@@ -6,6 +6,8 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
+import Image from "@tiptap/extension-image";
+import { DialogueExtension } from "./extensions/dialogue.js";
 import { slashCommandConfig } from "./slash-command.js";
 import { cn } from "@workspace/ui/lib/utils";
 import type { JSONContent } from "@tiptap/core";
@@ -14,9 +16,10 @@ export interface RichTextEditorProps {
   value?: JSONContent;
   onChange: (val: JSONContent) => void;
   className?: string;
+  onImageUpload?: (file: File) => Promise<string | undefined>;
 }
 
-export function RichTextEditor({ value, onChange, className }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, className, onImageUpload }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -30,6 +33,8 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
       }),
       Highlight.configure({ HTMLAttributes: { class: "bg-primary/20 text-foreground" } }),
       Typography,
+      Image,
+      DialogueExtension,
       slashCommandConfig,
     ],
     content: value,

@@ -5,7 +5,7 @@ import { Extension, type Editor, type Range } from "@tiptap/core";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
 import tippy, { type GetReferenceClientRect, type Instance } from "tippy.js";
-import { Heading1, Heading2, TextQuote, List, Type } from "lucide-react";
+import { Heading1, Heading2, TextQuote, List, Type, MessageCircle, Image as ImageIcon } from "lucide-react";
 
 export interface CommandItemProps {
   title: string;
@@ -50,10 +50,45 @@ const getSuggestionItems = ({ query }: { query: string }) => {
     },
     {
       title: "Quote",
-      description: "Capture a story element or dialogue.",
+      description: "Capture a story element.",
       icon: <TextQuote className="size-4" />,
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setNode("blockquote").run();
+      },
+    },
+    {
+      title: "Dialogue",
+      description: "Format script or spoken dialogue.",
+      icon: <MessageCircle className="size-4" />,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor.chain().focus().deleteRange(range).run();
+        // Since it's a browser prompt, wrap in setTimeout to avoid slash menu blocking issues
+        setTimeout(() => {
+          const characterName = window.prompt("Character Name:", "Elder");
+          if (!characterName) return;
+          const quote = window.prompt("What do they say?", "Long ago...");
+          if (!quote) return;
+          
+          editor.chain().focus().setDialogue({
+            character: characterName,
+            avatarUrl: "/avatars/default.png",
+            quote: quote,
+          }).run();
+        }, 10);
+      },
+    },
+    {
+      title: "Image",
+      description: "Embed an image from a URL.",
+      icon: <ImageIcon className="size-4" />,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor.chain().focus().deleteRange(range).run();
+        setTimeout(() => {
+          const url = window.prompt("Image URL:");
+          if (url) {
+            editor.chain().focus().setImage({ src: url }).run();
+          }
+        }, 10);
       },
     },
   ].filter((item) => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10);
