@@ -9,37 +9,40 @@ import { ArrowLeft, Save, ImagePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
 
-export default function SceneEditorPage({ params }: { params: Promise<{ id: string; sceneId: string }> }) {
+export default function SceneEditorPage({
+  params,
+}: {
+  params: Promise<{ id: string; sceneId: string }>;
+}) {
   const resolvedParams = use(params);
   const router = useRouter();
 
-  const sceneDetails = useQuery(api.scenes.getSceneDetails, { sceneId: resolvedParams.sceneId as never });
+  // ─── All hooks declared unconditionally at the top ────────────────────────
+  const sceneDetails = useQuery(api.scenes.getSceneDetails, {
+    sceneId: resolvedParams.sceneId as never,
+  });
   const saveSceneContent = useMutation(api.scenes.saveSceneContent);
   const generateUploadUrl = useMutation(api.upload.generateUploadUrl);
   const confirmUpload = useMutation(api.upload.confirmUpload);
 
   const [isSaving, setIsSaving] = useState(false);
   const [content, setContent] = useState<JSONContent | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
+  const [uploadStatus, setUploadStatus] = useState<
+    "idle" | "uploading" | "done" | "error"
+  >("idle");
 
-  // Parse initial content once
-  if (sceneDetails && content === null) {
-    if (sceneDetails.scene.tiptapContent) {
-      setContent(sceneDetails.scene.tiptapContent as JSONContent);
-    } else {
-      setContent({ type: "doc", content: [{ type: "paragraph" }] });
-    }
+  // Initialise content once when sceneDetails first arrives
+  // (safe: setting state during render only triggers a synchronous re-render
+  //  before the browser paints — React explicitly supports this pattern)
+  if (sceneDetails !== undefined && sceneDetails !== null && content === null) {
+    setContent(
+      sceneDetails.scene.tiptapContent
+        ? (sceneDetails.scene.tiptapContent as JSONContent)
+        : { type: "doc", content: [{ type: "paragraph" }] }
+    );
   }
 
-  if (sceneDetails === undefined) {
-    return <div className="p-8 text-muted-foreground font-mono text-sm animate-pulse">Loading scene editor...</div>;
-  }
-
-  if (sceneDetails === null) {
-    return <div className="p-8 text-destructive font-mono text-sm">Scene not found.</div>;
-  }
-
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!content) return;
     setIsSaving(true);
     try {
@@ -60,50 +63,62 @@ export default function SceneEditorPage({ params }: { params: Promise<{ id: stri
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [content, saveSceneContent, resolvedParams.sceneId]);
 
   /**
-   * handleImageUpload — called when a file is dropped into the Tiptap editor.
-   * 1. Gets a signed upload URL from Convex Storage
-   * 2. PUTs the file directly to that URL
-   * 3. Calls confirmUpload to persist to the assets table and get the public URL
-   * 4. Returns the URL so Tiptap inserts an image node
+   * handleImageUpload — drop a file into Tiptap → upload to Convex Storage →
+   * persist in assets table → return public URL for the image node.
    */
-  const handleImageUpload = useCallback(async (file: File): Promise<string | undefined> => {
-    setUploadStatus("uploading");
-    try {
-      // Step 1: get upload URL
-      const uploadUrl = await generateUploadUrl();
+  const handleImageUpload = useCallback(
+    async (file: File): Promise<string | undefined> => {
+      setUploadStatus("uploading");
+      try {
+        const uploadUrl = await generateUploadUrl();
 
-      // Step 2: PUT the file to Convex Storage
-      const res = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
+        const res = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+        if (!res.ok) throw new Error(`Upload failed: ${res.statusText}`);
 
-      if (!res.ok) throw new Error(`Upload failed: ${res.statusText}`);
+        const { storageId } = (await res.json()) as { storageId: string };
 
-      const { storageId } = await res.json() as { storageId: string };
+        const publicUrl = await confirmUpload({
+          storageId: storageId as never,
+          title: file.name,
+          type: "illustration",
+        });
 
-      // Step 3: Persist and get public URL
-      const publicUrl = await confirmUpload({
-        storageId: storageId as never,
-        title: file.name,
-        type: "illustration",
-      });
+        setUploadStatus("done");
+        setTimeout(() => setUploadStatus("idle"), 3000);
+        return publicUrl ?? undefined;
+      } catch (err) {
+        console.error("Image upload failed:", err);
+        setUploadStatus("error");
+        setTimeout(() => setUploadStatus("idle"), 4000);
+        return undefined;
+      }
+    },
+    [generateUploadUrl, confirmUpload]
+  );
 
-      setUploadStatus("done");
-      setTimeout(() => setUploadStatus("idle"), 3000);
+  // ─── Early returns AFTER all hooks ────────────────────────────────────────
+  if (sceneDetails === undefined) {
+    return (
+      <div className="p-8 text-muted-foreground font-mono text-sm animate-pulse">
+        Loading scene editor...
+      </div>
+    );
+  }
 
-      return publicUrl ?? undefined;
-    } catch (err) {
-      console.error("Image upload failed:", err);
-      setUploadStatus("error");
-      setTimeout(() => setUploadStatus("idle"), 4000);
-      return undefined;
-    }
-  }, [generateUploadUrl, confirmUpload]);
+  if (sceneDetails === null) {
+    return (
+      <div className="p-8 text-destructive font-mono text-sm">
+        Scene not found.
+      </div>
+    );
+  }
 
   const uploadLabel: Record<typeof uploadStatus, string> = {
     idle: "",
@@ -129,8 +144,15 @@ export default function SceneEditorPage({ params }: { params: Promise<{ id: stri
             <p className="text-xs text-muted-foreground font-mono">
               Editing Scene {sceneDetails.scene.order}
               {uploadStatus !== "idle" && (
-                <span className={uploadStatus === "error" ? " text-destructive" : " text-primary"}>
-                  {" · "}{uploadLabel[uploadStatus]}
+                <span
+                  className={
+                    uploadStatus === "error"
+                      ? " text-destructive"
+                      : " text-primary"
+                  }
+                >
+                  {" · "}
+                  {uploadLabel[uploadStatus]}
                 </span>
               )}
             </p>
@@ -142,7 +164,12 @@ export default function SceneEditorPage({ params }: { params: Promise<{ id: stri
             <ImagePlus className="size-3" />
             Drop image to upload
           </span>
-          <Button id="save-btn" size="sm" onClick={handleSave} disabled={isSaving}>
+          <Button
+            id="save-btn"
+            size="sm"
+            onClick={handleSave}
+            disabled={isSaving}
+          >
             <Save className="size-4 mr-2" />
             {isSaving ? "Saving..." : "Save Scene"}
           </Button>
