@@ -1,0 +1,200 @@
+"use client";
+
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { Extension } from "@tiptap/core";
+import Suggestion from "@tiptap/suggestion";
+import { ReactRenderer } from "@tiptap/react";
+import tippy, { GetReferenceClientRect } from "tippy.js";
+import { Heading1, Heading2, TextQuote, List, Type, Minus } from "lucide-react";
+
+export interface CommandItemProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  command: ({ editor, range }: { editor: any; range: any }) => void;
+}
+
+const getSuggestionItems = ({ query }: { query: string }) => {
+  return [
+    {
+      title: "Text",
+      description: "Just start typing with plain text.",
+      icon: <Type className="size-4" />,
+      command: ({ editor, range }: any) => {
+        editor.chain().focus().deleteRange(range).setNode("paragraph").run();
+      },
+    },
+    {
+      title: "Heading 1",
+      description: "Big section heading.",
+      icon: <Heading1 className="size-4" />,
+      command: ({ editor, range }: any) => {
+        editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run();
+      },
+    },
+    {
+      title: "Heading 2",
+      description: "Medium section heading.",
+      icon: <Heading2 className="size-4" />,
+      command: ({ editor, range }: any) => {
+        editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run();
+      },
+    },
+    {
+      title: "Bullet List",
+      description: "Create a simple bulleted list.",
+      icon: <List className="size-4" />,
+      command: ({ editor, range }: any) => {
+        editor.chain().focus().deleteRange(range).toggleBulletList().run();
+      },
+    },
+    {
+      title: "Quote",
+      description: "Capture a story element or dialogue.",
+      icon: <TextQuote className="size-4" />,
+      command: ({ editor, range }: any) => {
+        editor.chain().focus().deleteRange(range).setNode("blockquote").run();
+      },
+    },
+  ].filter((item) => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10);
+};
+
+export const CommandMenuList = forwardRef((props: any, ref) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const selectItem = (index: number) => {
+    const item = props.items[index];
+    if (item) {
+      props.command(item);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [props.items]);
+
+  useImperativeHandle(ref, () => ({
+    onKeyDown: ({ event }: { event: KeyboardEvent }) => {
+      if (event.key === "ArrowUp") {
+        setSelectedIndex((selectedIndex + props.items.length - 1) % props.items.length);
+        return true;
+      }
+      if (event.key === "ArrowDown") {
+        setSelectedIndex((selectedIndex + 1) % props.items.length);
+        return true;
+      }
+      if (event.key === "Enter") {
+        selectItem(selectedIndex);
+        return true;
+      }
+      return false;
+    },
+  }));
+
+  if (props.items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="z-50 min-w-[12rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-brutal animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+      {props.items.map((item: CommandItemProps, index: number) => (
+        <button
+          className={`flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors 
+            ${index === selectedIndex ? "bg-accent text-accent-foreground" : "hover:bg-accent/50 hover:text-accent-foreground"}
+          `}
+          key={index}
+          onClick={() => selectItem(index)}
+        >
+          <div className="flex h-6 w-6 items-center justify-center rounded-sm bg-background border border-border">
+            {item.icon}
+          </div>
+          <div className="flex flex-col text-left">
+            <span className="font-medium">{item.title}</span>
+            <span className="text-[10px] text-muted-foreground">{item.description}</span>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+});
+
+CommandMenuList.displayName = "CommandMenuList";
+
+export const SlashCommand = Extension.create({
+  name: "slashCommand",
+  addOptions() {
+    return {
+      suggestion: {
+        char: "/",
+        command: ({ editor, range, props }: any) => {
+          props.command({ editor, range });
+        },
+      },
+    };
+  },
+  addProseMirrorPlugins() {
+    return [
+      Suggestion({
+        editor: this.editor,
+        ...this.options.suggestion,
+      }),
+    ];
+  },
+});
+
+export const renderItems = () => {
+  let component: ReactRenderer | null = null;
+  let popup: any | null = null;
+
+  return {
+    onStart: (props: any) => {
+      component = new ReactRenderer(CommandMenuList, {
+        props,
+        editor: props.editor,
+      });
+
+      if (!props.clientRect) {
+        return;
+      }
+
+      popup = (tippy as any)("body", {
+        getReferenceClientRect: props.clientRect as GetReferenceClientRect,
+        appendTo: () => document.body,
+        content: component.element,
+        showOnCreate: true,
+        interactive: true,
+        trigger: "manual",
+        placement: "bottom-start",
+      });
+    },
+    onUpdate(props: any) {
+      component?.updateProps(props);
+
+      if (!props.clientRect) {
+        return;
+      }
+
+      popup?.[0]?.setProps({
+        getReferenceClientRect: props.clientRect as GetReferenceClientRect,
+      });
+    },
+    onKeyDown(props: any) {
+      if (props.event.key === "Escape") {
+        popup?.[0]?.hide();
+        return true;
+      }
+      return (component?.ref as any)?.onKeyDown(props);
+    },
+    onExit() {
+      popup?.[0]?.destroy();
+      component?.destroy();
+    },
+  };
+};
+
+export const slashCommandConfig = SlashCommand.configure({
+  suggestion: {
+    items: getSuggestionItems,
+    render: renderItems,
+  },
+});

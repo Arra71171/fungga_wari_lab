@@ -34,3 +34,20 @@ npm-debug.log*
 # Misc
 .DS_Store
 *.pem
+
+# Scratch / temp
+tmp/
+*.log
+codegen.log
+convex.log
+dev.log
+*_fail.txt
+*_fail_ascii.txt
+*_clean.txt
+*_clean_ascii.txt
+*_out.txt
+*.txt
+project-planning.md
+generate_keys.js
+skills-lock.json
+public/README.md

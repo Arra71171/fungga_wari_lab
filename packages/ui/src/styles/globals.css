@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 @source "../../../apps/**/*.{ts,tsx}";
@@ -9,71 +10,79 @@
 
 :root {
     --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --foreground: oklch(0.14 0.02 260);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.14 0.02 260);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.518 0.253 323.949);
-    --primary-foreground: oklch(0.977 0.017 320.058);
-    --secondary: oklch(0.967 0.001 286.375);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --popover-foreground: oklch(0.14 0.02 260);
+    --primary: oklch(0.40 0.18 260);
+    --primary-foreground: oklch(0.98 0.01 260);
+    --secondary: oklch(0.96 0.02 260);
+    --secondary-foreground: oklch(0.18 0.04 260);
+    --muted: oklch(0.96 0.02 260);
+    --muted-foreground: oklch(0.55 0.04 260);
+    --accent: oklch(0.96 0.02 260);
+    --accent-foreground: oklch(0.18 0.04 260);
+    --destructive: oklch(0.60 0.20 25.0);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.92 0.03 260);
+    --input: oklch(0.92 0.03 260);
+    --ring: oklch(0.70 0.05 260);
     --chart-1: oklch(0.879 0.169 91.605);
     --chart-2: oklch(0.769 0.188 70.08);
     --chart-3: oklch(0.666 0.179 58.318);
     --chart-4: oklch(0.555 0.163 48.998);
     --chart-5: oklch(0.473 0.137 46.201);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.591 0.293 322.896);
-    --sidebar-primary-foreground: oklch(0.977 0.017 320.058);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --radius: 0rem;
+    --status-active: oklch(0.60 0.18 260);
+    --shadow-brutal: 4px 4px 0px 0px var(--foreground);
+    --shadow-brutal-primary: 4px 4px 0px 0px var(--primary);
+    --shadow-brutal-sm: 2px 2px 0px 0px var(--foreground);
+    --sidebar: oklch(0.98 0.01 260);
+    --sidebar-foreground: oklch(0.14 0.02 260);
+    --sidebar-primary: oklch(0.40 0.18 260);
+    --sidebar-primary-foreground: oklch(0.98 0.01 260);
+    --sidebar-accent: oklch(0.96 0.02 260);
+    --sidebar-accent-foreground: oklch(0.18 0.04 260);
+    --sidebar-border: oklch(0.92 0.03 260);
+    --sidebar-ring: oklch(0.70 0.05 260);
+    --tracking-normal: 0.02em;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.452 0.211 324.591);
-    --primary-foreground: oklch(0.977 0.017 320.058);
-    --secondary: oklch(0.274 0.006 286.033);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
+    --background: oklch(0.12 0.03 260);
+    --foreground: oklch(0.98 0.02 260);
+    --card: oklch(0.15 0.04 260);
+    --card-foreground: oklch(0.98 0.02 260);
+    --popover: oklch(0.15 0.04 260);
+    --popover-foreground: oklch(0.98 0.02 260);
+    --primary: oklch(0.55 0.20 260);
+    --primary-foreground: oklch(0.10 0.03 260);
+    --secondary: oklch(0.18 0.05 260);
+    --secondary-foreground: oklch(0.98 0.02 260);
+    --muted: oklch(0.18 0.05 260);
+    --muted-foreground: oklch(0.70 0.05 260);
+    --accent: oklch(0.18 0.05 260);
+    --accent-foreground: oklch(0.98 0.02 260);
+    --destructive: oklch(0.60 0.20 25.0);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(1 0 0 / 15%);
+    --input: oklch(1 0 0 / 20%);
+    --ring: oklch(0.55 0.20 260);
     --chart-1: oklch(0.879 0.169 91.605);
     --chart-2: oklch(0.769 0.188 70.08);
     --chart-3: oklch(0.666 0.179 58.318);
     --chart-4: oklch(0.555 0.163 48.998);
     --chart-5: oklch(0.473 0.137 46.201);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.667 0.295 322.15);
-    --sidebar-primary-foreground: oklch(0.977 0.017 320.058);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --status-active: oklch(0.55 0.20 260);
+    --sidebar: oklch(0.15 0.04 260);
+    --sidebar-foreground: oklch(0.98 0.02 260);
+    --sidebar-primary: oklch(0.55 0.20 260);
+    --sidebar-primary-foreground: oklch(0.10 0.03 260);
+    --sidebar-accent: oklch(0.18 0.05 260);
+    --sidebar-accent-foreground: oklch(0.98 0.02 260);
+    --sidebar-border: oklch(1 0 0 / 15%);
+    --sidebar-ring: oklch(0.55 0.20 260);
 }
 
 @theme inline {
@@ -92,6 +101,7 @@
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
     --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
@@ -117,13 +127,96 @@
     --color-sidebar-ring: var(--sidebar-ring);
     --font-mono: var(--font-mono);
     --font-heading: var(--font-heading);
+    --font-sans: var(--font-sans);
+    --font-display: var(--font-display);
+    --color-status-active: var(--status-active);
+    --shadow-brutal: var(--shadow-brutal);
+    --shadow-brutal-primary: var(--shadow-brutal-primary);
+    --shadow-brutal-sm: var(--shadow-brutal-sm);
+    --text-2xs: 0.625rem;
+    --text-3xs: 0.5rem;
+
+    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+    --tracking-normal: var(--tracking-normal);
+    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+    --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+
+    --animate-slide-left: slide-left 20s linear infinite;
+
+    @keyframes slide-left {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+    letter-spacing: var(--tracking-normal);
+  }
+  ::selection {
+    @apply bg-primary/30 text-primary-foreground;
+  }
+  blockquote {
+    @apply border-l-4 border-primary pl-4 italic opacity-90;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+}
+
+/* Hide Clerk Watermark globally */
+.clerk-watermark {
+  display: none !important;
+}
+
+/* Override Clerk's JS-injected inline max-width on card containers */
+.cl-rootBox,
+.cl-cardBox,
+.cl-card {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Tiptap Editor Typography Override for Brutalist Aesthetic */
+.ProseMirror {
+  @apply text-foreground outline-none;
+}
+.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6 {
+  @apply tracking-tight text-foreground font-bold mt-6 mb-4;
+}
+.ProseMirror h1 { @apply font-display text-3xl italic; }
+.ProseMirror h2 { @apply font-display text-2xl italic; }
+.ProseMirror h3 { @apply font-heading text-xl; }
+.ProseMirror p {
+  @apply mb-4 leading-relaxed;
+}
+.ProseMirror blockquote {
+  @apply border-l-4 border-primary pl-4 italic bg-secondary/20 py-2 pr-4 my-4;
+}
+.ProseMirror code {
+  @apply font-mono bg-secondary/50 border border-border/50 px-1.5 py-0.5 rounded-none text-[0.85em];
+}
+.ProseMirror pre {
+  @apply font-mono bg-secondary/30 border border-border/50 p-4 rounded-none my-4 overflow-x-auto;
+}
+.ProseMirror pre code {
+  @apply bg-transparent border-none p-0;
+}
+.ProseMirror ul {
+  @apply list-disc pl-6 mb-4 marker:text-primary;
+}
+.ProseMirror ol {
+  @apply list-decimal pl-6 mb-4 marker:font-mono marker:text-primary;
+}
+.ProseMirror li > p {
+  @apply mb-2;
 }
