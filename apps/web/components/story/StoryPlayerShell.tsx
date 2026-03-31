@@ -55,16 +55,6 @@ export function StoryPlayerShell({ storySlug }: StoryPlayerShellProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const sceneProgress = () => {
-    // Basic approximate progress logic: chapter count vs active chapter. 
-    // Wait, first we find the active chapter
-    if (!chapters || !sceneQuery?.scene) return 0;
-    const activeChapterIndex = chapters.findIndex((c: Doc<"chapters">) => c._id === sceneQuery.scene.chapterId);
-    if (activeChapterIndex === -1) return 0;
-    
-    // Simplistic: completion based on chapter index out of total chapters
-    return Math.round(((activeChapterIndex + 1) / chapters.length) * 100);
-  };
 
   if (story === undefined) {
     return <div className="h-svh w-full flex items-center justify-center bg-background"><div className="animate-pulse h-8 w-32 bg-muted/50 rounded" /></div>;
