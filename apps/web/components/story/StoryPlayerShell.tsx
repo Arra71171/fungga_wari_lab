@@ -79,17 +79,17 @@ export function StoryPlayerShell({ storySlug }: StoryPlayerShellProps) {
     _id: c._id,
     title: c.title,
     order: c.order,
-    sceneCount: 5, // We don't have exact counts yet, so mock it for now
+    scenes: [] as { _id: string; title: string; order: number }[],
   })) || [];
 
   return (
     <div className="flex h-svh w-full bg-background text-foreground overflow-hidden">
       {/* LEFT SIDEBAR */}
       <div className="hidden lg:block h-full">
-        <StorySidebar 
-          chapters={sidebarChapters} 
-          activeChapterId={sceneQuery?.scene?.chapterId} 
-          progressPercent={sceneProgress()} 
+        <StorySidebar
+          chapters={sidebarChapters}
+          activeSceneId={activeSceneId}
+          onSceneSelect={(id) => handleChoice(id)}
         />
       </div>
 

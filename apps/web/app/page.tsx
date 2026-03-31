@@ -371,9 +371,12 @@ export default function Home() {
                 <Button
                   size="lg"
                   className="h-14 px-8 text-sm font-bold tracking-widest uppercase shadow-brutal hover:shadow-brutal-primary transition-shadow"
+                  asChild
                 >
-                  Explore Network
-                  <ArrowRight className="ml-3 size-4" />
+                  <Link href="/stories">
+                    Explore Network
+                    <ArrowRight className="ml-3 size-4" />
+                  </Link>
                 </Button>
               </MagneticButton>
 

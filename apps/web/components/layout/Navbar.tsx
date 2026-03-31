@@ -9,10 +9,10 @@ import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-to
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 
 const navItems = [
-  { name: "Stories", href: "#stories" },
-  { name: "Platform", href: "#platform" },
-  { name: "Community", href: "#community" },
-  { name: "Archive", href: "#archive" },
+  { name: "Stories", href: "/stories" },
+  { name: "Platform", href: "/#features" },
+  { name: "Community", href: "/#community" },
+  { name: "Archive", href: "/#archive" },
 ];
 
 // Dashboard lives on a separate origin (dashboard app).

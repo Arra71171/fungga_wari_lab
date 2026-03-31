@@ -1,7 +1,7 @@
 "use client";
 
 import { mergeAttributes, Node } from "@tiptap/core";
-import { ReactNodeViewRenderer, NodeViewWrapper } from "@tiptap/react";
+import { ReactNodeViewRenderer, NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { DialogueBlock as UIDialogueBlock } from "@workspace/ui/components/DialogueBlock";
 
 export interface DialogueOptions {
@@ -16,12 +16,12 @@ declare module "@tiptap/core" {
   }
 }
 
-interface DialogueNodeViewProps {
-  node: { attrs: { character: string; avatarUrl: string; quote: string } };
-}
-
-const DialogueComponent = (props: DialogueNodeViewProps) => {
-  const { character, avatarUrl, quote } = props.node.attrs;
+const DialogueComponent = (props: NodeViewProps) => {
+  const { character, avatarUrl, quote } = props.node.attrs as {
+    character: string;
+    avatarUrl: string;
+    quote: string;
+  };
 
   return (
     <NodeViewWrapper className="my-4">
