@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "convex/react";
@@ -132,10 +132,9 @@ function SkeletonCard() {
 export default function StoriesPage() {
   const allStories = useQuery(api.stories.getAll);
 
-  const publishedStories = React.useMemo(() => {
-    if (!allStories) return null;
-    return allStories.filter((s: Story) => s.status === "published");
-  }, [allStories]);
+  // getAll already returns only published stories (server-side filtered)
+  const publishedStories = allStories ?? null;
+
 
   return (
     <div className="relative min-h-screen bg-background text-foreground font-sans">

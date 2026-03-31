@@ -3,11 +3,13 @@ import { query, mutation } from "./_generated/server";
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
+    const stories = await ctx.db
       .query("stories")
-      .withIndex("by_slug") // status filter done in-memory — no status index, keep bounded
+      .withIndex("by_slug")
       .order("desc")
       .take(100);
+    // Filter on server — drafts must never reach the public reader
+    return stories.filter((s) => s.status === "published");
   },
 });
 
@@ -66,6 +68,7 @@ export const create = mutation({
   args: {
     title: v.string(),
     slug: v.string(),
+    description: v.optional(v.string()),
     category: v.string(),
     language: v.string(),
     coverImageUrl: v.optional(v.string()),
