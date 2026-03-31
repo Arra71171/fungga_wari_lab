@@ -7,7 +7,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card";
 
 export default function SettingsPage() {
-  const teamMembers = useQuery(api.teamMembers.getAll);
+  const teamMembers = useQuery(api.tasks.getTeamMembers);
 
   return (
     <div className="flex h-full flex-col gap-6">

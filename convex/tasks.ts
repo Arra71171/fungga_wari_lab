@@ -16,7 +16,9 @@ export const getTeamMembers = query({
     const userId = (await ctx.auth.getUserIdentity())?.subject;
     if (!userId) throw new Error("Unauthenticated");
 
-    return await ctx.db.query("teamMembers").collect();
+    const users = await ctx.db.query("users").collect();
+    // Map clerkId to userId to maintain compatibility with existing Team Kanban components
+    return users.map(u => ({ ...u, userId: u.clerkId || u._id }));
   },
 });
 

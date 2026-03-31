@@ -5,7 +5,7 @@ import { ReactNodeViewRenderer, NodeViewWrapper } from "@tiptap/react";
 import { DialogueBlock as UIDialogueBlock } from "@workspace/ui/components/DialogueBlock";
 
 export interface DialogueOptions {
-  HTMLAttributes: Record<string, any>;
+  HTMLAttributes: Record<string, unknown>;
 }
 
 declare module "@tiptap/core" {
@@ -16,7 +16,11 @@ declare module "@tiptap/core" {
   }
 }
 
-const DialogueComponent = (props: any) => {
+interface DialogueNodeViewProps {
+  node: { attrs: { character: string; avatarUrl: string; quote: string } };
+}
+
+const DialogueComponent = (props: DialogueNodeViewProps) => {
   const { character, avatarUrl, quote } = props.node.attrs;
 
   return (

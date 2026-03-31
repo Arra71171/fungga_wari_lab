@@ -16,7 +16,7 @@ export function TeamChat() {
   
   const messages = useQuery(api.messages.list);
   const sendMessage = useMutation(api.messages.send);
-  const currentUser = useQuery(api.teamMembers.getCurrent);
+  const currentUser = useQuery(api.users.getMe);
   
   // Ref to scroll to bottom
   const scrollRef = React.useRef<HTMLDivElement>(null);

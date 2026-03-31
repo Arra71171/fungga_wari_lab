@@ -85,17 +85,9 @@ export default defineSchema({
     sceneId: v.optional(v.id("scenes")),
   }).index("by_assigneeId", ["assigneeId"]).index("by_status", ["status"]),
 
-  // Team Members
-  teamMembers: defineTable({
-    userId: v.string(), // Convex Auth id
-    role: v.string(), // "admin", "editor", "illustrator", "translator", "viewer"
-    name: v.string(),
-    avatarUrl: v.optional(v.string()),
-  }).index("by_userId", ["userId"]),
-  
   // Real-time Contextual Team Chat
   messages: defineTable({
-    authorId: v.id("teamMembers"),
+    authorId: v.id("users"), // Replaced teamMembers with users
     content: v.string(),
     createdAt: v.number(),
     storyId: v.optional(v.id("stories")), // Chat scoped to a specific story

@@ -22,6 +22,7 @@ export const syncUser = mutation({
       email: identity.email ?? undefined,
       name: identity.name ?? undefined,
       avatarUrl: identity.pictureUrl ?? undefined,
+      role: "editor", // Defaulting to editor for team building logic
     });
 
     return await ctx.db.get(userId);

@@ -4,8 +4,8 @@ export const populate = mutation({
   args: {},
   handler: async (ctx) => {
     // 1. Create a dummy author
-    const authorId = await ctx.db.insert("teamMembers", {
-      userId: "dummy-user-123",
+    const authorId = await ctx.db.insert("users", {
+      clerkId: "dummy-user-123",
       role: "admin",
       name: "Wise Grandparent",
     });

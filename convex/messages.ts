@@ -16,11 +16,10 @@ export const list = query({
     // Need to reverse so they display in chronological order
     const reversed = messages.reverse();
     
-    // We mock the author if we don't have the real teamMember yet, to match getCurrent
     const enriched = await Promise.all(
       reversed.map(async (msg) => {
         let author = null;
-        if (msg.authorId !== "mock_id" as any) {
+        if (msg.authorId) {
            author = await ctx.db.get(msg.authorId);
         }
         
@@ -41,7 +40,7 @@ export const list = query({
 export const send = mutation({
   args: {
     content: v.string(),
-    authorId: v.id("teamMembers"), 
+    authorId: v.id("users"), 
   },
   handler: async (ctx, args) => {
     const userId = (await ctx.auth.getUserIdentity())?.subject;
@@ -50,15 +49,15 @@ export const send = mutation({
     let realAuthorId = args.authorId;
     
     const existing = await ctx.db
-      .query("teamMembers")
-      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", userId))
       .unique();
       
     if (existing) {
-      realAuthorId = existing._id as any;
+      realAuthorId = existing._id;
     } else {
-      realAuthorId = await ctx.db.insert("teamMembers", {
-        userId: userId,
+      realAuthorId = await ctx.db.insert("users", {
+        clerkId: userId,
         role: "viewer",
         name: "Unknown User",
         avatarUrl: "/avatars/default.png",

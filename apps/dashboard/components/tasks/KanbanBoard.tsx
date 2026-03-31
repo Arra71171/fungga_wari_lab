@@ -37,7 +37,7 @@ export const STATUSES: { id: TaskStatus; title: string }[] = [
 
 export function KanbanBoard() {
   const tasks = useQuery(api.tasks.getAll);
-  const teamMembers = useQuery(api.teamMembers.getAll);
+  const teamMembers = useQuery(api.tasks.getTeamMembers);
   const updateTaskStatus = useMutation(api.tasks.updateStatus);
 
   // Local state for optimistic updates during drag

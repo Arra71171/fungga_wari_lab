@@ -4,6 +4,7 @@ import "@workspace/ui/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexClerkProvider } from "@workspace/auth/convex-provider";
 import { cn } from "@workspace/ui/lib/utils";
+import { SyncUserStore } from "@/components/sync-user";
 
 // ── Folk-story heading: Literary, old-style serif with modern screen discipline
 const bacasimeAntique = Bacasime_Antique({
@@ -58,6 +59,7 @@ export default function RootLayout({
     >
       <body>
         <ConvexClerkProvider>
+          <SyncUserStore />
           <ThemeProvider>{children}</ThemeProvider>
         </ConvexClerkProvider>
       </body>

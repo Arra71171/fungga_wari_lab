@@ -53,6 +53,24 @@ export function RichTextEditor({ value, onChange, className, onImageUpload }: Ri
           className
         ),
       },
+      handleDrop(view, event) {
+        const file = event.dataTransfer?.files?.[0];
+        if (file && file.type.startsWith("image/") && onImageUpload) {
+          event.preventDefault();
+          onImageUpload(file).then((url) => {
+            if (url) {
+              const { schema } = view.state;
+              const node = schema.nodes.image?.create({ src: url });
+              if (node) {
+                const transaction = view.state.tr.replaceSelectionWith(node);
+                view.dispatch(transaction);
+              }
+            }
+          });
+          return true;
+        }
+        return false;
+      },
     },
     onUpdate({ editor }) {
       onChange(editor.getJSON());
