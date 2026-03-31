@@ -13,7 +13,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@workspace/ui/components/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import { RichTextEditor } from "@workspace/ui/components/editor/rich-text-editor";
+import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 
 import {
   DndContext,
@@ -37,7 +45,7 @@ const COLUMNS = [
   { id: "done", title: "Done" },
 ];
 
-function SortableTaskItem({ task, onSelect }: { task: any; onSelect: (task: any) => void }) {
+function SortableTaskItem({ task, teamMembers, onSelect }: { task: any; teamMembers: any[] | undefined; onSelect: (task: any) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task._id,
   });
@@ -46,6 +54,11 @@ function SortableTaskItem({ task, onSelect }: { task: any; onSelect: (task: any)
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const assignee = React.useMemo(() => {
+    if (!teamMembers || !task.assigneeId) return null;
+    return teamMembers.find(m => m.userId === task.assigneeId);
+  }, [teamMembers, task.assigneeId]);
 
   if (isDragging) {
     return (
@@ -79,14 +92,22 @@ function SortableTaskItem({ task, onSelect }: { task: any; onSelect: (task: any)
         <h4 className="text-sm font-medium leading-snug mb-3 group-hover:text-primary transition-colors">{task.title}</h4>
       <div className="flex items-center justify-between mt-4">
         <div className="flex -space-x-2">
-          {task.assigneeId && (
-            <div className="size-6 rounded-none bg-secondary border border-background flex items-center justify-center text-[10px] font-mono font-bold text-muted-foreground">
+          {assignee ? (
+            <div className="size-6 rounded-none bg-primary/20 border border-background flex items-center justify-center text-[10px] font-mono font-bold text-primary" title={assignee.name}>
+              {assignee.name.charAt(0).toUpperCase()}
+            </div>
+          ) : (
+            <div className="size-6 rounded-none bg-secondary border border-background flex items-center justify-center text-[10px] font-mono font-bold text-muted-foreground" title="Unassigned">
               <UserPlus className="size-3" />
             </div>
           )}
         </div>
         {task.priority && (
-          <span className="text-[10px] font-mono text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded-none capitalize">
+          <span className={`text-[10px] font-mono px-2 py-0.5 rounded-none capitalize ${
+            task.priority === 'high' ? 'bg-destructive/10 text-destructive' : 
+            task.priority === 'medium' ? 'bg-primary/10 text-primary' : 
+            'bg-secondary/50 text-muted-foreground'
+          }`}>
             {task.priority}
           </span>
         )}
@@ -98,12 +119,26 @@ function SortableTaskItem({ task, onSelect }: { task: any; onSelect: (task: any)
 
 export default function TasksPage() {
   const [searchQuery, setSearchQuery] = React.useState("");
+  
   const allTasks = useQuery(api.tasks.getAll);
+  const teamMembers = useQuery(api.tasks.getTeamMembers);
   const updateStatus = useMutation(api.tasks.updateStatus);
   const updateTaskDetails = useMutation(api.tasks.updateDetails);
   
   const [activeTask, setActiveTask] = React.useState<any | null>(null);
   const [selectedTask, setSelectedTask] = React.useState<any | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
+
+  // Sync selected task with latest data from convex if it changes in the background
+  React.useEffect(() => {
+    if (selectedTask && allTasks) {
+      const liveTask = allTasks.find(t => t._id === selectedTask._id);
+      if (liveTask && (liveTask.status !== selectedTask.status || liveTask.priority !== selectedTask.priority || liveTask.assigneeId !== selectedTask.assigneeId || liveTask.title !== selectedTask.title)) {
+        // We only want to auto-sync non-description fields to avoid jumping rich text editors while typing
+        setSelectedTask((prev: any) => ({ ...liveTask, description: prev.description }));
+      }
+    }
+  }, [allTasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -132,10 +167,15 @@ export default function TasksPage() {
     if (targetStatus && allTasks) {
       const activeTaskData = allTasks.find((t: any) => t._id === active.id);
       if (activeTaskData && activeTaskData.status !== targetStatus) {
-        // Optimistic update could go here
         await updateStatus({ taskId: activeTaskData._id as any, status: targetStatus });
       }
     }
+  };
+
+  const handleUpdateDetail = (taskId: string, field: string, value: any) => {
+    if (!selectedTask) return;
+    setSelectedTask({ ...selectedTask, [field]: value });
+    updateTaskDetails({ taskId: taskId as any, [field]: value });
   };
 
   // Memoize grouped tasks
@@ -177,7 +217,7 @@ export default function TasksPage() {
           <Button variant="outline" className="h-10 px-3 bg-secondary/50 border-border/50">
             <SlidersHorizontal className="size-4 mr-2 text-muted-foreground" /> View
           </Button>
-          <Button className="h-10 px-4 shadow-sm shadow-brand-ember/20">
+          <Button onClick={() => setIsCreateOpen(true)} className="h-10 px-4 shadow-sm shadow-brand-ember/20">
             <Plus className="size-4 mr-2" /> New Task
           </Button>
         </div>
@@ -198,7 +238,7 @@ export default function TasksPage() {
               return (
                 <div 
                   key={column.id} 
-                  className="flex flex-col w-80 bg-secondary/10 border border-border/40 rounded-none overflow-hidden shadow-sm"
+                  className="flex flex-col w-80 bg-secondary/10 border border-border/40 rounded-none overflow-hidden shadow-sm flex-shrink-0"
                 >
                   {/* Column Header */}
                   <div className="flex items-center justify-between p-4 border-b border-border/30 bg-secondary/20 backdrop-blur-sm shrink-0">
@@ -227,7 +267,7 @@ export default function TasksPage() {
                       )}
                       
                       {items.map((task: any) => (
-                        <SortableTaskItem key={task._id} task={task} onSelect={setSelectedTask} />
+                        <SortableTaskItem key={task._id} task={task} teamMembers={teamMembers} onSelect={setSelectedTask} />
                       ))}
                     </div>
                   </SortableContext>
@@ -239,7 +279,7 @@ export default function TasksPage() {
           <DragOverlay>
             {activeTask ? (
               <div className="opacity-80 rotate-3 scale-105 cursor-grabbing">
-                <div className="p-4 bg-background border border-primary/50 rounded-none shadow-2xl">
+                <div className="p-4 bg-background border border-primary/50 rounded-none shadow-2xl w-80">
                   <h4 className="text-sm font-medium leading-snug">{activeTask.title}</h4>
                 </div>
               </div>
@@ -248,30 +288,79 @@ export default function TasksPage() {
         </DndContext>
       </div>
 
+      <CreateTaskDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
+
       <Sheet open={!!selectedTask} onOpenChange={(open) => !open && setSelectedTask(null)}>
-        <SheetContent className="w-full sm:max-w-xl md:max-w-2xl border-l border-border/40 bg-background shadow-brutal p-0 flex flex-col rounded-none overflow-hidden">
+        <SheetContent className="w-full sm:max-w-xl md:max-w-2xl border-l border-border/40 bg-background shadow-brutal p-0 flex flex-col rounded-none overflow-hidden sm:min-w-[600px]">
           {selectedTask && (
-            <div className="flex flex-col h-full">
-              <SheetHeader className="p-6 border-b border-border/30 bg-secondary/10 shrink-0">
-                <SheetTitle className="font-heading text-xl">{selectedTask.title}</SheetTitle>
-                <SheetDescription className="font-mono text-xs flex items-center gap-3">
-                  <span>ID: #{selectedTask._id.slice(-6)}</span>
-                  <span>|</span>
-                  <span className="capitalize text-primary">{selectedTask.status.replace('_', ' ')}</span>
-                </SheetDescription>
+            <div className="flex flex-col h-full overflow-hidden">
+              <SheetHeader className="px-6 py-5 border-b border-border/30 bg-secondary/10 shrink-0">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <input
+                      value={selectedTask.title}
+                      onChange={(e) => handleUpdateDetail(selectedTask._id, 'title', e.target.value)}
+                      className="w-full font-heading text-xl bg-transparent focus:outline-none focus:border-b focus:border-primary/50 pb-1"
+                    />
+                    <SheetDescription className="font-mono text-xs mt-2 flex items-center gap-3">
+                      <span>ID: #{selectedTask._id.slice(-6)}</span>
+                    </SheetDescription>
+                  </div>
+                </div>
               </SheetHeader>
               
-              <div className="flex-1 overflow-y-auto p-6 bg-secondary/5">
-                <div className="space-y-4">
-                  <h3 className="text-sm font-mono font-bold text-muted-foreground uppercase tracking-wider mb-2">Lore & Description</h3>
-                  <div className="bg-background border border-border/40 min-h-[500px]">
+              <div className="flex-1 overflow-y-auto p-6 bg-secondary/5 flex flex-col gap-6">
+                
+                <div className="grid grid-cols-3 gap-6 bg-background p-4 border border-border/40">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground">Status</span>
+                    <Select value={selectedTask.status} onValueChange={(val) => handleUpdateDetail(selectedTask._id, 'status', val)}>
+                      <SelectTrigger className="bg-transparent border-0 px-0 h-auto focus:ring-0 text-sm font-medium">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COLUMNS.map(col => <SelectItem key={col.id} value={col.id}>{col.title}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                     <span className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground">Assignee</span>
+                     <Select value={selectedTask.assigneeId || 'unassigned'} onValueChange={(val) => handleUpdateDetail(selectedTask._id, 'assigneeId', val === 'unassigned' ? undefined : val)}>
+                      <SelectTrigger className="bg-transparent border-0 px-0 h-auto focus:ring-0 text-sm font-medium">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
+                        {teamMembers?.map((member) => (
+                           <SelectItem key={member.userId} value={member.userId}>{member.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground">Priority</span>
+                    <Select value={selectedTask.priority} onValueChange={(val) => handleUpdateDetail(selectedTask._id, 'priority', val)}>
+                      <SelectTrigger className="bg-transparent border-0 px-0 h-auto focus:ring-0 text-sm font-medium capitalize">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex-1 flex flex-col">
+                  <h3 className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider mb-2 px-1">Description & Lore</h3>
+                  <div className="bg-background border border-border/40 flex-1 min-h-[400px]">
                     <RichTextEditor
                       value={selectedTask.description}
-                      onChange={(val) => {
-                        setSelectedTask((prev: any) => ({ ...prev, description: val }));
-                        updateTaskDetails({ taskId: selectedTask._id as any, description: val });
-                      }}
-                      className="min-h-[500px] border-none shadow-none p-6"
+                      onChange={(val) => handleUpdateDetail(selectedTask._id, 'description', val)}
+                      className="min-h-[400px] border-none shadow-none p-6"
                     />
                   </div>
                 </div>
