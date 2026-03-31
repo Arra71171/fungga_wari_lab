@@ -6,12 +6,13 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
-import { slashCommandConfig } from "./slash-command";
+import { slashCommandConfig } from "./slash-command.js";
 import { cn } from "@workspace/ui/lib/utils";
+import type { JSONContent } from "@tiptap/core";
 
 export interface RichTextEditorProps {
-  value?: any;
-  onChange: (val: any) => void;
+  value?: JSONContent;
+  onChange: (val: JSONContent) => void;
   className?: string;
 }
 

@@ -1,6 +1,10 @@
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
+import { type JSONContent } from "@tiptap/core";
+
+export type { JSONContent };
+
 // --- Node Types ---
 
 export function ParagraphNode({ children }: { children: React.ReactNode }) {
@@ -12,7 +16,7 @@ export function ParagraphNode({ children }: { children: React.ReactNode }) {
 }
 
 export function HeadingNode({ level, children }: { level: number; children: React.ReactNode }) {
-  const Tag = `h${level}` as any;
+  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
   const classes = cn(
     "font-heading font-bold tracking-tight text-foreground",
     level === 1 && "text-4xl mt-12 mb-6",
@@ -44,15 +48,6 @@ export function ListItemNode({ children }: { children: React.ReactNode }) {
 }
 
 // --- Semantic Parser ---
-
-export interface JSONContent {
-  type?: string;
-  attrs?: Record<string, any>;
-  content?: JSONContent[];
-  marks?: { type: string; attrs?: Record<string, any> }[];
-  text?: string;
-  [key: string]: any;
-}
 
 const renderMarks = (node: JSONContent, children: React.ReactNode) => {
   if (!node.marks || node.marks.length === 0) return children;

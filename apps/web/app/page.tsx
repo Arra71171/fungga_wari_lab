@@ -8,14 +8,12 @@ import {
   useScroll,
   useTransform,
   useSpring,
-  useMotionValue,
   useInView,
   AnimatePresence,
   type Variants,
 } from "framer-motion";
 import {
   BookOpen,
-  Mic2,
   Users,
   Archive,
   Globe,

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Doc } from "../../../../convex/_generated/dataModel";
-import { RichTextRenderer } from "@workspace/ui/components/editor/rich-text-renderer";
+import { RichTextRenderer, type JSONContent } from "@workspace/ui/components/editor/rich-text-renderer";
 
 interface StorySceneRendererProps {
   scene: Doc<"scenes"> | null;
@@ -28,7 +28,7 @@ export function StorySceneRenderer({ scene }: StorySceneRendererProps) {
         className="mx-auto flex max-w-3xl flex-col gap-8 pb-32 pt-16"
       >
         {scene.tiptapContent ? (
-          <RichTextRenderer content={scene.tiptapContent as any} />
+          <RichTextRenderer content={scene.tiptapContent as JSONContent} />
         ) : (
           <p className="text-muted-foreground italic text-center">No content available for this scene.</p>
         )}

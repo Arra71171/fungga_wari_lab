@@ -9,23 +9,26 @@ import { Button } from "@workspace/ui/components/button";
 import { Save, ArrowLeft, Eye } from "lucide-react";
 import Link from "next/link";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { type JSONContent } from "@tiptap/core";
 
 export default function EditorPage() {
   const [sceneId, setSceneId] = useState<Id<"scenes"> | null>(null);
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<JSONContent | null>(null);
   const [isPreview, setIsPreview] = useState(false);
+  const [prevScenes, setPrevScenes] = useState<any>(null);
   
   // NOTE: For MVP we fetch the very first scene for demo. 
   // In production, ?sceneId= param should be used.
   const scenes = useQuery(api.scenes.getByChapterId, { chapterId: "jh792x0t5c18684v57hsvb7sds7btfvk" as Id<"chapters"> });
   const saveScene = useMutation(api.scenes.saveSceneContent);
 
-  useEffect(() => {
-    if (scenes && scenes.length > 0 && !sceneId) {
+  if (scenes && scenes !== prevScenes) {
+    setPrevScenes(scenes);
+    if (scenes.length > 0 && !sceneId) {
       setSceneId(scenes[0]._id);
-      setContent(scenes[0].tiptapContent || { type: "doc", content: [{ type: "paragraph" }] });
+      setContent(scenes[0].tiptapContent as JSONContent || { type: "doc", content: [{ type: "paragraph" }] });
     }
-  }, [scenes, sceneId]);
+  }
 
   const handleSave = async () => {
     if (!sceneId || !content) return;
@@ -86,7 +89,7 @@ export default function EditorPage() {
           ) : (
             <div className="animate-in fade-in slide-in-from-bottom-4">
                <RichTextEditor 
-                  value={content} 
+                  value={content ?? undefined} 
                   onChange={(val) => setContent(val)} 
                />
             </div>

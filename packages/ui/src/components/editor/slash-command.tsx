@@ -1,17 +1,17 @@
 "use client";
 
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { Extension } from "@tiptap/core";
-import Suggestion from "@tiptap/suggestion";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { Extension, type Editor, type Range } from "@tiptap/core";
+import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
-import tippy, { GetReferenceClientRect } from "tippy.js";
-import { Heading1, Heading2, TextQuote, List, Type, Minus } from "lucide-react";
+import tippy, { type GetReferenceClientRect, type Instance } from "tippy.js";
+import { Heading1, Heading2, TextQuote, List, Type } from "lucide-react";
 
 export interface CommandItemProps {
   title: string;
   description: string;
   icon: React.ReactNode;
-  command: ({ editor, range }: { editor: any; range: any }) => void;
+  command: ({ editor, range }: { editor: Editor; range: Range }) => void;
 }
 
 const getSuggestionItems = ({ query }: { query: string }) => {
@@ -20,7 +20,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Text",
       description: "Just start typing with plain text.",
       icon: <Type className="size-4" />,
-      command: ({ editor, range }: any) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setNode("paragraph").run();
       },
     },
@@ -28,7 +28,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Heading 1",
       description: "Big section heading.",
       icon: <Heading1 className="size-4" />,
-      command: ({ editor, range }: any) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run();
       },
     },
@@ -36,7 +36,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Heading 2",
       description: "Medium section heading.",
       icon: <Heading2 className="size-4" />,
-      command: ({ editor, range }: any) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run();
       },
     },
@@ -44,7 +44,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Bullet List",
       description: "Create a simple bulleted list.",
       icon: <List className="size-4" />,
-      command: ({ editor, range }: any) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).toggleBulletList().run();
       },
     },
@@ -52,15 +52,21 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       title: "Quote",
       description: "Capture a story element or dialogue.",
       icon: <TextQuote className="size-4" />,
-      command: ({ editor, range }: any) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setNode("blockquote").run();
       },
     },
   ].filter((item) => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10);
 };
 
-export const CommandMenuList = forwardRef((props: any, ref) => {
+export const CommandMenuList = forwardRef((props: { items: CommandItemProps[]; command: (item: CommandItemProps) => void }, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [prevItems, setPrevItems] = useState(props.items);
+
+  if (props.items !== prevItems) {
+    setPrevItems(props.items);
+    setSelectedIndex(0);
+  }
 
   const selectItem = (index: number) => {
     const item = props.items[index];
@@ -68,10 +74,6 @@ export const CommandMenuList = forwardRef((props: any, ref) => {
       props.command(item);
     }
   };
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [props.items]);
 
   useImperativeHandle(ref, () => ({
     onKeyDown: ({ event }: { event: KeyboardEvent }) => {
@@ -126,7 +128,7 @@ export const SlashCommand = Extension.create({
     return {
       suggestion: {
         char: "/",
-        command: ({ editor, range, props }: any) => {
+        command: ({ editor, range, props }: { editor: Editor; range: Range; props: { command: (args: { editor: Editor; range: Range }) => void } }) => {
           props.command({ editor, range });
         },
       },
@@ -142,12 +144,12 @@ export const SlashCommand = Extension.create({
   },
 });
 
-export const renderItems = () => {
+export const renderItems: SuggestionOptions["render"] = () => {
   let component: ReactRenderer | null = null;
-  let popup: any | null = null;
+  let popup: Instance[] | null = null;
 
   return {
-    onStart: (props: any) => {
+    onStart: (props) => {
       component = new ReactRenderer(CommandMenuList, {
         props,
         editor: props.editor,
@@ -157,7 +159,7 @@ export const renderItems = () => {
         return;
       }
 
-      popup = (tippy as any)("body", {
+      popup = (tippy as unknown as CallableFunction)("body", {
         getReferenceClientRect: props.clientRect as GetReferenceClientRect,
         appendTo: () => document.body,
         content: component.element,
@@ -167,7 +169,7 @@ export const renderItems = () => {
         placement: "bottom-start",
       });
     },
-    onUpdate(props: any) {
+    onUpdate(props) {
       component?.updateProps(props);
 
       if (!props.clientRect) {
@@ -178,12 +180,12 @@ export const renderItems = () => {
         getReferenceClientRect: props.clientRect as GetReferenceClientRect,
       });
     },
-    onKeyDown(props: any) {
+    onKeyDown(props) {
       if (props.event.key === "Escape") {
         popup?.[0]?.hide();
         return true;
       }
-      return (component?.ref as any)?.onKeyDown(props);
+      return (component?.ref as { onKeyDown?: (p: typeof props) => boolean })?.onKeyDown?.(props) ?? false;
     },
     onExit() {
       popup?.[0]?.destroy();
