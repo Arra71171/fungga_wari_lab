@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "",
+    "description": "",
+    "techStack": {
+      "framework": "Next.js 15 (App Router)",
+      "monorepo": "pnpm + Turborepo",
+      "ui": "@workspace/ui (shadcn radix-lyra style, Tailwind v4, OKLCH tokens)",
+      "language": "TypeScript (strict)",
+      "icons": "lucide-react",
+      "stateManagement": "React Server Components + useState/useReducer"
+    }
+  },
+  "mode": "interactive",
+  "workflow": {
+    "discuss": true,
+    "research": true,
+    "planCheck": true,
+    "verifier": true,
+    "antiHallucination": true,
+    "styleAnchoring": true,
+    "atomicCommits": true
+  },
+  "granularity": "standard",
+  "git": {
+    "branchingStrategy": "none",
+    "commitFormat": "conventional",
+    "commitScope": "phase-{N}"
+  },
+  "agentRules": {
+    "alwaysReadBeforeModify": true,
+    "verifyBeforeCommit": true,
+    "noAnyType": true,
+    "noDefaultExports": true,
+    "noHardcodedColors": true,
+    "requireDesignTokens": true,
+    "sharedComponentsIn": "packages/ui/src/components/",
+    "appComponentsIn": "apps/web/components/"
+  }
+}

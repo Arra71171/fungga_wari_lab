@@ -1,7 +1,8 @@
-import { Geist, Geist_Mono, JetBrains_Mono, DM_Sans } from "next/font/google"
+import { Geist, JetBrains_Mono, DM_Sans } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ConvexClerkProvider } from "@workspace/auth/convex-provider"
 import { cn } from "@workspace/ui/lib/utils";
 
 const dmSansHeading = DM_Sans({subsets:['latin'],variable:'--font-heading'});
@@ -22,10 +23,12 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontSans.variable, "font-mono", jetbrainsMono.variable, dmSansHeading.variable)}
+      className={cn("antialiased font-sans flex flex-col min-h-screen", fontSans.variable, jetbrainsMono.variable, dmSansHeading.variable)}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body suppressHydrationWarning>
+        <ConvexClerkProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </ConvexClerkProvider>
       </body>
     </html>
   )
