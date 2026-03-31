@@ -7,8 +7,8 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import Image from "@tiptap/extension-image";
-import { DialogueExtension } from "./extensions/dialogue.js";
-import { slashCommandConfig } from "./slash-command.js";
+import { DialogueExtension } from "./extensions/dialogue";
+import { slashCommandConfig } from "./slash-command";
 import { cn } from "@workspace/ui/lib/utils";
 import type { JSONContent } from "@tiptap/core";
 

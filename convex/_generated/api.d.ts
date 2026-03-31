@@ -16,7 +16,6 @@ import type * as scenes from "../scenes.js";
 import type * as seed from "../seed.js";
 import type * as stories from "../stories.js";
 import type * as tasks from "../tasks.js";
-import type * as teamMembers from "../teamMembers.js";
 import type * as upload from "../upload.js";
 import type * as users from "../users.js";
 
@@ -35,7 +34,6 @@ declare const fullApi: ApiFromModules<{
   seed: typeof seed;
   stories: typeof stories;
   tasks: typeof tasks;
-  teamMembers: typeof teamMembers;
   upload: typeof upload;
   users: typeof users;
 }>;
