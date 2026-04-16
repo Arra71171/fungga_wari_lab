@@ -1,6 +1,6 @@
 ---
 name: antigravity-master-workflow
-description: The definitive master workflow and knowledge base for the Antigravity Agent. Active on EVERY task. Fuses GSD (Get Shit Done) context-engineering, Superpowers composable skills, iterative self-debug loops, TDD, safety guardrails, persistent context utilization, multi-agent parallelism principles, and strict verification gates. Provides domain rules for Convex integrations (auth, components, performance), Zen Brutalist/Portrait UX aesthetics. MANDATORY on every task.
+description: The definitive master workflow and knowledge base for the Antigravity Agent. Active on EVERY task. Fuses GSD (Get Shit Done) context-engineering, Superpowers composable skills, iterative self-debug loops, TDD, safety guardrails, persistent context utilization, multi-agent parallelism principles, and strict verification gates. Provides domain rules for Supabase (PostgreSQL + RLS + Realtime), Clerk auth, Cloudinary media, Zen Brutalist/Portrait UX aesthetics. MANDATORY on every task.
 ---
 
 # Antigravity Master Workflow
@@ -369,10 +369,12 @@ Pattern: Each fix reveals new shared state/coupling in a different place
 
 #### opensrc-Assisted Root Cause Tracing
 
-| Symptom | opensrc Path to Check |
+| Symptom | opensrc Path / Tool to Check |
 |---|---|
-| Convex OCC / mutation conflict | `opensrc/.../convex-backend/.../src/sync/` — transaction isolation logic |
+| Supabase RLS blocks all requests | Supabase MCP `get_advisors(type:'security')` — RLS policy definition |
+| `createServerClient` cookie error | `opensrc/@supabase/ssr/src/nextjs/` — cookie handling |
 | `auth()` returns `null` unexpectedly | `opensrc/.../clerk/javascript/.../src/server/auth.ts` — session extraction |
+| Supabase query returns wrong data | Check RLS policy: `auth.jwt()->>'sub'` vs `auth.uid()` distinction |
 | Zod `.parse()` throws unexpectedly | `opensrc/.../zod/src/types.ts` — discriminated union parsing order |
 | `AnimatePresence` children not unmounting | `opensrc/.../motion/packages/framer-motion/src/components/AnimatePresence/` |
 | Tiptap command not applying | `opensrc/.../tiptap/packages/core/src/commands.ts` — command chain resolution |
@@ -380,10 +382,11 @@ Pattern: Each fix reveals new shared state/coupling in a different place
 | GSAP ScrollTrigger pinning off | `opensrc/.../GSAP/src/ScrollTrigger.js` — pin spacer calculation |
 
 **Debugging escalation order:**
-1. Read error message + stack trace.
-2. Check `npx convex insights` (for Convex-specific failures).
-3. Grep the relevant `opensrc/` path for the function/class named in the trace.
-4. Form a hypothesis. Confirm with a minimal reproduction before patching.
+1. Read error message + stack trace completely.
+2. Check Supabase MCP logs: `get_logs(service: 'postgres')` or `get_logs(service: 'auth')`.
+3. Check Supabase MCP advisors: `get_advisors(type: 'security')` for RLS issues.
+4. Grep the relevant `opensrc/` path for the function/class named in the trace.
+5. Form ONE hypothesis. Confirm with a minimal reproduction before patching.
 
 #### Red Flags — STOP and Return to Phase 4.1
 If you catch yourself thinking:
@@ -491,17 +494,25 @@ docs(specs): add reader experience design doc
 ## COMPREHENSIVE DOMAIN ARCHITECTURES
 
 ### 1. Robust Full-Stack Separation
-- **Frontend Layer:** Responsive Next.js 15 App Router UI. Use React Server Components heavily, pushing client state to the edges.
-- **Backend / Data Layer:** All business logic lives in Convex services (`convex/`). Never run complex calculations in the UI layer.
-- **Data Validation Layer:** Use **Zod** universally. No implicit types at the API boundary.
+- **Frontend Layer:** Responsive Next.js 15/16 App Router UI. Use React Server Components heavily, pushing client state to the edges.
+- **Backend / Data Layer:** All business logic lives in Supabase (PostgreSQL + RLS + Realtime). Server Actions are the API layer. Never run complex calculations in the UI layer.
+- **Data Validation Layer:** Use **Zod** universally. No implicit types at the API boundary. Use Supabase-generated TypeScript types for DB-level types.
 
-### 2. Convex Rules & Performance Optimization
-- **Setup Auth**: `ctx.auth` lives in the app. Use Clerk identity mappings safely.
-- **Create Components**: For isolated, reusable packages, put them under `convex/components/<name>/`. No access to app `ctx.auth`, `process.env`, or app IDs. Pass IDs as strings.
-- **Migrations**: Use the **Widen-Migrate-Narrow** pattern for schema changes.
-- **Performance Profiling**: Combat read/write amplification. Cache aggressively or use fast-paths. Resolve OCC conflicts by splitting hot-documents or batching. Utilize `npx convex insights`.
-- **Media Assets**: ONLY Cloudinary. NEVER `ctx.storage.store()` or `generateUploadUrl()` for images/audio/video. (Iron Law: Convex Storage Ban)
-- **Source Reference**: When the Convex guidelines in `convex/_generated/ai/guidelines.md` are insufficient, read `opensrc/repos/github.com/get-convex/convex-backend/npm-packages/convex/` for implementation-level detail.
+### 2. Supabase Backend Rules (Primary Backend)
+
+**Project:** `funnga-wari-labs` | **ID:** `ticxgnziqlumiivzdebz` | **Region:** `ap-northeast-2`
+
+- **Auth Bridge**: Clerk handles user auth → passes JWT to Supabase → RLS policies use `auth.jwt()->>'sub'` to identify the user
+- **Server Client** (RSC / Server Actions / Route Handlers): `createServerClient` from `@supabase/ssr` with `cookies()` from Next.js
+- **Browser Client** (Client Components, Realtime): `createBrowserClient` from `@supabase/ssr`
+- **Schema Changes**: New migration file in `supabase/migrations/YYYYMMDDHHMMSS_description.sql` — never edit existing migrations
+- **Every Table**: MUST have `ALTER TABLE ... ENABLE ROW LEVEL SECURITY;` — no exceptions
+- **Queries**: Always explicit columns (`.select('id, title, slug')`), never `.select('*')` in production
+- **Media Assets**: ONLY Cloudinary. NEVER `supabase.storage.from().upload()` for story images/audio/video
+- **Type Safety**: Always use generated types from `packages/ui/src/types/supabase.ts` — regenerate after every migration
+- **Realtime**: Subscribe in `useEffect` with cleanup unsubscribe — never fire-and-forget
+- **Data Retention**: `pg_cron` handles cleanup — 30 days for interactions, 7 days for messages
+- **Source Reference**: `npx opensrc @supabase/ssr` and `npx opensrc @supabase/supabase-js` for internals
 
 ### 3. UI Aesthetics (Portrait & Zen Brutalist)
 - **Portrait Orientation is an IRON LAW**. All story illustrations, covers, and scenic artwork MUST be portrait `3:4` aspect ratio (`aspect-[3/4]`). No exceptions. Do NOT use `aspect-video`.
@@ -538,29 +549,48 @@ npx opensrc <pkg>             # re-run to update to newly installed version
 
 ---
 
-## GSD CONVEX-SPECIFIC WORKFLOW
+## GSD SUPABASE-SPECIFIC WORKFLOW
 
-When modifying Convex schema or functions:
+When modifying Supabase schema or backend logic:
 
 ```
-ALWAYS read convex/_generated/ai/guidelines.md FIRST
+ALWAYS check AGENTS.md §14 (Supabase Backend Rules) FIRST
 ```
 
-1. **Schema Changes** → Widen-Migrate-Narrow pattern.
-   - Widen: add new field as optional.
-   - Migrate: backfill data.
-   - Narrow: make field required after migration.
-
-2. **Performance Investigation:**
+1. **Schema Changes** → Create a new migration file.
    ```bash
-   npx convex insights   # Check OCC conflicts, resource limits
+   pnpm supabase migration new <descriptive_name>
+   # Edit supabase/migrations/<timestamp>_<name>.sql
+   # Every table: ALTER TABLE ... ENABLE ROW LEVEL SECURITY;
    ```
 
-3. **Function Changes** → always update types and validators together.
+2. **After any migration** → regenerate TypeScript types:
+   ```bash
+   pnpm supabase gen types typescript --project-id ticxgnziqlumiivzdebz > packages/ui/src/types/supabase.ts
+   pnpm run typecheck  # verify types are consistent
+   ```
 
-4. **After any Convex change** → run `pnpm run typecheck` to ensure generated types are consistent.
+3. **Security Investigation** → run security advisors:
+   ```bash
+   /gsd-secure-phase  # triggers supabase MCP advisor check
+   ```
 
----
+4. **RLS Verification** → after every new table:
+   - Check policy with Supabase MCP: `get_advisors(type: 'security')`
+   - Verify authenticated AND anon roles are handled correctly
+   - Test with a JWT from Clerk to confirm `auth.jwt()->>'sub'` resolves
+
+5. **Realtime Changes** → subscribe and always clean up:
+   ```typescript
+   useEffect(() => {
+     const channel = supabase.channel('stories')
+       .on('postgres_changes', { event: '*', schema: 'public', table: 'stories' }, handler)
+       .subscribe()
+     return () => { supabase.removeChannel(channel) }
+   }, [])
+   ```
+
+6. **Performance Investigation** → use `get_advisors(type: 'performance')` via Supabase MCP to detect missing indexes, slow queries, and N+1 patterns.
 
 ## RESPONSE FORMAT
 
