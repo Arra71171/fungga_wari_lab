@@ -29,7 +29,7 @@ export function useReadingPreferences() {
     if (saved) {
       try {
         setPreferences(JSON.parse(saved));
-      } catch (e) {
+      } catch {
         // ignore
       }
     }

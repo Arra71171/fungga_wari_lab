@@ -323,7 +323,7 @@ export function StoryAssetForm() {
                     {chapter.file ? (
                       <div className="flex flex-col items-center justify-center h-full w-full">
                         <div className="flex-1 w-full relative mb-3 overflow-hidden border border-border">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          {/* eslint-disable-next-line @next/next/no-img-element, no-restricted-syntax */}
                           <img
                             src={URL.createObjectURL(chapter.file)}
                             alt="preview"

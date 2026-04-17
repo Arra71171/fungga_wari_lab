@@ -159,6 +159,7 @@ function ImageBlock({ src, caption, style = "inline" }: ImageBlockProps) {
         style === "cinematic" && "w-full -mx-4 md:-mx-24"
       )}
     >
+      {/* eslint-disable-next-line no-restricted-syntax */}
       <img
         src={src}
         alt={caption ?? "Story illustration"}
@@ -201,6 +202,7 @@ function StoryDialogueBlock({
       className="flex gap-4 items-start my-6 max-w-2xl mx-auto"
     >
       {avatar ? (
+        // eslint-disable-next-line no-restricted-syntax
         <img
           src={avatar}
           alt={character ?? "Character"}

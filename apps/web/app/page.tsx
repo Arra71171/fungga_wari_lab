@@ -56,20 +56,6 @@ const fadeUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const bentoContainer: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
-};
-
-const bentoItem: Variants = {
-  hidden: { opacity: 0, y: 36, scale: 0.97 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 180, damping: 22 },
-  },
-};
 
 const clipReveal: Variants = {
   hidden: { clipPath: "inset(0 0 100% 0)", opacity: 0 },
@@ -256,7 +242,8 @@ function CapabilityCell({
   icon: Icon,
   title,
   desc,
-  index,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  index: _index,
 }: {
   icon: React.ElementType;
   title: string;
@@ -306,7 +293,8 @@ function CapabilityCell({
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, -180]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for future parallax hero
+  const _y = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   // Fetch Manifesto from CMS
@@ -560,9 +548,9 @@ export default function Home() {
                 <div className="w-16 h-1 bg-brand-ember mx-auto mb-10 flex shadow-[0_0_10px_rgba(255,100,50,0.5)]" />
                 <ScrollReveal direction="up" distance={30} duration={1} delay={0.4}>
                   <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-[0.2em] leading-relaxed max-w-2xl mx-auto relative">
-                    <span className="absolute -left-4 top-0 text-brand-ember/40 text-lg">"</span>
+                    <span className="absolute -left-4 top-0 text-brand-ember/40 text-lg">&ldquo;</span>
                     We stand at the threshold of silence, recording the whispers of the hearth before they vanish into the ash of time.
-                    <span className="absolute -right-4 bottom-0 text-brand-ember/40 text-lg">"</span>
+                    <span className="absolute -right-4 bottom-0 text-brand-ember/40 text-lg">&rdquo;</span>
                   </p>
                 </ScrollReveal>
               </>

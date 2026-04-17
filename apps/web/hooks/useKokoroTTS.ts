@@ -18,57 +18,8 @@ export function useKokoroTTS(textToRead: string | null) {
   const audioContext = React.useRef<AudioContext | null>(null);
   const audioSource = React.useRef<AudioBufferSourceNode | null>(null);
 
-  // Initialize Web Worker
-  React.useEffect(() => {
-    let isMounted = true;
-
-    // Create the worker
-    const worker = new Worker(new URL("../workers/kokoro.worker.ts", import.meta.url), {
-      type: "module",
-    });
-    workerRef.current = worker;
-
-    worker.onmessage = (e: MessageEvent) => {
-      if (!isMounted) return;
-      const { type, payload } = e.data;
-
-      switch (type) {
-        case "INIT_DONE":
-          setIsReady(true);
-          setState("idle");
-          break;
-        case "GENERATE_DONE":
-          // The payload contains { audio: Float32Array, sampling_rate: number }
-          playAudioBuffer(payload.audio, payload.sampling_rate);
-          break;
-        case "ERROR":
-          console.error("Worker TTS Error:", payload);
-          setError(payload);
-          setState("error");
-          break;
-      }
-    };
-
-    // Trigger init
-    setState("loading");
-    worker.postMessage({ type: "INIT" });
-
-    return () => {
-      isMounted = false;
-      worker.terminate();
-      if (audioSource.current) {
-        try {
-          audioSource.current.stop();
-        } catch {
-          /* already stopped */
-        }
-      }
-      if (audioContext.current) {
-        audioContext.current.close();
-      }
-    };
-  }, []);
-
+  // Declare playAudioBuffer before the useEffect that uses it to avoid
+  // temporal dead zone lint warnings — the effect callback captures this via closure.
   const playAudioBuffer = React.useCallback((audioArray: Float32Array, samplingRate: number) => {
     try {
       if (!audioContext.current) {
@@ -110,6 +61,51 @@ export function useKokoroTTS(textToRead: string | null) {
       setState("error");
     }
   }, []);
+
+  // Initialize Web Worker — declared after playAudioBuffer so the closure is valid
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const worker = new Worker(new URL("../workers/kokoro.worker.ts", import.meta.url), {
+      type: "module",
+    });
+    workerRef.current = worker;
+
+    worker.onmessage = (e: MessageEvent) => {
+      if (!isMounted) return;
+      const { type, payload } = e.data;
+
+      switch (type) {
+        case "INIT_DONE":
+          setIsReady(true);
+          setState("idle");
+          break;
+        case "GENERATE_DONE":
+          // payload: { audio: Float32Array, sampling_rate: number }
+          playAudioBuffer(payload.audio, payload.sampling_rate);
+          break;
+        case "ERROR":
+          console.error("Worker TTS Error:", payload);
+          setError(payload);
+          setState("error");
+          break;
+      }
+    };
+
+    setState("loading");
+    worker.postMessage({ type: "INIT" });
+
+    return () => {
+      isMounted = false;
+      worker.terminate();
+      if (audioSource.current) {
+        try { audioSource.current.stop(); } catch { /* already stopped */ }
+      }
+      if (audioContext.current) {
+        audioContext.current.close();
+      }
+    };
+  }, [playAudioBuffer]);
 
   const play = React.useCallback(() => {
     if (!workerRef.current || !isReady || !textToRead) return;

@@ -11,47 +11,15 @@ export function useKeyboardNavigation() {
     setMode,
   } = useStoryReader();
 
-  const handleKeyDown = React.useCallback(
-    (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input or textarea
-      if (
-        document.activeElement?.tagName === "INPUT" ||
-        document.activeElement?.tagName === "TEXTAREA"
-      ) {
-        return;
-      }
-
-      switch (e.key) {
-        case "ArrowRight":
-        case "ArrowDown":
-          e.preventDefault();
-          goToNextScene();
-          break;
-        case "ArrowLeft":
-        case "ArrowUp":
-          e.preventDefault();
-          goToPrevScene();
-          break;
-        case "f":
-        case "F":
-          e.preventDefault();
-          // Toggle immersive mode
-          setMode(mode === "immersive" ? "standard" : "immersive");
-          break;
-      }
-    },
-    [story, blocks, currentSceneId, mode, setMode]
-  );
-
   const getOrderedScenes = React.useCallback(() => {
     if (!story?.chapters || !blocks) return [];
     
     // Create a sequential list of all scene IDs in the story, based on chapter order
     const orderedSceneIds: string[] = [];
-    story.chapters.forEach((chap: any) => {
+    story.chapters.forEach((chap: { scenes?: Array<{ _id?: string } | string> }) => {
       if (chap.scenes && Array.isArray(chap.scenes)) {
-        chap.scenes.forEach((scene: any) => {
-          if (scene && scene._id) {
+        chap.scenes.forEach((scene) => {
+          if (scene && typeof scene === 'object' && '_id' in scene && scene._id) {
             orderedSceneIds.push(scene._id);
           } else if (typeof scene === 'string') {
             orderedSceneIds.push(scene); // Fallback in case it's unpopulated
@@ -90,6 +58,40 @@ export function useKeyboardNavigation() {
       setCurrentSceneId(scenes[currentIndex - 1] ?? null);
     }
   }, [getOrderedScenes, currentSceneId, setCurrentSceneId]);
+
+  const handleKeyDown = React.useCallback(
+    (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input or textarea
+      if (
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
+
+      switch (e.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          e.preventDefault();
+          goToNextScene();
+          break;
+        case "ArrowLeft":
+        case "ArrowUp":
+          e.preventDefault();
+          goToPrevScene();
+          break;
+        case "f":
+        case "F":
+          e.preventDefault();
+          // Toggle immersive mode
+          setMode(mode === "immersive" ? "standard" : "immersive");
+          break;
+      }
+    },
+    [mode, setMode, goToNextScene, goToPrevScene]
+  );
+
+
 
   React.useEffect(() => {
     // Attach listener to window

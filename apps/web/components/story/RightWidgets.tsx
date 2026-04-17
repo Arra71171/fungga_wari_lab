@@ -1,13 +1,13 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { Button } from "@workspace/ui/components/button";
-import { Volume2, VolumeX, MessageSquare, Bookmark, Type, ArrowRight, Play, Square, Pause, Loader2 } from "lucide-react";
+import { Volume2, MessageSquare, Bookmark, Type, Play, Square, Pause, Loader2 } from "lucide-react";
 import { useStoryReader } from "./StoryReaderContext";
 import { useReadingPreferences } from "@/hooks/useReadingPreferences";
 import { useKokoroTTS } from "@/hooks/useKokoroTTS";
-import { cn } from "@workspace/ui/lib/utils";
 
 export function RightWidgets() {
   const { story, currentSceneId, setCurrentSceneId } = useStoryReader();
@@ -95,10 +95,6 @@ export function RightWidgets() {
     return text || "No text available.";
   }, [activeScene]);
 
-  const toggleSound = () => {
-    updatePreference("ambientSound", !preferences.ambientSound);
-  };
-
   const nextSize = () => {
     const sizes = ["small", "medium", "large", "xlarge"] as const;
     const curr = sizes.indexOf(preferences.fontSize as any);
@@ -121,7 +117,8 @@ export function RightWidgets() {
           <div className="flex flex-col gap-0 relative mt-2 pl-2">
             <div className="absolute left-[13px] top-4 bottom-4 w-[1px] bg-gradient-to-b from-cinematic-border via-brand-ember/50 to-transparent" />
             
-            {upcomingScenes.map((scene: { id: string; title: string; chapterTitle: string; status: 'past' | 'current' | 'future' }, i: number) => {
+            {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+            {upcomingScenes.map((scene: { id: string; title: string; chapterTitle: string; status: 'past' | 'current' | 'future' }, _i: number) => {
               if (scene.status === 'past') {
                 return (
                   <div key={scene.id} className="pl-8 relative py-2 mb-1 cursor-pointer hover:bg-cinematic-panel-hover rounded-md transition-colors" onClick={() => setCurrentSceneId(scene.id)}>
@@ -239,8 +236,8 @@ export function RightWidgets() {
           {[
             { label: "Feedback", icon: MessageSquare },
             { label: "Bookmark", icon: Bookmark },
-          ].map((item, i) => (
-            <button key={i} className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg hover:bg-cinematic-panel-hover text-xs font-medium text-cinematic-text-dim hover:text-brand-ember transition-colors border border-transparent hover:border-cinematic-border/50">
+          ].map((item) => (
+            <button key={item.label} className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg hover:bg-cinematic-panel-hover text-xs font-medium text-cinematic-text-dim hover:text-brand-ember transition-colors border border-transparent hover:border-cinematic-border/50">
               <span className="flex items-center gap-3">
                 <item.icon className="size-3.5 opacity-80" />
                 {item.label}

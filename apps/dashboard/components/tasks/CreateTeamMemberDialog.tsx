@@ -17,7 +17,7 @@ import { createTeamMember } from "@/actions/userActions";
 
 export function CreateTeamMemberDialog() {
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

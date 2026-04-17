@@ -75,6 +75,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
         <div className="text-[9px] font-mono tracking-[0.2em] text-muted-foreground/60 uppercase mt-8 mb-3 pl-3">
           Public Site
         </div>
+        {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
         <a
           href={
             process.env.NEXT_PUBLIC_WEB_URL

@@ -2,7 +2,7 @@
 
 import { SignIn } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { enUS } from "@clerk/localizations";
+
 import * as React from "react";
 import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout";
 

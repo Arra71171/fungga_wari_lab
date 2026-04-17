@@ -23,7 +23,8 @@ export function StoryReaderShell({ slug }: { slug: string }) {
   }
 
   // Check if we have any legacy published scenes
-  const hasLegacyScenes = story?.chapters?.some((c: any) => c.scenes?.length > 0);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hasLegacyScenes = (story?.chapters as any[])?.some((c: { scenes?: unknown[] }) => c.scenes && c.scenes.length > 0);
 
   // If we have blocks, OR if there are no legacy scenes at all (e.g. brand new story), we use the modern BlockStoryReader
   if (blocks.length > 0 || !hasLegacyScenes) {

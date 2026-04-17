@@ -340,7 +340,7 @@ export default function SettingsPage() {
             <div className="flex-1 h-[2px] bg-border-strong" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {Object.entries(ROLE_META).map(([role, meta]) => (
+            {Object.keys(ROLE_META).map((role) => (
               <div key={role} className="flex flex-col gap-3 p-4 border-2 border-border">
                 <div className="w-fit">
                   <RoleBadge role={role} />

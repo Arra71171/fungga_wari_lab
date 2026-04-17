@@ -199,12 +199,12 @@ export function AuthGatewayLayout({
               <div className="pt-4 mt-3 border-t border-border">
                 <p className="font-mono text-[11px] text-muted-foreground">
                   No account?{" "}
-                  <a
+                  <Link
                     href="/register"
                     className="text-primary font-bold uppercase tracking-wide hover:text-primary/70 transition-colors duration-200"
                   >
                     Create access →
-                  </a>
+                  </Link>
                 </p>
               </div>
             )}

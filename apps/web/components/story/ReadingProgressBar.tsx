@@ -1,8 +1,8 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { useStoryReader } from "./StoryReaderContext";
-import { cn } from "@workspace/ui/lib/utils";
 
 export function ReadingProgressBar() {
   const { story, currentSceneId } = useStoryReader();

@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { cn } from "@workspace/ui/lib/utils";
@@ -30,7 +31,7 @@ export function LeftNav() {
         {/* Navigation Section */}
         <div className="flex flex-col gap-1">
           <h4 className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cinematic-text-dim mb-4">
-            Storyteller's Notebook
+          Storyteller&apos;s Notebook
           </h4>
           
           <div className="flex flex-col gap-2">

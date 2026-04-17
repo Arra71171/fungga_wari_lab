@@ -16,8 +16,6 @@ import {
   Type,
   Pencil,
   ImageIcon,
-  Globe,
-  Tag,
 } from "lucide-react";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { Button } from "@workspace/ui/components/button";
@@ -929,7 +927,7 @@ export default function StoryEditorPage() {
               </Label>
               {activeSceneData.illustration_url ? (
                 <div className="relative aspect-[3/4] border border-border overflow-hidden bg-muted group">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {/* eslint-disable-next-line @next/next/no-img-element, no-restricted-syntax */}
                   <img
                     src={activeSceneData.illustration_url}
                     alt={activeSceneData.title ?? "Scene illustration"}

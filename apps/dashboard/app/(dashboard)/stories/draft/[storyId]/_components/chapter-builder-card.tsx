@@ -139,7 +139,7 @@ export function ChapterBuilderCard({
         <div className="flex items-center gap-2">
           {!isExpanded && illustrationUrl && (
             <div className="size-6 border border-border overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* eslint-disable-next-line @next/next/no-img-element, no-restricted-syntax */}
               <img
                 src={illustrationUrl}
                 alt="Thumbnail preview"

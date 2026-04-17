@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import * as React from "react"
 import { motion } from "framer-motion"
@@ -63,7 +63,8 @@ type StoryRendererProps = {
 
 function SortableBlockItem({
   block,
-  index,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  index: _index,
   isSelected,
   onSelect,
   onDelete,

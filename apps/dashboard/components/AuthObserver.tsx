@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 export function AuthObserver() {
   const { isSignedIn, isLoaded } = useAuth();
-  const initialized = useRef(false);
 
   useEffect(() => {
     if (!isLoaded) return;

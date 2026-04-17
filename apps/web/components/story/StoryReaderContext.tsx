@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { useParams } from "next/navigation";
@@ -26,7 +27,7 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
 
   const [story, setStory] = React.useState<any>(undefined);
   const [blocks, setBlocks] = React.useState<any[] | undefined>(undefined);
-  const supabase = createClient();
+  const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     async function loadData() {
@@ -69,7 +70,7 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
       setBlocks(mappedBlocks);
     }
     loadData();
-  }, [slug]);
+  }, [slug, supabase]);
 
   // Fire view event once the story ID resolves
   useViewTracking(story?._id);
@@ -111,7 +112,7 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
         localStorage.removeItem(storageKey);
       }
     }
-  }, [story?._id]);
+  }, [story]);
 
   const isLoading = story === undefined || blocks === undefined;
 
@@ -125,7 +126,7 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
       currentSceneId,
       setCurrentSceneId,
     }),
-    [story, blocks, isLoading, mode, currentSceneId]
+    [story, blocks, isLoading, mode, currentSceneId, setCurrentSceneId]
   );
 
   return <StoryReaderContext.Provider value={value}>{children}</StoryReaderContext.Provider>;

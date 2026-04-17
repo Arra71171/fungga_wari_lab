@@ -1,3 +1,4 @@
+/* global process */
 import bundleAnalyzer from "@next/bundle-analyzer";
 
 const withBundleAnalyzer = bundleAnalyzer({

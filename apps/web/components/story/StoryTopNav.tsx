@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Search, Maximize2, Minimize2, ChevronLeft, LayoutPanelLeft } from "lucide-react";
+import { Search, Maximize2, ChevronLeft, LayoutPanelLeft } from "lucide-react";
 import { FungaMark } from "@workspace/ui/components/BrandLogo";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";

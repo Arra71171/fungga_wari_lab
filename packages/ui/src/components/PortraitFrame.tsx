@@ -17,12 +17,14 @@ function PortraitFrame({
   const imageElement = renderImage ? (
     renderImage({ src: imageUrl, alt, className: "object-cover w-full h-full" })
   ) : (
+    // eslint-disable-next-line no-restricted-syntax
     <img src={imageUrl} alt={alt} className="object-cover w-full h-full" />
   )
 
   const blurElement = renderImage ? (
     renderImage({ src: imageUrl, alt: "", className: "object-cover w-full h-full" })
   ) : (
+    // eslint-disable-next-line no-restricted-syntax
     <img src={imageUrl} alt="" className="object-cover w-full h-full" />
   )
 

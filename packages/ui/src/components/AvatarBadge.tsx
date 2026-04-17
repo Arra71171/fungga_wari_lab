@@ -41,6 +41,7 @@ function AvatarBadge({
       {...props}
     >
       {src ? (
+        // eslint-disable-next-line no-restricted-syntax
         <img
           src={src}
           alt={alt}

@@ -37,6 +37,15 @@ export function MediaUploader() {
       return;
     }
 
+    // Robustness: Validate file size before upload (e.g., 50MB limit)
+    const MAX_FILE_SIZE_MB = 50;
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      toast.error("File too large", {
+        description: `Please select a file smaller than ${MAX_FILE_SIZE_MB}MB.`,
+      });
+      return;
+    }
+
     try {
       setIsUploading(true);
 

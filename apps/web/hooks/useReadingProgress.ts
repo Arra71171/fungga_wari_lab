@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "fungga-wari-reading-progress";
 
@@ -39,14 +39,18 @@ function saveProgressMap(map: ReadingProgressMap) {
  *  - allProgress: full map for "continue reading" features
  */
 export function useReadingProgress(slug: string) {
-  const [progress, setProgress] = useState(0);
+  // Lazy initializer: reads localStorage once at mount — avoids setState-in-effect
+  // for the initial render while remaining SSR-safe (getProgressMap returns {} on server)
+  const [progress, setProgress] = useState(() => getProgressMap()[slug]?.progress ?? 0);
 
+  // Re-sync from localStorage only when slug changes after initial mount
+  const prevSlugRef = useRef(slug);
   useEffect(() => {
+    if (prevSlugRef.current === slug) return;
+    prevSlugRef.current = slug;
     const map = getProgressMap();
-    const entry = map[slug];
-    if (entry) {
-      setProgress(entry.progress);
-    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setProgress(map[slug]?.progress ?? 0);
   }, [slug]);
 
   const updateProgress = useCallback(

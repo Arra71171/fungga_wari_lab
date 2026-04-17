@@ -584,7 +584,7 @@ export default function StoriesPage() {
   }, [searchQuery]);
 
   const [stories, setStories] = React.useState<Story[] | undefined>(undefined);
-  const supabase = createClient();
+  const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     async function fetchStories() {
@@ -608,7 +608,7 @@ export default function StoriesPage() {
       const { data, error } = await query;
       
       if (error) {
-        console.error("Error fetching stories:", error);
+        console.error("Error fetching stories:", JSON.stringify(error, null, 2), error);
         setStories([]);
         return;
       }
@@ -632,7 +632,7 @@ export default function StoriesPage() {
     }
 
     fetchStories();
-  }, [activeCategory, activeLanguage, debouncedQuery]);
+  }, [activeCategory, activeLanguage, debouncedQuery, supabase]);
 
   const displayedStories = stories;
   const isLoading = displayedStories === undefined;

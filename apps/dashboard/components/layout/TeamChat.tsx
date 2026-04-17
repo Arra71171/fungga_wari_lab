@@ -101,10 +101,6 @@ export function TeamChat() {
     }
   }
 
-  const isCurrentUser = (authorId: string) =>
-    messages?.find((m) => m.author_id === authorId)?.users?.id === user?.id ||
-    false;
-
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 text-foreground">
       {isOpen && (

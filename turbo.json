@@ -31,6 +31,9 @@
     "e2e": {
       "cache": false,
       "dependsOn": ["^build"]
+    },
+    "supabase:types": {
+      "cache": false
     }
   }
 }

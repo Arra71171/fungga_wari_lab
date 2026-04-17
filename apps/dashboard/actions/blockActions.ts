@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
 type BlockType = Database["public"]["Enums"]["block_type"]
-type BlockRow = Database["public"]["Tables"]["blocks"]["Row"]
 
 // ─── Block Queries ────────────────────────────────────────────────────────────
 

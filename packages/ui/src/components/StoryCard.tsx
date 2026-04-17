@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@workspace/ui/lib/utils"
-import { CategoryBadge } from "@workspace/ui/components/CategoryBadge"
+// CategoryBadge reserved for future use in category display variations
 import { ProgressBar } from "@workspace/ui/components/ProgressBar"
 import { Flame, BookOpen, Globe2 } from "lucide-react"
 
@@ -65,6 +65,7 @@ function StoryCard({
           {renderImage ? (
             renderImage()
           ) : coverUrl ? (
+            // eslint-disable-next-line no-restricted-syntax
             <img
               src={coverUrl}
               alt={title}
@@ -112,6 +113,7 @@ function StoryCard({
         {renderImage ? (
           renderImage()
         ) : coverUrl ? (
+          // eslint-disable-next-line no-restricted-syntax
           <img
             src={coverUrl}
             alt={title}

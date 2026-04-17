@@ -78,6 +78,7 @@ function Navbar() {
             className="rounded-none font-mono font-bold uppercase tracking-widest transition-all border-brand-ember/30 text-brand-ember hover:bg-brand-ember/10"
             asChild
           >
+            {/* eslint-disable-next-line no-restricted-syntax -- cross-origin link to dashboard app, next/link cannot handle external origins */}
             <a href={DASHBOARD_URL}>Dashboard</a>
           </Button>
           <div className="ml-2 flex items-center">
