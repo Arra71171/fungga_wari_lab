@@ -1,12 +1,10 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// Define public routes if any, though Reader app is entirely public with optional auth.
-const isProtectedRoute = createRouteMatcher(['/stories(.*)']);
+// The Reader app is entirely public with optional auth.
+// Authorization for stories is handled at the component level by PaywallGate.
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) {
-      await auth.protect();
-  }
+  // No globally protected routes in the public web app.
 });
 
 export const config = {
