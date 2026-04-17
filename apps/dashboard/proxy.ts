@@ -15,17 +15,26 @@ export default clerkMiddleware(async (auth, req) => {
 
     // 2. Fetch role from Supabase users table via REST API
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    // Try to get the Clerk JWT for Supabase to respect RLS
+    let clerkToken: string | null = null;
+    try {
+      clerkToken = await authObj.getToken({ template: "supabase" });
+    } catch (e) {
+      console.warn("Clerk supabase template not configured");
+    }
 
-    if (supabaseUrl && supabaseKey) {
+    if (supabaseUrl && anonKey && clerkToken) {
       try {
         const response = await fetch(
           `${supabaseUrl}/rest/v1/users?clerk_id=eq.${authObj.userId}&select=role`,
           {
             headers: {
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
+              apikey: anonKey,
+              Authorization: `Bearer ${clerkToken}`,
             },
+            cache: "no-store",
           }
         );
 
