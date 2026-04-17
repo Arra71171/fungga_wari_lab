@@ -2,6 +2,8 @@ import * as React from "react";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { StoryReaderShell } from "@/components/story/StoryReaderShell";
+import { PaywallGate } from "@/components/story/PaywallGate";
+import { checkUserAccess } from "@/actions/paywallActions";
 
 type StoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -64,10 +66,13 @@ export async function generateMetadata({ params }: StoryPageProps): Promise<Meta
 
 export default async function StoryPage({ params }: StoryPageProps) {
   const { slug } = await params;
+  const hasAccess = await checkUserAccess();
 
   return (
     <div className="w-full h-full flex justify-center bg-cinematic-bg">
-      <StoryReaderShell slug={slug} />
+      <PaywallGate slug={slug} hasAccess={hasAccess}>
+        <StoryReaderShell slug={slug} />
+      </PaywallGate>
     </div>
   );
 }
