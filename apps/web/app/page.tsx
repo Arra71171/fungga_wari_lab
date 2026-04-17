@@ -708,10 +708,28 @@ export default function Home() {
       </section>
 
       {/* ─── CTA ──────────────────────────────────────────────────────────── */}
-      <section className="relative py-32 px-6 md:px-12 flex items-center justify-center text-center overflow-hidden bg-primary text-primary-foreground">
-        <EmberParticles density={80} speed={0.4} className="z-0 mix-blend-screen" />
-        <div className="absolute inset-0 z-0 bg-primary/10 mix-blend-multiply" />
-        <div className="absolute inset-0 z-10 bg-[linear-gradient(to_right,var(--color-primary-foreground)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-primary-foreground)_1px,transparent_1px)] bg-[size:32px_32px] opacity-10" />
+      <section className="relative py-32 px-6 md:px-12 flex items-center justify-center text-center overflow-hidden bg-cinematic-bg">
+
+        {/* ── Full-bleed illustration ── */}
+        <Image
+          src="https://res.cloudinary.com/dlytqegcw/image/upload/v1776439982/fungga-wari-lab/illustrations/fungga-wari-lab/illustrations/cta-section-bg.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center z-0"
+          priority={false}
+          quality={90}
+        />
+
+        {/* ── Dark cinematic overlay: edges crushed to black, center breathes ── */}
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent_0%,oklch(0.08_0.01_50/0.55)_50%,oklch(0.05_0.01_50/0.92)_100%)]" />
+        {/* ── Bottom-to-top gradient to bleed into footer ── */}
+        <div className="absolute inset-x-0 bottom-0 h-40 z-10 bg-gradient-to-t from-background to-transparent" />
+        {/* ── Top-to-bottom gradient to bleed from previous section ── */}
+        <div className="absolute inset-x-0 top-0 h-24 z-10 bg-gradient-to-b from-background to-transparent" />
+
+        {/* ── Ember particles — now blend naturally against the dark fire scene ── */}
+        <EmberParticles density={50} speed={0.35} className="z-20 mix-blend-screen opacity-60" />
 
         <motion.div
           variants={{ hidden: { opacity: 0, scale: 0.94, y: 30 }, visible: { opacity: 1, scale: 1, y: 0 } }}
@@ -719,10 +737,10 @@ export default function Home() {
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.1 }}
-          className="relative z-20 max-w-3xl bg-background border border-border text-foreground p-12 md:p-20 backdrop-blur-sm"
+          className="relative z-30 max-w-3xl bg-cinematic-bg/80 border border-cinematic-border text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-brutal"
         >
           <motion.div
-            className="mx-auto size-16 border border-border bg-secondary mb-8 flex items-center justify-center text-primary"
+            className="mx-auto size-16 border border-primary/40 bg-primary/10 mb-8 flex items-center justify-center text-primary"
             animate={{ rotate: [0, 10, -10, 5, -5, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", repeatDelay: 2 }}
           >
@@ -732,7 +750,7 @@ export default function Home() {
           <SplitText
             text="What is past is prologue."
             as="h2"
-            className="text-4xl md:text-6xl lg:text-7xl font-heading font-black tracking-tighter uppercase leading-[0.85] mb-8"
+            className="text-4xl md:text-6xl lg:text-7xl font-heading font-black tracking-tighter uppercase leading-[0.85] mb-8 text-cinematic-text"
             stagger={0.055}
           />
 
