@@ -25,7 +25,7 @@ const DialogueComponent = (props: NodeViewProps) => {
 
   return (
     <NodeViewWrapper className="my-4">
-      <div className="relative group rounded-none border border-border/40 p-1 bg-background/50">
+      <div className="relative group rounded-none border border-border-strong p-1 bg-background/50">
         <UIDialogueBlock
           characterName={character}
           avatarUrl={avatarUrl}

@@ -6,6 +6,8 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
+import { enUS } from "@clerk/localizations";
+
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 type Props = { children: React.ReactNode };
@@ -14,6 +16,8 @@ export function ConvexClerkProvider({ children }: Props) {
   return (
     <ClerkProvider
       localization={{
+        ...enUS,
+        formButtonPrimary: "ACCESSING...",
         signIn: {
           start: {
             title: "Sign in to Fungga-Wari-Lab",
@@ -22,6 +26,7 @@ export function ConvexClerkProvider({ children }: Props) {
         },
       }}
       appearance={{
+        baseTheme: dark,
         variables: {
           colorPrimary: "var(--primary)",
           colorBackground: "var(--background)",
@@ -39,8 +44,24 @@ export function ConvexClerkProvider({ children }: Props) {
           dividerRow: { display: "none" },
           // Hide "Don't have an account? Sign up" footer
           footerAction: { display: "none" },
-          // Hide "Secured by Clerk" branding
+          // Hide "Secured by Clerk" branding on static forms
           footer: { display: "none" },
+          
+          // --- Zen Brutalist Overrides for Popovers (UserButton & Logout) ---
+          userButtonPopoverCard: "bg-bg-panel border-2 border-border shadow-none rounded-none !p-0",
+          userButtonPopoverActionButton: "hover:bg-bg-surface rounded-none px-4 py-3 text-foreground transition-none font-mono",
+          userButtonPopoverActionButtonText: "text-foreground font-bold uppercase tracking-[0.15em] text-[10px]",
+          userButtonPopoverActionButtonIconBox: "text-brand-ember",
+          userPreview: "px-4 py-4 border-b border-border-subtle",
+          userPreviewMainIdentifier: "text-foreground font-heading font-black tracking-tight",
+          userPreviewSecondaryIdentifier: "text-muted-foreground font-mono text-[9px] uppercase tracking-widest",
+          userButtonPopoverFooter: "hidden", // Removes "Secured by Clerk - Dev Mode" in popover
+          
+          // --- Global Component Tuning ---
+          card: "bg-background border border-border shadow-none rounded-none",
+          headerTitle: "font-heading uppercase tracking-tighter",
+          headerSubtitle: "font-mono uppercase tracking-widest text-[10px]",
+          formButtonPrimary: "rounded-none bg-brand-ember text-black hover:opacity-90 font-mono text-xs font-bold uppercase tracking-widest transition-none h-10",
         },
       }}
     >

@@ -3,7 +3,10 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TaskCard } from "@workspace/ui/components/TaskCard";
 
-export function DraggableTask({ task, assignee }: { task: any; assignee: any }) {
+type TaskStatus = "todo" | "in_progress" | "review" | "done";
+type TaskPriority = "low" | "medium" | "high" | null;
+
+export function DraggableTask({ task, assignee }: { task: { _id: string; title: string; description?: string; status: TaskStatus; priority?: TaskPriority }; assignee?: { name?: string; avatarUrl?: string } }) {
   const {
     attributes,
     listeners,

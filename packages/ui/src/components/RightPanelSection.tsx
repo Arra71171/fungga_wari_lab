@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@workspace/ui/lib/utils"
 
 const rightPanelSectionVariants = cva(
-  "flex flex-col gap-3 py-6 px-4 first:pt-4 border-b border-border/50 bg-background/50",
+  "flex flex-col gap-3 py-6 px-4 first:pt-4 border-b border-border-strong bg-background/50",
   {
     variants: {
       variant: {

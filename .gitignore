@@ -51,3 +51,6 @@ project-planning.md
 generate_keys.js
 skills-lock.json
 public/README.md
+
+# opensrc - source code for packages
+opensrc/

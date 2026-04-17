@@ -1,104 +1,134 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/../../convex/_generated/api";
+import React, { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
-import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import { ShieldCheck, UserCheck, Eye, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { ShieldCheck, UserCheck, Eye, Loader2, Settings2 } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const RichTextEditor = dynamic(
+  () => import("@workspace/ui/components/editor/rich-text-editor").then((mod) => mod.RichTextEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full border-2 border-border-strong bg-cinematic-bg text-muted-foreground font-mono text-xs flex items-center justify-center min-h-[400px]">
+        Loading Global Content Editor...
+      </div>
+    ),
+  }
+);
+import type { JSONContent } from "@tiptap/core";
+import { OperativeDossier } from "@/components/settings/OperativeDossier";
+import { getAllUsers, updateUserRole } from "@/actions/userActions";
+import { getGlobalContent, upsertGlobalContent } from "@/actions/assetActions";
 
 type Role = "admin" | "editor" | "viewer";
+type Member = Awaited<ReturnType<typeof getAllUsers>>[number];
 
-const ROLE_META: Record<Role, { label: string; icon: React.ReactNode; variant: "default" | "secondary" | "outline" }> = {
-  admin: { label: "Admin", icon: <ShieldCheck className="size-3" />, variant: "default" },
-  editor: { label: "Editor", icon: <UserCheck className="size-3" />, variant: "secondary" },
-  viewer: { label: "Viewer", icon: <Eye className="size-3" />, variant: "outline" },
+// ─── Role Meta ────────────────────────────────────────────────────────────────
+
+const ROLE_META: Record<Role, { label: string; icon: React.ReactNode }> = {
+  admin: { label: "Admin", icon: <ShieldCheck className="size-3" /> },
+  editor: { label: "Editor", icon: <UserCheck className="size-3" /> },
+  viewer: { label: "Viewer", icon: <Eye className="size-3" /> },
 };
 
 const ROLE_CYCLE: Role[] = ["viewer", "editor", "admin"];
 
-type TeamMember = {
-  _id: string;
-  name?: string;
-  email?: string;
-  avatarUrl?: string;
-  role?: string;
-  clerkId?: string;
-};
+// ─── RoleBadge ───────────────────────────────────────────────────────────────
 
 function RoleBadge({ role }: { role: string }) {
   const meta = ROLE_META[(role as Role) ?? "viewer"] ?? ROLE_META.viewer;
   return (
-    <Badge variant={meta.variant} className="flex items-center gap-1 capitalize font-mono text-[10px] tracking-widest">
+    <div
+      className={`flex items-center justify-center gap-2 px-3 py-1.5 border-2 text-[10px] font-mono tracking-widest uppercase shadow-brutal-sm ${
+        role === "admin"
+          ? "border-brand-ember text-brand-ember bg-brand-ember/5"
+          : role === "editor"
+          ? "border-brand-ochre text-brand-ochre bg-brand-ochre/5"
+          : "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
+      }`}
+    >
       {meta.icon}
       {meta.label}
-    </Badge>
+    </div>
   );
 }
 
-function MemberRow({ member, currentUserId, isCallerAdmin }: {
-  member: TeamMember;
-  currentUserId?: string;
+// ─── MemberRow ────────────────────────────────────────────────────────────────
+
+function MemberRow({
+  member,
+  currentUserClerkId,
+  isCallerAdmin,
+}: {
+  member: Member;
+  currentUserClerkId?: string;
   isCallerAdmin: boolean;
 }) {
-  const updateRole = useMutation(api.users.updateRole);
   const [isPending, setIsPending] = useState(false);
-  const isSelf = member.clerkId === currentUserId;
+  const isSelf = member.clerk_id === currentUserClerkId;
   const currentRole = (member.role ?? "viewer") as Role;
 
   const cycleRole = async () => {
+    if (!member.clerk_id) return;
     const nextIndex = (ROLE_CYCLE.indexOf(currentRole) + 1) % ROLE_CYCLE.length;
-    const nextRole = ROLE_CYCLE[nextIndex];
+    const nextRole = ROLE_CYCLE[nextIndex]!;
     setIsPending(true);
     try {
-      await updateRole({ userId: member._id as never, role: nextRole });
+      await updateUserRole(member.clerk_id, nextRole);
     } finally {
       setIsPending(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-between py-4 gap-4">
-      {/* Avatar + info */}
-      <div className="flex items-center gap-4 min-w-0">
-        <AvatarBadge src={member.avatarUrl} alt={member.name ?? "?"} size="default" />
+    <div className="flex items-center justify-between p-6 border-b-2 border-border-strong bg-cinematic-panel transition-all group hover:bg-bg-surface/5">
+      <div className="flex items-center gap-6 min-w-0">
+        <div className="border-2 border-border p-1 bg-cinematic-bg group-hover:border-primary transition-colors">
+          <AvatarBadge
+            src={member.avatar_url ?? undefined}
+            alt={member.alias || member.name || "?"}
+            size="default"
+            className="rounded-none"
+          />
+        </div>
         <div className="min-w-0">
-          <p className="font-semibold truncate">
-            {member.name ?? "Unnamed"}
+          <p className="font-heading text-xl text-foreground font-bold tracking-tight truncate flex items-center">
+            {member.alias || member.name || member.email?.split("@")[0] || "Unnamed Operative"}
             {isSelf && (
-              <span className="ml-2 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                (you)
+              <span className="ml-4 px-2 py-0.5 text-[9px] font-mono font-bold text-brand-ember uppercase tracking-[0.2em] border border-brand-ember/30 bg-brand-ember/5">
+                Active Uplink
               </span>
             )}
           </p>
-          <p className="text-xs text-muted-foreground truncate">{member.email ?? member.clerkId}</p>
+          <div className="flex items-center gap-3 mt-1.5">
+            {member.alias && member.name && (
+              <span className="text-[10px] font-mono tracking-widest text-muted-foreground/50 truncate border-r-2 border-border-strong pr-3">
+                {member.name}
+              </span>
+            )}
+            <span className="text-[10px] font-mono tracking-widest text-muted-foreground truncate">
+              {member.email ?? member.clerk_id}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Role badge + change button */}
-      <div className="flex items-center gap-3 shrink-0">
-        <RoleBadge role={currentRole} />
+      <div className="flex items-center gap-8 shrink-0">
+        <div className="w-28 text-center">
+          <RoleBadge role={currentRole} />
+        </div>
         {isCallerAdmin && !isSelf && (
           <Button
             variant="ghost"
             size="sm"
             onClick={cycleRole}
             disabled={isPending}
-            className="font-mono text-[10px] uppercase tracking-widest h-7 px-2 rounded-none"
+            className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] h-10 px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
-            {isPending ? (
-              <Loader2 className="size-3 animate-spin" />
-            ) : (
-              "Change"
-            )}
+            {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
           </Button>
         )}
       </div>
@@ -106,66 +136,228 @@ function MemberRow({ member, currentUserId, isCallerAdmin }: {
   );
 }
 
-export default function SettingsPage() {
-  const members = useQuery(api.users.getAll);
-  const me = useQuery(api.users.getMe);
-  const isCallerAdmin = me?.role === "admin";
+// ─── GlobalContentSection ─────────────────────────────────────────────────────
+
+function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
+  const [activeTab, setActiveTab] = useState<"manifesto" | "terms">("manifesto");
+  const [contentData, setContentData] = useState<Awaited<ReturnType<typeof getGlobalContent>> | null>(null);
+  const [editorContent, setEditorContent] = useState<JSONContent | undefined>();
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    setContentData(null);
+    getGlobalContent(activeTab).then((data) => {
+      setContentData(data);
+      if (data?.tiptap_content !== undefined) {
+        setEditorContent(data.tiptap_content as JSONContent);
+      } else {
+        setEditorContent(undefined);
+      }
+    });
+  }, [activeTab]);
+
+  const handleSave = async () => {
+    if (!editorContent || !isCallerAdmin) return;
+    setIsSaving(true);
+    try {
+      await upsertGlobalContent({
+        slug: activeTab,
+        title: activeTab === "manifesto" ? "Fungga Wari Manifesto" : "Terms of Hearth",
+        tiptap_content: editorContent as Record<string, unknown>,
+      });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
-    <div className="flex h-full flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-heading font-bold tracking-tight">Team Settings</h1>
-        <p className="text-muted-foreground">
-          Manage roles, permissions, and workspace preferences.
-        </p>
-      </div>
+    <div className="border-2 border-border-strong bg-cinematic-bg relative overflow-hidden shadow-brutal mt-12">
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      {/* Role legend */}
-      <div className="flex flex-wrap gap-4 text-xs font-mono text-muted-foreground">
-        {Object.entries(ROLE_META).map(([role, meta]) => (
-          <span key={role} className="flex items-center gap-1.5">
-            <Badge variant={meta.variant} className="text-[10px]">{role}</Badge>
-            {role === "admin" && "— full access, can change roles"}
-            {role === "editor" && "— can create & edit stories"}
-            {role === "viewer" && "— read-only access"}
-          </span>
-        ))}
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Team Members</CardTitle>
-          <CardDescription>
-            Everyone who has signed into the dashboard.
+      <div className="p-6 border-b-2 border-border flex justify-between items-end bg-bg-surface/10">
+        <div>
+          <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
+            Global Configurations
+          </h2>
+          <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-1 border-l-2 border-border/50 pl-2">
             {isCallerAdmin
-              ? ' Click "Change" to cycle a member\'s role: Viewer → Editor → Admin.'
-              : " Only admins can change roles."}
+              ? "Modify the central lore and protocols globally."
+              : "Insufficient clearance to alter global content. View-only mode active."}
+          </p>
+        </div>
+        <div className="flex border-2 border-border-strong p-1 gap-1 bg-cinematic-panel">
+          {(["manifesto", "terms"] as const).map((tab) => (
+            <Button
+              key={tab}
+              variant={activeTab === tab ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setActiveTab(tab)}
+              className={`font-mono text-[10px] font-bold uppercase tracking-[0.2em] rounded-none h-10 px-6 transition-colors ${
+                activeTab === tab
+                  ? "bg-primary text-primary-foreground border-2 border-primary"
+                  : "text-muted-foreground hover:bg-bg-overlay border-2 border-transparent"
+              }`}
+            >
+              {tab === "manifesto" ? "Manifesto" : "Terms"}
+            </Button>
+          ))}
+        </div>
+      </div>
 
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {members === undefined ? (
-            <div className="animate-pulse flex flex-col gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-12 bg-muted rounded-none" />
-              ))}
+      <div className="p-6">
+        {contentData === null ? (
+          <div className="animate-pulse h-[400px] border-2 border-border-strong bg-bg-surface/20 blur-sm" />
+        ) : (
+          <div className="space-y-4">
+            {!isCallerAdmin && (
+              <div className="p-4 border-2 border-brand-ember/50 bg-brand-ember/5 text-brand-ember font-mono text-[10px] font-bold uppercase tracking-[0.3em]">
+                View-Only Clearance. Unauthorized modifications denied.
+              </div>
+            )}
+            <RichTextEditor
+              key={activeTab}
+              value={editorContent}
+              onChange={setEditorContent}
+              className="min-h-[400px] border-2 border-border-strong bg-cinematic-bg"
+            />
+            {isCallerAdmin && (
+              <div className="flex justify-end pt-4 items-center gap-4 border-t-2 border-border-strong mt-6 pt-6">
+                {saveSuccess && (
+                  <span className="font-mono text-[10px] font-bold text-primary uppercase tracking-[0.2em]">
+                    Protocol Overwritten Successfully
+                  </span>
+                )}
+                <Button
+                  onClick={handleSave}
+                  disabled={isSaving || !editorContent}
+                  className="font-mono text-xs font-bold uppercase tracking-[0.2em] rounded-none min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none"
+                >
+                  {isSaving ? <Loader2 className="animate-spin size-4" /> : "Deploy Changes"}
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default function SettingsPage() {
+  const { user: clerkUser } = useUser();
+  const [members, setMembers] = useState<Member[] | null>(null);
+
+  // Use Clerk publicMetadata for role — synced by Clerk dashboard
+  const myRole = (clerkUser?.publicMetadata?.role as string) ?? "editor";
+  const isCallerAdmin = myRole === "admin";
+
+  useEffect(() => {
+    getAllUsers()
+      .then(setMembers)
+      .catch(() => setMembers([]));
+  }, []);
+
+  return (
+    <div className="flex flex-col min-h-full p-6 lg:p-10 lg:px-14 max-w-[1400px] mx-auto w-full space-y-16 animate-in fade-in duration-700">
+
+      {/* Header */}
+      <div className="flex flex-col border-b-4 border-foreground pb-8 shrink-0 relative z-10 w-full pt-8">
+        <div className="space-y-4">
+          <div className="flex items-center gap-4 text-primary font-mono text-[10px] font-bold uppercase tracking-[0.3em] mb-2 border-l-4 border-primary pl-3 bg-primary/5 w-fit py-1 pr-4">
+            <Settings2 className="size-4" />
+            <span>Core Mainframe</span>
+          </div>
+          <h1 className="font-heading text-5xl md:text-7xl font-black tracking-tighter uppercase text-foreground leading-[0.8]">
+            System Configuration.
+          </h1>
+          <p className="text-muted-foreground font-mono text-[10px] font-bold tracking-[0.2em] uppercase max-w-2xl mt-4">
+            Global access controls, network roles, and identity dossier protocols for authorized operatives.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-10">
+        {/* Operative Dossier */}
+        <OperativeDossier />
+
+        {/* Roster Sector */}
+        <div className="border-2 border-border-strong bg-cinematic-panel relative overflow-hidden shadow-brutal">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+          <div className="p-6 border-b-2 border-border flex justify-between items-end bg-bg-surface/10">
+            <div>
+              <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
+                Operative Roster
+              </h2>
+              <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-1 border-l-2 border-border/50 pl-2">
+                {isCallerAdmin
+                  ? "Admin Access: Cycle classifications to upgrade privileges."
+                  : "Insufficient clearance to alter roles. View-only matrix active."}
+              </p>
             </div>
-          ) : members.length === 0 ? (
-            <p className="text-muted-foreground py-4 font-mono text-sm">No team members found.</p>
-          ) : (
-            <div className="divide-y divide-border">
-              {members.map((member) => (
-                <MemberRow
-                  key={member._id}
-                  member={member as TeamMember}
-                  currentUserId={me?.clerkId}
-                  isCallerAdmin={isCallerAdmin ?? false}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+
+          <div>
+            {members === null ? (
+              <div className="animate-pulse flex flex-col p-4 gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-24 border-2 border-border bg-cinematic-bg" />
+                ))}
+              </div>
+            ) : members.length === 0 ? (
+              <div className="p-16 text-center text-muted-foreground font-mono text-sm font-bold uppercase tracking-[0.3em]">
+                NO SIGNALS DETECTED.
+              </div>
+            ) : (
+              <div className="flex flex-col">
+                {members.map((member) => (
+                  <MemberRow
+                    key={member.id}
+                    member={member}
+                    currentUserClerkId={clerkUser?.id}
+                    isCallerAdmin={isCallerAdmin}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Role Legend */}
+        <div className="p-6 border-2 border-border-strong bg-cinematic-bg mt-6">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="size-2 bg-primary" />
+            <h3 className="font-mono text-xs font-bold tracking-[0.2em] uppercase text-foreground">
+              Role Classification Matrix
+            </h3>
+            <div className="flex-1 h-[2px] bg-border-strong" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {Object.entries(ROLE_META).map(([role, meta]) => (
+              <div key={role} className="flex flex-col gap-3 p-4 border-2 border-border">
+                <div className="w-fit">
+                  <RoleBadge role={role} />
+                </div>
+                <p className="text-[10px] font-mono text-muted-foreground tracking-widest leading-relaxed uppercase">
+                  {role === "admin" && "Root access level. Complete matrix control over configuration and roles."}
+                  {role === "editor" && "Authoring access. Ability to overwrite literature and sequence flows."}
+                  {role === "viewer" && "Observer level. Access granted strictly for reading and verifying."}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Global Content */}
+        <GlobalContentSection isCallerAdmin={isCallerAdmin} />
+      </div>
     </div>
   );
 }

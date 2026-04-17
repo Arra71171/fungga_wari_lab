@@ -5,7 +5,7 @@ import { Extension, type Editor, type Range } from "@tiptap/core";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
 import tippy, { type GetReferenceClientRect, type Instance } from "tippy.js";
-import { Heading1, Heading2, TextQuote, List, Type, MessageCircle, Image as ImageIcon } from "lucide-react";
+import { Heading1, Heading2, TextQuote, List, Type, MessageCircle, Image as ImageIcon, MoveRight } from "lucide-react";
 
 export interface CommandItemProps {
   title: string;
@@ -89,6 +89,14 @@ const getSuggestionItems = ({ query }: { query: string }) => {
             editor.chain().focus().setImage({ src: url }).run();
           }
         }, 10);
+      },
+    },
+    {
+      title: "Choice",
+      description: "Interactive story path choice.",
+      icon: <MoveRight className="size-4" />,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor.chain().focus().deleteRange(range).setChoice().run();
       },
     },
   ].filter((item) => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10);

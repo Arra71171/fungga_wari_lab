@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "convex:dev": "convex dev",
-    "dev": "turbo run dev //#convex:dev",
+    "dev": "turbo run dev",
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.4",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "convex": "^1.18.2",
+    "eslint-plugin-tailwindcss": "^3.18.3",
     "jose": "^6.2.2",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "turbo": "^2.8.17",
+    "turbo": "^2.9.3",
     "typescript": "5.9.3"
   },
   "packageManager": "pnpm@10.33.0",
@@ -25,6 +25,9 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@auth/core": "^0.37.2"
+    "@auth/core": "^0.37.2",
+    "@clerk/localizations": "^4.3.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0"
   }
 }

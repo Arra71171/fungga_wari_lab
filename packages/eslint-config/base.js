@@ -19,6 +19,17 @@ export const config = [
     },
     rules: {
       "turbo/no-undeclared-env-vars": "warn",
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXElement[openingElement.name.name='img']",
+          message: "Do not use raw <img> tags. Use next/image instead to ensure performance and optimization.",
+        },
+        {
+          selector: "JSXElement[openingElement.name.name='a'][openingElement.attributes.length>0]",
+          message: "Do not use raw <a> tags. Use next/link instead for internal routing.",
+        },
+      ],
     },
   },
   {

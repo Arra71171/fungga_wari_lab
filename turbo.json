@@ -1,7 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["ANALYZE"],
   "tasks": {
+    "analyze": {
+      "dependsOn": ["^build"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
@@ -17,10 +21,6 @@
       "dependsOn": ["^typecheck"]
     },
     "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "//#convex:dev": {
       "cache": false,
       "persistent": true
     }
