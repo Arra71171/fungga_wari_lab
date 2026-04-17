@@ -1,0 +1,42 @@
+version: 2
+
+updates:
+  # ── Root workspace ────────────────────────────────────────────────────────────
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Kolkata
+    open-pull-requests-limit: 5
+    groups:
+      # Batch all Turborepo + dev tooling upgrades together
+      dev-tooling:
+        patterns:
+          - "turbo"
+          - "typescript"
+          - "eslint*"
+          - "@typescript-eslint*"
+          - "prettier"
+      # Batch Next.js + React upgrades together
+      nextjs-ecosystem:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+    ignore:
+      # Pin Tailwind CSS v4 — major version changes are breaking
+      - dependency-name: tailwindcss
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ────────────────────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Kolkata
+    open-pull-requests-limit: 3
