@@ -106,7 +106,7 @@ export default async function OverviewPage() {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div id="tour-overview-stats" className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <KpiCard
             title="Total Manuscripts"
             value={stats.totalStories.toLocaleString()}
@@ -135,7 +135,7 @@ export default async function OverviewPage() {
         </div>
 
         {/* Publishing Pipeline Stepper */}
-        <div className="border border-border-subtle bg-bg-panel p-8 flex flex-col md:flex-row items-stretch justify-between relative overflow-hidden space-y-8 md:space-y-0">
+        <div id="tour-overview-pipeline" className="border border-border-subtle bg-bg-panel p-8 flex flex-col md:flex-row items-stretch justify-between relative overflow-hidden space-y-8 md:space-y-0">
           {/* Connector Line */}
           <div className="hidden md:block absolute top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
 
@@ -171,7 +171,7 @@ export default async function OverviewPage() {
         </div>
 
         {/* Charts Row */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div id="tour-overview-charts" className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
             <EngagementChart data={undefined} isLoading={false} />
           </div>

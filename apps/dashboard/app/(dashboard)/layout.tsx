@@ -37,10 +37,52 @@ const navItems = [
   { name: "Settings", href: "/settings", icon: Settings2 },
 ];
 
+import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding";
+
+// ─── Custom User Profile Block ────────────────────────────────────────────────
+// Uses Clerk's useUser() only — no Supabase query needed for the sidebar widget.
+// Full profile data (alias, custom avatar) can be fetched in the /settings page.
+
+function UserProfileBlock() {
+  const { user: clerkUser } = useUser();
+
+  if (!clerkUser) return null;
+
+  const avatarUrl = clerkUser.imageUrl;
+  const displayName =
+    clerkUser.fullName ||
+    clerkUser.primaryEmailAddress?.emailAddress ||
+    "Archive Admin";
+  const userRoleStr =
+    (clerkUser.publicMetadata?.role as string) === "admin" ? "Admin" : "Creator";
+
+  return (
+    <div id="tour-profile" className="flex items-center gap-3">
+      <div className="relative size-8 shrink-0 bg-secondary border border-border overflow-hidden">
+        <Image
+          src={avatarUrl}
+          alt="Avatar"
+          fill
+          sizes="32px"
+          className="object-cover grayscale opacity-80"
+        />
+      </div>
+      <div className="flex flex-col min-w-0">
+        <span className="text-xs font-mono text-foreground truncate h-4 leading-none">
+          {displayName}
+        </span>
+        <span className="text-[9px] font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
+          {userRoleStr}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function SidebarContent({ pathname }: { pathname: string }) {
   return (
     <>
-      <div className="p-5 flex items-center h-[72px] shrink-0 border-b border-border-subtle lg:border-none">
+      <div id="tour-brand" className="p-5 flex items-center h-[72px] shrink-0 border-b border-border-subtle lg:border-none">
         <Link href="/overview" className="hover:opacity-80 transition-opacity">
           <BrandLogo variant="full" size="sm" />
         </Link>
@@ -56,6 +98,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
           return (
             <Link key={item.name} href={item.href} className="block group outline-none">
               <div
+                id={`tour-${item.name.toLowerCase()}`}
                 className={cn(
                   "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-sm",
                   isActive
@@ -77,6 +120,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
         </div>
         {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
         <a
+          id="tour-public"
           href={
             process.env.NEXT_PUBLIC_WEB_URL
               ? `${process.env.NEXT_PUBLIC_WEB_URL}/stories`
@@ -127,87 +171,52 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-bg-base text-foreground">
-      {/* Desktop Sidebar */}
-      <aside
-        className={cn(
-          "w-[240px] hidden lg:flex flex-col border-r border-border-subtle",
-          "bg-bg-panel z-50 sticky top-0 h-screen shrink-0"
-        )}
-      >
-        <SidebarContent pathname={pathname} />
-      </aside>
+    <>
+      <DashboardOnboarding />
+      <div className="flex min-h-screen bg-bg-base text-foreground">
+        {/* Desktop Sidebar */}
+        <aside
+          className={cn(
+            "w-[240px] hidden lg:flex flex-col border-r border-border-subtle",
+            "bg-bg-panel sticky top-0 h-screen shrink-0"
+          )}
+        >
+          <SidebarContent pathname={pathname} />
+        </aside>
 
-      {/* Main Content Area - CMS Workspace */}
-      <main className="flex-1 w-full relative h-screen flex flex-col min-w-0 bg-bg-base">
-        {/* Mobile Header Bar */}
-        <header className="lg:hidden flex items-center h-[60px] px-4 border-b border-border-subtle bg-bg-panel shrink-0 sticky top-0 z-40">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden mr-2">
-                <Menu className="size-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r-border-subtle">
-              <SheetHeader className="p-0 text-left">
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              </SheetHeader>
-              <SidebarContent pathname={pathname} />
-            </SheetContent>
-          </Sheet>
+        {/* Main Content Area - CMS Workspace */}
+        <main className="flex-1 w-full relative h-screen flex flex-col min-w-0 bg-bg-base">
+          {/* Mobile Header Bar */}
+          <header className="lg:hidden flex items-center h-[60px] px-4 border-b border-border-subtle bg-bg-panel shrink-0 sticky top-0 z-40">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden mr-2">
+                  <Menu className="size-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r-border-subtle">
+                <SheetHeader className="p-0 text-left">
+                  <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                </SheetHeader>
+                <SidebarContent pathname={pathname} />
+              </SheetContent>
+            </Sheet>
 
-          <div className="flex-1 flex items-center justify-center md:justify-start lg:hidden">
-            <Link href="/overview" className="hover:opacity-80 transition-opacity">
-              <BrandLogo variant="full" size="sm" />
-            </Link>
+            <div className="flex-1 flex items-center justify-center md:justify-start lg:hidden">
+              <Link href="/overview" className="hover:opacity-80 transition-opacity">
+                <BrandLogo variant="full" size="sm" />
+              </Link>
+            </div>
+          </header>
+
+          <div id="tour-main-content" className="flex-1 w-full h-full overflow-y-auto">
+            {children}
           </div>
-        </header>
-
-        <div className="flex-1 w-full h-full overflow-y-auto">
-          {children}
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 }
 
-// ─── Custom User Profile Block ────────────────────────────────────────────────
-// Uses Clerk's useUser() only — no Supabase query needed for the sidebar widget.
-// Full profile data (alias, custom avatar) can be fetched in the /settings page.
 
-function UserProfileBlock() {
-  const { user: clerkUser } = useUser();
-
-  if (!clerkUser) return null;
-
-  const avatarUrl = clerkUser.imageUrl;
-  const displayName =
-    clerkUser.fullName ||
-    clerkUser.primaryEmailAddress?.emailAddress ||
-    "Archive Admin";
-  const userRoleStr =
-    (clerkUser.publicMetadata?.role as string) === "admin" ? "Admin" : "Creator";
-
-  return (
-    <div className="flex items-center gap-3">
-      <div className="relative size-8 shrink-0 bg-secondary border border-border overflow-hidden">
-        <Image
-          src={avatarUrl}
-          alt="Avatar"
-          fill
-          sizes="32px"
-          className="object-cover grayscale opacity-80"
-        />
-      </div>
-      <div className="flex flex-col min-w-0">
-        <span className="text-xs font-mono text-foreground truncate h-4 leading-none">
-          {displayName}
-        </span>
-        <span className="text-[9px] font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
-          {userRoleStr}
-        </span>
-      </div>
-    </div>
-  );
-}

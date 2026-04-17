@@ -573,6 +573,7 @@ export type Database = {
           created_at: string | null
           custom_avatar_url: string | null
           email: string | null
+          has_lifetime_access: boolean | null
           id: string
           name: string | null
           phone: string | null
@@ -587,6 +588,7 @@ export type Database = {
           created_at?: string | null
           custom_avatar_url?: string | null
           email?: string | null
+          has_lifetime_access?: boolean | null
           id?: string
           name?: string | null
           phone?: string | null
@@ -601,6 +603,7 @@ export type Database = {
           created_at?: string | null
           custom_avatar_url?: string | null
           email?: string | null
+          has_lifetime_access?: boolean | null
           id?: string
           name?: string | null
           phone?: string | null
@@ -614,7 +617,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       asset_type:

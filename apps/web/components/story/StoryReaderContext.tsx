@@ -35,7 +35,19 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
       
       const { data: storyData, error: storyError } = await supabase
         .from('stories')
-        .select('*')
+        .select(`
+          *,
+          chapters (
+            id,
+            title,
+            order,
+            scenes (
+              id,
+              title,
+              order
+            )
+          )
+        `)
         .eq('slug', slug)
         .single();
         
@@ -47,7 +59,23 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
       }
       
       // Need mapped _id for view tracking and other components
-      const mappedStory = { ...storyData, _id: storyData.id };
+      // We also map the chapters and scenes to ensure _id is present for legacy UI components
+      const mappedStory = { 
+        ...storyData, 
+        _id: storyData.id,
+        chapters: ((storyData.chapters as any[]) || [])
+          .sort((a, b) => a.order - b.order)
+          .map(c => ({
+            ...c,
+            _id: c.id,
+            scenes: ((c.scenes as any[]) || [])
+              .sort((a, b) => a.order - b.order)
+              .map(s => ({
+                ...s,
+                _id: s.id
+              }))
+          }))
+      };
       setStory(mappedStory);
 
       const { data: blocksData, error: blocksError } = await supabase
@@ -65,7 +93,9 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
       // Map scene_id to sceneId for existing UI logic
       const mappedBlocks = blocksData.map(b => ({
         ...b,
-        sceneId: b.scene_id
+        sceneId: b.scene_id,
+        chapterId: b.chapter_id,
+        storyId: b.story_id
       }));
       setBlocks(mappedBlocks);
     }

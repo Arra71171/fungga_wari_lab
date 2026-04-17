@@ -95,9 +95,9 @@ function BlockStoryReader({ slug: _slug }: BlockStoryReaderProps) {
   }
 
   return (
-    <article className="w-full min-h-screen bg-cinematic-bg">
+    <article className="w-full min-h-screen relative z-10">
       {/* Back to Archive nav */}
-      <nav className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-cinematic-bg/80 backdrop-blur-md border-b border-border/10">
+      <nav className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-cinematic-bg/40 backdrop-blur-md border-b border-border/10">
         <Link
           href="/stories"
           className="flex items-center gap-2 text-muted-foreground hover:text-brand-ember transition-colors group"
@@ -134,12 +134,12 @@ function BlockStoryReader({ slug: _slug }: BlockStoryReaderProps) {
       <StoryRenderer
         blocks={blockData}
         mode="viewer"
-        className="py-16 md:py-24 text-cinematic-text"
+        className="py-16 md:py-24 text-cinematic-text relative z-10"
       />
 
       {/* Story end / dead-end screen */}
       {isDeadEnd && (
-        <div className="flex flex-col items-center justify-center py-24 px-6 text-center gap-8">
+        <div className="flex flex-col items-center justify-center py-24 px-6 text-center gap-8 relative z-10">
           <div className="relative">
             <div className="absolute inset-0 blur-2xl bg-brand-ember/20 rounded-full scale-150" />
             <Flame className="relative size-12 text-brand-ember" aria-hidden />

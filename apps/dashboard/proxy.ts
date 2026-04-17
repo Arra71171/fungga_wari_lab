@@ -21,7 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
     let clerkToken: string | null = null;
     try {
       clerkToken = await authObj.getToken({ template: "supabase" });
-    } catch (e) {
+    } catch (_e) {
       console.warn("Clerk supabase template not configured");
     }
 

@@ -48,7 +48,7 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
       data-slot="paywall-overlay"
       className={cn(
         "absolute inset-0 z-30 flex flex-col items-center justify-end",
-        "bg-gradient-to-t from-cinematic-bg via-cinematic-bg/90 to-transparent",
+        "bg-gradient-to-t from-cinematic-bg via-cinematic-bg/80 to-transparent",
         className
       )}
     >
@@ -64,13 +64,13 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
 
         {/* Heading */}
         <div className="text-center space-y-2">
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-brand-ember">
+          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-brand-ember drop-shadow-md">
             Archive Access Required
           </p>
-          <h2 className="font-heading text-2xl text-cinematic-text leading-tight">
+          <h2 className="font-heading text-2xl text-cinematic-text leading-tight drop-shadow-md">
             Unlock the Full Archive
           </h2>
-          <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+          <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed drop-shadow-sm">
             {"You're reading a preview. Purchase lifetime access to read every folk story in the Kangleipak archive — once, forever."}
           </p>
         </div>
@@ -80,19 +80,19 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
           {FEATURES.map(({ icon: Icon, label, detail }) => (
             <li
               key={label}
-              className="flex items-start gap-3 border border-cinematic-border bg-cinematic-panel/40 px-4 py-3"
+              className="flex items-start gap-3 border border-cinematic-border bg-cinematic-panel/60 backdrop-blur-md px-4 py-3 shadow-lg"
             >
-              <Icon className="size-4 text-brand-ember shrink-0 mt-0.5" aria-hidden="true" />
+              <Icon className="size-4 text-brand-ember shrink-0 mt-0.5 drop-shadow-sm" aria-hidden="true" />
               <div>
-                <span className="text-xs font-mono text-cinematic-text font-semibold">{label}</span>
-                <p className="text-[11px] text-muted-foreground mt-0.5">{detail}</p>
+                <span className="text-xs font-mono text-cinematic-text font-semibold drop-shadow-sm">{label}</span>
+                <p className="text-[11px] text-muted-foreground mt-0.5 drop-shadow-sm">{detail}</p>
               </div>
             </li>
           ))}
         </ul>
 
         {/* CTA form — invokes bound server action */}
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full mt-2">
           {storySlug && <input type="hidden" name="slug" value={storySlug} />}
           <button
             type="submit"
@@ -105,7 +105,7 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
               "transition-all duration-200",
               "hover:bg-primary/90 hover:shadow-brutal",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              "disabled:opacity-60 disabled:cursor-not-allowed"
+              "disabled:opacity-60 disabled:cursor-not-allowed shadow-xl"
             )}
           >
             {isPending ? (
@@ -118,14 +118,14 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
               </>
             ) : (
               <>
-                <Flame className="size-4" aria-hidden="true" />
+                <Flame className="size-4 drop-shadow-sm" aria-hidden="true" />
                 Unlock Lifetime Access — ₹899
               </>
             )}
           </button>
         </form>
 
-        <p className="text-[10px] font-mono text-muted-foreground/60 text-center tracking-wide">
+        <p className="text-[10px] font-mono text-muted-foreground/80 text-center tracking-wide drop-shadow-sm">
           One-time payment · No subscription · Secure checkout via Stripe
         </p>
       </div>

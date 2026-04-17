@@ -2,6 +2,7 @@
 
 import { useState, useRef, startTransition } from "react";
 import { createAsset } from "@/actions/assetActions";
+import { getCloudinarySignature } from "@/actions/cloudinaryActions";
 import { Button } from "@workspace/ui/components/button";
 import { UploadCloud, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -16,10 +17,9 @@ import {
 import { Label } from "@workspace/ui/components/label";
 
 // ─── Cloudinary config ───────────────────────────────────────────────────────
-// Files are uploaded directly to Cloudinary CDN — NOT Convex Storage.
+// Files are uploaded directly to Cloudinary CDN using signed requests.
 // This prevents Convex file bandwidth overages on the Free tier.
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 export function MediaUploader() {
   const [isUploading, setIsUploading] = useState(false);
@@ -30,9 +30,9 @@ export function MediaUploader() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+    if (!CLOUDINARY_CLOUD_NAME) {
       toast.error("Cloudinary not configured", {
-        description: "Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in .env.local",
+        description: "Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME in .env.local",
       });
       return;
     }
@@ -49,10 +49,16 @@ export function MediaUploader() {
     try {
       setIsUploading(true);
 
-      // 1. Upload directly to Cloudinary via unsigned preset
+      // 1. Get signed signature from server
+      const { signature, timestamp, apiKey, folder } = await getCloudinarySignature("fungga-wari-lab/assets");
+
+      // 2. Upload directly to Cloudinary using signed details
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
 
       const cloudinaryRes = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`,
