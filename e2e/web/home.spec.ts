@@ -38,10 +38,10 @@ test.describe("Home Page", () => {
     expect(h1Count).toBe(1);
   });
 
-  test("should reach the stories page from CTA", async ({ page }) => {
+  test("should redirect to login when accessing stories page", async ({ page }) => {
     const cta = page.locator("a[href='/stories']").first();
     await cta.click();
-    await page.waitForURL("**/stories");
-    expect(page.url()).toContain("/stories");
+    await page.waitForURL("**/login**");
+    expect(page.url()).toContain("/login");
   });
 });
