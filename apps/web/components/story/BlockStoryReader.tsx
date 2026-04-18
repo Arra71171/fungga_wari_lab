@@ -247,9 +247,19 @@ function BlockStoryReader({ slug: _slug }: BlockStoryReaderProps) {
   // ── Empty states ─────────────────────────────────────────────────────────
   if (!story) return null;
 
-  const hasContent =
-    activeScene &&
-    (activeScene.tiptap_content || activeScene.content);
+  // Derive the active chapter for fallback content
+  const activeChapter = React.useMemo(() => {
+    if (!currentSceneId) return chapters[0] ?? null;
+    for (const ch of chapters) {
+      if (ch.scenes.some((s) => s.id === currentSceneId)) return ch;
+    }
+    return null;
+  }, [chapters, currentSceneId]);
+
+  // Prefer scene content → fall back to chapter-level tiptap_content
+  const sceneHasContent = activeScene && (activeScene.tiptap_content || activeScene.content);
+  const chapterFallbackContent = !sceneHasContent && activeChapter?.tiptap_content ? activeChapter.tiptap_content : null;
+  const hasContent = sceneHasContent || chapterFallbackContent;
 
   return (
     <main
@@ -307,9 +317,11 @@ function BlockStoryReader({ slug: _slug }: BlockStoryReaderProps) {
 
         {hasContent ? (
           <>
-            {/* TipTap rich content */}
-            {activeScene.tiptap_content ? (
+            {/* TipTap rich content — scene-level first, chapter fallback second */}
+            {activeScene?.tiptap_content ? (
               renderTipTapNode(activeScene.tiptap_content as TipTapNode, 0)
+            ) : chapterFallbackContent ? (
+              renderTipTapNode(chapterFallbackContent as TipTapNode, 0)
             ) : (
               /* Plain text fallback */
               <div className="whitespace-pre-wrap font-sans text-base leading-[1.9] text-cinematic-text">

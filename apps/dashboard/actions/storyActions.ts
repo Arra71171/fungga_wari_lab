@@ -6,8 +6,40 @@ import type { Database } from "@workspace/ui/types/supabase"
 
 type StoryCategory = Database["public"]["Enums"]["story_category"]
 
-// ─── Slug Helper ──────────────────────────────────────────────────────────────
+// ─── Slug Helpers ─────────────────────────────────────────────────────────────
 
+/** Generate a draft slug with a random suffix (used at creation time). */
+function generateDraftSlug(): string {
+  return `draft-${Date.now().toString(36)}`
+}
+
+/**
+ * generatePublishSlug — produce a clean, URL-safe slug from a story title.
+ * Appends a short random suffix only if the base slug is already taken.
+ */
+async function generatePublishSlug(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  title: string,
+  currentId: string
+): Promise<string> {
+  const base = title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+
+  const { data: conflict } = await supabase
+    .from("stories")
+    .select("id")
+    .eq("slug", base)
+    .neq("id", currentId)
+    .maybeSingle()
+
+  return conflict ? `${base}-${Date.now().toString(36)}` : base
+}
+
+/** Legacy helper kept for createStory (explicit slug arg). */
 function generateSlug(title: string): string {
   return (
     title
@@ -19,31 +51,14 @@ function generateSlug(title: string): string {
   )
 }
 
-// ─── Auth Helper ─────────────────────────────────────────────────────────────
-
-/**
- * getAuthorUUID — resolves the current Clerk userId to the Supabase users.id UUID.
- * 
- * CRITICAL: stories.author_id is uuid REFERENCES users(id).
- * Clerk returns a string userId (e.g. "user_2abc..."), NOT a UUID.
- * We must look up the matching row in users via clerk_id.
- */
-async function getAuthorUUID(supabase: Awaited<ReturnType<typeof createClient>>, clerkId: string): Promise<string> {
-  const { data, error } = await supabase
-    .from("users")
-    .select("id")
-    .eq("clerk_id", clerkId)
-    .single()
-
-  if (error || !data) {
-    throw new Error(
-      `Author profile not found for Clerk ID ${clerkId}. ` +
-      `Ensure the Clerk webhook has synced this user to Supabase (users table).`
-    )
-  }
-
-  return data.id
-}
+// ─── Auth Note ────────────────────────────────────────────────────────────────
+//
+// stories.author_id is a TEXT column (no FK) that stores the Clerk userId string
+// directly (e.g. "user_2abc...").  We deliberately do NOT look up the Supabase
+// UUID from the users table — doing so would break all ownership filters because
+// the column contains Clerk strings, not UUIDs.
+//
+// Use `userId` from auth() directly in all .eq("author_id", userId) filters.
 
 // ─── Queries ──────────────────────────────────────────────────────────────────
 
@@ -138,10 +153,8 @@ export async function createDraftStory() {
 
   const supabase = await createClient()
 
-  // Resolve Clerk ID → Supabase UUID
-  const authorUUID = await getAuthorUUID(supabase, userId)
-
-  const slug = `draft-${Date.now().toString(36)}`
+  // stories.author_id stores Clerk userId strings directly (TEXT, no FK)
+  const slug = generateDraftSlug()
 
   const { data, error } = await supabase
     .from("stories")
@@ -151,7 +164,7 @@ export async function createDraftStory() {
       category: "other",
       language: "Meiteilon",
       status: "draft",
-      author_id: authorUUID,
+      author_id: userId,
       tags: [],
       chapter_count: 0,
     })
@@ -180,9 +193,6 @@ export async function createStory(args: {
 
   const supabase = await createClient()
 
-  // Resolve Clerk ID → Supabase UUID
-  const authorUUID = await getAuthorUUID(supabase, userId)
-
   const slug = args.slug || generateSlug(args.title)
 
   // Ensure slug uniqueness
@@ -206,7 +216,7 @@ export async function createStory(args: {
       tags: args.tags,
       moral: args.moral ?? null,
       status: "draft",
-      author_id: authorUUID,
+      author_id: userId,
       chapter_count: 0,
     })
     .select("id")
@@ -236,13 +246,12 @@ export async function updateStory(
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
-  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .update(patch)
     .eq("id", id)
-    .eq("author_id", authorUUID)
+    .eq("author_id", userId)
 
   if (error) throw new Error(`Failed to update story: ${error.message}`)
   return id
@@ -256,12 +265,11 @@ export async function publishStory(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
-  const authorUUID = await getAuthorUUID(supabase, userId)
 
-  // Fetch story to build searchable text
+  // Fetch story to build searchable text + get current slug for update
   const { data: story } = await supabase
     .from("stories")
-    .select("title, description, tags, chapters(title, content, scenes(title, content))")
+    .select("title, slug, description, tags, chapters(title, content, scenes(title, content))")
     .eq("id", id)
     .single()
 
@@ -280,18 +288,25 @@ export async function publishStory(id: string) {
 
   searchableText = searchableText.replace(/\s+/g, " ").trim()
 
+  // Generate a clean slug from the title if still has draft- prefix
+  const needsCleanSlug = story.slug?.startsWith("draft-")
+  const cleanSlug = needsCleanSlug
+    ? await generatePublishSlug(supabase, story.title, id)
+    : story.slug
+
   const { error } = await supabase
     .from("stories")
     .update({
       status: "published",
       published_at: new Date().toISOString(),
       searchable_text: searchableText,
+      ...(needsCleanSlug ? { slug: cleanSlug } : {}),
     })
     .eq("id", id)
-    .eq("author_id", authorUUID)
+    .eq("author_id", userId)
 
   if (error) throw new Error(`Failed to publish story: ${error.message}`)
-  return id
+  return { id, slug: cleanSlug }
 }
 
 /**
@@ -302,13 +317,12 @@ export async function unpublishStory(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
-  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .update({ status: "draft" })
     .eq("id", id)
-    .eq("author_id", authorUUID)
+    .eq("author_id", userId)
 
   if (error) throw new Error(`Failed to unpublish story: ${error.message}`)
   return id
@@ -322,13 +336,12 @@ export async function submitForReview(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
-  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .update({ status: "in_review" })
     .eq("id", id)
-    .eq("author_id", authorUUID)
+    .eq("author_id", userId)
 
   if (error) throw new Error(`Failed to submit for review: ${error.message}`)
   return id
@@ -342,13 +355,12 @@ export async function deleteStory(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
-  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .delete()
     .eq("id", id)
-    .eq("author_id", authorUUID)
+    .eq("author_id", userId)
 
   if (error) throw new Error(`Failed to delete story: ${error.message}`)
   return { success: true }
@@ -370,9 +382,6 @@ export async function createStoryWithInitialScene(args: {
 
   const supabase = await createClient()
 
-  // Resolve Clerk ID → Supabase UUID
-  const authorUUID = await getAuthorUUID(supabase, userId)
-
   const slug = args.slug || generateSlug(args.title)
 
   const { data: story, error: storyError } = await supabase
@@ -385,7 +394,7 @@ export async function createStoryWithInitialScene(args: {
       language: args.language,
       cover_image_url: args.cover_image_url ?? null,
       status: "draft",
-      author_id: authorUUID,
+      author_id: userId,
       tags: [],
       chapter_count: 1,
     })

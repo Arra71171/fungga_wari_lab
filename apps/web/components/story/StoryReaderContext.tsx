@@ -96,7 +96,7 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
             scenes (
               id, title, "order", content, tiptap_content, illustration_url,
               is_draft, version, reading_time, excerpt,
-              choices ( id, label, next_scene_id )
+              choices!choices_scene_id_fkey ( id, label, next_scene_id )
             )
           )
         `)
