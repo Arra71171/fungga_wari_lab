@@ -21,9 +21,8 @@ import {
 import {
   createChapter,
   updateChapter,
+  updateSceneContent,
   deleteChapter,
-} from "@/actions/chapterActions";
-import {
   addChoice,
   deleteChoice,
 } from "@/actions/chapterActions";
@@ -335,14 +334,18 @@ export default function DraftEditorPage({
           isNew: false,
         };
       } else {
+        // Save chapter metadata (title, order, illustration) to chapters table
         await updateChapter(ch.id, {
           title: ch.title,
           order: ch.order,
           illustration_url: ch.illustrationUrl ?? null,
-          tiptap_content: ch.tiptapContent as never,
-          content: ch.content,
         });
+        // Save story content to scenes table — that's where the web reader reads from
         if (ch.sceneId) {
+          await updateSceneContent(ch.sceneId, {
+            tiptap_content: ch.tiptapContent,
+            content: ch.content,
+          });
           chapterIdToSceneId[ch.id] = ch.sceneId;
         }
       }

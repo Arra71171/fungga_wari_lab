@@ -38,7 +38,7 @@ export default function StoriesOverviewPage() {
       setIsCreating(true);
       const newId = await createDraftStory();
       toast.success("Draft Initialized", { description: "A new blank manuscript has been forged." });
-      router.push(`/stories/${newId}`);
+      router.push(`/stories/draft/${newId}`);
     } catch (e) {
       console.error(e);
       toast.error("Creation Failed", { description: "Failed to initialize new manuscript." });
@@ -168,7 +168,7 @@ export default function StoriesOverviewPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10 pb-20">
           {stories.map((story) => (
             <div key={story.id} className="relative group/card">
-              <Link href={`/stories/${story.id}`}>
+              <Link href={`/stories/draft/${story.id}`}>
                 <StoryCard
                   title={story.title}
                   category={story.category ?? "other"}
