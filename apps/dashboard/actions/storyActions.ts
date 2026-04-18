@@ -19,10 +19,37 @@ function generateSlug(title: string): string {
   )
 }
 
+// ─── Auth Helper ─────────────────────────────────────────────────────────────
+
+/**
+ * getAuthorUUID — resolves the current Clerk userId to the Supabase users.id UUID.
+ * 
+ * CRITICAL: stories.author_id is uuid REFERENCES users(id).
+ * Clerk returns a string userId (e.g. "user_2abc..."), NOT a UUID.
+ * We must look up the matching row in users via clerk_id.
+ */
+async function getAuthorUUID(supabase: Awaited<ReturnType<typeof createClient>>, clerkId: string): Promise<string> {
+  const { data, error } = await supabase
+    .from("users")
+    .select("id")
+    .eq("clerk_id", clerkId)
+    .single()
+
+  if (error || !data) {
+    throw new Error(
+      `Author profile not found for Clerk ID ${clerkId}. ` +
+      `Ensure the Clerk webhook has synced this user to Supabase (users table).`
+    )
+  }
+
+  return data.id
+}
+
 // ─── Queries ──────────────────────────────────────────────────────────────────
 
 /**
- * getAllStoriesAdmin — all stories for dashboardoverview (auth required).
+ * getAllStoriesAdmin — all stories for dashboard overview (auth required).
+ * RLS: stories_select_public policy allows author to see their own drafts.
  */
 export async function getAllStoriesAdmin() {
   const { userId } = await auth()
@@ -101,12 +128,19 @@ export async function getFullStoryById(id: string) {
 
 /**
  * createDraftStory — creates a blank draft for the current author.
+ * 
+ * FIXED: Looks up the author's Supabase UUID via clerk_id before inserting.
+ * stories.author_id is uuid REFERENCES users(id) — cannot store Clerk string IDs.
  */
 export async function createDraftStory() {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+
+  // Resolve Clerk ID → Supabase UUID
+  const authorUUID = await getAuthorUUID(supabase, userId)
+
   const slug = `draft-${Date.now().toString(36)}`
 
   const { data, error } = await supabase
@@ -117,7 +151,7 @@ export async function createDraftStory() {
       category: "other",
       language: "Meiteilon",
       status: "draft",
-      author_id: userId,
+      author_id: authorUUID,
       tags: [],
       chapter_count: 0,
     })
@@ -145,6 +179,10 @@ export async function createStory(args: {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+
+  // Resolve Clerk ID → Supabase UUID
+  const authorUUID = await getAuthorUUID(supabase, userId)
+
   const slug = args.slug || generateSlug(args.title)
 
   // Ensure slug uniqueness
@@ -168,7 +206,7 @@ export async function createStory(args: {
       tags: args.tags,
       moral: args.moral ?? null,
       status: "draft",
-      author_id: userId,
+      author_id: authorUUID,
       chapter_count: 0,
     })
     .select("id")
@@ -198,12 +236,13 @@ export async function updateStory(
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .update(patch)
     .eq("id", id)
-    .eq("author_id", userId)
+    .eq("author_id", authorUUID)
 
   if (error) throw new Error(`Failed to update story: ${error.message}`)
   return id
@@ -217,6 +256,7 @@ export async function publishStory(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+  const authorUUID = await getAuthorUUID(supabase, userId)
 
   // Fetch story to build searchable text
   const { data: story } = await supabase
@@ -248,7 +288,7 @@ export async function publishStory(id: string) {
       searchable_text: searchableText,
     })
     .eq("id", id)
-    .eq("author_id", userId)
+    .eq("author_id", authorUUID)
 
   if (error) throw new Error(`Failed to publish story: ${error.message}`)
   return id
@@ -262,12 +302,13 @@ export async function unpublishStory(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .update({ status: "draft" })
     .eq("id", id)
-    .eq("author_id", userId)
+    .eq("author_id", authorUUID)
 
   if (error) throw new Error(`Failed to unpublish story: ${error.message}`)
   return id
@@ -281,12 +322,13 @@ export async function submitForReview(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .update({ status: "in_review" })
     .eq("id", id)
-    .eq("author_id", userId)
+    .eq("author_id", authorUUID)
 
   if (error) throw new Error(`Failed to submit for review: ${error.message}`)
   return id
@@ -300,12 +342,13 @@ export async function deleteStory(id: string) {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+  const authorUUID = await getAuthorUUID(supabase, userId)
 
   const { error } = await supabase
     .from("stories")
     .delete()
     .eq("id", id)
-    .eq("author_id", userId)
+    .eq("author_id", authorUUID)
 
   if (error) throw new Error(`Failed to delete story: ${error.message}`)
   return { success: true }
@@ -326,6 +369,10 @@ export async function createStoryWithInitialScene(args: {
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
+
+  // Resolve Clerk ID → Supabase UUID
+  const authorUUID = await getAuthorUUID(supabase, userId)
+
   const slug = args.slug || generateSlug(args.title)
 
   const { data: story, error: storyError } = await supabase
@@ -338,7 +385,7 @@ export async function createStoryWithInitialScene(args: {
       language: args.language,
       cover_image_url: args.cover_image_url ?? null,
       status: "draft",
-      author_id: userId,
+      author_id: authorUUID,
       tags: [],
       chapter_count: 1,
     })
@@ -377,5 +424,5 @@ export async function createStoryWithInitialScene(args: {
  */
 export async function incrementViewCount(id: string) {
   const supabase = await createClient()
-  await supabase.rpc("increment_view_count" as never, { story_id: id } as never)
+  await supabase.rpc("increment_view_count", { story_id: id })
 }

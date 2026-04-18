@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useFormStatus } from "react-dom";
 import { Flame, Lock, Sparkles, BookOpen } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -18,6 +19,42 @@ const FEATURES = [
   { icon: Flame, label: "Immersive cinematic reader", detail: "Ambient audio, focus modes & scene search" },
 ];
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      aria-label="Unlock lifetime access for ₹899"
+      className={cn(
+        "w-full h-14 flex items-center justify-center gap-3",
+        "border border-primary bg-primary text-primary-foreground",
+        "font-mono text-sm uppercase tracking-widest font-bold",
+        "transition-all duration-200",
+        "hover:bg-primary/90 hover:shadow-brutal",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "disabled:opacity-60 disabled:cursor-not-allowed shadow-xl"
+      )}
+    >
+      {pending ? (
+        <>
+          <span
+            className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"
+            aria-hidden="true"
+          />
+          Redirecting to checkout…
+        </>
+      ) : (
+        <>
+          <Flame className="size-4 drop-shadow-sm" aria-hidden="true" />
+          Unlock Lifetime Access — ₹899
+        </>
+      )}
+    </button>
+  );
+}
+
 /**
  * PaywallOverlay — Zen Brutalist paywall gate.
  * Renders a gradient overlay over teaser content with a Stripe checkout CTA.
@@ -28,21 +65,6 @@ const FEATURES = [
  * <PaywallOverlay onUnlock={action} storySlug="my-story-slug" />
  */
 function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps) {
-  const [isPending, setIsPending] = React.useState(false);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (isPending) return;
-    setIsPending(true);
-    try {
-      const formData = new FormData(e.currentTarget);
-      await onUnlock(formData);
-    } finally {
-      // If redirect succeeds this won't run; only runs on error
-      setIsPending(false);
-    }
-  }
-
   return (
     <div
       data-slot="paywall-overlay"
@@ -92,37 +114,9 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
         </ul>
 
         {/* CTA form — invokes bound server action */}
-        <form onSubmit={handleSubmit} className="w-full mt-2">
+        <form action={onUnlock} className="w-full mt-2">
           {storySlug && <input type="hidden" name="slug" value={storySlug} />}
-          <button
-            type="submit"
-            disabled={isPending}
-            aria-label="Unlock lifetime access for ₹899"
-            className={cn(
-              "w-full h-14 flex items-center justify-center gap-3",
-              "border border-primary bg-primary text-primary-foreground",
-              "font-mono text-sm uppercase tracking-widest font-bold",
-              "transition-all duration-200",
-              "hover:bg-primary/90 hover:shadow-brutal",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              "disabled:opacity-60 disabled:cursor-not-allowed shadow-xl"
-            )}
-          >
-            {isPending ? (
-              <>
-                <span
-                  className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"
-                  aria-hidden="true"
-                />
-                Redirecting to checkout…
-              </>
-            ) : (
-              <>
-                <Flame className="size-4 drop-shadow-sm" aria-hidden="true" />
-                Unlock Lifetime Access — ₹899
-              </>
-            )}
-          </button>
+          <SubmitButton />
         </form>
 
         <p className="text-[10px] font-mono text-muted-foreground/80 text-center tracking-wide drop-shadow-sm">

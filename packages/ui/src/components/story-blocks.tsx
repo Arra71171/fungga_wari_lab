@@ -32,6 +32,7 @@ export type BlockData = {
 
 type TextBlockProps = {
   content?: string
+  text?: string // Fallback for database seed format
   alignment?: "left" | "center" | "right"
   dropCap?: boolean
   editable?: boolean
@@ -40,15 +41,18 @@ type TextBlockProps = {
 
 function TextBlock({
   content,
+  text,
   alignment = "left",
   dropCap = false,
   editable = false,
   onChange,
 }: TextBlockProps) {
+  const displayContent = content ?? text ?? ""
+
   if (editable) {
     return (
       <textarea
-        value={content ?? ""}
+        value={displayContent}
         onChange={(e) => onChange?.({ content: e.target.value })}
         placeholder="Write your storyâ€¦"
         aria-label="Block text content"
@@ -73,7 +77,7 @@ function TextBlock({
         dropCap && "first-letter:text-5xl first-letter:font-display first-letter:text-primary first-letter:float-left first-letter:mr-3 first-letter:mt-1"
       )}
     >
-      {content}
+      {displayContent}
     </p>
   )
 }
@@ -134,20 +138,27 @@ function HeadingBlock({
 
 type ImageBlockProps = {
   src?: string
+  url?: string // Fallback for database seed format
   caption?: string
   style?: "full" | "inline" | "cinematic"
+  editable?: boolean
 }
 
-function ImageBlock({ src, caption, style = "inline" }: ImageBlockProps) {
-  if (!src) {
-    return (
-      <div
-        data-slot="block-image-placeholder"
-        className="w-full h-48 rounded-none border-2 border-dashed border-border flex items-center justify-center text-muted-foreground text-sm"
-      >
-        No image set
-      </div>
-    )
+function ImageBlock({ src, url, caption, style = "inline", editable = false }: ImageBlockProps) {
+  const displaySrc = src ?? url
+
+  if (!displaySrc) {
+    if (editable) {
+      return (
+        <div
+          data-slot="block-image-placeholder"
+          className="w-full h-48 rounded-none border-2 border-dashed border-border flex items-center justify-center text-muted-foreground text-sm"
+        >
+          No image set
+        </div>
+      )
+    }
+    return null
   }
 
   return (
@@ -161,7 +172,7 @@ function ImageBlock({ src, caption, style = "inline" }: ImageBlockProps) {
     >
       {/* eslint-disable-next-line no-restricted-syntax */}
       <img
-        src={src}
+        src={displaySrc}
         alt={caption ?? "Story illustration"}
         className={cn(
           "w-full object-cover",
@@ -249,15 +260,24 @@ type ChoiceOption = {
 
 type ChoiceBlockProps = {
   options?: ChoiceOption[]
+  text?: string // Fallback label
+  targetSceneId?: string // Fallback scene destination
   onChoose?: (option: ChoiceOption) => void
 }
 
-function ChoiceBlock({ options, onChoose }: ChoiceBlockProps) {
-  if (!options || options.length === 0) return null
+function ChoiceBlock({ options, text, targetSceneId, onChoose }: ChoiceBlockProps) {
+  // Normalize options array from fallback props if needed
+  const normalizedOptions: ChoiceOption[] = React.useMemo(() => {
+    if (options && options.length > 0) return options
+    if (text) return [{ label: text, nextSceneId: targetSceneId }]
+    return []
+  }, [options, text, targetSceneId])
+
+  if (normalizedOptions.length === 0) return null
 
   return (
     <div data-slot="block-choice" className="my-8 max-w-2xl mx-auto space-y-3">
-      {options.map((opt, i) => (
+      {normalizedOptions.map((opt, i) => (
         <button
           key={i}
           onClick={() => {
@@ -309,19 +329,24 @@ function DividerBlock({ style = "line" }: DividerBlockProps) {
 
 type QuoteBlockProps = {
   content?: string
+  text?: string // Fallback
   attribution?: string
+  author?: string // Fallback
 }
 
-function QuoteBlock({ content, attribution }: QuoteBlockProps) {
+function QuoteBlock({ content, text, attribution, author }: QuoteBlockProps) {
+  const displayContent = content ?? text ?? ""
+  const displayAttribution = attribution ?? author ?? ""
+
   return (
     <blockquote
       data-slot="block-quote"
       className="border-l-4 border-primary pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground"
     >
-      <p className="text-lg leading-relaxed">{content}</p>
-      {attribution && (
+      <p className="text-lg leading-relaxed">{displayContent}</p>
+      {displayAttribution && (
         <footer className="mt-2 text-sm font-mono text-primary/80 not-italic">
-          â€” {attribution}
+          â€” {displayAttribution}
         </footer>
       )}
     </blockquote>

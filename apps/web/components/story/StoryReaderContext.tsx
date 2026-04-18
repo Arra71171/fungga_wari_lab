@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { useParams } from "next/navigation";
@@ -8,13 +7,66 @@ import { useViewTracking } from "@/hooks/useViewTracking";
 
 export type ReadingMode = "standard" | "focus" | "immersive";
 
+// ─── Scene shape coming from Supabase ────────────────────────────────────────
+
+type SceneRow = {
+  id: string;
+  title: string | null;
+  order: number;
+  content: string | null;
+  tiptap_content: Record<string, unknown> | null;
+  illustration_url: string | null;
+  is_draft: boolean;
+  version: number;
+  reading_time: number | null;
+  excerpt: string | null;
+  choices: Array<{
+    id: string;
+    label: string;
+    next_scene_id: string;
+  }>;
+};
+
+type ChapterWithScenes = {
+  id: string;
+  title: string;
+  order: number;
+  illustration_url: string | null;
+  tiptap_content: Record<string, unknown> | null;
+  scenes: SceneRow[];
+};
+
+export type StoryShape = {
+  id: string;
+  /** Legacy alias — components that still use _id will work */
+  _id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  language: string;
+  status: string;
+  cover_image_url: string | null;
+  tags: string[] | null;
+  moral: string | null;
+  attributed_author: string | null;
+  author_id: string;
+  chapter_count: number | null;
+  view_count: number | null;
+  read_count: number | null;
+  published_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  chapters: ChapterWithScenes[];
+};
+
 interface StoryReaderContextValue {
-  story: any;
-  blocks: any[] | undefined;
+  story: StoryShape | null;
+  chapters: ChapterWithScenes[];
+  activeScene: SceneRow | null;
   isLoading: boolean;
   mode: ReadingMode;
   setMode: (mode: ReadingMode) => void;
-  // Progress state
   currentSceneId: string | null;
   setCurrentSceneId: (id: string | null) => void;
 }
@@ -25,138 +77,127 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
   const params = useParams();
   const slug = params.slug as string;
 
-  const [story, setStory] = React.useState<any>(undefined);
-  const [blocks, setBlocks] = React.useState<any[] | undefined>(undefined);
+  const [story, setStory] = React.useState<StoryShape | null | undefined>(undefined);
   const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     async function loadData() {
       if (!slug) return;
-      
+
       const { data: storyData, error: storyError } = await supabase
-        .from('stories')
+        .from("stories")
         .select(`
-          *,
+          id, title, slug, description, category, language, status,
+          cover_image_url, tags, moral, attributed_author, author_id,
+          chapter_count, view_count, read_count, published_at,
+          created_at, updated_at,
           chapters (
-            id,
-            title,
-            order,
+            id, title, "order", illustration_url, tiptap_content,
             scenes (
-              id,
-              title,
-              order
+              id, title, "order", content, tiptap_content, illustration_url,
+              is_draft, version, reading_time, excerpt,
+              choices ( id, label, next_scene_id )
             )
           )
         `)
-        .eq('slug', slug)
+        .eq("slug", slug)
         .single();
-        
-      if (storyError) {
+
+      if (storyError || !storyData) {
         console.error("Error fetching story:", storyError);
         setStory(null);
-        setBlocks([]);
         return;
       }
-      
-      // Need mapped _id for view tracking and other components
-      // We also map the chapters and scenes to ensure _id is present for legacy UI components
-      const mappedStory = { 
-        ...storyData, 
+
+      // Sort chapters and scenes by order
+      // Cast via unknown to handle Supabase SelectQueryError on nested choices join
+      const sortedChapters: ChapterWithScenes[] = ((storyData.chapters ?? []) as unknown as ChapterWithScenes[])
+        .sort((a, b) => a.order - b.order)
+        .map((ch) => ({
+          ...ch,
+          scenes: (ch.scenes ?? []).sort((a, b) => a.order - b.order),
+        }));
+
+      const mappedStory: StoryShape = {
+        ...(storyData as Omit<StoryShape, "_id" | "chapters">),
         _id: storyData.id,
-        chapters: ((storyData.chapters as any[]) || [])
-          .sort((a, b) => a.order - b.order)
-          .map(c => ({
-            ...c,
-            _id: c.id,
-            scenes: ((c.scenes as any[]) || [])
-              .sort((a, b) => a.order - b.order)
-              .map(s => ({
-                ...s,
-                _id: s.id
-              }))
-          }))
+        chapters: sortedChapters,
       };
+
       setStory(mappedStory);
-
-      const { data: blocksData, error: blocksError } = await supabase
-        .from('blocks')
-        .select('*')
-        .eq('story_id', storyData.id)
-        .order('order', { ascending: true });
-
-      if (blocksError) {
-        console.error("Error fetching blocks:", blocksError);
-        setBlocks([]);
-        return;
-      }
-
-      // Map scene_id to sceneId for existing UI logic
-      const mappedBlocks = blocksData.map(b => ({
-        ...b,
-        sceneId: b.scene_id,
-        chapterId: b.chapter_id,
-        storyId: b.story_id
-      }));
-      setBlocks(mappedBlocks);
     }
+
     loadData();
   }, [slug, supabase]);
 
   // Fire view event once the story ID resolves
-  useViewTracking(story?._id);
+  useViewTracking(story?.id ?? undefined);
 
   const [mode, setMode] = React.useState<ReadingMode>("standard");
   const [currentSceneId, setCurrentSceneIdState] = React.useState<string | null>(null);
 
-  // Load from local storage or default to first scene
+  // Set currentSceneId from localStorage or default to first scene
   React.useEffect(() => {
-    if (story?._id && blocks && blocks.length > 0) {
-      const storageKey = `fungga:scene:${story._id}`;
-      const savedSceneId = localStorage.getItem(storageKey);
-      
-      if (savedSceneId) {
-        // Verify the saved scene still exists in blocks
-        if (blocks.some(b => b.sceneId === savedSceneId)) {
-          setCurrentSceneIdState(savedSceneId);
-          return;
-        }
-      }
-      
-      // Fallback to first scene
-      if (!currentSceneId) {
-        const firstSceneBlock = blocks.find(b => b.sceneId);
-        if (firstSceneBlock?.sceneId) {
-          setCurrentSceneIdState(firstSceneBlock.sceneId);
-        }
+    if (!story || story.chapters.length === 0) return;
+
+    const firstScene = story.chapters[0]?.scenes[0];
+    const storageKey = `fungga:scene:${story.id}`;
+    const saved = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
+
+    if (saved) {
+      // Verify the saved scene still exists
+      const allScenes = story.chapters.flatMap((ch) => ch.scenes);
+      if (allScenes.some((s) => s.id === saved)) {
+        setCurrentSceneIdState(saved);
+        return;
       }
     }
-  }, [story?._id, blocks, currentSceneId]);
 
-  const setCurrentSceneId = React.useCallback((id: string | null) => {
-    setCurrentSceneIdState(id);
-    if (story?._id) {
-      const storageKey = `fungga:scene:${story._id}`;
-      if (id) {
-        localStorage.setItem(storageKey, id);
-      } else {
-        localStorage.removeItem(storageKey);
-      }
+    if (firstScene && !currentSceneId) {
+      setCurrentSceneIdState(firstScene.id);
     }
-  }, [story]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [story?.id]);
 
-  const isLoading = story === undefined || blocks === undefined;
+  const setCurrentSceneId = React.useCallback(
+    (id: string | null) => {
+      setCurrentSceneIdState(id);
+      if (story?.id && typeof window !== "undefined") {
+        const storageKey = `fungga:scene:${story.id}`;
+        if (id) {
+          localStorage.setItem(storageKey, id);
+        } else {
+          localStorage.removeItem(storageKey);
+        }
+      }
+    },
+    [story?.id]
+  );
 
-  const value = React.useMemo(
+  // Derive the active scene from chapters
+  const activeScene = React.useMemo<SceneRow | null>(() => {
+    if (!story || !currentSceneId) return null;
+    for (const ch of story.chapters) {
+      const found = ch.scenes.find((s) => s.id === currentSceneId);
+      if (found) return found;
+    }
+    return null;
+  }, [story, currentSceneId]);
+
+  const isLoading = story === undefined;
+
+  const value = React.useMemo<StoryReaderContextValue>(
     () => ({
-      story,
-      blocks,
+      story: story ?? null,
+      chapters: story?.chapters ?? [],
+      activeScene,
       isLoading,
       mode,
       setMode,
       currentSceneId,
       setCurrentSceneId,
     }),
-    [story, blocks, isLoading, mode, currentSceneId, setCurrentSceneId]
+    [story, activeScene, isLoading, mode, currentSceneId, setCurrentSceneId]
   );
 
   return <StoryReaderContext.Provider value={value}>{children}</StoryReaderContext.Provider>;

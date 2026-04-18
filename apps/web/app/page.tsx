@@ -96,18 +96,30 @@ function GridBackground() {
 // ─── Story Ticker ────────────────────────────────────────────────────────────
 
 function StoryTicker() {
-  const stories = [
-    "Hiyangthau",
-    "Henjunaha",
-    "Kabokki Nong",
-    "Lanmei Thanbi",
-    "Kabui Keioiba",
-    "Lai Khutsangbi",
-    "Lamhui Lousing",
-    "Laira Macha Taret",
-    "Lukhrabi Amadi Hangoi",
-    "Henzoonaha",
-  ];
+  const [stories, setStories] = React.useState<string[]>([
+    "Loading...",
+  ]);
+
+  React.useEffect(() => {
+    async function fetchStories() {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("stories")
+        .select("title")
+        .eq("status", "published")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      
+      if (!error && data && data.length > 0) {
+        setStories(data.map((s) => s.title));
+      } else if (!error && data?.length === 0) {
+        // Fallback if no published stories yet
+        setStories(["Archive Empty", "Awaiting Manuscripts"]);
+      }
+    }
+    fetchStories();
+  }, []);
 
   return (
     <section className="py-24 md:py-32 bg-background relative overflow-hidden border-b border-border">

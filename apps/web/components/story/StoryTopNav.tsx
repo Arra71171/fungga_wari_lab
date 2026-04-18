@@ -44,7 +44,7 @@ export function StoryTopNav() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="text-cinematic-text-dim hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-lg"
+          className="text-cinematic-text-dim hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-none"
           title="Search in Story"
         >
           <Search className="size-4" />
@@ -53,7 +53,7 @@ export function StoryTopNav() {
           variant="ghost" 
           size="icon" 
           onClick={toggleFocus}
-          className={`${mode === 'focus' ? 'text-brand-ember' : 'text-cinematic-text-dim'} hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-lg`}
+          className={`${mode === 'focus' ? 'text-brand-ember' : 'text-cinematic-text-dim'} hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-none`}
           title={mode === 'focus' ? "Standard Mode" : "Focus Mode"}
         >
           {mode === 'focus' ? <LayoutPanelLeft className="size-4" /> : <Maximize2 className="size-4" />}

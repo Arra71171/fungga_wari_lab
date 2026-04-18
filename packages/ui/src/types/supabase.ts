@@ -617,7 +617,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin: { Args: never; Returns: boolean }
+      decrement_chapter_count: {
+        Args: { story_id: string }
+        Returns: undefined
+      }
+      get_my_user_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      increment_chapter_count: {
+        Args: { story_id: string }
+        Returns: undefined
+      }
+      increment_view_count: {
+        Args: { story_id: string }
+        Returns: undefined
+      }
+      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
+      is_story_owner: {
+        Args: { p_story_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       asset_type:

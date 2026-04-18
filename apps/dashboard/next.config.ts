@@ -8,6 +8,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   transpilePackages: ["@workspace/ui", "@workspace/auth"],
   images: {
+    qualities: [25, 50, 75, 90, 100],
     // placehold.co returns SVG — must be enabled at the top level in Next.js 15+
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

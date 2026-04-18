@@ -61,10 +61,10 @@ const CATEGORIES = [
 const LANGUAGES = [
   { value: "Meiteilon", label: "Meiteilon" },
   { value: "meitei", label: "Meitei" },
-  { value: "English", label: "English" },
-  { value: "en", label: "English" },
+  { value: "english", label: "English" },
   { value: "Hindi", label: "Hindi" },
 ] as const;
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -80,11 +80,19 @@ function getCategoryLabel(value?: string): string {
   return value.replace(/_/g, " ");
 }
 
-/** Get language display label */
+/** Get language display label — normalises case before lookup */
 function getLanguageLabel(value?: string): string {
   if (!value) return "";
-  const map: Record<string, string> = { en: "English", meitei: "Meitei", Meiteilon: "Meiteilon" };
-  return map[value] ?? value;
+  // Normalise to lowercase for case-insensitive lookup
+  const lower = value.toLowerCase();
+  const map: Record<string, string> = {
+    en: "English",
+    english: "English",
+    meitei: "Meitei",
+    meiteilon: "Meiteilon",
+    hindi: "Hindi",
+  };
+  return map[lower] ?? value;
 }
 
 // ─── Animation Presets ────────────────────────────────────────────────────────
@@ -608,7 +616,7 @@ export default function StoriesPage() {
       const { data, error } = await query;
       
       if (error) {
-        console.error("Error fetching stories:", JSON.stringify(error, null, 2), error);
+        console.error("Error fetching stories:", JSON.stringify(error, null, 2));
         setStories([]);
         return;
       }

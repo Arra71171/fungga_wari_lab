@@ -9,6 +9,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   images: {
+    qualities: [25, 50, 75, 90, 100],
     // placehold.co returns SVG — must be enabled at the top level in Next.js 15+
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -29,6 +30,40 @@ const nextConfig = {
         hostname: "img.clerk.com",
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Don't try to polyfill Node.js core modules on the client
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+        os: false,
+      };
+      
+      // Stop Webpack from attempting to parse the node bindings for client bundles
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'onnxruntime-node': false,
+      };
+    }
+
+    // Completely ignore .node files so Webpack never errors on them
+    config.module.rules.push({
+      test: /\.node$/,
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/media/[name].[hash][ext]'
+      }
+    });
+    
+    // Externalize the node module for the server build
+    if (isServer) {
+      config.externals.push('onnxruntime-node');
+    }
+    
+    return config;
   },
 }
 

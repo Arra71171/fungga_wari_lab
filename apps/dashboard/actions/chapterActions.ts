@@ -53,7 +53,7 @@ export async function createChapter(args: {
   if (error) throw new Error(`Failed to create chapter: ${error.message}`)
 
   // Increment chapter_count on story
-  await supabase.rpc("increment_chapter_count" as never, { story_id: args.storyId } as never)
+  await supabase.rpc("increment_chapter_count", { story_id: args.storyId })
 
   return data.id
 }
@@ -99,7 +99,7 @@ export async function deleteChapter(id: string) {
   if (error) throw new Error(`Failed to delete chapter: ${error.message}`)
 
   if (chapter?.story_id) {
-    await supabase.rpc("decrement_chapter_count" as never, { story_id: chapter.story_id } as never)
+    await supabase.rpc("decrement_chapter_count", { story_id: chapter.story_id })
   }
 
   return { success: true }

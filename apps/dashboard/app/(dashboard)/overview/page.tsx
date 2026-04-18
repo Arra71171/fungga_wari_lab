@@ -197,7 +197,17 @@ export default async function OverviewPage() {
         {/* Activity Feed */}
         <div className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-3">
-            <ActivityFeed activities={activities as never} isLoading={false} />
+            <ActivityFeed 
+              activities={activities.map(a => ({
+                _id: a.id,
+                storyId: a.story_id,
+                type: a.type,
+                timestamp: new Date(a.created_at ?? 0).getTime(),
+                storyTitle: Array.isArray(a.stories) ? a.stories[0]?.title : a.stories?.title ?? "Unknown Story",
+                storySlug: Array.isArray(a.stories) ? a.stories[0]?.slug : a.stories?.slug ?? ""
+              }))} 
+              isLoading={false} 
+            />
           </div>
         </div>
 
