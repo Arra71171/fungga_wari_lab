@@ -260,10 +260,8 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
   // Derive first scene ID for "restart" logic
   const firstSceneId = chapters[0]?.scenes[0]?.id ?? null;
 
-  // ── Empty states ─────────────────────────────────────────────────────────
-  if (!story) return null;
-
-  // Derive the active chapter for fallback content without introducing hook order issues.
+  // Derive the active chapter — done before any early returns so hooks always
+  // run in the same order regardless of story state.
   let activeChapter = chapters[0] ?? null;
   let activeChapterIndex = 0;
 
@@ -282,11 +280,6 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
   const activeSceneIndex = activeChapter
     ? activeChapter.scenes.findIndex((s) => s.id === currentSceneId)
     : -1;
-
-  // Is this the last scene in the current chapter (no choices)?
-  const isLastSceneInChapter =
-    activeChapter !== null &&
-    activeSceneIndex === activeChapter.scenes.length - 1;
 
   // Is this the very last chapter?
   const isLastChapter = activeChapterIndex === chapters.length - 1;
@@ -330,6 +323,9 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
   React.useEffect(() => {
     scrollContentToTop();
   }, [currentSceneId, scrollContentToTop]);
+
+  // ── Empty state — all hooks are above, safe to return early here ──────────
+  if (!story) return null;
 
   // Navigation handler
   function goToNext() {

@@ -5,6 +5,7 @@ import { StoryReaderShell } from "@/components/story/StoryReaderShell";
 import { PaywallGate } from "@/components/story/PaywallGate";
 import { checkUserAccess } from "@/actions/paywallActions";
 import { PaymentSuccessHandler } from "@/components/story/PaymentSuccessHandler";
+import type { StoryShape } from "@/components/story/StoryReaderContext";
 
 type StoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -99,13 +100,30 @@ export default async function StoryPage({ params }: StoryPageProps) {
     console.log("[StoryPage] StoryData fetched successfully. Chapters:", storyData.chapters?.length);
   }
 
-  let initialStory = null;
+  let initialStory: StoryShape | undefined;
   if (storyData) {
-    const sortedChapters = ((storyData.chapters ?? []) as any[])
-      .sort((a, b) => a.order - b.order)
-      .map((ch) => ({
+    type RawChapter = NonNullable<typeof storyData.chapters>[number];
+    type RawScene = NonNullable<RawChapter["scenes"]>[number];
+
+    const sortedChapters = (storyData.chapters ?? [])
+      .slice()
+      .sort((a: RawChapter, b: RawChapter) => a.order - b.order)
+      .map((ch: RawChapter) => ({
         ...ch,
-        scenes: (ch.scenes ?? []).sort((a: any, b: any) => a.order - b.order),
+        // Cast tiptap_content: Supabase Json type is structurally Record<string,unknown>
+        // at runtime; the generated type is a union that includes string/number/boolean
+        // which tsc can't narrow without a cast here.
+        tiptap_content: ch.tiptap_content as Record<string, unknown> | null,
+        scenes: (ch.scenes ?? [])
+          .slice()
+          .sort((a: RawScene, b: RawScene) => a.order - b.order)
+          .map((s: RawScene) => ({
+            ...s,
+            tiptap_content: s.tiptap_content as Record<string, unknown> | null,
+            is_draft: s.is_draft ?? false,
+            version: s.version ?? 1,
+            choices: [] as Array<{ id: string; label: string; next_scene_id: string }>,
+          })),
       }));
 
     initialStory = {

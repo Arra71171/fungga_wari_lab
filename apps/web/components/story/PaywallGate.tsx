@@ -1,14 +1,15 @@
 import * as React from "react";
 import { PaywallOverlay } from "@workspace/ui/components/PaywallOverlay";
 import { createCheckoutSession } from "@/actions/paywallActions";
-import { StoryReaderProvider } from "./StoryReaderContext";
+import { StoryReaderProvider, type StoryShape } from "./StoryReaderContext";
 
 type PaywallGateProps = {
   slug: string;
   hasAccess: boolean;
-  initialStory?: any; // We can use any or import StoryShape, I will just use any here to avoid cyclic imports
+  initialStory?: StoryShape;
   children: React.ReactNode;
 };
+
 
 /**
  * PaywallGate — Server Component wrapper.
