@@ -59,7 +59,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={cn(
-        "dark antialiased font-sans flex flex-col min-h-screen",
+        "antialiased font-sans flex flex-col min-h-screen",
         cinzel.variable,
         instrumentSerif.variable,
         poppins.variable,
