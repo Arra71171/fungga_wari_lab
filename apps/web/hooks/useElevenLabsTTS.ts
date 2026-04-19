@@ -2,8 +2,8 @@ import * as React from "react";
 
 export type TTSState = "idle" | "loading" | "playing" | "paused" | "error";
 
-// Default voice — Rachel (warm narration voice, great for stories)
-const DEFAULT_VOICE_ID = "21m00Tcm4TlvDq8ikWAM";
+// Default voice — Sarah (warm, expressive female narration, free tier premade)
+const DEFAULT_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
 
 /**
  * useElevenLabsTTS — Streams TTS audio from our /api/tts proxy (ElevenLabs backend).
