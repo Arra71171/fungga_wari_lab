@@ -143,6 +143,36 @@ Impact:
 
 - Root `pnpm run build` now succeeds for both applications.
 
+### 8. React hydration mismatch in Cinematic Reader
+
+Root cause:
+
+- Client-side state (`currentSceneId`) was initialized to `null`, diverging from the server-side render that assumed the first scene, causing UI mismatches (e.g., button disabled states) during hydration.
+
+Fix:
+
+- Updated `apps/web/components/story/StoryReaderContext.tsx`
+- Synchronously initialized `currentSceneId` to the first scene ID when `initialStory` is available, aligning server and client rendering logic.
+
+Impact:
+
+- Eliminated console hydration errors and stabilized initial load presentation of the `StoryRightPanel` and `MobileReaderBar`.
+
+### 9. Missing Footer Credits
+
+Root cause:
+
+- Landing page footer was missing team attribution.
+
+Fix:
+
+- Updated `apps/web/app/page.tsx`
+- Injected `Code. Coffee. Oliver Oinam (Fungga_Wari Team)` text into the global footer.
+
+Impact:
+
+- Correct team credit and branding is now visible across the landing page experience.
+
 ## Static Audit Results
 
 Authored source checks were run against `apps/web`, `apps/dashboard`, `packages/ui`, and `packages/auth`, excluding generated output and dependencies.
