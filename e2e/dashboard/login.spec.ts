@@ -1,45 +1,29 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import {
+  ensureE2EUser,
+  findUserRow,
+  loginToDashboard,
+} from "../support/testBackend";
 
-/**
- * Dashboard App — Login Page E2E Smoke Tests
- * baseURL: http://localhost:3000
- */
-
-test.describe("Login Page", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-  });
-
-  test("should redirect unauthenticated users to login", async ({ page }) => {
-    // Wait for redirect to complete (Clerk middleware)
-    await page.waitForURL(/sign-in|login/, { timeout: 10_000 });
-    expect(page.url()).toMatch(/sign-in|login/);
-  });
-
-  test("should render the Clerk sign-in form", async ({ page }) => {
-    await page.waitForURL(/sign-in|login/, { timeout: 10_000 });
-    // Clerk renders an email input field
-    const emailInput = page.locator("input[name='identifier'], input[type='email']");
-    await expect(emailInput).toBeVisible({ timeout: 8_000 });
-  });
-
-  test("should have the dashboard title tag", async ({ page }) => {
-    await expect(page).toHaveTitle(/Hearth|Dashboard|Fungga/i);
-  });
-});
-
-test.describe("Dashboard Shell (authenticated)", () => {
-  // These tests require a logged-in session.
-  // Use storageState or a global setup file once auth flow is established.
-  test.skip("should render the sidebar navigation", async ({ page }) => {
+test.describe("Dashboard authentication", () => {
+  test("redirects unauthenticated visitors to login", async ({ page }) => {
     await page.goto("/overview");
-    const nav = page.locator("nav[aria-label='Sidebar']");
-    await expect(nav).toBeVisible();
+
+    await page.waitForURL(/\/login/, { timeout: 30_000 });
+    await expect(page.locator("input[name='identifier']")).toBeVisible();
+    await expect(page).toHaveTitle(/creator studio|fungga/i);
   });
 
-  test.skip("should render the overview KPI cards", async ({ page }) => {
-    await page.goto("/overview");
-    const kpiCards = page.locator("[data-slot='kpi-card']");
-    await expect(kpiCards.first()).toBeVisible();
+  test("signs in with Clerk and syncs the user into Supabase", async ({ page }) => {
+    const user = await ensureE2EUser();
+
+    await loginToDashboard(page, user);
+
+    await expect(page).toHaveURL(/\/overview$/);
+    await expect(page.locator("h1")).toContainText(/welcome back|overview/i);
+
+    await expect
+      .poll(async () => Boolean(await findUserRow(user.clerkId)), { timeout: 60_000 })
+      .toBe(true);
   });
 });

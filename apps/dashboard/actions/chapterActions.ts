@@ -52,10 +52,27 @@ export async function createChapter(args: {
 
   if (error) throw new Error(`Failed to create chapter: ${error.message}`)
 
+  const { data: scene, error: sceneError } = await supabase
+    .from("scenes")
+    .insert({
+      chapter_id: data.id,
+      title: args.title,
+      order: 1,
+      is_draft: true,
+      version: 1,
+    })
+    .select("id")
+    .single()
+
+  if (sceneError) {
+    await supabase.from("chapters").delete().eq("id", data.id)
+    throw new Error(`Failed to create initial scene: ${sceneError.message}`)
+  }
+
   // Increment chapter_count on story
   await supabase.rpc("increment_chapter_count", { story_id: args.storyId })
 
-  return data.id
+  return { chapterId: data.id, sceneId: scene.id }
 }
 
 /**

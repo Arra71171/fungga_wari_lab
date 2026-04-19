@@ -21,7 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
     let clerkToken: string | null = null;
     try {
       clerkToken = await authObj.getToken({ template: "supabase" });
-    } catch (_e) {
+    } catch {
       console.warn("Clerk supabase template not configured");
     }
 
@@ -40,8 +40,8 @@ export default clerkMiddleware(async (auth, req) => {
 
         if (response.ok) {
           const data = await response.json();
-          // If user not found or not an admin, redirect to public web site
-          if (!data || data.length === 0 || data[0].role !== 'admin') {
+          // If user not found or not a superadmin, redirect to public web site
+          if (!data || data.length === 0 || data[0].role !== 'superadmin') {
             const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
             return NextResponse.redirect(new URL(webUrl));
           }

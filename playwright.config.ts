@@ -19,7 +19,7 @@ export default defineConfig({
     ["list"],
   ],
   use: {
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
   projects: [

@@ -7,6 +7,13 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@workspace/ui", "@workspace/auth"],
+  experimental: {
+    // Cache fetch responses in Server Components across HMR refreshes — faster local dev
+    // See: https://nextjs.org/docs/app/api-reference/config/next-config-js/serverComponentsHmrCache
+    serverComponentsHmrCache: true,
+    // Optimize imports from these packages to avoid slow barrel-file compilation
+    optimizePackageImports: ["lucide-react", "@workspace/ui"],
+  },
   images: {
     qualities: [25, 50, 75, 90, 100],
     // placehold.co returns SVG — must be enabled at the top level in Next.js 15+

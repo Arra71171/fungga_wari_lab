@@ -23,18 +23,18 @@ import { OperativeDossier } from "@/components/settings/OperativeDossier";
 import { getAllUsers, updateUserRole } from "@/actions/userActions";
 import { getGlobalContent, upsertGlobalContent } from "@/actions/assetActions";
 
-type Role = "admin" | "editor" | "viewer";
+type Role = "superadmin" | "editor" | "viewer";
 type Member = Awaited<ReturnType<typeof getAllUsers>>[number];
 
 // ─── Role Meta ────────────────────────────────────────────────────────────────
 
 const ROLE_META: Record<Role, { label: string; icon: React.ReactNode }> = {
-  admin: { label: "Admin", icon: <ShieldCheck className="size-3" /> },
+  superadmin: { label: "Superadmin", icon: <ShieldCheck className="size-3" /> },
   editor: { label: "Editor", icon: <UserCheck className="size-3" /> },
   viewer: { label: "Viewer", icon: <Eye className="size-3" /> },
 };
 
-const ROLE_CYCLE: Role[] = ["viewer", "editor", "admin"];
+const ROLE_CYCLE: Role[] = ["viewer", "editor", "superadmin"];
 
 // ─── RoleBadge ───────────────────────────────────────────────────────────────
 
@@ -43,7 +43,7 @@ function RoleBadge({ role }: { role: string }) {
   return (
     <div
       className={`flex items-center justify-center gap-2 px-3 py-1.5 border-2 text-[10px] font-mono tracking-widest uppercase shadow-brutal-sm ${
-        role === "admin"
+        role === "superadmin"
           ? "border-brand-ember text-brand-ember bg-brand-ember/5"
           : role === "editor"
           ? "border-brand-ochre text-brand-ochre bg-brand-ochre/5"
@@ -256,7 +256,7 @@ export default function SettingsPage() {
 
   // Use Clerk publicMetadata for role — synced by Clerk dashboard
   const myRole = (clerkUser?.publicMetadata?.role as string) ?? "editor";
-  const isCallerAdmin = myRole === "admin";
+  const isCallerAdmin = myRole === "superadmin";
 
   useEffect(() => {
     getAllUsers()
@@ -346,7 +346,7 @@ export default function SettingsPage() {
                   <RoleBadge role={role} />
                 </div>
                 <p className="text-[10px] font-mono text-muted-foreground tracking-widest leading-relaxed uppercase">
-                  {role === "admin" && "Root access level. Complete matrix control over configuration and roles."}
+                  {role === "superadmin" && "Root access level. Complete matrix control over configuration and roles."}
                   {role === "editor" && "Authoring access. Ability to overwrite literature and sequence flows."}
                   {role === "viewer" && "Observer level. Access granted strictly for reading and verifying."}
                 </p>

@@ -6,6 +6,7 @@ import { StoryReaderProvider } from "./StoryReaderContext";
 type PaywallGateProps = {
   slug: string;
   hasAccess: boolean;
+  initialStory?: any; // We can use any or import StoryShape, I will just use any here to avoid cyclic imports
   children: React.ReactNode;
 };
 
@@ -17,14 +18,14 @@ type PaywallGateProps = {
  *   PaywallOverlay on top. The overlay calls the createCheckoutSession
  *   server action bound to this story's slug.
  */
-export function PaywallGate({ slug, hasAccess, children }: PaywallGateProps) {
+export function PaywallGate({ slug, hasAccess, initialStory, children }: PaywallGateProps) {
   // Bind the slug into the server action so PaywallOverlay doesn't need
   // to know about paywallActions directly.
   const checkoutWithSlug = createCheckoutSession.bind(null, slug);
 
   if (hasAccess) {
     return (
-      <StoryReaderProvider>
+      <StoryReaderProvider initialStory={initialStory}>
         {children}
       </StoryReaderProvider>
     );
@@ -34,11 +35,10 @@ export function PaywallGate({ slug, hasAccess, children }: PaywallGateProps) {
     <div className="relative w-full min-h-screen overflow-hidden">
       {/* Teaser — blurred, non-interactive reader */}
       <div
-        className="pointer-events-none select-none"
+        className="pointer-events-none select-none blur-sm opacity-40"
         aria-hidden="true"
-        style={{ filter: "blur(3px)", opacity: 0.4 }}
       >
-        <StoryReaderProvider>
+        <StoryReaderProvider initialStory={initialStory}>
           {children}
         </StoryReaderProvider>
       </div>

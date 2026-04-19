@@ -1,5 +1,5 @@
 -- Seed Data for test users and roles
--- Using stable UUIDs for predictable testing
+-- Users keep stable UUIDs, but Clerk-backed ownership columns store clerk_id text.
 
 -- Insert Admin User
 INSERT INTO users (id, name, email, role, clerk_id, bio, alias)
@@ -47,7 +47,7 @@ VALUES (
 INSERT INTO stories (id, author_id, title, slug, language, status, description, category)
 VALUES (
   '00000000-0000-0000-0000-000000000010',
-  '00000000-0000-0000-0000-000000000002',
+  'user_editor123',
   'The First Tale',
   'the-first-tale',
   'en',

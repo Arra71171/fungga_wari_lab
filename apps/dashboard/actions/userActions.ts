@@ -93,23 +93,23 @@ export async function getAllUsers() {
 }
 
 /**
- * updateUserRole — change a user's role (admin only).
+ * updateUserRole — change a user's role (superadmin only).
  */
-export async function updateUserRole(targetClerkId: string, role: "admin" | "editor" | "viewer") {
+export async function updateUserRole(targetClerkId: string, role: "superadmin" | "editor" | "viewer") {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthenticated")
 
   const supabase = await createClient()
 
-  // Verify caller is admin
+  // Verify caller is superadmin
   const { data: caller } = await supabase
     .from("users")
     .select("role")
     .eq("clerk_id", userId)
     .single()
 
-  if (!caller || caller.role !== "admin") {
-    throw new Error("Forbidden — only admins can change roles")
+  if (!caller || caller.role !== "superadmin") {
+    throw new Error("Forbidden — only superadmins can change roles")
   }
 
   const { error } = await supabase

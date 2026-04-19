@@ -12,7 +12,12 @@ import { useStoryReader } from "./StoryReaderContext";
  * Reads all data from StoryReaderContext (Supabase-backed).
  * No props required. Uses `id` (not legacy `_id`) from new context.
  */
-export function StorySidebar() {
+type StorySidebarProps = {
+  /** Called when a scene is selected — used to close mobile drawer */
+  onSceneSelect?: () => void;
+};
+
+export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
   const { story, chapters, currentSceneId, setCurrentSceneId } = useStoryReader();
   const [expandedChapterId, setExpandedChapterId] = React.useState<string | null>(null);
 
@@ -47,7 +52,7 @@ export function StorySidebar() {
   return (
     <aside
       data-slot="story-sidebar"
-      className="w-72 h-full flex flex-col pt-6 pb-8 border-r border-cinematic-border shrink-0 bg-cinematic-panel/90 backdrop-blur-md z-10"
+      className="w-full lg:w-72 h-full flex flex-col pt-6 pb-8 border-r border-cinematic-border shrink-0 bg-cinematic-panel/90 backdrop-blur-md z-10"
     >
       {/* Logo */}
       <div className="flex items-center justify-between px-6 mb-8">
@@ -79,7 +84,7 @@ export function StorySidebar() {
                 {/* Chapter header */}
                 <button
                   onClick={() => setExpandedChapterId(isExpanded ? null : chapter.id)}
-                  className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-white/5 rounded-none transition-colors"
+                  className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-cinematic-border rounded-none transition-colors"
                   aria-expanded={isExpanded}
                   aria-label={`Chapter ${chIdx + 1}: ${chapter.title}`}
                 >
@@ -106,7 +111,7 @@ export function StorySidebar() {
                           key={scene.id}
                           onClick={() => {
                             setCurrentSceneId(scene.id);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
+                            onSceneSelect?.();
                           }}
                           aria-label={`Scene ${scIdx + 1}: ${scene.title ?? "Scene"}`}
                           aria-current={isActive ? "true" : undefined}
@@ -114,7 +119,7 @@ export function StorySidebar() {
                             "w-full flex items-center gap-3 px-3 py-2 text-xs rounded-none cursor-pointer transition-all text-left",
                             isActive
                               ? "bg-brand-ember/10 border-l-2 border-brand-ember text-cinematic-text font-medium"
-                              : "text-muted-foreground hover:text-cinematic-text hover:bg-white/5 border-l-2 border-transparent"
+                              : "text-muted-foreground hover:text-cinematic-text hover:bg-cinematic-border border-l-2 border-transparent"
                           )}
                         >
                           {isActive ? (

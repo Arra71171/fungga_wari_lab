@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -16,7 +18,7 @@ import {
 import { Loader2, Plus, Trash2, UploadCloud, BookOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createStory } from "@/actions/storyActions";
-import { createChapter, updateChapter } from "@/actions/chapterActions";
+import { createChapter, updateChapter, updateSceneContent } from "@/actions/chapterActions";
 import { createAsset } from "@/actions/assetActions";
 import type { Database } from "@workspace/ui/types/supabase";
 
@@ -64,6 +66,38 @@ const STORY_LANGUAGES = [
   { value: "english", label: "English" },
   { value: "bilingual", label: "Bilingual" },
 ];
+
+function ChapterIllustrationPreview({
+  file,
+}: {
+  file: File;
+}) {
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [file]);
+
+  if (!previewUrl) {
+    return null;
+  }
+
+  return (
+    <Image
+      src={previewUrl}
+      alt="Chapter illustration preview"
+      fill
+      sizes="(max-width: 1024px) 100vw, 320px"
+      className="absolute inset-0 h-full w-full object-cover opacity-60 transition-opacity group-hover/upload:opacity-40"
+      unoptimized
+    />
+  );
+}
 
 export function StoryAssetForm() {
   const router = useRouter();
@@ -123,7 +157,7 @@ export function StoryAssetForm() {
       for (let i = 0; i < chapters.length; i++) {
         const ch = chapters[i]!;
 
-        const chapterId = await createChapter({
+        const { chapterId, sceneId } = await createChapter({
           storyId,
           title: ch.title || `Chapter ${i + 1}`,
           order: i + 1,
@@ -150,6 +184,10 @@ export function StoryAssetForm() {
         await updateChapter(chapterId, {
           content: ch.text || undefined,
           illustration_url: illustrationUrl ?? null,
+        });
+        await updateSceneContent(sceneId, {
+          content: ch.text || undefined,
+          title: ch.title || `Chapter ${i + 1}`,
         });
       }
 
@@ -318,19 +356,14 @@ export function StoryAssetForm() {
                 <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
                   Illustration
                 </Label>
-                <label className="flex flex-col items-center justify-center w-full h-[calc(100%-1.5rem)] min-h-[14rem] border border-dashed border-border bg-bg-base hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors cursor-pointer group/upload relative overflow-hidden">
+                <label className="relative flex w-full aspect-[3/4] min-h-56 flex-col items-center justify-center overflow-hidden border border-dashed border-border bg-bg-base transition-colors hover:border-brand-ember/50 hover:bg-bg-overlay/80 cursor-pointer group/upload">
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-10 w-full h-full">
                     {chapter.file ? (
                       <div className="flex flex-col items-center justify-center h-full w-full">
                         <div className="flex-1 w-full relative mb-3 overflow-hidden border border-border">
-                          {/* eslint-disable-next-line @next/next/no-img-element, no-restricted-syntax */}
-                          <img
-                            src={URL.createObjectURL(chapter.file)}
-                            alt="preview"
-                            className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover/upload:opacity-40 transition-opacity"
-                          />
+                          <ChapterIllustrationPreview file={chapter.file} />
                         </div>
-                        <p className="text-xs font-mono text-brand-ochre truncate max-w-[12rem] bg-bg-base/80 px-2">
+                        <p className="max-w-48 truncate bg-bg-base/80 px-2 text-xs font-mono text-brand-ochre">
                           {chapter.file.name}
                         </p>
                         <p className="text-[9px] font-mono text-muted-foreground mt-1 uppercase tracking-widest">

@@ -88,12 +88,15 @@ export default function StoriesOverviewPage() {
 
     setDeletingId(storyId);
     try {
-      await deleteStory(storyId);
+      const result = await deleteStory(storyId);
+      if (result && !result.success) {
+        throw new Error(result.error || "Unknown server error");
+      }
       toast.success("Manuscript Destroyed", { description: "The story has been permanently erased." });
       setStories((prev) => prev?.filter((s) => s.id !== storyId) ?? null);
-    } catch (err) {
-      console.error("Failed to delete story:", err);
-      toast.error("Deletion Failed", { description: "Could not remove the manuscript." });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not remove the manuscript.";
+      toast.error("Deletion Failed", { description: message });
     } finally {
       setDeletingId(null);
     }

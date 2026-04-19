@@ -70,21 +70,50 @@ export default async function StoryPage({ params }: StoryPageProps) {
   const hasAccess = await checkUserAccess();
 
   const supabase = await createClient();
-  const { data: story } = await supabase
+  const { data: storyData } = await supabase
     .from("stories")
-    .select("cover_image_url")
+    .select(`
+      id, title, slug, description, category, language, status,
+      cover_image_url, tags, moral, attributed_author, author_id,
+      chapter_count, view_count, read_count, published_at,
+      created_at, updated_at,
+      chapters (
+        id, title, "order", illustration_url, tiptap_content,
+        scenes (
+          id, title, "order", content, tiptap_content, illustration_url,
+          is_draft, version, reading_time, excerpt,
+          choices!choices_scene_id_fkey ( id, label, next_scene_id )
+        )
+      )
+    `)
     .eq("slug", slug)
     .single();
+
+  let initialStory = null;
+  if (storyData) {
+    const sortedChapters = ((storyData.chapters ?? []) as any[])
+      .sort((a, b) => a.order - b.order)
+      .map((ch) => ({
+        ...ch,
+        scenes: (ch.scenes ?? []).sort((a: any, b: any) => a.order - b.order),
+      }));
+
+    initialStory = {
+      ...storyData,
+      _id: storyData.id,
+      chapters: sortedChapters,
+    };
+  }
 
   return (
     <div className="relative w-full h-full min-h-screen flex justify-center bg-cinematic-bg overflow-hidden">
       {/* Immersive background illustration */}
-      {story?.cover_image_url && (
+      {initialStory?.cover_image_url && (
         <>
           <div
             className="absolute inset-0 z-0 pointer-events-none opacity-20 transition-opacity duration-1000"
             style={{
-              backgroundImage: `url(${story.cover_image_url})`,
+              backgroundImage: `url(${initialStory.cover_image_url})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               filter: "blur(24px)",
@@ -101,7 +130,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
         <React.Suspense fallback={null}>
           <PaymentSuccessHandler />
         </React.Suspense>
-        <PaywallGate slug={slug} hasAccess={hasAccess}>
+        <PaywallGate slug={slug} hasAccess={hasAccess} initialStory={initialStory}>
           <StoryReaderShell slug={slug} />
         </PaywallGate>
       </div>

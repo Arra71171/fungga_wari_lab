@@ -41,6 +41,7 @@ type Story = {
   viewCount?: number;
   readCount?: number;
   moral?: string;
+  attributedAuthor?: string;
   chapterCount?: number;
 };
 
@@ -598,7 +599,7 @@ export default function StoriesPage() {
     async function fetchStories() {
       let query = supabase
         .from("stories")
-        .select("id, title, slug, description, category, language, status, cover_image_url, tags, view_count, published_at")
+        .select("id, title, slug, description, category, language, status, cover_image_url, tags, view_count, published_at, moral, attributed_author, chapter_count")
         .eq("status", "published");
 
       if (activeCategory) {
@@ -634,6 +635,9 @@ export default function StoriesPage() {
         tags: Array.isArray(row.tags) ? (row.tags as string[]) : [],
         viewCount: row.view_count || 0,
         publishedAt: row.published_at ? new Date(row.published_at).getTime() : undefined,
+        moral: row.moral || undefined,
+        attributedAuthor: row.attributed_author || undefined,
+        chapterCount: row.chapter_count ?? 0,
       }));
 
       setStories(mappedStories);

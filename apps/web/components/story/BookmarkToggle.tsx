@@ -10,7 +10,7 @@ export function BookmarkToggle({ storyId }: { storyId: string }) {
   const [isBookmarked, setIsBookmarked] = React.useState<boolean | undefined>(undefined);
   const [isToggling, setIsToggling] = React.useState(false);
   const { userId } = useAuth();
-  const supabase = createClient();
+  const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     async function checkBookmark() {

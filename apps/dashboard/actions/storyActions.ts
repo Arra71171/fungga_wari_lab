@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@workspace/ui/types/supabase"
 
 type StoryCategory = Database["public"]["Enums"]["story_category"]
@@ -143,9 +144,6 @@ export async function getFullStoryById(id: string) {
 
 /**
  * createDraftStory — creates a blank draft for the current author.
- * 
- * FIXED: Looks up the author's Supabase UUID via clerk_id before inserting.
- * stories.author_id is uuid REFERENCES users(id) — cannot store Clerk string IDs.
  */
 export async function createDraftStory() {
   const { userId } = await auth()
@@ -153,7 +151,7 @@ export async function createDraftStory() {
 
   const supabase = await createClient()
 
-  // stories.author_id stores Clerk userId strings directly (TEXT, no FK)
+  // stories.author_id stores the Clerk userId string directly.
   const slug = generateDraftSlug()
 
   const { data, error } = await supabase
@@ -349,21 +347,56 @@ export async function submitForReview(id: string) {
 
 /**
  * deleteStory — cascade deletes chapters → scenes → choices via FK ON DELETE CASCADE.
+ * Uses service role to bypass RLS for administrative delete.
  */
 export async function deleteStory(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
+  try {
+    const { userId } = await auth()
+    if (!userId) {
+      return { success: false, error: "Unauthenticated" }
+    }
 
-  const supabase = await createClient()
+    const supabase = await createClient()
 
-  const { error } = await supabase
-    .from("stories")
-    .delete()
-    .eq("id", id)
-    .eq("author_id", userId)
+    // Verify ownership with the authenticated (RLS-scoped) client first
+    const { data: story, error: authError } = await supabase
+      .from("stories")
+      .select("id")
+      .eq("id", id)
+      .single()
 
-  if (error) throw new Error(`Failed to delete story: ${error.message}`)
-  return { success: true }
+    if (authError || !story) {
+      return { success: false, error: `Story not found or unauthorized: ${authError?.message}` }
+    }
+
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (!serviceRoleKey) {
+      console.error("[deleteStory] SUPABASE_SERVICE_ROLE_KEY is not configured")
+      return { success: false, error: "Server configuration error: missing service role key" }
+    }
+
+    // Use service role client to bypass RLS for the cascade delete
+    const supabaseAdmin = createSupabaseClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      serviceRoleKey
+    )
+
+    const { error } = await supabaseAdmin
+      .from("stories")
+      .delete()
+      .eq("id", id)
+
+    if (error) {
+      console.error(`[deleteStory] Delete failed: ${error.message}`)
+      return { success: false, error: `Delete failed: ${error.message}` }
+    }
+
+    return { success: true }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error"
+    console.error("[deleteStory] Unexpected error:", message)
+    return { success: false, error: `Delete failed: ${message}` }
+  }
 }
 
 /**

@@ -1,10 +1,18 @@
 import * as React from "react"
+import Image from "next/image"
 import { cn } from "@workspace/ui/lib/utils"
+
+type PortraitFrameImageProps = {
+  alt: string
+  className: string
+  sizes: string
+  src: string
+}
 
 export interface PortraitFrameProps extends React.HTMLAttributes<HTMLDivElement> {
   imageUrl: string
   alt?: string
-  renderImage?: (props: { src: string; alt: string; className: string }) => React.ReactNode
+  renderImage?: (props: PortraitFrameImageProps) => React.ReactNode
 }
 
 function PortraitFrame({
@@ -14,18 +22,33 @@ function PortraitFrame({
   className,
   ...props
 }: PortraitFrameProps) {
+  const imageSizes = "(max-width: 768px) 100vw, 50vw"
+  const imageClassName = "h-full w-full object-cover"
+
   const imageElement = renderImage ? (
-    renderImage({ src: imageUrl, alt, className: "object-cover w-full h-full" })
+    renderImage({ src: imageUrl, alt, className: imageClassName, sizes: imageSizes })
   ) : (
-    // eslint-disable-next-line no-restricted-syntax
-    <img src={imageUrl} alt={alt} className="object-cover w-full h-full" />
+    <Image
+      src={imageUrl}
+      alt={alt}
+      fill
+      sizes={imageSizes}
+      className={imageClassName}
+      unoptimized
+    />
   )
 
   const blurElement = renderImage ? (
-    renderImage({ src: imageUrl, alt: "", className: "object-cover w-full h-full" })
+    renderImage({ src: imageUrl, alt: "", className: imageClassName, sizes: imageSizes })
   ) : (
-    // eslint-disable-next-line no-restricted-syntax
-    <img src={imageUrl} alt="" className="object-cover w-full h-full" />
+    <Image
+      src={imageUrl}
+      alt=""
+      fill
+      sizes={imageSizes}
+      className={imageClassName}
+      unoptimized
+    />
   )
 
   return (

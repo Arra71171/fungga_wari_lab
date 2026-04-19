@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   Loader2,
   Plus,
@@ -239,7 +240,7 @@ export default function StoryEditorPage() {
 
   const handleAddChapter = async () => {
     const newOrder = (chapters?.length ?? 0) + 1;
-    const newId = await createChapterAction({
+    const { chapterId: newChapterId } = await createChapterAction({
       storyId,
       title: `Chapter ${newOrder}`,
       order: newOrder,
@@ -247,7 +248,7 @@ export default function StoryEditorPage() {
     // Refresh chapters and select new one
     const updated = await getChaptersByStory(storyId);
     setChapters(updated as ChapterRow[]);
-    setActiveChapterId(newId);
+    setActiveChapterId(newChapterId);
     setActiveSceneId(null);
     setSceneList([]);
   };
@@ -927,17 +928,19 @@ export default function StoryEditorPage() {
               </Label>
               {activeSceneData.illustration_url ? (
                 <div className="relative aspect-[3/4] border border-border overflow-hidden bg-muted group">
-                  {/* eslint-disable-next-line @next/next/no-img-element, no-restricted-syntax */}
-                  <img
+                  <Image
                     src={activeSceneData.illustration_url}
                     alt={activeSceneData.title ?? "Scene illustration"}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 320px"
                     className="w-full h-full object-cover"
+                    unoptimized
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="absolute inset-0 bg-cinematic-bg/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-white hover:text-white hover:bg-white/20 font-mono text-[10px] uppercase tracking-widest"
+                      className="text-cinematic-text hover:text-cinematic-text hover:bg-cinematic-border font-mono text-[10px] uppercase tracking-widest"
                       onClick={async () => {
                         const input = document.createElement("input");
                         input.type = "file";

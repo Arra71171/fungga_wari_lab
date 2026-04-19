@@ -1,9 +1,10 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 // The Reader app is entirely public with optional auth.
+// /login and /register are public sign-in/sign-up routes.
 // Authorization for stories is handled at the component level by PaywallGate.
 
-export default clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware(() => {
   // No globally protected routes in the public web app.
 });
 

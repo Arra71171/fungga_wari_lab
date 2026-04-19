@@ -54,7 +54,7 @@ function TaskCard({
     todo: "bg-muted text-muted-foreground",
     in_progress: "bg-primary/20 text-primary",
     review: "bg-secondary text-secondary-foreground",
-    done: "bg-green-500/20 text-green-500",
+    done: "bg-brand-ochre/15 text-brand-ochre",
   }
 
   return (

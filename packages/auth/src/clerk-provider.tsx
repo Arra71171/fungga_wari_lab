@@ -56,7 +56,7 @@ export function ClerkAuthProvider({ children }: Props) {
           card: "bg-background border border-border shadow-none rounded-none",
           headerTitle: "font-heading uppercase tracking-tighter",
           headerSubtitle: "font-mono uppercase tracking-widest text-[10px]",
-          formButtonPrimary: "rounded-none bg-brand-ember text-black hover:opacity-90 font-mono text-xs font-bold uppercase tracking-widest transition-none h-10",
+          formButtonPrimary: "rounded-none bg-brand-ember text-primary-foreground hover:opacity-90 font-mono text-xs font-bold uppercase tracking-widest transition-none h-10",
         },
       }}
     >

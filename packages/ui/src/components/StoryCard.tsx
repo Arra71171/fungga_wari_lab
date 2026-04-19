@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import Image from "next/image"
 import { cn } from "@workspace/ui/lib/utils"
 // CategoryBadge reserved for future use in category display variations
 import { ProgressBar } from "@workspace/ui/components/ProgressBar"
@@ -52,6 +53,8 @@ function StoryCard({
   ...props
 }: StoryCardProps) {
   const isCompact = variant === "compact"
+  const compactImageSizes = "(max-width: 768px) 100vw, 33vw"
+  const portraitImageSizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
 
   if (isCompact) {
     // Compact Horizontal Layout (Bento structure applied differently)
@@ -65,12 +68,13 @@ function StoryCard({
           {renderImage ? (
             renderImage()
           ) : coverUrl ? (
-            // eslint-disable-next-line no-restricted-syntax
-            <img
+            <Image
               src={coverUrl}
               alt={title}
+              fill
+              sizes={compactImageSizes}
               className="h-full w-full object-cover grayscale transition-transform duration-500 group-hover:grayscale-0 group-hover:scale-105"
-              loading="lazy"
+              unoptimized
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-cinematic-bg to-bg-overlay flex items-center justify-center">
@@ -113,12 +117,13 @@ function StoryCard({
         {renderImage ? (
           renderImage()
         ) : coverUrl ? (
-          // eslint-disable-next-line no-restricted-syntax
-          <img
+          <Image
             src={coverUrl}
             alt={title}
+            fill
+            sizes={portraitImageSizes}
             className="h-full w-full object-cover grayscale-[20%] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.03]"
-            loading="lazy"
+            unoptimized
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-cinematic-panel to-cinematic-bg flex items-center justify-center">

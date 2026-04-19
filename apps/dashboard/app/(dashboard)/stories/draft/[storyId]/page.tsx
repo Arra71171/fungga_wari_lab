@@ -20,6 +20,7 @@ import {
 } from "@/actions/storyActions";
 import {
   createChapter,
+  createScene,
   updateChapter,
   updateSceneContent,
   deleteChapter,
@@ -310,7 +311,7 @@ export default function DraftEditorPage({
       const ch = updatedChapters[i]!;
 
       if (ch.isNew) {
-        const newChapterId = await createChapter({
+        const { chapterId: newChapterId, sceneId: newSceneId } = await createChapter({
           storyId,
           title: ch.title || `Chapter ${ch.order}`,
           order: ch.order,
@@ -323,14 +324,19 @@ export default function DraftEditorPage({
           illustration_url: ch.illustrationUrl ?? null,
         });
 
-        // The first scene is auto-created by createChapter in chapterActions
-        // Fetch scene id for choice wiring — reuse state for now
-        chapterIdToSceneId[ch.id] = newChapterId; // placeholder
-        chapterIdToSceneId[newChapterId] = newChapterId;
+        await updateSceneContent(newSceneId, {
+          tiptap_content: ch.tiptapContent,
+          content: ch.content,
+          title: ch.title || `Chapter ${ch.order}`,
+        });
+
+        chapterIdToSceneId[ch.id] = newSceneId;
+        chapterIdToSceneId[newChapterId] = newSceneId;
 
         updatedChapters[i] = {
           ...ch,
           id: newChapterId,
+          sceneId: newSceneId,
           isNew: false,
         };
       } else {
@@ -340,14 +346,27 @@ export default function DraftEditorPage({
           order: ch.order,
           illustration_url: ch.illustrationUrl ?? null,
         });
-        // Save story content to scenes table — that's where the web reader reads from
-        if (ch.sceneId) {
-          await updateSceneContent(ch.sceneId, {
-            tiptap_content: ch.tiptapContent,
-            content: ch.content,
+
+        let sceneId = ch.sceneId;
+        if (!sceneId) {
+          sceneId = await createScene({
+            chapterId: ch.id,
+            title: ch.title || `Chapter ${ch.order}`,
+            order: 1,
           });
-          chapterIdToSceneId[ch.id] = ch.sceneId;
+
+          updatedChapters[i] = {
+            ...updatedChapters[i]!,
+            sceneId,
+          };
         }
+
+        await updateSceneContent(sceneId, {
+          tiptap_content: ch.tiptapContent,
+          content: ch.content,
+          title: ch.title || `Chapter ${ch.order}`,
+        });
+        chapterIdToSceneId[ch.id] = sceneId;
       }
     }
 

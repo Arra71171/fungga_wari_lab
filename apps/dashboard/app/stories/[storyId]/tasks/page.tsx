@@ -65,7 +65,7 @@ export default function StoryTasksPage() {
             href={storyId ? `/stories/${storyId}` : "/stories"}
             className="text-muted-foreground hover:text-foreground transition-colors group"
           >
-            <div className="size-8 rounded-full bg-white/5 border border-border flex items-center justify-center group-hover:bg-white/10 group-hover:border-brand-ember/50">
+            <div className="size-8 rounded-full bg-cinematic-border border border-border flex items-center justify-center group-hover:bg-bg-overlay group-hover:border-brand-ember/50">
               <ArrowLeft className="size-4" />
             </div>
           </Link>
@@ -137,7 +137,7 @@ export default function StoryTasksPage() {
                 return (
                   <div
                     key={task.id}
-                    className="grid grid-cols-12 gap-4 px-6 py-5 bg-white/[0.02] border border-border-subtle rounded-sm hover:border-brand-ember/30 hover:bg-white/[0.04] transition-all group items-center"
+                    className="grid grid-cols-12 gap-4 px-6 py-5 bg-bg-overlay/20 border border-border-subtle rounded-sm hover:border-brand-ember/30 hover:bg-bg-overlay/40 transition-all group items-center"
                   >
                     <div className="col-span-5 flex items-center gap-4">
                       <button
@@ -180,7 +180,7 @@ export default function StoryTasksPage() {
                             ? "border-brand-ember/50 text-brand-ember bg-brand-ember/10"
                             : isInProgress
                             ? "border-brand-ochre/30 text-brand-ochre bg-brand-ochre/10"
-                            : "border-border text-muted-foreground/60 bg-white/5"
+                            : "border-border text-muted-foreground/60 bg-cinematic-border"
                         }`}
                       >
                         {isInProgress && <Clock className="size-3 animate-pulse" />}

@@ -164,14 +164,14 @@ export function OperativeDossier() {
             </p>
             <div
               className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 border-2 text-[10px] font-mono tracking-widest uppercase shadow-brutal-sm ${
-                role === "admin"
+                role === "superadmin"
                   ? "border-brand-ember text-brand-ember bg-brand-ember/5"
                   : role === "editor"
                   ? "border-brand-ochre text-brand-ochre bg-brand-ochre/5"
                   : "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
               }`}
             >
-              {role === "admin" && <ShieldCheck className="size-3" />}
+              {role === "superadmin" && <ShieldCheck className="size-3" />}
               {role} Level
             </div>
           </div>

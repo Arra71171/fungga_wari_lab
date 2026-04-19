@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Flame } from "lucide-react";
+import { ArrowLeft, ChevronDown, Flame } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { useStoryReader } from "./StoryReaderContext";
@@ -24,6 +25,10 @@ function extractText(node: TipTapNode): string {
   return node.content.map(extractText).join("");
 }
 
+function isInternalHref(href: string | undefined): boolean {
+  return Boolean(href && (href.startsWith("/") || href.startsWith("#")));
+}
+
 /** Render a single TipTap node to a React element */
 function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
   switch (node.type) {
@@ -38,7 +43,7 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
       const text = extractText(node);
       if (!text.trim()) return <div key={index} className="h-4" aria-hidden />;
       return (
-        <p key={index} className="font-sans text-base leading-[1.9] text-cinematic-text mb-5">
+        <p key={index} className="font-sans text-base md:text-lg leading-[1.9] text-cinematic-text mb-6">
           {renderInlineContent(node.content ?? [])}
         </p>
       );
@@ -108,20 +113,25 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
       const alt = (node.attrs?.alt as string | undefined) ?? "";
       if (!src) return null;
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           key={index}
           src={src}
           alt={alt}
-          className="w-full aspect-[3/4] object-cover my-8 border border-cinematic-border/20"
-          loading="lazy"
+          width={1200}
+          height={1600}
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="w-full h-auto aspect-[3/4] object-cover my-8 border border-cinematic-border/20"
+          unoptimized
         />
       );
     }
 
     case "codeBlock":
       return (
-        <pre key={index} className="bg-black/40 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto">
+        <pre
+          key={index}
+          className="bg-cinematic-panel/80 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
+        >
           <code className="font-mono text-sm text-brand-glow">
             {extractText(node)}
           </code>
@@ -166,23 +176,32 @@ function renderInlineContent(nodes: TipTapNode[]): React.ReactNode {
             break;
           case "code":
             element = (
-              <code key={i} className="font-mono text-sm bg-black/30 px-1 py-0.5 rounded-none text-brand-glow">
+              <code
+                key={i}
+                className="font-mono text-sm bg-cinematic-panel px-1 py-0.5 rounded-none text-brand-glow"
+              >
                 {element}
               </code>
             );
             break;
           case "link": {
             const href = mark.attrs?.href as string | undefined;
-            element = (
-              <a
+            const className =
+              "text-brand-ember underline underline-offset-2 hover:text-brand-glow transition-colors";
+            const isInternal = isInternalHref(href);
+
+            element = href ? (
+              <Link
                 key={i}
                 href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand-ember underline underline-offset-2 hover:text-brand-glow transition-colors"
+                className={className}
+                target={isInternal ? undefined : "_blank"}
+                rel={isInternal ? undefined : "noopener noreferrer"}
               >
                 {element}
-              </a>
+              </Link>
+            ) : (
+              <span key={i}>{element}</span>
             );
             break;
           }
@@ -215,10 +234,6 @@ function ChoiceButtons({
           key={choice.id}
           onClick={() => {
             onChoose(choice.next_scene_id);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            window.dispatchEvent(
-              new CustomEvent("story:choice", { detail: { sceneId: choice.next_scene_id } })
-            );
           }}
           className="w-full max-w-sm px-6 py-3 border border-border hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-foreground hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
@@ -233,161 +248,333 @@ function ChoiceButtons({
 
 type BlockStoryReaderProps = { slug: string };
 
-function BlockStoryReader({ slug: _slug }: BlockStoryReaderProps) {
+function BlockStoryReader({ slug }: BlockStoryReaderProps) {
   const { activeScene, chapters, story, currentSceneId, setCurrentSceneId } = useStoryReader();
+
+  // Refs for scrollable containers — needed because on mobile the scroll target
+  // is the inner div (overflow-y-auto), NOT the window.
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const mainRef = React.useRef<HTMLElement>(null);
 
   // Derive first scene ID for "restart" logic
   const firstSceneId = chapters[0]?.scenes[0]?.id ?? null;
 
-  // Is this the last scene (no choices) → dead end
+  // ── Empty states ─────────────────────────────────────────────────────────
+  if (!story) return null;
+
+  // Derive the active chapter for fallback content without introducing hook order issues.
+  let activeChapter = chapters[0] ?? null;
+  let activeChapterIndex = 0;
+
+  if (currentSceneId) {
+    activeChapter = null;
+    for (let i = 0; i < chapters.length; i++) {
+      if (chapters[i]?.scenes.some((s) => s.id === currentSceneId)) {
+        activeChapter = chapters[i] ?? null;
+        activeChapterIndex = i;
+        break;
+      }
+    }
+  }
+
+  // Determine the current scene index within the active chapter
+  const activeSceneIndex = activeChapter
+    ? activeChapter.scenes.findIndex((s) => s.id === currentSceneId)
+    : -1;
+
+  // Is this the last scene in the current chapter (no choices)?
+  const isLastSceneInChapter =
+    activeChapter !== null &&
+    activeSceneIndex === activeChapter.scenes.length - 1;
+
+  // Is this the very last chapter?
+  const isLastChapter = activeChapterIndex === chapters.length - 1;
+
+  // Is there a next chapter to navigate to?
+  const hasNextChapter = !isLastChapter && chapters.length > 1;
+
+  // Is this scene a dead end (no choices)?
   const isDeadEnd =
     activeScene !== null &&
     (!activeScene.choices || activeScene.choices.length === 0);
 
-  // ── Empty states ─────────────────────────────────────────────────────────
-  if (!story) return null;
+  // Next chapter info
+  const nextChapter = hasNextChapter ? (chapters[activeChapterIndex + 1] ?? null) : null;
+  const nextChapterFirstScene = nextChapter?.scenes[0] ?? null;
 
-  // Derive the active chapter for fallback content
-  const activeChapter = React.useMemo(() => {
-    if (!currentSceneId) return chapters[0] ?? null;
-    for (const ch of chapters) {
-      if (ch.scenes.some((s) => s.id === currentSceneId)) return ch;
-    }
-    return null;
-  }, [chapters, currentSceneId]);
+  // Is there a next scene within the same chapter?
+  const hasNextScene =
+    activeChapter !== null &&
+    activeSceneIndex >= 0 &&
+    activeSceneIndex < activeChapter.scenes.length - 1;
+  const nextScene = hasNextScene ? activeChapter?.scenes[activeSceneIndex + 1] : null;
 
   // Prefer scene content → fall back to chapter-level tiptap_content
   const sceneHasContent = activeScene && (activeScene.tiptap_content || activeScene.content);
   const chapterFallbackContent = !sceneHasContent && activeChapter?.tiptap_content ? activeChapter.tiptap_content : null;
   const hasContent = sceneHasContent || chapterFallbackContent;
 
+  // Scroll helper — scrolls the actual scrollable containers, not the window
+  const scrollContentToTop = React.useCallback(() => {
+    setTimeout(() => {
+      // Scroll the text content container
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: "auto" });
+      // On mobile, also scroll the main (flex-col) container so the illustration
+      // is visible and the content starts from the top
+      mainRef.current?.scrollTo({ top: 0, behavior: "auto" });
+    }, 10);
+  }, []);
+
+  // Automatically scroll to top whenever the scene changes
+  React.useEffect(() => {
+    scrollContentToTop();
+  }, [currentSceneId, scrollContentToTop]);
+
+  // Navigation handler
+  function goToNext() {
+    if (hasNextScene && nextScene) {
+      setCurrentSceneId(nextScene.id);
+    } else if (hasNextChapter && nextChapterFirstScene) {
+      setCurrentSceneId(nextChapterFirstScene.id);
+    }
+    // Scrolling is now handled automatically by the useEffect
+  }
+
   return (
     <main
-      className="flex-1 h-full overflow-y-auto flex flex-col bg-cinematic-bg relative z-10 scrollbar-none"
+      ref={mainRef}
+      className="flex-1 h-full flex flex-col lg:flex-row bg-cinematic-bg relative z-10 overflow-y-auto lg:overflow-hidden"
       data-slot="block-story-reader"
+      data-story-slug={slug}
     >
-      {/* ── Top nav bar ────────────────────────────────────────────────── */}
-      <nav
-        className="sticky top-0 z-30 flex items-center justify-between px-8 py-4 bg-cinematic-bg/60 backdrop-blur-md border-b border-border/10 shrink-0"
-        aria-label="Story navigation"
+      {/* ── Cinematic Hero Illustration (Left Pane on Desktop) ─────────── */}
+      <div 
+        className={cn(
+          "relative w-full shrink-0 border-b lg:border-b-0 lg:border-r border-cinematic-border/20 flex flex-col items-center justify-center bg-bg-base overflow-hidden",
+          activeChapter?.illustration_url ? "h-[40vh] sm:h-[45vh] lg:h-full lg:w-[45%]" : "hidden lg:flex lg:w-1/3 lg:h-full"
+        )}
       >
-        <Link
-          href="/stories"
-          className="flex items-center gap-2 text-muted-foreground hover:text-brand-ember transition-colors group"
-          aria-label="Back to manuscripts archive"
-        >
-          <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[10px] font-mono uppercase tracking-widest">
-            Archive
-          </span>
-        </Link>
-
-        <BrandLogo
-          variant="icon"
-          size="sm"
-          className="text-muted-foreground/40 absolute left-1/2 -translate-x-1/2"
-        />
-
-        {currentSceneId && firstSceneId && currentSceneId !== firstSceneId ? (
-          <button
-            onClick={() => {
-              if (window.confirm("Restart this story? Your current progress will be lost.")) {
-                setCurrentSceneId(null);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }
-            }}
-            className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors"
-            aria-label="Restart story"
-          >
-            Restart
-          </button>
-        ) : (
-          <div className="w-14" aria-hidden />
-        )}
-      </nav>
-
-      {/* ── Scene content ─────────────────────────────────────────────── */}
-      <div className="flex-1 max-w-2xl mx-auto w-full px-6 py-16 md:py-20">
-        {/* Scene title */}
-        {activeScene?.title && (
-          <p className="font-mono text-[10px] uppercase tracking-widest text-brand-ember/60 mb-8">
-            {activeScene.title}
-          </p>
-        )}
-
-        {hasContent ? (
+        {activeChapter?.illustration_url ? (
           <>
-            {/* TipTap rich content — scene-level first, chapter fallback second */}
-            {activeScene?.tiptap_content ? (
-              renderTipTapNode(activeScene.tiptap_content as TipTapNode, 0)
-            ) : chapterFallbackContent ? (
-              renderTipTapNode(chapterFallbackContent as TipTapNode, 0)
-            ) : (
-              /* Plain text fallback */
-              <div className="whitespace-pre-wrap font-sans text-base leading-[1.9] text-cinematic-text">
-                {activeScene?.content}
-              </div>
-            )}
-
-            {/* Choices */}
-            {activeScene?.choices && activeScene.choices.length > 0 && (
-              <ChoiceButtons
-                choices={activeScene.choices}
-                onChoose={setCurrentSceneId}
+            {/* Blurred background to fill the pane */}
+            <div className="absolute inset-0 opacity-20 blur-[60px] scale-110 pointer-events-none" aria-hidden>
+              <Image
+                src={activeChapter.illustration_url}
+                alt=""
+                fill
+                className="object-cover"
               />
-            )}
+            </div>
+
+            {/* Uncropped Illustration Container */}
+            <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
+              {/* Ensures the image maintains a strict 3:4 aspect ratio and fits within its container */}
+              <div className="relative w-full max-w-[400px] h-auto aspect-[3/4] max-h-full rounded-sm overflow-hidden shadow-brutal ring-1 ring-border/20 mx-auto">
+                <Image
+                  src={activeChapter.illustration_url}
+                  alt={activeChapter.title ?? "Chapter illustration"}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                  priority
+                />
+                
+                {/* Cinematic gradient overlay & Text */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-cinematic-bg via-cinematic-bg/30 to-transparent pointer-events-none"
+                  aria-hidden
+                />
+                <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-8 px-6 pointer-events-none text-center">
+                  <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-brand-ember/90 mb-2 drop-shadow-md">
+                    Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
+                  </span>
+                  <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-foreground leading-tight drop-shadow-lg">
+                    {activeChapter.title}
+                  </h2>
+                </div>
+              </div>
+            </div>
           </>
-        ) : (
-          /* No content state */
-          <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
-            <BrandLogo variant="icon" size="lg" className="text-muted-foreground/20" />
-            <div className="space-y-2">
-              <p className="font-heading text-xl text-muted-foreground">
-                No content yet
-              </p>
-              <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground/60">
-                This story is being crafted
-              </p>
+        ) : activeChapter ? (
+          <div className="text-center px-6 relative z-10">
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-ember/60 mb-3 block">
+              Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
+            </span>
+            <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-foreground leading-tight">
+              {activeChapter.title}
+            </h2>
+            <div className="flex items-center justify-center gap-3 mt-6" aria-hidden>
+              <div className="w-8 h-px bg-brand-ember/30" />
+              <div className="size-1 bg-brand-ember/60" />
+              <div className="w-8 h-px bg-brand-ember/30" />
             </div>
           </div>
-        )}
+        ) : null}
       </div>
 
-      {/* ── Dead-end / path conclusion screen ────────────────────────── */}
-      {isDeadEnd && hasContent && (
-        <div className="flex flex-col items-center justify-center py-24 px-6 text-center gap-8 relative z-10 shrink-0">
-          <div className="relative">
-            <div className="absolute inset-0 blur-2xl bg-brand-ember/20 rounded-full scale-150" />
-            <Flame className="relative size-12 text-brand-ember" aria-hidden="true" />
+      {/* ── Story Content (Right Pane on Desktop, Scrollable) ──────────── */}
+      <div ref={scrollContainerRef} className="flex-1 w-full lg:h-full flex flex-col overflow-y-auto scrollbar-none relative bg-cinematic-bg pb-16 lg:pb-0">
+        {/* Minimal top nav */}
+        <nav
+          className="sticky top-0 z-30 flex items-center justify-between px-6 md:px-8 py-3 bg-cinematic-bg/80 backdrop-blur-md shrink-0"
+          aria-label="Story navigation"
+        >
+          <Link
+            href="/stories"
+            className="flex items-center gap-2 text-muted-foreground/60 hover:text-brand-ember transition-colors group"
+            aria-label="Back to manuscripts archive"
+          >
+            <ArrowLeft className="size-3.5 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-[9px] font-mono uppercase tracking-widest">
+              Archive
+            </span>
+          </Link>
+
+          {/* Chapter indicator (mobile only, since desktop has it on the left) */}
+          <div className="lg:hidden">
+            {activeChapter && (
+              <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/40">
+                {String(activeChapterIndex + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
+              </span>
+            )}
           </div>
-          <div className="space-y-3">
-            <p className="font-heading text-2xl font-black uppercase tracking-widest text-foreground">
-              End of Path
-            </p>
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground max-w-xs">
-              This thread of the tale has reached its conclusion
-            </p>
-          </div>
-          <div className="flex items-center gap-6">
+
+          {currentSceneId && firstSceneId && currentSceneId !== firstSceneId ? (
             <button
               onClick={() => {
-                setCurrentSceneId(null);
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                if (window.confirm("Restart this story? Your current progress will be lost.")) {
+                  if (firstSceneId) setCurrentSceneId(firstSceneId);
+                  scrollContentToTop();
+                }
               }}
-              className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember border border-border hover:border-brand-ember px-4 py-2 transition-colors"
-              aria-label="Restart story from beginning"
+              className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/40 hover:text-brand-ember transition-colors"
+              aria-label="Restart story"
             >
-              Begin Anew
+              Restart
             </button>
-            <Link
-              href="/stories"
-              className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors"
-            >
-              Return to Archive
-            </Link>
-          </div>
+          ) : (
+            <div className="w-12" aria-hidden />
+          )}
+        </nav>
+
+        {/* Content Body */}
+        <div className="flex-1 max-w-2xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-6 sm:pt-8 md:pt-12 pb-20 lg:pb-24">
+          {hasContent ? (
+            <>
+              {/* TipTap rich content */}
+              {activeScene?.tiptap_content ? (
+                renderTipTapNode(activeScene.tiptap_content as TipTapNode, 0)
+              ) : chapterFallbackContent ? (
+                renderTipTapNode(chapterFallbackContent as TipTapNode, 0)
+              ) : (
+                /* Plain text fallback */
+                <div className="whitespace-pre-wrap font-sans text-base leading-[1.9] text-cinematic-text">
+                  {activeScene?.content}
+                </div>
+              )}
+
+              {/* Choices */}
+              {activeScene?.choices && activeScene.choices.length > 0 && (
+                <div className="mt-12">
+                  <ChoiceButtons
+                    choices={activeScene.choices}
+                    onChoose={setCurrentSceneId}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
+              <BrandLogo variant="icon" size="lg" className="text-muted-foreground/20" />
+              <div className="space-y-2">
+                <p className="font-heading text-xl text-muted-foreground">
+                  No content yet
+                </p>
+                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground/60">
+                  This story is being crafted
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* ── Continue Reading / The End ─────────────────────────────────── */}
+          {isDeadEnd && hasContent && (
+            <div className="mt-16 md:mt-24">
+              {/* NOT the last chapter → Continue to next chapter */}
+              {(hasNextScene || hasNextChapter) ? (
+                <div className="flex flex-col items-center justify-center py-12 px-6 text-center gap-6 border-t border-cinematic-border/10">
+                  <div className="flex items-center gap-3" aria-hidden>
+                    <div className="w-12 h-px bg-brand-ember/20" />
+                    <div className="size-1.5 bg-brand-ember/40" />
+                    <div className="w-12 h-px bg-brand-ember/20" />
+                  </div>
+
+                  {nextChapter && !hasNextScene && (
+                    <div className="space-y-2">
+                      <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/50">
+                        Next — Chapter {String(activeChapterIndex + 2).padStart(2, "0")}
+                      </p>
+                      <p className="font-heading text-lg md:text-xl font-bold uppercase tracking-tight text-foreground/80 max-w-sm mx-auto">
+                        {nextChapter.title}
+                      </p>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={goToNext}
+                    className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 sm:py-3 mt-2 border border-brand-ember/30 hover:border-brand-ember text-sm font-mono uppercase tracking-widest text-brand-ember/70 hover:text-brand-ember hover:bg-brand-ember/5 transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    aria-label={hasNextScene ? "Continue reading" : `Continue to chapter ${activeChapterIndex + 2}`}
+                  >
+                    Continue Reading
+                    <ChevronDown className="size-4 group-hover:translate-y-0.5 transition-transform" />
+                  </button>
+                </div>
+              ) : (
+                /* LAST chapter, LAST scene → The End */
+                <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-8 relative z-10 border-t border-cinematic-border/10">
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
+                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-full" />
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-full scale-150" />
+                    <Flame className="relative size-8 text-brand-ember" aria-hidden="true" />
+                  </div>
+
+                  <div className="space-y-3 relative">
+                    <p className="font-display text-3xl font-black uppercase tracking-widest text-foreground">
+                      The End
+                    </p>
+                    {story.moral && (
+                      <p className="font-sans text-sm italic text-cinematic-text/60 max-w-sm mx-auto leading-relaxed mt-4">
+                        &ldquo;{story.moral}&rdquo;
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-4 mt-6 relative">
+                    <button
+                      onClick={() => {
+                        if (firstSceneId) setCurrentSceneId(firstSceneId);
+                        scrollContentToTop();
+                      }}
+                      className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors"
+                    >
+                      Read Again
+                    </button>
+                    <Link
+                      href="/stories"
+                      className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"
+                    >
+                      Archive
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </main>
   );
 }

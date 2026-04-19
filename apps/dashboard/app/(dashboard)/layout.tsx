@@ -54,7 +54,7 @@ function UserProfileBlock() {
     clerkUser.primaryEmailAddress?.emailAddress ||
     "Archive Admin";
   const userRoleStr =
-    (clerkUser.publicMetadata?.role as string) === "admin" ? "Admin" : "Creator";
+    (clerkUser.publicMetadata?.role as string) === "superadmin" ? "Superadmin" : "Creator";
 
   return (
     <div id="tour-profile" className="flex items-center gap-3">

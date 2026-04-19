@@ -6,7 +6,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 
 const navItems = [
@@ -23,10 +23,13 @@ const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost
 function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = React.useState(false);
+  const { user } = useUser();
 
   useMotionValueEvent(scrollY, "change", (latest: number) => {
     setScrolled(latest > 20);
   });
+
+  const isSuperAdmin = user?.publicMetadata?.role === "superadmin";
 
   return (
     <motion.nav
@@ -70,17 +73,28 @@ function Navbar() {
           >
             <Link href="/login">Sign In</Link>
           </Button>
-        </SignedOut>
-        <SignedIn>
           <Button
-            variant="outline"
+            variant="default"
             size="default"
-            className="rounded-none font-mono font-bold uppercase tracking-widest transition-all border-brand-ember/30 text-brand-ember hover:bg-brand-ember/10"
+            className="rounded-none font-mono font-bold uppercase tracking-widest transition-all"
             asChild
           >
-            {/* eslint-disable-next-line no-restricted-syntax -- cross-origin link to dashboard app, next/link cannot handle external origins */}
-            <a href={DASHBOARD_URL}>Dashboard</a>
+            <Link href="/register">Sign Up</Link>
           </Button>
+        </SignedOut>
+        <SignedIn>
+          {isSuperAdmin && (
+            <Button
+              variant="outline"
+              size="default"
+              className="rounded-none font-mono font-bold uppercase tracking-widest transition-all border-brand-ember/30 text-brand-ember hover:bg-brand-ember/10"
+              asChild
+            >
+              <Link href={DASHBOARD_URL} prefetch={false}>
+                Dashboard
+              </Link>
+            </Button>
+          )}
           <div className="ml-2 flex items-center">
             <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "h-8 w-8 rounded-none border border-border" } }} />
           </div>
@@ -94,3 +108,4 @@ function Navbar() {
 }
 
 export { Navbar };
+

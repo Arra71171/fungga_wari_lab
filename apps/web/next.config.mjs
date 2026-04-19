@@ -41,30 +41,19 @@ const nextConfig = {
         crypto: false,
         os: false,
       };
-      
-      // Stop Webpack from attempting to parse the node bindings for client bundles
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'onnxruntime-node': false,
-      };
     }
 
     // Completely ignore .node files so Webpack never errors on them
     config.module.rules.push({
       test: /\.node$/,
-      type: 'asset/resource',
+      type: "asset/resource",
       generator: {
-        filename: 'static/media/[name].[hash][ext]'
-      }
+        filename: "static/media/[name].[hash][ext]",
+      },
     });
-    
-    // Externalize the node module for the server build
-    if (isServer) {
-      config.externals.push('onnxruntime-node');
-    }
-    
+
     return config;
   },
-}
+};
 
 export default withBundleAnalyzer(nextConfig);

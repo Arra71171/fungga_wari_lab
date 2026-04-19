@@ -46,10 +46,21 @@ export async function POST(req: NextRequest) {
     try {
       const supabase = createAdminClient();
 
+      const email = session.customer_details?.email ?? session.customer_email ?? "";
+
       const { error } = await supabase
         .from("users")
-        .update({ has_lifetime_access: true })
-        .eq("clerk_id", clerkId);
+        .upsert(
+          {
+            clerk_id: clerkId,
+            email: email,
+            has_lifetime_access: true,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "clerk_id",
+          }
+        );
 
       if (error) {
         console.error("Failed to grant lifetime access:", error);

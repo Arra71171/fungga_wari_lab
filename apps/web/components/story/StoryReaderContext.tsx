@@ -73,16 +73,16 @@ interface StoryReaderContextValue {
 
 const StoryReaderContext = React.createContext<StoryReaderContextValue | undefined>(undefined);
 
-export function StoryReaderProvider({ children }: { children: React.ReactNode }) {
+export function StoryReaderProvider({ children, initialStory }: { children: React.ReactNode; initialStory?: StoryShape | null }) {
   const params = useParams();
   const slug = params.slug as string;
 
-  const [story, setStory] = React.useState<StoryShape | null | undefined>(undefined);
+  const [story, setStory] = React.useState<StoryShape | null | undefined>(initialStory);
   const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     async function loadData() {
-      if (!slug) return;
+      if (!slug || initialStory !== undefined) return;
 
       const { data: storyData, error: storyError } = await supabase
         .from("stories")
@@ -104,7 +104,7 @@ export function StoryReaderProvider({ children }: { children: React.ReactNode })
         .single();
 
       if (storyError || !storyData) {
-        console.error("Error fetching story:", storyError);
+        console.error("Error fetching story:", JSON.stringify(storyError, null, 2));
         setStory(null);
         return;
       }

@@ -66,7 +66,7 @@ export default function RootLayout({
         jetbrainsMono.variable,
       )}
     >
-      <body>
+      <body suppressHydrationWarning>
         <ClerkAuthProvider>
           <ThemeProvider>
             <SyncUserStore />

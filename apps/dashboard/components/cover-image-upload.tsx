@@ -186,12 +186,12 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
             className="object-cover"
           />
           {/* Overlay actions */}
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          <div className="absolute inset-0 bg-cinematic-bg/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
             <Button
               type="button"
               size="sm"
               variant="ghost"
-              className="text-white hover:text-white hover:bg-white/20"
+              className="text-cinematic-text hover:text-cinematic-text hover:bg-cinematic-border"
               onClick={() => inputRef.current?.click()}
             >
               <Upload className="size-4 mr-2" /> Change

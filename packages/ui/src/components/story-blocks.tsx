@@ -3,6 +3,7 @@
 import * as React from "react"
 import { cn } from "@workspace/ui/lib/utils"
 import { cva } from "class-variance-authority"
+import Image from "next/image"
 
 // â”€â”€â”€ Block Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -170,16 +171,19 @@ function ImageBlock({ src, url, caption, style = "inline", editable = false }: I
         style === "cinematic" && "w-full -mx-4 md:-mx-24"
       )}
     >
-      {/* eslint-disable-next-line no-restricted-syntax */}
-      <img
+      <Image
         src={displaySrc}
         alt={caption ?? "Story illustration"}
+        width={1200}
+        height={1600}
+        sizes="(max-width: 768px) 100vw, 75vw"
         className={cn(
           "w-full object-cover",
           style === "inline" && "rounded-none max-h-96",
           style === "full" && "rounded-none max-h-[60vh]",
           style === "cinematic" && "rounded-none max-h-[80vh]"
         )}
+        unoptimized
       />
       {caption && (
         <figcaption className="mt-3 text-center text-sm text-muted-foreground italic font-sans">
@@ -213,11 +217,14 @@ function StoryDialogueBlock({
       className="flex gap-4 items-start my-6 max-w-2xl mx-auto"
     >
       {avatar ? (
-        // eslint-disable-next-line no-restricted-syntax
-        <img
+        <Image
           src={avatar}
           alt={character ?? "Character"}
+          width={48}
+          height={48}
+          sizes="48px"
           className="size-12 rounded-none border-2 border-brand-ember/20 object-cover flex-shrink-0"
+          unoptimized
         />
       ) : (
         <div className="size-12 rounded-none bg-secondary flex items-center justify-center flex-shrink-0 border-2 border-brand-ember/20">

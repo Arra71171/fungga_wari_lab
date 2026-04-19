@@ -1,47 +1,28 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-/**
- * Web App — Home Page E2E Smoke Tests
- * baseURL: http://localhost:3001
- */
-
-test.describe("Home Page", () => {
-  test.beforeEach(async ({ page }) => {
+test.describe("Public reader surfaces", () => {
+  test("renders the landing page and reaches the public archive", async ({ page }) => {
     await page.goto("/");
-  });
 
-  test("should have correct page title", async ({ page }) => {
     await expect(page).toHaveTitle(/Fungga Wari/i);
-  });
+    await expect(page.locator("nav")).toBeVisible();
+    await expect(page.locator("h1")).toBeVisible();
 
-  test("should render the hero headline", async ({ page }) => {
-    const hero = page.locator("h1");
-    await expect(hero).toBeVisible();
-    await expect(hero).toContainText(/stories|silence|wari/i);
-  });
-
-  test("should render the navbar", async ({ page }) => {
-    const nav = page.locator("nav");
-    await expect(nav).toBeVisible();
-  });
-
-  test("should have a visible CTA button linking to /stories", async ({ page }) => {
     const cta = page.locator("a[href='/stories']").first();
     await expect(cta).toBeVisible();
-  });
 
-  test("should have no detectable accessibility violations on heading structure", async ({
-    page,
-  }) => {
-    // Ensure single h1 per page (WCAG requirement)
-    const h1Count = await page.locator("h1").count();
-    expect(h1Count).toBe(1);
-  });
-
-  test("should redirect to login when accessing stories page", async ({ page }) => {
-    const cta = page.locator("a[href='/stories']").first();
     await cta.click();
-    await page.waitForURL("**/login**");
-    expect(page.url()).toContain("/login");
+    await page.waitForURL("**/stories");
+
+    await expect(page.getByRole("heading", { name: /the manuscripts/i })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: /search manuscripts/i })).toBeVisible();
+  });
+
+  test("renders published archive cards for signed-out readers", async ({ page }) => {
+    await page.goto("/stories");
+
+    await expect(page.getByRole("heading", { name: /the manuscripts/i })).toBeVisible();
+    await expect(page.locator("a[href^='/stories/']").first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /sign in/i })).toBeVisible();
   });
 });

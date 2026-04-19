@@ -60,7 +60,6 @@ export function StoryMapSidebar() {
                           onClick={() => {
                             setCurrentSceneId(scene._id);
                             setOpen(false);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
                           className={cn(
                             "w-full flex items-center gap-3 text-left group transition-all",
