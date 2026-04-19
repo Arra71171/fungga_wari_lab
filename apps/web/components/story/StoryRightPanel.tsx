@@ -6,6 +6,7 @@ import {
   Loader2,
   Mic2,
   Pause,
+  PanelRightClose,
   Play,
   Square,
   Zap,
@@ -24,6 +25,8 @@ import { useStoryReader } from "./StoryReaderContext";
 type StoryRightPanelProps = {
   /** 'desktop' renders as a fixed aside; 'mobile' renders as scrollable content */
   variant?: "desktop" | "mobile";
+  /** Called when the user clicks the close/collapse button (desktop only) */
+  onClose?: () => void;
 };
 
 /** Deterministic bar heights based on index to avoid SSR mismatch */
@@ -33,7 +36,7 @@ function deriveBarHeight(index: number): number {
 
 const BAR_HEIGHTS = Array.from({ length: 32 }, (_, i) => deriveBarHeight(i));
 
-export function StoryRightPanel({ variant = "desktop" }: StoryRightPanelProps) {
+export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPanelProps) {
   const { activeScene, story, currentSceneId } = useStoryReader();
 
   const sceneText = React.useMemo<string | null>(() => {
@@ -86,7 +89,19 @@ export function StoryRightPanel({ variant = "desktop" }: StoryRightPanelProps) {
             Reader Panel
           </span>
         </div>
-        {story?.id ? <BookmarkToggle storyId={story.id} /> : null}
+        <div className="flex items-center gap-2">
+          {story?.id ? <BookmarkToggle storyId={story.id} /> : null}
+          {/* Close/collapse button — desktop only, hidden in mobile sheet */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              aria-label="Close reader panel"
+              className="size-7 flex items-center justify-center border border-cinematic-border/30 text-muted-foreground/50 hover:text-cinematic-text hover:border-brand-ember/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <PanelRightClose className="size-3.5" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── ElevenLabs AI Narration ─────────────────────────── */}
@@ -196,7 +211,7 @@ export function StoryRightPanel({ variant = "desktop" }: StoryRightPanelProps) {
             <button
               onClick={stop}
               aria-label="Stop narration"
-              className="size-8 border border-border/30 text-muted-foreground hover:text-foreground hover:border-border flex items-center justify-center transition-all duration-200 cursor-pointer"
+              className="size-8 border border-cinematic-border/40 text-muted-foreground hover:text-cinematic-text hover:border-cinematic-border flex items-center justify-center transition-all duration-200 cursor-pointer"
             >
               <Square className="size-3 fill-current" />
             </button>
@@ -279,7 +294,7 @@ export function StoryRightPanel({ variant = "desktop" }: StoryRightPanelProps) {
             <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 mb-1">
               Language
             </p>
-            <p className="font-mono text-[10px] text-foreground uppercase tracking-widest">
+            <p className="font-mono text-[10px] text-cinematic-text uppercase tracking-widest">
               {story.language}
             </p>
           </div>

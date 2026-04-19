@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, ChevronDown, Flame } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
+import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 import { useStoryReader } from "./StoryReaderContext";
 
 // ─── TipTap → Plain Block Renderer ──────────────────────────────────────────
@@ -62,7 +63,7 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
         6: "font-mono text-sm uppercase tracking-widest mb-2 mt-4 text-muted-foreground",
       };
       return (
-        <Tag key={index} className={cn("text-foreground", sizeMap[level] ?? sizeMap[2])}>
+        <Tag key={index} className={cn("text-cinematic-text", sizeMap[level] ?? sizeMap[2])}>
           {text}
         </Tag>
       );
@@ -235,7 +236,7 @@ function ChoiceButtons({
           onClick={() => {
             onChoose(choice.next_scene_id);
           }}
-          className="w-full max-w-sm px-6 py-3 border border-border hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-foreground hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {choice.label}
         </button>
@@ -350,7 +351,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
       {/* ── Cinematic Hero Illustration (Left Pane on Desktop) ─────────── */}
       <div 
         className={cn(
-          "relative w-full shrink-0 border-b lg:border-b-0 lg:border-r border-cinematic-border/20 flex flex-col items-center justify-center bg-bg-base overflow-hidden",
+          "relative w-full shrink-0 border-b lg:border-b-0 lg:border-r border-cinematic-border/20 flex flex-col items-center justify-center bg-cinematic-bg overflow-hidden",
           activeChapter?.illustration_url ? "h-[40vh] sm:h-[45vh] lg:h-full lg:w-[45%]" : "hidden lg:flex lg:w-1/3 lg:h-full"
         )}
       >
@@ -369,7 +370,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             {/* Uncropped Illustration Container */}
             <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
               {/* Ensures the image maintains a strict 3:4 aspect ratio and fits within its container */}
-              <div className="relative w-full max-w-[400px] h-auto aspect-[3/4] max-h-full rounded-sm overflow-hidden shadow-brutal ring-1 ring-border/20 mx-auto">
+              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-sm overflow-hidden shadow-brutal ring-1 ring-border/20 mx-auto">
                 <Image
                   src={activeChapter.illustration_url}
                   alt={activeChapter.title ?? "Chapter illustration"}
@@ -388,7 +389,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                   <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-brand-ember/90 mb-2 drop-shadow-md">
                     Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
                   </span>
-                  <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-foreground leading-tight drop-shadow-lg">
+                  <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-cinematic-text leading-tight drop-shadow-lg">
                     {activeChapter.title}
                   </h2>
                 </div>
@@ -400,7 +401,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-ember/60 mb-3 block">
               Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
             </span>
-            <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-foreground leading-tight">
+            <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-cinematic-text leading-tight">
               {activeChapter.title}
             </h2>
             <div className="flex items-center justify-center gap-3 mt-6" aria-hidden>
@@ -439,26 +440,29 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             )}
           </div>
 
-          {currentSceneId && firstSceneId && currentSceneId !== firstSceneId ? (
-            <button
-              onClick={() => {
-                if (window.confirm("Restart this story? Your current progress will be lost.")) {
-                  if (firstSceneId) setCurrentSceneId(firstSceneId);
-                  scrollContentToTop();
-                }
-              }}
-              className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/40 hover:text-brand-ember transition-colors"
-              aria-label="Restart story"
-            >
-              Restart
-            </button>
-          ) : (
-            <div className="w-12" aria-hidden />
-          )}
+          <div className="flex items-center gap-4">
+            <AnimatedThemeToggler />
+            {currentSceneId && firstSceneId && currentSceneId !== firstSceneId ? (
+              <button
+                onClick={() => {
+                  if (window.confirm("Restart this story? Your current progress will be lost.")) {
+                    if (firstSceneId) setCurrentSceneId(firstSceneId);
+                    scrollContentToTop();
+                  }
+                }}
+                className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/40 hover:text-brand-ember transition-colors"
+                aria-label="Restart story"
+              >
+                Restart
+              </button>
+            ) : (
+              <div className="w-12" aria-hidden />
+            )}
+          </div>
         </nav>
 
         {/* Content Body */}
-        <div className="flex-1 max-w-2xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-6 sm:pt-8 md:pt-12 pb-20 lg:pb-24">
+        <div className="flex-1 max-w-2xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-16 sm:pt-20 md:pt-28 lg:pt-36 pb-20 lg:pb-24">
           {hasContent ? (
             <>
               {/* TipTap rich content */}
@@ -514,7 +518,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                       <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/50">
                         Next — Chapter {String(activeChapterIndex + 2).padStart(2, "0")}
                       </p>
-                      <p className="font-heading text-lg md:text-xl font-bold uppercase tracking-tight text-foreground/80 max-w-sm mx-auto">
+                      <p className="font-heading text-lg md:text-xl font-bold uppercase tracking-tight text-cinematic-text/80 max-w-sm mx-auto">
                         {nextChapter.title}
                       </p>
                     </div>
@@ -542,7 +546,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                   </div>
 
                   <div className="space-y-3 relative">
-                    <p className="font-display text-3xl font-black uppercase tracking-widest text-foreground">
+                    <p className="font-display text-3xl font-black uppercase tracking-widest text-cinematic-text">
                       The End
                     </p>
                     {story.moral && (

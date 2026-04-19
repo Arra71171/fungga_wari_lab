@@ -4,6 +4,7 @@ import * as React from "react";
 import { BookOpen, List, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { useStoryReader } from "./StoryReaderContext";
+import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 
 type MobileReaderBarProps = {
   onOpenChapters: () => void;
@@ -122,14 +123,20 @@ export function MobileReaderBar({ onOpenChapters, onOpenSettings }: MobileReader
           </button>
         </div>
 
-        {/* Right: Settings / Reader panel trigger */}
-        <button
-          onClick={onOpenSettings}
-          aria-label="Open reader panel"
-          className="flex items-center gap-2 px-3 py-2 text-muted-foreground hover:text-cinematic-text transition-colors"
-        >
-          <BookOpen className="size-5" />
-        </button>
+        {/* Right: Settings + Theme toggle */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onOpenSettings}
+            aria-label="Open reader panel"
+            className="flex items-center gap-2 px-3 py-2 text-muted-foreground hover:text-cinematic-text transition-colors"
+          >
+            <BookOpen className="size-5" />
+          </button>
+          <AnimatedThemeToggler
+            aria-label="Toggle reader theme"
+            className="size-9 border-cinematic-border/30 bg-transparent hover:bg-cinematic-border"
+          />
+        </div>
       </div>
     </div>
   );

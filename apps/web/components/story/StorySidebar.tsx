@@ -4,6 +4,7 @@ import * as React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
+import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 import { useStoryReader } from "./StoryReaderContext";
 
 /**
@@ -165,7 +166,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
       <div className="px-6 mt-auto pt-6 border-t border-cinematic-border/40 space-y-3">
         <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
           <span>Progress</span>
-          <span className="text-foreground tabular-nums">
+          <span className="text-cinematic-text tabular-nums">
             {currentSceneId ? Math.max(1, activeSceneIndex + 1) : 0} / {totalScenes}
           </span>
         </div>
@@ -176,16 +177,23 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
           />
         </div>
 
-        {/* Bottom branding */}
-        <div className="flex items-center gap-2 pt-2">
-          <div className="flex gap-1">
-            <div className="size-1 bg-brand-ember/40 rounded-none" />
-            <div className="size-1 bg-brand-ember/60 rounded-none" />
-            <div className="size-1 bg-brand-ember rounded-none" />
+        {/* Bottom branding + theme toggle */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1">
+              <div className="size-1 bg-brand-ember/40 rounded-none" />
+              <div className="size-1 bg-brand-ember/60 rounded-none" />
+              <div className="size-1 bg-brand-ember rounded-none" />
+            </div>
+            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40">
+              Fungga Wari
+            </span>
           </div>
-          <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40">
-            Fungga Wari
-          </span>
+          {/* Theme toggle — controls cinematic reader light/dark */}
+          <AnimatedThemeToggler
+            aria-label="Toggle reader theme"
+            className="size-7 border-cinematic-border/40 bg-cinematic-panel hover:bg-cinematic-border"
+          />
         </div>
       </div>
     </aside>

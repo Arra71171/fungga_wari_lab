@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Loader2, PanelRightOpen, PanelRightClose } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -19,10 +19,13 @@ import { MobileReaderBar } from "./MobileReaderBar";
  * StoryReaderShell — Responsive cinematic reader shell.
  *
  * Desktop (lg+):
- *   ┌──────────────────────────────────────────────────────┐
- *   │ StorySidebar (w-72) │ BlockStoryReader   │ [toggle →] │
- *   │ Chapters / Scenes   │ Center canvas      │ RightPanel │
- *   └──────────────────────────────────────────────────────┘
+ *   ┌──────────────────────────────────────────────────────────────┐
+ *   │ StorySidebar (w-72) │ BlockStoryReader (flex-1) │ RightPanel │
+ *   │ Chapters / Scenes   │ Center canvas             │ (w-80)     │
+ *   └──────────────────────────────────────────────────────────────┘
+ *
+ *   The RightPanel header contains its own toggle button — no overlap
+ *   with the center canvas sticky nav (Archive / Restart) ever.
  *
  * Mobile (<lg):
  *   ┌──────────────────────┐
@@ -64,6 +67,11 @@ export function StoryReaderShell({ slug }: { slug: string }) {
 
   return (
     <div
+      /*
+       * Theme-responsive cinematic reader. In dark mode: deep black.
+       * In light mode: warm parchment (see globals.css :root cinematic tokens).
+       * The global AnimatedThemeToggler controls this via next-themes.
+       */
       className="flex h-screen w-full bg-cinematic-bg text-cinematic-text antialiased overflow-hidden"
       data-slot="story-reader-shell"
     >
@@ -106,32 +114,45 @@ export function StoryReaderShell({ slug }: { slug: string }) {
       </Sheet>
 
       {/* ─── Center canvas ─────────────────────────────────────────────── */}
-      <div className="relative flex-1 min-w-0">
+      <div className="flex-1 min-w-0">
         <BlockStoryReader slug={slug} />
-
-        {/* Right panel toggle — desktop only */}
-        <button
-          onClick={() => setRightPanelOpen((v) => !v)}
-          aria-label={rightPanelOpen ? "Close details panel" : "Open details panel"}
-          className="hidden lg:flex absolute top-5 right-5 z-20 items-center gap-1.5 px-3 py-1.5 border border-cinematic-border bg-cinematic-panel/80 backdrop-blur-sm text-muted-foreground hover:text-cinematic-text hover:border-brand-ember/40 transition-all text-[10px] font-mono uppercase tracking-widest"
-        >
-          {rightPanelOpen ? (
-            <PanelRightClose className="size-3.5" />
-          ) : (
-            <PanelRightOpen className="size-3.5" />
-          )}
-          {rightPanelOpen ? "Close" : "Details"}
-        </button>
       </div>
 
-      {/* ─── Desktop: Right panel (hidden on mobile) ───────────────────── */}
+      {/* ─── Desktop: Right panel with built-in toggle ─────────────────── */}
+      {/*
+       * The toggle lives INSIDE the right panel header, not floating over
+       * the center canvas. This eliminates any overlap with the sticky nav.
+       * When closed, a minimal collapsed strip shows the re-open button.
+       */}
       <div
-        className={`hidden lg:block transition-all duration-300 ease-in-out overflow-hidden shrink-0 ${
-          rightPanelOpen ? "w-80 opacity-100" : "w-0 opacity-0"
-        }`}
-        aria-hidden={!rightPanelOpen}
+        className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out shrink-0 ${
+          rightPanelOpen ? "w-80" : "w-10"
+        } overflow-hidden border-l border-cinematic-border bg-cinematic-panel/90 backdrop-blur-md`}
+        aria-label="Reader panel"
       >
-        {rightPanelOpen && <StoryRightPanel />}
+        {rightPanelOpen ? (
+          <StoryRightPanel onClose={() => setRightPanelOpen(false)} />
+        ) : (
+          /* Collapsed strip — single icon to re-open */
+          <div className="flex-1 flex flex-col items-center pt-5">
+            <button
+              onClick={() => setRightPanelOpen(true)}
+              aria-label="Open details panel"
+              className="size-8 flex items-center justify-center border border-cinematic-border/40 text-muted-foreground hover:text-cinematic-text hover:border-brand-ember/40 transition-all"
+            >
+              {/* Rotated chevron pointing left to indicate "expand right" */}
+              <svg
+                className="size-3.5 rotate-180"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ─── Mobile: Bottom reader bar ─────────────────────────────────── */}
