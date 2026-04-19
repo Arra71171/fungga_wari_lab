@@ -9,65 +9,94 @@
 @source "../**/*.{ts,tsx}";
 
 :root {
-    --background: oklch(0.98 0.01 60);
-    --foreground: oklch(0.14 0.02 50);
-    --card: oklch(0.98 0.01 60);
-    --card-foreground: oklch(0.14 0.02 50);
-    --popover: oklch(0.98 0.01 60);
-    --popover-foreground: oklch(0.14 0.02 50);
-    --primary: oklch(0.60 0.18 45);
-    --primary-foreground: oklch(0.98 0.01 60);
-    --secondary: oklch(0.94 0.04 60);
-    --secondary-foreground: oklch(0.20 0.06 50);
-    --muted: oklch(0.94 0.04 60);
-    --muted-foreground: oklch(0.55 0.06 50);
-    --accent: oklch(0.94 0.04 60);
-    --accent-foreground: oklch(0.20 0.06 50);
-    --destructive: oklch(0.60 0.20 25.0);
+    /* ── Core Semantic Tokens — Warm Ivory/Manuscript Base ─────────────── */
+    /* Background: warm ivory (not cold flat white) */
+    --background: oklch(0.96 0.022 75);
+    /* Foreground: rich near-black ink — high contrast */
+    --foreground: oklch(0.10 0.03 45);
+    /* Cards lift slightly above background */
+    --card: oklch(0.99 0.010 72);
+    --card-foreground: oklch(0.10 0.03 45);
+    --popover: oklch(0.99 0.010 72);
+    --popover-foreground: oklch(0.10 0.03 45);
+
+    /* Primary: saturated amber fire — slightly richer than before */
+    --primary: oklch(0.58 0.21 43);
+    --primary-foreground: oklch(0.99 0.005 72);
+
+    /* Secondary/Muted: warm sand — clearly distinct from background */
+    --secondary: oklch(0.89 0.04 70);
+    --secondary-foreground: oklch(0.15 0.04 48);
+    --muted: oklch(0.89 0.04 70);
+    /* Muted foreground: dark enough to read comfortably */
+    --muted-foreground: oklch(0.38 0.06 52);
+
+    --accent: oklch(0.89 0.04 70);
+    --accent-foreground: oklch(0.15 0.04 48);
+
+    --destructive: oklch(0.58 0.22 25);
     --destructive-foreground: oklch(1 0 0);
-    --border-subtle: oklch(0.88 0.01 50);
-    --border-default: oklch(0.78 0.02 50);
-    --border-strong: oklch(0.65 0.03 50);
+
+    /* Borders: warm-toned with real opacity — not ghost lines */
+    --border-subtle: oklch(0.80 0.03 68);
+    --border-default: oklch(0.68 0.04 62);
+    --border-strong: oklch(0.50 0.06 55);
     --border: var(--border-default);
     --border-primary: var(--primary);
-    --input: oklch(0.90 0.03 60);
-    --ring: oklch(0.70 0.10 50);
+
+    --input: oklch(0.86 0.035 70);
+    --ring: oklch(0.58 0.18 43);
+
     --chart-1: oklch(0.879 0.169 91.605);
     --chart-2: oklch(0.769 0.188 70.08);
     --chart-3: oklch(0.666 0.179 58.318);
     --chart-4: oklch(0.555 0.163 48.998);
     --chart-5: oklch(0.473 0.137 46.201);
-    --radius: 0.625rem;
-    --status-active: oklch(0.60 0.18 50);
-    --shadow-brutal: 4px 4px 0px 0px oklch(0.14 0.02 50);
-    --shadow-brutal-primary: 4px 4px 0px 0px var(--primary);
-    --shadow-brutal-sm: 2px 2px 0px 0px oklch(0.14 0.02 50);
-    --sidebar: oklch(0.98 0.01 60);
-    --sidebar-foreground: oklch(0.14 0.02 50);
-    --sidebar-primary: oklch(0.60 0.18 45);
-    --sidebar-primary-foreground: oklch(0.98 0.01 60);
-    --sidebar-accent: oklch(0.94 0.04 60);
-    --sidebar-accent-foreground: oklch(0.20 0.06 50);
-    --sidebar-border: oklch(0.90 0.03 60);
-    --sidebar-ring: oklch(0.70 0.10 50);
-    --tracking-normal: 0.02em;
-    
-    /* Brand & Cinematic Tokens */
-    --brand-ember: oklch(0.60 0.18 45);
-    --brand-ochre: oklch(0.65 0.16 65);
-    --brand-glow: oklch(0.85 0.15 55); 
-    --cinematic-bg: oklch(0.10 0.02 50);
-    --cinematic-panel: oklch(0.14 0.03 50);
-    --cinematic-text: oklch(0.90 0.02 60);
-    --cinematic-accent: oklch(0.65 0.20 50);
-    --cinematic-border: oklch(1 0 0 / 8%);
 
-    /* Depth Layer Tokens (light) */
-    --bg-base: oklch(0.97 0.01 60);
-    --bg-panel: oklch(0.95 0.01 60);
-    --bg-surface: oklch(0.98 0.01 60);
-    --bg-overlay: oklch(0.99 0.005 60);
+    --radius: 0.625rem;
+    --status-active: oklch(0.58 0.21 43);
+
+    /* Shadows — darker to punch through the warm bg */
+    --shadow-brutal: 4px 4px 0px 0px oklch(0.12 0.03 45);
+    --shadow-brutal-primary: 4px 4px 0px 0px var(--primary);
+    --shadow-brutal-sm: 2px 2px 0px 0px oklch(0.12 0.03 45);
+
+    /* Sidebar: noticeably darker warm sand than background */
+    --sidebar: oklch(0.91 0.03 70);
+    --sidebar-foreground: oklch(0.10 0.03 45);
+    --sidebar-primary: oklch(0.58 0.21 43);
+    --sidebar-primary-foreground: oklch(0.99 0.005 72);
+    --sidebar-accent: oklch(0.86 0.04 68);
+    --sidebar-accent-foreground: oklch(0.15 0.04 48);
+    --sidebar-border: oklch(0.72 0.04 65);
+    --sidebar-ring: oklch(0.58 0.18 43);
+
+    --tracking-normal: 0.02em;
+
+    /* ── Brand Tokens ───────────────────────────────────────────────────── */
+    --brand-ember: oklch(0.58 0.21 43);
+    --brand-ochre: oklch(0.62 0.16 65);
+    --brand-glow: oklch(0.80 0.15 55);
+
+    /* ── Cinematic Reader — Parchment Mode (light) ─────────────────────── */
+    /* Reading surface: warm ivory — lightest layer */
+    --cinematic-bg: oklch(0.97 0.022 80);
+    /* Left/right panels: aged parchment — CLEARLY darker than reading bg */
+    --cinematic-panel: oklch(0.86 0.038 70);
+    /* Body text: rich manuscript ink */
+    --cinematic-text: oklch(0.10 0.03 45);
+    /* Accent: amber fire */
+    --cinematic-accent: oklch(0.58 0.21 43);
+    /* Borders: dark enough to actually see panel edges */
+    --cinematic-border: oklch(0 0 0 / 22%);
+
+    /* ── Depth Layer Tokens (light) ─────────────────────────────────────── */
+    --bg-base: oklch(0.92 0.03 72);
+    --bg-panel: oklch(0.89 0.03 70);
+    --bg-surface: oklch(0.96 0.022 75);
+    --bg-overlay: oklch(0.99 0.010 72);
 }
+
 
 .dark {
     --background: oklch(0.10 0.02 50);
