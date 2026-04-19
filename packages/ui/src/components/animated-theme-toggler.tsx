@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useCallback, useRef } from "react";
@@ -79,6 +79,9 @@ export function AnimatedThemeToggler({
     }
   }, [resolvedTheme, setTheme, duration]);
 
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => { setMounted(true) }, []);
+
   // Clean, brutalist interactions without spinning
   return (
     <Button
@@ -94,8 +97,16 @@ export function AnimatedThemeToggler({
       aria-label="Toggle theme"
       {...props}
     >
-      <Moon className="h-[1.2rem] w-[1.2rem] hidden dark:block" />
-      <Sun className="h-[1.2rem] w-[1.2rem] block dark:hidden" />
+      {/* Defer icon rendering until client is mounted to prevent hydration mismatch */}
+      {mounted ? (
+        resolvedTheme === "dark" ? (
+          <Moon className="h-[1.2rem] w-[1.2rem]" />
+        ) : (
+          <Sun className="h-[1.2rem] w-[1.2rem]" />
+        )
+      ) : (
+        <Sun className="h-[1.2rem] w-[1.2rem] opacity-0" aria-hidden />
+      )}
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

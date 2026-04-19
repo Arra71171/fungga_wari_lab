@@ -1,5 +1,15 @@
+"use client";
+
 import React from "react";
 import { cn } from "@workspace/ui/lib/utils";
+import { motion } from "framer-motion";
+import { DialogueBlock } from "@workspace/ui/components/DialogueBlock";
+
+import { ChoiceBlock } from "@workspace/ui/components/story-blocks";
+
+import { type JSONContent } from "@tiptap/core";
+
+export type { JSONContent };
 
 // --- Node Types ---
 
@@ -12,7 +22,7 @@ export function ParagraphNode({ children }: { children: React.ReactNode }) {
 }
 
 export function HeadingNode({ level, children }: { level: number; children: React.ReactNode }) {
-  const Tag = `h${level}` as any;
+  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
   const classes = cn(
     "font-heading font-bold tracking-tight text-foreground",
     level === 1 && "text-4xl mt-12 mb-6",
@@ -44,15 +54,6 @@ export function ListItemNode({ children }: { children: React.ReactNode }) {
 }
 
 // --- Semantic Parser ---
-
-export interface JSONContent {
-  type?: string;
-  attrs?: Record<string, any>;
-  content?: JSONContent[];
-  marks?: { type: string; attrs?: Record<string, any> }[];
-  text?: string;
-  [key: string]: any;
-}
 
 const renderMarks = (node: JSONContent, children: React.ReactNode) => {
   if (!node.marks || node.marks.length === 0) return children;
@@ -93,8 +94,33 @@ const renderNode = (node: JSONContent, index: number): React.ReactNode => {
       return <ListNode key={index} ordered={true}>{children}</ListNode>;
     case "listItem":
       return <ListItemNode key={index}>{children}</ListItemNode>;
-    case "hardBreak":
-      return <br key={index} />;
+    case "dialogue":
+      return (
+        <DialogueBlock
+          key={index}
+          characterName={node.attrs?.character || "Unknown"}
+          avatarUrl={node.attrs?.avatarUrl || "/avatars/default.png"}
+          quote={node.attrs?.quote || "..."}
+          align="left"
+        />
+      );
+    case "choice":
+      return (
+        <ChoiceBlock
+          key={index}
+          options={[
+            {
+              label: node.attrs?.label || "Continue",
+              nextSceneId: node.attrs?.nextSceneId,
+            }
+          ]}
+          onChoose={(opt) => {
+            if (opt.nextSceneId) {
+              window.dispatchEvent(new CustomEvent('story:choice', { detail: { sceneId: opt.nextSceneId } }));
+            }
+          }}
+        />
+      );
     default:
       // Fallback for unknown nodes
       if (children) return <React.Fragment key={index}>{children}</React.Fragment>;
@@ -108,8 +134,31 @@ export function RichTextRenderer({ content }: { content: JSONContent | null }) {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto py-12 space-y-6">
-      {content.content.map((node, i) => renderNode(node, i))}
-    </div>
+    <motion.div 
+      className="w-full max-w-3xl mx-auto py-12 space-y-6"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.15,
+          },
+        },
+      }}
+    >
+      {content.content.map((node, i) => (
+        <motion.div 
+          key={i}
+          variants={{
+            hidden: { opacity: 0, y: 30 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+          }}
+        >
+          {renderNode(node, i)}
+        </motion.div>
+      ))}
+    </motion.div>
   );
 }

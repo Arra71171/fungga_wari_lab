@@ -2,24 +2,35 @@
 
 ## Current Position
 
-- **Phase:** Not started (awaiting roadmap approval)
-- **Last Session:** 2026-03-29
-- **Active App:** `apps/web` (Next.js 15 shell exists, minimal)
-- **Dashboard App:** Not created yet (`apps/dashboard` to be scaffolded in Phase 0)
+- **Phase:** Phase 5 Complete — Public Story Reader
+- **Last Session:** 2026-04-01
+- **Active App:** `apps/web` (fully functional public reader)
 
 ## Workspace Status
 
 | Item | Status |
 |---|---|
 | Monorepo (pnpm + Turborepo) | ✅ Configured |
-| `apps/web` (Next.js 15) | ✅ Shell exists, minimal |
-| `packages/ui` | ✅ Exists — `button.tsx` + `globals.css` design tokens |
-| `apps/dashboard` | ❌ Does not exist yet |
-| Convex backend | ❌ Not integrated |
-| Clerk auth | ❌ Not integrated |
-| Cloudinary | ❌ Not integrated |
-| Framer Motion | ❌ Not installed |
-| Tiptap | ❌ Not installed |
+| `apps/web` (Next.js 15) | ✅ Full landing page + story reader |
+| `apps/dashboard` (Next.js 15) | ✅ Full creator workspace with auth |
+| `packages/ui` | ✅ Full design system (buttons, cards, editor, kanban, marquee, etc.) |
+| `packages/auth` | ✅ Clerk + Convex provider + SyncUserStore |
+| Convex backend | ✅ Fully integrated (stories, chapters, scenes, users, tasks, messages) |
+| Clerk auth | ✅ Integrated in dashboard + web |
+| Cloudinary | ❌ Not yet integrated (image upload pending) |
+| Framer Motion | ✅ Installed and used in apps/web |
+| Tiptap | ✅ Editor in apps/dashboard; JSON renderer in apps/web |
+
+## Completed Phases
+
+| Phase | Description | Status |
+|---|---|---|
+| 0 | Foundation & Design System | ✅ Done |
+| 1 | Story Platform — Reader Experience | ✅ Done |
+| 2 | Creator Dashboard — Content Management | ✅ Done |
+| 3 | Team Workspace — Kanban, Chat, Tasks | ✅ Done |
+| 4 | Global Identity Sync (Clerk ↔ Convex users table) | ✅ Done |
+| 5 | Public Story Reader (stories listing, wired player, CTA links) | ✅ Done |
 
 ## Key Decisions
 
@@ -28,18 +39,22 @@
 - **USER-DECIDED:** Platform name = "Fungga Wari Lab" (Meetei Fireplace Folk Stories)
 - **AI-SUGGESTED:** Use Convex for real-time backend (chat, tasks, stories)
 - **AI-SUGGESTED:** Use Clerk for auth (team roles: admin/editor/viewer)
-- **AI-SUGGESTED:** Use Cloudinary for media (illustrations + audio)
+- **AI-SUGGESTED:** Use Cloudinary for media (illustrations + audio) — PENDING
 - **AI-SUGGESTED:** Two apps: `apps/web` (reader) + `apps/dashboard` (creator workspace)
-- **DESIGN:** Dark mode is primary — deep dark background + warm amber/ochre brand accent (firelight)
-- **DESIGN:** Extend design system with Fungga Wari brand tokens in `globals.css`
-- **RULE:** All shared UI goes to `packages/ui/src/components/` — NEVER in `apps/web/components/` unless app-specific
-
-## Blockers
-
-None currently. Awaiting roadmap approval.
+- **DESIGN:** Zen Brutalist — deep cobalt blue primary, oklch design tokens, DM Sans heading, JetBrains Mono
+- **ARCHITECTURE:** `teamMembers` table merged into `users` table (role field added)
+- **ARCHITECTURE:** `SyncUserStore` component silently syncs Clerk user into Convex on every login
 
 ## Next Steps
 
-1. Get user approval on ROADMAP.md
-2. Run `/gsd-discuss-phase` for Phase 0 to capture design preferences
-3. Begin Phase 0: Foundation & Design System
+Priority order for Phase 6:
+
+1. **Cloudinary image upload** — wire `onImageUpload` in the Tiptap editor to a Convex upload action
+2. **Admin role management** — UI in Settings to promote users from viewer → editor → admin
+3. **Story description field** — add `description` field to the `stories` schema for reader-facing summaries
+4. **Reader app auth** — allow readers to bookmark scenes (requires minor Clerk setup in `apps/web`)
+5. **Full-text search** — Convex search index on story title + content
+
+## Blockers
+
+None currently.

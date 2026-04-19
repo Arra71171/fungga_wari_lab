@@ -1,14 +1,18 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// Marketing site has no protected routes.
-// The proxy still runs so Clerk can sync auth state for future gated features.
-export const proxy = clerkMiddleware();
+// The Reader app is entirely public with optional auth.
+// /login and /register are public sign-in/sign-up routes.
+// Authorization for stories is handled at the component level by PaywallGate.
 
-export default proxy;
+export default clerkMiddleware(() => {
+  // No globally protected routes in the public web app.
+});
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
   ],
 };

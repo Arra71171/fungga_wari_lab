@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import Image from "next/image"
 import { cn } from "@workspace/ui/lib/utils"
 
 const avatarBadgeVariants = cva(
@@ -34,6 +35,8 @@ function AvatarBadge({
   fallback,
   ...props
 }: AvatarBadgeProps) {
+  const imageSize = size === "sm" ? 32 : size === "lg" ? 48 : 40
+
   return (
     <span
       data-slot="avatar-badge"
@@ -41,11 +44,14 @@ function AvatarBadge({
       {...props}
     >
       {src ? (
-        <img
+        <Image
           src={src}
           alt={alt}
+          width={imageSize}
+          height={imageSize}
+          sizes={`${imageSize}px`}
           className="h-full w-full object-cover"
-          loading="lazy"
+          unoptimized
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground font-heading font-bold uppercase tracking-wider">

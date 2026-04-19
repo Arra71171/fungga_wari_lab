@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+
 
 interface DroppableColumnProps {
   id: string;

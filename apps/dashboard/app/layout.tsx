@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Bacasime_Antique, Instrument_Serif, Gentium_Plus } from "next/font/google";
+import { JetBrains_Mono, Cinzel, Instrument_Serif, Poppins } from "next/font/google";
 import "@workspace/ui/globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ConvexClerkProvider } from "@workspace/auth/convex-provider";
+import { ClerkAuthProvider } from "@workspace/auth/clerk-provider";
 import { cn } from "@workspace/ui/lib/utils";
+import { SyncUserStore } from "@/components/sync-user";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@workspace/ui/components/sonner";
+import { AuthObserver } from "@/components/AuthObserver";
 
-// ── Folk-story heading: Literary, old-style serif with modern screen discipline
-const bacasimeAntique = Bacasime_Antique({
-  weight: "400",
+// ── Folk-story heading: Literary, cinematic vibe (Mythological feel)
+const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
@@ -22,9 +24,9 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-// ── Body serif: Humanist, open, multilingual-ready (Meitei cultural content)
-const gentiumPlus = Gentium_Plus({
-  weight: ["400", "700"],
+// ── Dashboard body: Geometric, modern UI contrast
+const poppins = Poppins({
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-sans",
@@ -35,8 +37,16 @@ const gentiumPlus = Gentium_Plus({
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Dashboard - Fungga Wari Lab",
-  description: "Creator and Team Workspace",
+  title: {
+    default: "Creator Studio — Fungga Wari Lab",
+    template: "%s | Creator Studio",
+  },
+  description: "The Fungga Wari Lab Creator Studio — manage stories, chapters, scenes, and assets for the Meitei folk storytelling platform.",
+  robots: {
+    // Dashboard is private CMS — must not be indexed by search engines.
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({
@@ -50,18 +60,22 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased font-sans flex flex-col min-h-screen",
-        bacasimeAntique.variable,
+        cinzel.variable,
         instrumentSerif.variable,
-        gentiumPlus.variable,
+        poppins.variable,
         jetbrainsMono.variable,
       )}
     >
-      <body>
-        <ConvexClerkProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </ConvexClerkProvider>
+      <body suppressHydrationWarning>
+        <ClerkAuthProvider>
+          <ThemeProvider>
+            <SyncUserStore />
+            <AuthObserver />
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </ClerkAuthProvider>
       </body>
     </html>
   );
 }
-

@@ -10,6 +10,7 @@ import { config as baseConfig } from "./base.js"
 
 /**
  * A custom ESLint configuration for libraries that use Next.js.
+ * Includes Tailwind CSS class linting (order, conflicts, drift detection).
  *
  * @type {import("eslint").Linter.Config}
  * */

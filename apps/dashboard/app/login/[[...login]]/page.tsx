@@ -1,264 +1,154 @@
 "use client";
 
-import { SignIn } from "@clerk/nextjs";
-import Link from "next/link";
 import * as React from "react";
-import { BorderBeam } from "@workspace/ui/components/border-beam";
-import { ArrowLeft, Moon, Sun } from "lucide-react";
 import {
-  motion,
-  useMotionValue,
-  useSpring,
-  AnimatePresence,
-  type Variants,
-} from "framer-motion";
-import { useTheme } from "next-themes";
-import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
+  SignIn,
+  TaskChooseOrganization,
+  useOrganizationList,
+  ClerkLoaded,
+  ClerkLoading,
+} from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import { usePathname, useSearchParams } from "next/navigation";
+import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout";
 
-// ─── Animation Variants ──────────────────────────────────────────────────────
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { type: "spring", stiffness: 180, damping: 22 },
+const authAppearance = {
+  baseTheme: dark,
+  variables: {
+    colorPrimary: "var(--primary)",
+    colorBackground: "transparent",
+    colorDanger: "var(--destructive)",
+    colorInputBackground: "var(--cinematic-bg)",
+    colorInputText: "var(--foreground)",
+    colorSuccess: "var(--brand-ochre)",
+    colorText: "var(--foreground)",
+    fontSize: "14px",
+  },
+  elements: {
+    rootBox: "!w-full !max-w-none",
+    cardBox:
+      "!w-full !max-w-none !shadow-none !bg-transparent !rounded-none",
+    card: "!p-0 !w-full !max-w-none !shadow-none !border-none !rounded-none !bg-transparent",
+    headerTitle: "!hidden",
+    headerSubtitle: "!hidden",
+    header: "!hidden",
+    main: "!gap-3",
+    formFields: "!gap-3",
+    formFieldRow: "!m-0",
+    formFieldLabelRow: "!mb-1.5",
+    formFieldLabel:
+      "font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em] !m-0",
+    formFieldInput:
+      "!w-full h-10 !rounded-none !border !border-border bg-cinematic-bg/80 px-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:!border-primary focus:bg-primary/5 !outline-none !shadow-none ring-0 focus:ring-0",
+    formButtonPrimary:
+      "cl-custom-button !w-full !rounded-none bg-primary text-primary-foreground font-mono text-[11px] font-black uppercase tracking-[0.22em] h-11 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 !mt-5 !mb-0 !border-0 !shadow-none overflow-hidden relative " +
+      "[&[data-loading]]:!text-transparent " +
+      "[&[data-loading]::after]:content-['ACCESSING...'] [&[data-loading]::after]:absolute [&[data-loading]::after]:inset-0 [&[data-loading]::after]:flex [&[data-loading]::after]:items-center [&[data-loading]::after]:justify-center [&[data-loading]::after]:text-primary-foreground " +
+      "[&[data-loading]>svg]:!absolute [&[data-loading]>svg]:!left-4",
+    footerAction:
+      "!flex !items-center !justify-end !mt-2 !p-0 !bg-transparent",
+    footerActionLink:
+      "font-mono text-[10px] uppercase tracking-widest text-primary hover:text-primary/70 transition-colors duration-200 !font-bold",
+    footerActionText: "!hidden",
+    footer: "!hidden",
+    socialButtonsBlockButton: "!hidden",
+    dividerRow: "!hidden",
+    socialButtonsBlockButtonText: "!hidden",
+    identityPreviewText: "font-mono text-sm font-bold text-foreground",
+    identityPreviewEditButton:
+      "text-primary font-mono text-[10px] uppercase tracking-widest font-bold hover:text-primary/70 transition-colors duration-200",
+    formResendCodeLink:
+      "text-primary font-mono text-[10px] font-bold uppercase tracking-widest hover:text-primary/70 transition-colors duration-200",
+    otpCodeFieldInput:
+      "!rounded-none !border !border-border bg-cinematic-bg/80 focus:border-primary focus:bg-primary/5 size-11 font-mono text-base transition-all duration-200 !shadow-none",
   },
 };
 
-const cardVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.97, y: 20 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 200, damping: 25, delay: 0.35 },
-  },
-};
-
-// ─── Animated Grid Background ─────────────────────────────────────────────────
-
-function GridBackground() {
+function AuthFallback() {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-      <div className="absolute inset-0 max-w-7xl mx-auto flex h-full">
-        {[0, 1, 2, 3].map((i) => (
-          <motion.div
-            key={i}
-            className={`w-1/4 h-full flex-shrink-0 border-r border-border border-dashed ${
-              i === 1 ? "hidden md:block" : i === 2 ? "hidden lg:block" : i === 3 ? "hidden lg:block" : ""
-            }`}
-            animate={{ opacity: [0.08, 0.2, 0.08] }}
-            transition={{
-              duration: 3.5 + i * 0.9,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.7,
-            }}
-          />
-        ))}
+    <div className="mt-4 w-full flex-col space-y-4 animate-pulse">
+      <div className="mb-1.5 space-y-1.5">
+        <div className="h-3 w-1/4 rounded-none bg-cinematic-panel" />
+        <div className="h-10 w-full rounded-none border border-border bg-cinematic-bg/80" />
       </div>
+      <div className="mb-1.5 space-y-1.5">
+        <div className="h-3 w-1/4 rounded-none bg-cinematic-panel" />
+        <div className="h-10 w-full rounded-none border border-border bg-cinematic-bg/80" />
+      </div>
+      <div className="mt-5 h-11 w-full rounded-none border border-primary/30 bg-primary/20" />
     </div>
   );
 }
 
-// ─── Magnetic Back Button ─────────────────────────────────────────────────────
+function ChooseOrganizationTask({ redirectUrl }: { redirectUrl: string }) {
+  const { isLoaded, setActive, userMemberships } = useOrganizationList({
+    userMemberships: true,
+  });
 
-function MagneticBackButton({ href }: { href: string }) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const x = useSpring(rawX, { stiffness: 200, damping: 20, mass: 0.5 });
-  const y = useSpring(rawY, { stiffness: 200, damping: 20, mass: 0.5 });
+  React.useEffect(() => {
+    if (!isLoaded || !setActive) {
+      return;
+    }
 
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    rawX.set((e.clientX - (rect.left + rect.width / 2)) * 0.35);
-    rawY.set((e.clientY - (rect.top + rect.height / 2)) * 0.35);
-  }
+    const memberships = userMemberships.data ?? [];
+    if (memberships.length !== 1) {
+      return;
+    }
 
-  function handleMouseLeave() {
-    rawX.set(0);
-    rawY.set(0);
-  }
+    const organizationId = memberships[0]?.organization.id;
+    if (!organizationId) {
+      return;
+    }
+
+    void setActive({
+      organization: organizationId,
+      redirectUrl,
+    }).catch((error: unknown) => {
+      console.error("Failed to activate organization during login task:", error);
+    });
+  }, [isLoaded, redirectUrl, setActive, userMemberships.data]);
 
   return (
-    <Link href={href} aria-label="Return to Mainframe">
-      <motion.div
-        ref={ref}
-        style={{ x, y }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="group flex items-center gap-4 outline-none cursor-pointer"
-      >
-        <motion.div
-          className="flex size-12 items-center justify-center border border-border bg-background text-foreground shadow-brutal-sm"
-          whileHover={{ backgroundColor: "var(--secondary)" }}
-          transition={{ duration: 0.2 }}
-        >
-          <motion.div
-            className="flex items-center justify-center"
-            whileHover={{ x: -4 }}
-            transition={{ type: "spring", stiffness: 300, damping: 15 }}
-          >
-            <ArrowLeft className="size-4" />
-          </motion.div>
-        </motion.div>
-        <div className="hidden flex-col sm:flex">
-          <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
-            FW_LAB
-          </span>
-          <span className="font-heading text-xs font-bold uppercase tracking-widest text-foreground">
-            ACCESS
-          </span>
-        </div>
-      </motion.div>
-    </Link>
+    <TaskChooseOrganization
+      appearance={authAppearance}
+      redirectUrlComplete={redirectUrl}
+    />
   );
 }
-
-
-// ─── Login Page ───────────────────────────────────────────────────────────────
 
 export default function LoginPage() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect_url") ?? "/overview";
+  const isChooseOrganizationTask = pathname.includes("/tasks/choose-organization");
+
   return (
-    <div
-      className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-background antialiased text-foreground selection:bg-primary/30 selection:text-primary-foreground"
+    <AuthGatewayLayout
+      portalLabel="Creator Studio"
+      headingText="Access the Forge."
+      portalDescription="Warekeepers Only"
+      versionText="FW_LAB · Identity Protocol v2.4"
+      backLinkHref={process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3001"}
+      showSignUp={false}
     >
-      <GridBackground />
-
-      {/* Top Nav */}
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 md:py-8"
-      >
-        <MagneticBackButton
-          href={process.env.NEXT_PUBLIC_LANDING_URL || "http://localhost:3001"}
-        />
-        <AnimatedThemeToggler />
-      </motion.div>
-
-      {/* Main content column */}
-      <div className="relative z-20 flex w-full max-w-[480px] flex-col items-center gap-8 px-6 py-24">
-
-        {/* Branding block — staggered */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col items-center text-center w-full gap-4"
-        >
-          {/* Status badge */}
-          <motion.div variants={itemVariants}>
-            <div className="flex items-center gap-2.5 border border-border px-4 py-2 bg-secondary/50">
-              <motion.div
-                className="size-2 rounded-full bg-status-active"
-                animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-                FW_LAB • Mainframe
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            variants={itemVariants}
-            className="text-4xl md:text-5xl font-heading font-black tracking-tighter uppercase leading-none"
-          >
-            Initialize{" "}
-            <motion.span
-              className="text-primary inline-block"
-              animate={{ opacity: [1, 0.7, 1] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              Session.
-            </motion.span>
-          </motion.h1>
-
-          {/* Sub line */}
-          <motion.p
-            variants={itemVariants}
-            className="text-[11px] text-muted-foreground font-mono leading-relaxed max-w-[300px]"
-          >
-            Authenticate to access the Neo-Archival protocol and cultural heritage systems.
-          </motion.p>
-        </motion.div>
-
-        {/* Auth Form Card */}
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          className="relative w-full overflow-hidden border border-border bg-background shadow-brutal"
-        >
-          <BorderBeam size={250} duration={12} delay={9} />
-          <SignIn
-            routing="path"
-            path="/login"
-            signUpUrl="/login"
-            fallbackRedirectUrl="/stories"
-            appearance={{
-              elements: {
-                rootBox: "!w-full !max-w-full",
-                cardBox: "!w-full !max-w-full !shadow-none !bg-transparent !rounded-none",
-                card: "!w-full !max-w-full !shadow-none !border-none !rounded-none !bg-transparent px-8 py-6 relative z-10",
-                headerTitle:
-                  "font-heading text-lg font-black tracking-tighter uppercase text-foreground text-center !mb-1",
-                headerSubtitle:
-                  "font-mono text-[9px] uppercase tracking-widest text-muted-foreground text-center !max-w-none w-full !mb-0",
-                main: "!gap-0",
-                formFields: "!gap-0",
-                formFieldRow: "!mt-5",
-                formFieldLabelRow: "!mb-1.5",
-                formFieldLabel:
-                  "font-mono text-[9px] font-bold uppercase tracking-widest text-foreground !m-0",
-                formFieldInput:
-                  "!w-full h-11 !rounded-none !border-b-2 !border-l !border-r !border-t-0 border-border bg-secondary/20 px-3 font-mono text-sm text-foreground transition-all duration-300 focus:border-primary focus:bg-primary/5 !outline-none !shadow-none",
-                formButtonPrimary:
-                  "!w-full !rounded-none bg-primary text-primary-foreground font-mono text-[10px] font-bold uppercase tracking-widest h-12 hover:bg-primary/90 transition-all duration-300 !mt-6 !shadow-none !border-0",
-                footerAction: "!hidden",
-                footer: "!hidden",
-                socialButtonsBlockButton: "!hidden",
-                dividerRow: "!hidden",
-                identityPreviewText: "font-mono text-sm text-foreground",
-                identityPreviewEditButton:
-                  "text-primary font-mono text-xs hover:text-primary/80 transition-colors",
-                formResendCodeLink:
-                  "text-primary font-mono text-xs hover:text-primary/80 transition-colors uppercase tracking-widest",
-                otpCodeFieldInput:
-                  "!rounded-none !border-b-2 !border-l !border-r !border-t-0 border-border bg-secondary/20 focus:border-primary focus:bg-primary/5 size-12 transition-all duration-300 !shadow-none",
-              },
-            }}
-          />
-        </motion.div>
-
-        {/* Footer meta */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-        >
-          <motion.div
-            className="border border-border px-6 py-2.5 bg-secondary/50 font-mono text-[9px] uppercase tracking-widest text-muted-foreground"
-            whileHover={{ borderColor: "var(--primary)", color: "var(--primary)" }}
-            transition={{ duration: 0.2 }}
-          >
-            FW_LAB • Identity Protocol v2.4
-          </motion.div>
-        </motion.div>
-
-      </div>
-    </div>
+      {isChooseOrganizationTask ? (
+        <ChooseOrganizationTask redirectUrl={redirectUrl} />
+      ) : (
+        <>
+          <ClerkLoading>
+            <AuthFallback />
+          </ClerkLoading>
+          <ClerkLoaded>
+            <SignIn
+              appearance={authAppearance}
+              forceRedirectUrl="/overview"
+              path="/login"
+              routing="path"
+              signUpUrl="/login"
+            />
+          </ClerkLoaded>
+        </>
+      )}
+    </AuthGatewayLayout>
   );
 }

@@ -1,7 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["ANALYZE", "CLOUDINARY_API_SECRET", "CLOUDINARY_API_KEY", "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "SUPABASE_SERVICE_ROLE_KEY", "CLERK_WEBHOOK_SECRET", "CLERK_SECRET_KEY", "ELEVENLABS_API_KEY"],
   "tasks": {
+    "analyze": {
+      "dependsOn": ["^build"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
@@ -20,9 +24,16 @@
       "cache": false,
       "persistent": true
     },
-    "//#convex:dev": {
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "e2e": {
       "cache": false,
-      "persistent": true
+      "dependsOn": ["^build"]
+    },
+    "supabase:types": {
+      "cache": false
     }
   }
 }

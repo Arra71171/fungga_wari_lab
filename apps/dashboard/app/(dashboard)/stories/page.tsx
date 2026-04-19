@@ -1,172 +1,232 @@
 "use client";
 
 import * as React from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/../../convex/_generated/api";
 import { Button } from "@workspace/ui/components/button";
-import { Plus, Search, BookOpen, Clock, AlertCircle } from "lucide-react";
+import { Plus, Search, BookOpen, Sparkles, Globe, EyeOff, Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Input } from "@workspace/ui/components/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@workspace/ui/components/dialog";
-import { Label } from "@workspace/ui/components/label";
+import { StoryCard } from "@workspace/ui/components/StoryCard";
+import { useRouter } from "next/navigation";
+import { cn } from "@workspace/ui/lib/utils";
+import { toast } from "sonner";
+import {
+  getAllStoriesAdmin,
+  createDraftStory,
+  publishStory,
+  unpublishStory,
+  deleteStory,
+} from "@/actions/storyActions";
 
-export default function StoriesPage() {
+type Story = Awaited<ReturnType<typeof getAllStoriesAdmin>>[number];
+
+export default function StoriesOverviewPage() {
   const router = useRouter();
-  const [isNewDialogOpen, setIsNewDialogOpen] = React.useState(false);
-  const [newTitle, setNewTitle] = React.useState("");
-  const [newCategory, setNewCategory] = React.useState("folktale");
+  const [stories, setStories] = React.useState<Story[] | null>(null);
   const [isCreating, setIsCreating] = React.useState(false);
+  const [togglingId, setTogglingId] = React.useState<string | null>(null);
+  const [deletingId, setDeletingId] = React.useState<string | null>(null);
 
-  const createStory = useMutation(api.stories.createWithInitialScene);
-  const storiesQuery = useQuery(api.stories?.getAll || (() => [] as any));
-  const stories = storiesQuery ?? [];
+  // Load stories on mount
+  React.useEffect(() => {
+    getAllStoriesAdmin()
+      .then(setStories)
+      .catch(() => setStories([]));
+  }, []);
+
+  const handleNewManuscript = async () => {
+    try {
+      setIsCreating(true);
+      const newId = await createDraftStory();
+      toast.success("Draft Initialized", { description: "A new blank manuscript has been forged." });
+      router.push(`/stories/draft/${newId}`);
+    } catch (e) {
+      console.error(e);
+      toast.error("Creation Failed", { description: "Failed to initialize new manuscript." });
+      setIsCreating(false);
+    }
+  };
+
+  const handleTogglePublish = async (
+    e: React.MouseEvent,
+    storyId: string,
+    currentStatus: string,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setTogglingId(storyId);
+    try {
+      if (currentStatus === "published") {
+        await unpublishStory(storyId);
+        toast.info("Story Sealed", { description: "Manuscript returned to the private vault." });
+      } else {
+        await publishStory(storyId);
+        toast.success("Story Published", { description: "Manuscript released to the public archive." });
+      }
+      // Refresh
+      const updated = await getAllStoriesAdmin();
+      setStories(updated);
+    } catch (err) {
+      console.error("Failed to toggle publish:", err);
+      toast.error("Action Failed", { description: "Could not modify publish status." });
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const handleDelete = async (
+    e: React.MouseEvent,
+    storyId: string,
+    storyTitle: string,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const confirmed = window.confirm(
+      `Permanently delete "${storyTitle}"?\n\nThis will remove the story, all its chapters, scenes, and related data. This action cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(storyId);
+    try {
+      const result = await deleteStory(storyId);
+      if (result && !result.success) {
+        throw new Error(result.error || "Unknown server error");
+      }
+      toast.success("Manuscript Destroyed", { description: "The story has been permanently erased." });
+      setStories((prev) => prev?.filter((s) => s.id !== storyId) ?? null);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not remove the manuscript.";
+      toast.error("Deletion Failed", { description: message });
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  if (stories === null) {
+    return (
+      <div className="flex flex-col h-full space-y-8 p-10 max-w-7xl mx-auto animate-pulse">
+        <div className="h-20 bg-muted/30 rounded-none w-1/3" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-64 bg-muted/20 border border-border-subtle rounded-none" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col h-full space-y-6">
+    <div className="flex flex-col h-full space-y-8 animate-in fade-in duration-700 p-10 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6 shrink-0">
-        <div>
-          <h1 className="font-display text-4xl italic tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60">
-            Stories
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6 shrink-0 relative z-10">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3 text-brand-ember/80 font-mono text-xs uppercase tracking-[0.2em] mb-2">
+            <Sparkles className="size-3" />
+            <span>Fungga Wari Archive</span>
+          </div>
+          <h1 className="font-display text-5xl md:text-6xl italic tracking-tight text-foreground drop-shadow-lg">
+            Manuscripts
           </h1>
-          <p className="text-muted-foreground font-mono text-sm mt-1">
-            Manage your folklore archive and track ongoing translations.
+          <p className="text-muted-foreground font-mono text-sm max-w-lg leading-relaxed">
+            Manage your folklore archive. Transcribe the oral tradition into digital stone.
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3">
-          <Button onClick={() => setIsNewDialogOpen(true)} className="gap-2 shadow-sm shadow-brand-ember/20">
-            <Plus className="size-4" /> New Story
+          <Button
+            onClick={handleNewManuscript}
+            disabled={isCreating}
+            className="gap-2 border border-brand-ember/30 bg-background text-brand-ember hover:bg-brand-ember/10 transition-all rounded-none px-6"
+          >
+            <Plus className="size-4" />
+            {isCreating ? "Initializing..." : "New Manuscript"}
           </Button>
         </div>
       </div>
 
-      <div className="relative w-full sm:max-w-md">
+      <div className="relative w-full sm:max-w-md z-10">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-        <Input 
-          placeholder="Search by title or category..." 
-          className="pl-9 h-10 border-border/50 bg-secondary/30 focus-visible:ring-primary/50"
+        <Input
+          placeholder="Search by title or category..."
+          className="pl-9 h-12 border-border bg-primary/5 hover:bg-primary/10 focus-visible:ring-brand-ember/50 text-foreground placeholder:text-muted-foreground/50 rounded-none transition-all font-mono text-sm"
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        {stories.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-16 text-center border border-dashed border-border/50 rounded-none bg-secondary/10">
-            <BookOpen className="size-10 text-muted-foreground mb-4 opacity-50" />
-            <h2 className="text-xl font-bold font-heading mb-2">No Stories in the Archive</h2>
-            <p className="text-sm text-muted-foreground max-w-sm mb-6">
-              Establish the first manuscript. Gather your field notes, audio recordings, or translations to begin.
-            </p>
-            <Button onClick={() => setIsNewDialogOpen(true)}>
-              <Plus className="size-4 mx-2" /> Start a Story
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Story Cards */}
-            {stories.map((story) => {
-              // Extract logic: The previous pipeline linked to scene directly if one existed, but lacking a direct lookup we can route to an overview or the first scene.
-              // For minimalism, assuming we can fetch its first scene on the fly or just link to an overview. 
-              // Wait, the new pipeline uses `/stories/[id]/scenes/[sceneId]`, but without sceneId we can't link directly. Let's just link to `/stories/${story._id}` which should redirect or handle it.
-              return (
-              <Link 
-                href={`/stories/${story._id}`} 
-                key={story._id}
-                className="group block p-5 border border-border/40 bg-secondary/20 rounded-none hover:border-primary/50 transition-all hover:shadow-sm hover:shadow-brand-ember/5 hover:-translate-y-1"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex flex-col">
-                    <span className="text-xs uppercase font-mono font-bold tracking-wider text-primary/80 mb-1">
-                      {story.category || "Uncategorized"}
-                    </span>
-                    <h3 className="font-heading font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
-                      {story.title}
-                    </h3>
-                  </div>
-                </div>
-                
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-4 min-h-[40px]">
-                  {story.description || "No description provided."}
-                </p>
-                
-                <div className="flex items-center justify-between text-xs text-muted-foreground font-mono mt-auto pt-4 border-t border-border/30">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="size-3" />
-                    <span className="capitalize">{story.status || "Draft"}</span>
-                  </div>
-                  <div className="flex gap-1">
-                    {(story.tags || []).slice(0, 2).map((tag: string) => (
-                      <span key={tag} className="px-1.5 py-0.5 bg-background border border-border/50 rounded-none">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+      {stories.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border border-dashed border-border bg-secondary/20 relative z-10">
+          <BookOpen className="size-12 text-muted-foreground/30 mb-6" />
+          <h3 className="font-heading text-xl font-semibold mb-2 text-foreground/80">The Archive is Empty</h3>
+          <p className="text-muted-foreground mb-8 max-w-md text-center font-mono text-sm leading-relaxed">
+            There are no manuscripts in the sacred vault. Begin by establishing a new record of the oral tradition.
+          </p>
+          <Button
+            onClick={handleNewManuscript}
+            disabled={isCreating}
+            className="rounded-none bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 border border-brand-ember/30 transition-all px-8"
+          >
+            {isCreating ? "Initializing..." : "Establish First Manuscript"}
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10 pb-20">
+          {stories.map((story) => (
+            <div key={story.id} className="relative group/card">
+              <Link href={`/stories/draft/${story.id}`}>
+                <StoryCard
+                  title={story.title}
+                  category={story.category ?? "other"}
+                  description={story.description ?? undefined}
+                  status={story.status}
+                  coverUrl={story.cover_image_url ?? undefined}
+                  chapterCount={story.chapter_count ?? 0}
+                  language={story.language}
+                  className="h-full hover:-translate-y-1 transition-transform duration-300 rounded-none border-border"
+                />
               </Link>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      <Dialog open={isNewDialogOpen} onOpenChange={setIsNewDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-none border border-border/40 shadow-brutal bg-background">
-          <DialogHeader>
-            <DialogTitle className="font-heading">Establish Manuscript</DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Define the bedrock details of this lore piece.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title" className="font-mono text-xs text-muted-foreground">Title</Label>
-              <Input 
-                id="title" 
-                value={newTitle} 
-                onChange={(e) => setNewTitle(e.target.value)} 
-                className="bg-secondary/30 rounded-none border-border/50" 
-                placeholder="The Tale of Sandrembi and Chaisra" 
-              />
+              {/* Quick actions */}
+              <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={togglingId === story.id || deletingId === story.id}
+                  onClick={(e) => handleTogglePublish(e, story.id, story.status)}
+                  className={cn(
+                    "rounded-none text-[10px] font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm",
+                    story.status === "published"
+                      ? "border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
+                      : "border-brand-ember/50 text-brand-ember hover:bg-brand-ember/10 bg-background/90",
+                  )}
+                  aria-label={story.status === "published" ? "Unpublish story" : "Publish story"}
+                >
+                  {togglingId === story.id ? (
+                    <Loader2 className="size-3 animate-spin" />
+                  ) : story.status === "published" ? (
+                    <EyeOff className="size-3" />
+                  ) : (
+                    <Globe className="size-3" />
+                  )}
+                  {story.status === "published" ? "Unpublish" : "Publish"}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={deletingId === story.id || togglingId === story.id}
+                  onClick={(e) => handleDelete(e, story.id, story.title)}
+                  className="rounded-none text-[10px] font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
+                  aria-label="Delete story"
+                >
+                  {deletingId === story.id ? (
+                    <Loader2 className="size-3 animate-spin" />
+                  ) : (
+                    <Trash2 className="size-3" />
+                  )}
+                  Delete
+                </Button>
+              </div>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="category" className="font-mono text-xs text-muted-foreground">Category</Label>
-              <Input 
-                id="category" 
-                value={newCategory} 
-                onChange={(e) => setNewCategory(e.target.value)} 
-                className="bg-secondary/30 rounded-none border-border/50" 
-                placeholder="creation_myth, fable, historical..." 
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button 
-              disabled={isCreating || !newTitle.trim()} 
-              onClick={async () => {
-                setIsCreating(true);
-                try {
-                  const { storyId, sceneId } = await createStory({
-                    title: newTitle,
-                    slug: newTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                    category: newCategory,
-                    language: 'meitei', // Default for project context
-                  });
-                  router.push(`/stories/${storyId}/scenes/${sceneId}`);
-                } catch (e) {
-                  console.error(e);
-                } finally {
-                  setIsCreating(false);
-                  setIsNewDialogOpen(false);
-                }
-              }}
-              className="gap-2 shadow-sm rounded-none"
-            >
-              {isCreating ? "Initializing..." : "Create Manuscript"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

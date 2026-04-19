@@ -1,0 +1,64 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Web: Debug (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceFolder}/apps/web",
+      "runtimeArgs": [
+        "--remote-debugging-port=9222"
+      ]
+    },
+    {
+      "name": "Dashboard: Debug (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/apps/dashboard",
+      "runtimeArgs": [
+        "--remote-debugging-port=9222"
+      ]
+    },
+    {
+      "name": "Web: Dev Server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/apps/web"
+    },
+    {
+      "name": "Dashboard: Dev Server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/apps/dashboard"
+    },
+    {
+      "name": "Convex Dev Server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm convex dev",
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack (Web)",
+      "configurations": [
+        "Web: Dev Server",
+        "Convex Dev Server",
+        "Web: Debug (Chrome)"
+      ]
+    },
+    {
+      "name": "Full Stack (Dashboard)",
+      "configurations": [
+        "Dashboard: Dev Server",
+        "Convex Dev Server",
+        "Dashboard: Debug (Chrome)"
+      ]
+    }
+  ]
+}
