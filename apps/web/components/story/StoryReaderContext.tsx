@@ -77,12 +77,14 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
   const params = useParams();
   const slug = params.slug as string;
 
-  const [story, setStory] = React.useState<StoryShape | null | undefined>(initialStory);
+  const [story, setStory] = React.useState<StoryShape | null | undefined>(
+    initialStory === null ? undefined : initialStory
+  );
   const supabase = React.useMemo(() => createClient(), []);
 
   React.useEffect(() => {
     async function loadData() {
-      if (!slug || initialStory !== undefined) return;
+      if (!slug || initialStory) return;
 
       const { data: storyData, error: storyError } = await supabase
         .from("stories")
@@ -95,8 +97,7 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
             id, title, "order", illustration_url, tiptap_content,
             scenes (
               id, title, "order", content, tiptap_content, illustration_url,
-              is_draft, version, reading_time, excerpt,
-              choices!choices_scene_id_fkey ( id, label, next_scene_id )
+              is_draft, version, reading_time, excerpt
             )
           )
         `)
@@ -134,13 +135,14 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
   useViewTracking(story?.id ?? undefined);
 
   const [mode, setMode] = React.useState<ReadingMode>("standard");
-  const [currentSceneId, setCurrentSceneIdState] = React.useState<string | null>(null);
+  const [currentSceneId, setCurrentSceneIdState] = React.useState<string | null>(
+    initialStory?.chapters?.[0]?.scenes?.[0]?.id ?? null
+  );
 
-  // Set currentSceneId from localStorage or default to first scene
+  // Set currentSceneId from localStorage only if it exists
   React.useEffect(() => {
     if (!story || story.chapters.length === 0) return;
 
-    const firstScene = story.chapters[0]?.scenes[0];
     const storageKey = `fungga:scene:${story.id}`;
     const saved = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
 
@@ -149,12 +151,7 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
       const allScenes = story.chapters.flatMap((ch) => ch.scenes);
       if (allScenes.some((s) => s.id === saved)) {
         setCurrentSceneIdState(saved);
-        return;
       }
-    }
-
-    if (firstScene && !currentSceneId) {
-      setCurrentSceneIdState(firstScene.id);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [story?.id]);
