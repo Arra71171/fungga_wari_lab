@@ -84,8 +84,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build packages
-        run: pnpm --filter @workspace/ui run build
+      # @workspace/ui is a source-only package (no compile step) — consumed
+      # directly via its exports map. No build script exists or is needed.
+      # Apps import from source files directly; Next.js transpiles them via
+      # `transpilePackages: ["@workspace/ui"]` in next.config.mjs.
 
       - name: Build web app
         run: pnpm --filter web run build
