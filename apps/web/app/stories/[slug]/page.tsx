@@ -70,7 +70,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
   const hasAccess = await checkUserAccess();
 
   const supabase = await createClient();
-  const { data: storyData } = await supabase
+  const { data: storyData, error } = await supabase
     .from("stories")
     .select(`
       id, title, slug, description, category, language, status,
@@ -81,13 +81,23 @@ export default async function StoryPage({ params }: StoryPageProps) {
         id, title, "order", illustration_url, tiptap_content,
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
-          is_draft, version, reading_time, excerpt,
-          choices!choices_scene_id_fkey ( id, label, next_scene_id )
+          is_draft, version, reading_time, excerpt
         )
       )
     `)
     .eq("slug", slug)
     .single();
+
+  if (error) {
+    const errorDetails = error instanceof Error 
+      ? { message: error.message, stack: error.stack, name: error.name } 
+      : error;
+    console.error(`[StoryPage] Supabase Error for slug "${slug}":`, errorDetails);
+  } else if (!storyData) {
+    console.warn("[StoryPage] StoryData is null for slug:", slug);
+  } else {
+    console.log("[StoryPage] StoryData fetched successfully. Chapters:", storyData.chapters?.length);
+  }
 
   let initialStory = null;
   if (storyData) {

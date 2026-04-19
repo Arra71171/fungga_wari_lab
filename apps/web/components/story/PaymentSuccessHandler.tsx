@@ -70,7 +70,7 @@ export function PaymentSuccessHandler() {
       </div>
       <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-both">
         <BrandLogo variant="icon" size="lg" className="text-brand-ember/60" />
-        <h2 className="font-heading text-2xl font-black uppercase tracking-widest text-foreground">
+        <h2 className="font-heading text-2xl font-black uppercase tracking-widest text-cinematic-text">
           Purchase Successful
         </h2>
         <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground text-center max-w-sm">

@@ -799,6 +799,9 @@ export default function Home() {
             <span className="text-3xs font-mono text-muted-foreground uppercase tracking-widest mt-2 border border-border px-2 py-1">
               Oral History Systems v2.0
             </span>
+            <span className="text-3xs font-mono text-muted-foreground/70 uppercase tracking-widest mt-4">
+              Code. Coffee. Oliver Oinam (Fungga_Wari Team)
+            </span>
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 text-2xs font-mono text-muted-foreground uppercase tracking-widest font-bold">
