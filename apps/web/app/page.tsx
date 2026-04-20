@@ -473,7 +473,7 @@ export default function Home() {
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-md">
               <div 
-                className="relative w-full aspect-[3/4] max-w-xs mx-auto lg:max-w-md bg-background border border-border p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
+                className="relative w-full aspect-[3/4] sm:max-w-md mx-auto lg:max-w-md bg-background border border-border p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
               >
                 <BorderBeam size={150} duration={8} delay={1} />
                 {/* Glow */}
