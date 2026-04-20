@@ -146,37 +146,37 @@ export default async function OverviewPage() {
         </div>
 
         {/* Publishing Pipeline Stepper */}
-        <div id="tour-overview-pipeline" className="border border-border-subtle bg-bg-panel p-8 flex flex-col md:flex-row items-stretch justify-between relative overflow-hidden space-y-8 md:space-y-0">
+        <div id="tour-overview-pipeline" className="border border-border-subtle bg-bg-panel p-4 md:p-8 flex flex-row items-center justify-between relative overflow-hidden">
           {/* Connector Line */}
-          <div className="hidden md:block absolute top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
+          <div className="absolute top-[35%] md:top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
 
-          <div className="flex-1 flex flex-col items-center gap-4 relative z-10 md:bg-bg-panel/90 backdrop-blur-sm px-4">
-            <div className="size-12 rounded-full border border-border bg-bg-base flex items-center justify-center">
-              <FileText className="size-5 text-muted-foreground" />
+          <div className="flex-1 flex flex-col items-center gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-1 md:px-4">
+            <div className="size-10 md:size-12 rounded-full border border-border bg-bg-base flex items-center justify-center">
+              <FileText className="size-4 md:size-5 text-muted-foreground" />
             </div>
             <div className="text-center">
-              <div className="text-3xl font-heading font-bold text-foreground">{stats.draftStories}</div>
-              <div className="text-fine font-mono uppercase tracking-label text-muted-foreground mt-1">Drafts</div>
+              <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.draftStories}</div>
+              <div className="text-[10px] md:text-fine font-mono uppercase tracking-label text-muted-foreground mt-0.5 md:mt-1">Drafts</div>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center gap-4 relative z-10 md:bg-bg-panel/90 backdrop-blur-sm px-4">
-            <div className="size-12 rounded-full border border-brand-ochre/40 bg-brand-ochre/5 flex items-center justify-center">
-              <Send className="size-5 text-brand-ochre" />
+          <div className="flex-1 flex flex-col items-center gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-1 md:px-4">
+            <div className="size-10 md:size-12 rounded-full border border-brand-ochre/40 bg-brand-ochre/5 flex items-center justify-center">
+              <Send className="size-4 md:size-5 text-brand-ochre" />
             </div>
             <div className="text-center">
-              <div className="text-3xl font-heading font-bold text-foreground">{stats.inReviewStories}</div>
-              <div className="text-fine font-mono uppercase tracking-label text-brand-ochre mt-1">In Review</div>
+              <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.inReviewStories}</div>
+              <div className="text-[10px] md:text-fine font-mono uppercase tracking-label text-brand-ochre mt-0.5 md:mt-1">In Review</div>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center gap-4 relative z-10 md:bg-bg-panel/90 backdrop-blur-sm px-4">
-            <div className="size-12 rounded-full border border-primary/40 bg-primary/5 flex items-center justify-center">
-              <Globe2 className="size-5 text-primary" />
+          <div className="flex-1 flex flex-col items-center gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-1 md:px-4">
+            <div className="size-10 md:size-12 rounded-full border border-primary/40 bg-primary/5 flex items-center justify-center">
+              <Globe2 className="size-4 md:size-5 text-primary" />
             </div>
             <div className="text-center">
-              <div className="text-3xl font-heading font-bold text-foreground">{stats.publishedStories}</div>
-              <div className="text-fine font-mono uppercase tracking-label text-primary mt-1">Published</div>
+              <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.publishedStories}</div>
+              <div className="text-[10px] md:text-fine font-mono uppercase tracking-label text-primary mt-0.5 md:mt-1">Published</div>
             </div>
           </div>
         </div>

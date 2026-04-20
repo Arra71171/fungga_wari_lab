@@ -238,20 +238,11 @@ export default function DashboardLayout({
               </Link>
             </div>
 
-            {/* Quick actions on mobile header — sign out + theme */}
-            <div className="flex items-center gap-1 shrink-0">
+            {/* Quick actions on mobile header — theme */}
+            <div className="flex items-center shrink-0">
               <div className="border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
                 <AnimatedThemeToggler />
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleSignOut}
-                aria-label="Sign out"
-                className="size-[34px] text-muted-foreground hover:text-foreground"
-              >
-                <LogOut className="size-4" />
-              </Button>
             </div>
           </header>
 
