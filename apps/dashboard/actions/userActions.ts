@@ -279,18 +279,28 @@ export async function createTeamMember(data: {
   return member
 }
 
+const getOperativeStatsSchema = z.object({
+  authId: z.string().uuid(),
+})
+
 /**
  * getOperativeStats — aggregate task completion and lore authored counts.
  */
 export async function getOperativeStats(authId: string) {
-  const supabase = await createClient()
+  const parsed = getOperativeStatsSchema.safeParse({ authId })
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validAuthId = parsed.data.authId
 
+  const supabase = await createClient()
+  
   // Resolve internal users.id and legacy clerk_id for identity migration bridging
   // stories.author_id and tasks.assignee_id may hold either format during transition
   const { data: profile, error: profileError } = await supabase
     .from("users")
     .select("id, clerk_id")
-    .eq("auth_id", authId)
+    .eq("auth_id", validAuthId)
     .single()
 
   if (profileError) throw new Error(`Failed to load operative identity: ${profileError.message}`)
