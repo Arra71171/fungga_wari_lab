@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 
 // ─── Message Queries ──────────────────────────────────────────────────────────
@@ -9,10 +8,9 @@ import { createClient } from "@/lib/supabase/server"
  * getMessages — paginated list of global team messages (newest first, reversed on display).
  */
 export async function getMessages(limit = 50) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("messages")
@@ -37,25 +35,24 @@ export async function getMessages(limit = 50) {
  * sendMessage — insert a new chat message for the current user.
  */
 export async function sendMessage(content: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user: authUser } } = await supabase.auth.getUser()
+  if (!authUser) throw new Error("Unauthenticated")
 
-  // Resolve the internal user id (Supabase users.id, not Clerk userId)
-  const { data: user } = await supabase
+  // Resolve the internal user id (Supabase users.id, not auth_id)
+  const { data: dbUser } = await supabase
     .from("users")
     .select("id")
-    .eq("clerk_id", userId)
+    .eq("auth_id", authUser.id)
     .single()
 
-  if (!user) throw new Error("User record not found — sync-user may not have run")
+  if (!dbUser) throw new Error("User record not found — auth trigger may not have run")
 
   const { data, error } = await supabase
     .from("messages")
     .insert({
       content: content.trim(),
-      author_id: user.id,
+      author_id: dbUser.id,
     })
     .select("id")
     .single()

@@ -17,7 +17,7 @@ import {
   Menu,
 } from "lucide-react";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
-import { useUser, SignOutButton } from "@clerk/nextjs";
+import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 import {
   Sheet,
@@ -44,28 +44,34 @@ import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding
 // Full profile data (alias, custom avatar) can be fetched in the /settings page.
 
 function UserProfileBlock() {
-  const { user: clerkUser } = useUser();
+  const { userProfile } = useSupabaseAuth();
 
-  if (!clerkUser) return null;
+  if (!userProfile) return null;
 
-  const avatarUrl = clerkUser.imageUrl;
+  const avatarUrl = userProfile.avatar_url;
   const displayName =
-    clerkUser.fullName ||
-    clerkUser.primaryEmailAddress?.emailAddress ||
+    userProfile.name ||
+    userProfile.email ||
     "Archive Admin";
   const userRoleStr =
-    (clerkUser.publicMetadata?.role as string) === "superadmin" ? "Superadmin" : "Creator";
+    userProfile.role === "superadmin" ? "Superadmin" : "Creator";
 
   return (
     <div id="tour-profile" className="flex items-center gap-3">
-      <div className="relative size-8 shrink-0 bg-secondary border border-border overflow-hidden">
-        <Image
-          src={avatarUrl}
-          alt="Avatar"
-          fill
-          sizes="32px"
-          className="object-cover grayscale opacity-80"
-        />
+      <div className="relative size-8 shrink-0 bg-secondary border border-border overflow-hidden flex items-center justify-center">
+        {avatarUrl ? (
+          <Image
+            src={avatarUrl}
+            alt="Avatar"
+            fill
+            sizes="32px"
+            className="object-cover grayscale opacity-80"
+          />
+        ) : (
+          <span className="text-xs font-mono text-muted-foreground">
+            {(displayName[0] || "A").toUpperCase()}
+          </span>
+        )}
       </div>
       <div className="flex flex-col min-w-0">
         <span className="text-xs font-mono text-foreground truncate h-4 leading-none">
@@ -79,7 +85,7 @@ function UserProfileBlock() {
   );
 }
 
-function SidebarContent({ pathname }: { pathname: string }) {
+function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: () => void }) {
   return (
     <>
       <div id="tour-brand" className="p-5 flex items-center h-[72px] shrink-0 border-b border-border-subtle lg:border-none">
@@ -143,16 +149,14 @@ function SidebarContent({ pathname }: { pathname: string }) {
         <UserProfileBlock />
 
         <div className="flex items-center gap-2">
-          <SignOutButton signOutOptions={{ sessionId: undefined }}>
-            <Button
+          <Button
               variant="outline"
               className="flex-1 flex items-center justify-center rounded-none bg-bg-surface border-border-subtle text-muted-foreground hover:text-foreground hover:border-border hover:bg-bg-surface/80"
-              onClick={() => toast.info("Signing Out", { description: "Re-sealing the archive..." })}
+              onClick={onSignOut}
             >
               <LogOut className="size-4 mr-2" />
               <span className="font-mono text-[10px] uppercase tracking-widest">Sign Out</span>
             </Button>
-          </SignOutButton>
 
           <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
             <AnimatedThemeToggler />
@@ -169,6 +173,27 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { user, userProfile, isLoaded, signOut } = useSupabaseAuth();
+
+  const handleSignOut = React.useCallback(async () => {
+    toast.info("Signing Out", { description: "Re-sealing the archive..." });
+    await signOut();
+    window.location.href = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
+  }, [signOut]);
+
+  // Guard: redirect non-superadmins to the public web app
+  const isSuperAdmin = userProfile?.role === "superadmin";
+  React.useEffect(() => {
+    if (isLoaded && user && !isSuperAdmin) {
+      const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
+      window.location.href = webUrl;
+    }
+  }, [isLoaded, user, isSuperAdmin]);
+
+  // Show nothing while checking auth or redirecting non-admins
+  if (!isLoaded || !user || !isSuperAdmin) {
+    return null;
+  }
 
   return (
     <>
@@ -181,7 +206,7 @@ export default function DashboardLayout({
             "bg-bg-panel sticky top-0 h-screen shrink-0"
           )}
         >
-          <SidebarContent pathname={pathname} />
+          <SidebarContent pathname={pathname} onSignOut={handleSignOut} />
         </aside>
 
         {/* Main Content Area - CMS Workspace */}
@@ -199,7 +224,7 @@ export default function DashboardLayout({
                 <SheetHeader className="p-0 text-left">
                   <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 </SheetHeader>
-                <SidebarContent pathname={pathname} />
+                <SidebarContent pathname={pathname} onSignOut={handleSignOut} />
               </SheetContent>
             </Sheet>
 

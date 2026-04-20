@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
@@ -12,10 +11,9 @@ type AssetType = Database["public"]["Enums"]["asset_type"]
  * getAllAssets — all assets for the asset library.
  */
 export async function getAllAssets(type?: AssetType) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   let query = supabase
     .from("assets")
@@ -35,10 +33,9 @@ export async function getAllAssets(type?: AssetType) {
  * getAssetsByStory — assets linked to a specific story.
  */
 export async function getAssetsByStory(storyId: string) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("assets")
@@ -53,10 +50,9 @@ export async function getAssetsByStory(storyId: string) {
  * getAssetStats — count by type for the asset library overview.
  */
 export async function getAssetStats() {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
   const { data } = await supabase.from("assets").select("type")
 
@@ -91,10 +87,10 @@ export async function createAsset(args: {
   tags?: string[]
   storyId?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const { data, error } = await supabase
     .from("assets")
@@ -126,10 +122,10 @@ export async function updateAsset(
     story_id?: string | null
   }
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const { error } = await supabase
     .from("assets")
@@ -147,10 +143,10 @@ export async function updateAsset(
  * mcp_cloudinary_delete-asset tool or Cloudinary SDK before calling this.
  */
 export async function deleteAsset(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const { error } = await supabase
     .from("assets")
@@ -187,10 +183,9 @@ export async function upsertGlobalContent(args: {
   title: string
   tiptap_content?: Record<string, unknown>
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("global_content")
@@ -225,7 +220,8 @@ export async function trackInteraction(args: {
   const supabase = await createClient()
 
   // Get current user if available (optional)
-  const { userId } = await auth().catch(() => ({ userId: null }))
+  const { data: { user } } = await supabase.auth.getUser()
+  const userId = user?.id ?? null
 
   await supabase.from("interactions").insert({
     story_id: args.storyId,
@@ -242,10 +238,9 @@ export async function trackInteraction(args: {
  * getStoryAnalytics — analytics summary for a story (admin only).
  */
 export async function getStoryAnalytics(storyId: string) {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
   const { data } = await supabase
     .from("interactions")

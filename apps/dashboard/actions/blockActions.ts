@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
@@ -12,10 +11,9 @@ type BlockType = Database["public"]["Enums"]["block_type"]
  * getBlocksByStoryId — ordered list of blocks for a story.
  */
 export async function getBlocksByStoryId(storyId: string) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("blocks")
@@ -39,10 +37,9 @@ export async function createBlock(args: {
   chapterId?: string
   sceneId?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("blocks")
@@ -68,10 +65,9 @@ export async function updateBlock(
   id: string,
   props: Record<string, unknown>
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("blocks")
@@ -89,10 +85,9 @@ export async function updateBlock(
  * updateBlockOrder — update the order of a single block.
  */
 export async function updateBlockOrder(id: string, order: number) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("blocks")
@@ -104,10 +99,9 @@ export async function updateBlockOrder(id: string, order: number) {
 }
 
 export async function reorderBlocks(blockIds: string[]) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const updates = blockIds.map((id, index) =>
     supabase
@@ -127,10 +121,9 @@ export async function reorderBlocks(blockIds: string[]) {
  * removeBlock — delete a block by ID.
  */
 export async function removeBlock(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("blocks").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete block: ${error.message}`)

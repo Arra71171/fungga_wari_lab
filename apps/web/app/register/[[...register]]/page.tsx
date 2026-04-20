@@ -1,105 +1,174 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { SignUp } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout";
+import React from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { createBrowserClient } from "@supabase/ssr"
+import { BrandLogo } from "@workspace/ui/components/BrandLogo"
+import { Button } from "@workspace/ui/components/button"
+import { Input } from "@workspace/ui/components/input"
+import { Label } from "@workspace/ui/components/label"
+import { Eye, EyeOff, UserPlus, Loader2 } from "lucide-react"
 
-const authAppearance = {
-  baseTheme: dark,
-  variables: {
-    colorPrimary: "var(--primary)",
-    colorBackground: "transparent",
-    colorDanger: "var(--destructive)",
-    colorInputBackground: "var(--cinematic-bg)",
-    colorInputText: "var(--foreground)",
-    colorSuccess: "var(--brand-ochre)",
-    colorText: "var(--foreground)",
-    fontSize: "14px",
-  },
-  elements: {
-    rootBox: "!w-full !max-w-none",
-    cardBox:
-      "!w-full !max-w-none !shadow-none !bg-transparent !rounded-none",
-    card: "!p-0 !w-full !max-w-none !shadow-none !border-none !rounded-none !bg-transparent",
-    headerTitle: "!hidden",
-    headerSubtitle: "!hidden",
-    header: "!hidden",
-    main: "!gap-3",
-    formFields: "!gap-3",
-    formFieldRow: "!m-0",
-    formFieldLabelRow: "!mb-1.5",
-    formFieldLabel:
-      "font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em] !m-0",
-    formFieldInput:
-      "!w-full h-10 !rounded-none !border !border-border bg-cinematic-bg/80 px-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:!border-primary focus:bg-primary/5 !outline-none !shadow-none ring-0 focus:ring-0",
-    formButtonPrimary:
-      "cl-custom-button !w-full !rounded-none bg-primary text-primary-foreground font-mono text-[11px] font-black uppercase tracking-[0.22em] h-11 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 !mt-5 !mb-0 !border-0 !shadow-none overflow-hidden relative " +
-      "[&[data-loading]]:!text-transparent " +
-      "[&[data-loading]::after]:content-['ACCESSING...'] [&[data-loading]::after]:absolute [&[data-loading]::after]:inset-0 [&[data-loading]::after]:flex [&[data-loading]::after]:items-center [&[data-loading]::after]:justify-center [&[data-loading]::after]:text-primary-foreground " +
-      "[&[data-loading]>svg]:!absolute [&[data-loading]>svg]:!left-4",
-    footerAction:
-      "!flex !items-center !justify-end !mt-2 !p-0 !bg-transparent",
-    footerActionLink:
-      "font-mono text-[10px] uppercase tracking-widest text-primary hover:text-primary/70 transition-colors duration-200 !font-bold",
-    footerActionText: "!hidden",
-    footer: "!hidden",
-    socialButtonsBlockButton: "!hidden",
-    dividerRow: "!hidden",
-    socialButtonsBlockButtonText: "!hidden",
-    identityPreviewText: "font-mono text-sm font-bold text-foreground",
-    identityPreviewEditButton:
-      "text-primary font-mono text-[10px] uppercase tracking-widest font-bold hover:text-primary/70 transition-colors duration-200",
-    formResendCodeLink:
-      "text-primary font-mono text-[10px] font-bold uppercase tracking-widest hover:text-primary/70 transition-colors duration-200",
-    otpCodeFieldInput:
-      "!rounded-none !border !border-border bg-cinematic-bg/80 focus:border-primary focus:bg-primary/5 size-11 font-mono text-base transition-all duration-200 !shadow-none",
-  },
-};
+function RegisterForm() {
+  const router = useRouter()
 
-function AuthFallback() {
+  const [name, setName] = React.useState("")
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const supabase = React.useMemo(
+    () =>
+      createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      ),
+    []
+  )
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setIsLoading(true)
+
+    const { error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+        },
+      },
+    })
+
+    if (signUpError) {
+      setError(signUpError.message)
+      setIsLoading(false)
+      return
+    }
+
+    router.push("/")
+    router.refresh()
+  }
+
   return (
-    <div className="mt-4 w-full flex-col space-y-4 animate-pulse">
-      <div className="mb-1.5 space-y-1.5">
-        <div className="h-3 w-1/4 rounded-none bg-cinematic-panel" />
-        <div className="h-10 w-full rounded-none border border-border bg-cinematic-bg/80" />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="name" className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+          Name
+        </Label>
+        <Input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Folklore Keeper"
+          autoComplete="name"
+          className="bg-bg-surface border-border font-mono text-sm"
+        />
       </div>
-      <div className="mb-1.5 space-y-1.5">
-        <div className="h-3 w-1/4 rounded-none bg-cinematic-panel" />
-        <div className="h-10 w-full rounded-none border border-border bg-cinematic-bg/80" />
+
+      <div className="space-y-2">
+        <Label htmlFor="email" className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+          Email
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="keeper@fungga-wari.com"
+          required
+          autoComplete="email"
+          className="bg-bg-surface border-border font-mono text-sm"
+        />
       </div>
-      <div className="mt-5 h-11 w-full rounded-none border border-primary/30 bg-primary/20" />
-    </div>
-  );
+
+      <div className="space-y-2">
+        <Label htmlFor="password" className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+          Password
+        </Label>
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+            minLength={6}
+            autoComplete="new-password"
+            className="bg-bg-surface border-border font-mono text-sm pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/30 text-destructive text-xs font-mono px-3 py-2 rounded-sm">
+          {error}
+        </div>
+      )}
+
+      <Button
+        type="submit"
+        disabled={isLoading}
+        className="w-full font-mono text-xs tracking-widest uppercase"
+      >
+        {isLoading ? (
+          <Loader2 className="size-4 mr-2 animate-spin" />
+        ) : (
+          <UserPlus className="size-4 mr-2" />
+        )}
+        {isLoading ? "Creating..." : "Join the Archive"}
+      </Button>
+    </form>
+  )
 }
 
 export default function RegisterPage() {
   return (
-    <>
-      <style>{`
-        .cl-formFieldRow:has(input[name="firstName"]),
-        .cl-formFieldRow:has(input[name="lastName"]),
-        .cl-formFieldRow:has(input[name="username"]) {
-          display: none !important;
-        }
-      `}</style>
-      <AuthGatewayLayout
-        portalLabel="Reader Archive"
-        headingText="Create Access."
-        portalDescription="Join the hearth."
-        versionText="SYS.AUTH.V2"
-        backLinkHref="/"
-        showSignUp={false}
-      >
-      <SignUp
-        appearance={authAppearance}
-        fallback={<AuthFallback />}
-        forceRedirectUrl="/"
-        path="/register"
-        routing="path"
-        signInUrl="/login"
-      />
-    </AuthGatewayLayout>
-    </>
-  );
+    <div className="min-h-screen flex items-center justify-center bg-bg-base px-4">
+      <div className="w-full max-w-sm space-y-8">
+        {/* Brand */}
+        <div className="flex flex-col items-center gap-4">
+          <BrandLogo variant="full" size="md" />
+          <div className="space-y-1 text-center">
+            <h1 className="font-heading text-xl tracking-tight text-foreground">
+              Join the Archive
+            </h1>
+            <p className="font-mono text-xs tracking-wide text-muted-foreground">
+              Become a keeper of folklore
+            </p>
+          </div>
+        </div>
+
+        {/* Register Form */}
+        <div className="border border-border bg-card p-6 shadow-brutal-sm">
+          <RegisterForm />
+        </div>
+
+        {/* Login Link */}
+        <p className="text-center text-xs font-mono text-muted-foreground">
+          Already a keeper?{" "}
+          <Link
+            href="/login"
+            className="text-brand-ember hover:text-brand-ochre transition-colors underline underline-offset-4"
+          >
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </div>
+  )
 }

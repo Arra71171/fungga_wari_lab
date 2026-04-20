@@ -1,6 +1,4 @@
 import { Suspense } from "react"
-import { auth } from "@clerk/nextjs/server"
-import { currentUser } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 import { KpiCard } from "@/components/overview/KpiCard"
 import { TopStoriesTable } from "@/components/overview/TopStoriesTable"
@@ -81,11 +79,20 @@ async function getRecentActivity(limit = 20) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function OverviewPage() {
-  const { userId } = await auth()
-  if (!userId) return null
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
-  const [user, stats, topStories, activities] = await Promise.all([
-    currentUser(),
+  // Get user profile for display name
+  const { data: profile } = await supabase
+    .from("users")
+    .select("name, alias")
+    .eq("auth_id", user.id)
+    .single()
+
+  const displayName = profile?.alias || profile?.name || user.email?.split("@")[0] || "Creator"
+
+  const [stats, topStories, activities] = await Promise.all([
     getOverviewData(),
     getTopStories(10),
     getRecentActivity(20),
@@ -98,7 +105,7 @@ export default async function OverviewPage() {
         {/* Page Header */}
         <div className="flex flex-col gap-2 border-l-[3px] border-brand-ember pl-5 py-1">
           <h1 className="text-4xl font-heading tracking-tight text-foreground">
-            {user ? `Welcome back, ${user.firstName || "Creator"}` : "Overview"}
+            {`Welcome back, ${displayName}`}
           </h1>
           <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70">
             Fungga Wari Creator Studio — Analytics

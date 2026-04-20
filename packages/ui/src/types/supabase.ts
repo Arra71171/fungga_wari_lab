@@ -567,6 +567,7 @@ export type Database = {
       users: {
         Row: {
           alias: string | null
+          auth_id: string | null
           avatar_url: string | null
           bio: string | null
           clerk_id: string | null
@@ -582,6 +583,7 @@ export type Database = {
         }
         Insert: {
           alias?: string | null
+          auth_id?: string | null
           avatar_url?: string | null
           bio?: string | null
           clerk_id?: string | null
@@ -597,6 +599,7 @@ export type Database = {
         }
         Update: {
           alias?: string | null
+          auth_id?: string | null
           avatar_url?: string | null
           bio?: string | null
           clerk_id?: string | null
@@ -621,23 +624,14 @@ export type Database = {
         Args: { story_id: string }
         Returns: undefined
       }
-      get_my_user_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      get_my_user_id: { Args: never; Returns: string }
       increment_chapter_count: {
         Args: { story_id: string }
         Returns: undefined
       }
-      increment_view_count: {
-        Args: { story_id: string }
-        Returns: undefined
-      }
-      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
-      is_story_owner: {
-        Args: { p_story_id: string }
-        Returns: boolean
-      }
+      increment_view_count: { Args: { story_id: string }; Returns: undefined }
+      is_admin: { Args: never; Returns: boolean }
+      is_story_owner: { Args: { p_story_id: string }; Returns: boolean }
     }
     Enums: {
       asset_type:

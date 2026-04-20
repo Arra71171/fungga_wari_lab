@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
 import { ShieldCheck, UserCheck, Eye, Loader2, Settings2 } from "lucide-react";
@@ -60,24 +60,24 @@ function RoleBadge({ role }: { role: string }) {
 
 function MemberRow({
   member,
-  currentUserClerkId,
+  currentUserAuthId,
   isCallerAdmin,
 }: {
   member: Member;
-  currentUserClerkId?: string;
+  currentUserAuthId?: string;
   isCallerAdmin: boolean;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const isSelf = member.clerk_id === currentUserClerkId;
+  const isSelf = member.auth_id === currentUserAuthId;
   const currentRole = (member.role ?? "viewer") as Role;
 
   const cycleRole = async () => {
-    if (!member.clerk_id) return;
+    if (!member.auth_id) return;
     const nextIndex = (ROLE_CYCLE.indexOf(currentRole) + 1) % ROLE_CYCLE.length;
     const nextRole = ROLE_CYCLE[nextIndex]!;
     setIsPending(true);
     try {
-      await updateUserRole(member.clerk_id, nextRole);
+      await updateUserRole(member.auth_id, nextRole);
     } finally {
       setIsPending(false);
     }
@@ -110,7 +110,7 @@ function MemberRow({
               </span>
             )}
             <span className="text-[10px] font-mono tracking-widest text-muted-foreground truncate">
-              {member.email ?? member.clerk_id}
+              {member.email ?? member.auth_id}
             </span>
           </div>
         </div>
@@ -251,11 +251,10 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function SettingsPage() {
-  const { user: clerkUser } = useUser();
+  const { user, userProfile } = useSupabaseAuth();
   const [members, setMembers] = useState<Member[] | null>(null);
 
-  // Use Clerk publicMetadata for role — synced by Clerk dashboard
-  const myRole = (clerkUser?.publicMetadata?.role as string) ?? "editor";
+  const myRole = userProfile?.role ?? "editor";
   const isCallerAdmin = myRole === "superadmin";
 
   useEffect(() => {
@@ -321,7 +320,7 @@ export default function SettingsPage() {
                   <MemberRow
                     key={member.id}
                     member={member}
-                    currentUserClerkId={clerkUser?.id}
+                    currentUserAuthId={user?.id}
                     isCallerAdmin={isCallerAdmin}
                   />
                 ))}

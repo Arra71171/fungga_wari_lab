@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
@@ -13,10 +12,9 @@ type SceneRow = Database["public"]["Tables"]["scenes"]["Row"]
  * getChaptersByStory — ordered list of chapters for a story.
  */
 export async function getChaptersByStory(storyId: string) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("chapters")
@@ -35,10 +33,9 @@ export async function createChapter(args: {
   title: string
   order: number
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("chapters")
@@ -82,10 +79,9 @@ export async function updateChapter(
   id: string,
   patch: Partial<Pick<ChapterRow, "title" | "order" | "illustration_url" | "content" | "tiptap_content">>
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("chapters")
@@ -100,10 +96,9 @@ export async function updateChapter(
  * deleteChapter — deletes chapter + cascades scenes/choices via FK.
  */
 export async function deleteChapter(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   // Get story_id before deletion for count decrement
   const { data: chapter } = await supabase
@@ -128,10 +123,9 @@ export async function deleteChapter(id: string) {
  * getScenesByChapter — ordered list of scenes for a chapter.
  */
 export async function getScenesByChapter(chapterId: string) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("scenes")
@@ -146,10 +140,9 @@ export async function getScenesByChapter(chapterId: string) {
  * getSceneById — single scene with content + choices.
  */
 export async function getSceneById(id: string) {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
   const { data } = await supabase
     .from("scenes")
@@ -173,10 +166,9 @@ export async function createScene(args: {
   title?: string
   order: number
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("scenes")
@@ -207,10 +199,9 @@ export async function updateSceneContent(
     title?: string
   }
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const patch: Partial<SceneRow> = {}
   if (args.content !== undefined) patch.content = args.content
@@ -231,10 +222,9 @@ export async function updateScene(
   id: string,
   patch: Partial<Pick<SceneRow, "title" | "order" | "illustration_url" | "is_draft">>
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("scenes").update(patch).eq("id", id)
   if (error) throw new Error(`Failed to update scene: ${error.message}`)
@@ -245,10 +235,9 @@ export async function updateScene(
  * publishScene — mark scene as non-draft + increment version.
  */
 export async function publishScene(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   // Get current version
   const { data: scene } = await supabase
@@ -270,10 +259,9 @@ export async function publishScene(id: string) {
  * deleteScene — cascades choices via FK ON DELETE CASCADE.
  */
 export async function deleteScene(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("scenes").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete scene: ${error.message}`)
@@ -290,10 +278,9 @@ export async function addChoice(args: {
   label: string
   nextSceneId: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("choices")
@@ -313,10 +300,9 @@ export async function addChoice(args: {
  * deleteChoice — remove a branching choice.
  */
 export async function deleteChoice(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("choices").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete choice: ${error.message}`)

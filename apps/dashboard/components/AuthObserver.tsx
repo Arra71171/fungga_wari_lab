@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { toast } from "sonner";
 
 export function AuthObserver() {
-  const { isSignedIn, isLoaded } = useAuth();
+  const { user, isLoaded } = useSupabaseAuth();
 
   useEffect(() => {
     if (!isLoaded) return;
 
     const prevState = sessionStorage.getItem("fw_auth_state");
-    const currentStr = isSignedIn ? "true" : "false";
+    const currentStr = user ? "true" : "false";
 
     if (currentStr === "true" && prevState === "false") {
       toast.success("Identity Verified", {
@@ -24,7 +24,7 @@ export function AuthObserver() {
     }
 
     sessionStorage.setItem("fw_auth_state", currentStr);
-  }, [isSignedIn, isLoaded]);
+  }, [user, isLoaded]);
 
   return null;
 }

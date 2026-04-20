@@ -1,48 +1,28 @@
 "use server"
 
-import { auth, currentUser } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 
 /**
- * syncUserToSupabase — call on every authenticated session start.
- * Upserts the Clerk user into the Supabase users table.
- * Safe to call repeatedly — idempotent via ON CONFLICT.
+ * syncUserToSupabase — DEPRECATED.
+ * User creation is now handled by the `on_auth_user_created` database trigger.
+ * Kept for backward compatibility — no-op.
  */
 export async function syncUserToSupabase() {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
-  const user = await currentUser()
-  if (!user) throw new Error("User not found")
-
-  const supabase = await createClient()
-
-  const { error } = await supabase.from("users").upsert(
-    {
-      clerk_id: userId,
-      email: user.emailAddresses[0]?.emailAddress ?? null,
-      name: user.fullName ?? null,
-      avatar_url: user.imageUrl ?? null,
-    },
-    { onConflict: "clerk_id" }
-  )
-
-  if (error) throw new Error(`Failed to sync user: ${error.message}`)
+  // No-op: trigger handles user creation
 }
 
 /**
- * getSupabaseUser — fetch current user's Supabase record.
+ * getSupabaseUser — fetch current user's Supabase profile record.
  */
 export async function getSupabaseUser() {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
   const { data, error } = await supabase
     .from("users")
-    .select("id, clerk_id, name, email, avatar_url, role, alias, bio")
-    .eq("clerk_id", userId)
+    .select("id, auth_id, clerk_id, name, email, avatar_url, role, alias, bio")
+    .eq("auth_id", user.id)
     .single()
 
   if (error) return null
@@ -62,15 +42,14 @@ export async function updateUserProfile(patch: {
   bio?: string
   avatar_url?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("users")
     .update(patch)
-    .eq("clerk_id", userId)
+    .eq("auth_id", user.id)
 
   if (error) throw new Error(`Failed to update profile: ${error.message}`)
 }
@@ -79,14 +58,13 @@ export async function updateUserProfile(patch: {
  * getAllUsers — returns all users (admin only).
  */
 export async function getAllUsers() {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("users")
-    .select("id, clerk_id, name, email, avatar_url, role, alias")
+    .select("id, auth_id, clerk_id, name, email, avatar_url, role, alias")
     .order("created_at", { ascending: false })
 
   return data ?? []
@@ -94,18 +72,18 @@ export async function getAllUsers() {
 
 /**
  * updateUserRole — change a user's role (superadmin only).
+ * Uses auth_id to identify target user.
  */
-export async function updateUserRole(targetClerkId: string, role: "superadmin" | "editor" | "viewer") {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
+export async function updateUserRole(targetAuthId: string, role: "superadmin" | "editor" | "viewer") {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   // Verify caller is superadmin
   const { data: caller } = await supabase
     .from("users")
     .select("role")
-    .eq("clerk_id", userId)
+    .eq("auth_id", user.id)
     .single()
 
   if (!caller || caller.role !== "superadmin") {
@@ -115,7 +93,7 @@ export async function updateUserRole(targetClerkId: string, role: "superadmin" |
   const { error } = await supabase
     .from("users")
     .update({ role })
-    .eq("clerk_id", targetClerkId)
+    .eq("auth_id", targetAuthId)
 
   if (error) throw new Error(`Failed to update role: ${error.message}`)
 }
@@ -128,10 +106,9 @@ export async function createTeamMember(data: {
   email?: string
   phone?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data: member, error } = await supabase
     .from("users")
@@ -151,18 +128,18 @@ export async function createTeamMember(data: {
 /**
  * getOperativeStats — aggregate task completion and lore authored counts.
  */
-export async function getOperativeStats(clerkId: string) {
+export async function getOperativeStats(authId: string) {
   const supabase = await createClient()
 
   const [storiesResult, tasksResult] = await Promise.all([
     supabase
       .from("stories")
       .select("id, chapter_count")
-      .eq("author_id", clerkId),
+      .eq("author_id", authId),
     supabase
       .from("tasks")
       .select("id, status")
-      .eq("assignee_id", clerkId),
+      .eq("assignee_id", authId),
   ])
 
   const stories = storiesResult.data ?? []
