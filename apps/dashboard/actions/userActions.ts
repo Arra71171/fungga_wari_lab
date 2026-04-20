@@ -12,7 +12,7 @@ const updateUserProfileSchema = z.object({
 
 const updateUserRoleSchema = z.object({
   targetAuthId: z.string().uuid(),
-  role: z.enum(["superadmin", "editor", "viewer"]),
+  role: z.enum(["superadmin", "admin", "editor", "viewer"]),
 })
 
 const deleteUserAccountSchema = z.object({
@@ -100,8 +100,8 @@ export async function getAllUsers() {
     .single()
 
   if (callerError) throw new Error(`Failed to verify permissions: ${callerError.message}`)
-  if (caller?.role !== "superadmin") {
-    throw new Error("Forbidden — only superadmins can view users")
+  if (caller?.role !== "superadmin" && caller?.role !== "admin") {
+    throw new Error("Forbidden — only admins and superadmins can view users")
   }
 
   const { data, error } = await supabase
@@ -118,7 +118,7 @@ export async function getAllUsers() {
  * updateUserRole — change a user's role (superadmin only).
  * Uses auth_id to identify target user.
  */
-export async function updateUserRole(targetAuthId: string, role: "superadmin" | "editor" | "viewer") {
+export async function updateUserRole(targetAuthId: string, role: "superadmin" | "admin" | "editor" | "viewer") {
   const parsed = updateUserRoleSchema.safeParse({ targetAuthId, role })
   if (!parsed.success) {
     throw new Error(`Validation error: ${parsed.error.message}`)
@@ -136,8 +136,27 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
     .eq("auth_id", user.id)
     .single()
 
-  if (!caller || caller.role !== "superadmin") {
-    throw new Error("Forbidden — only superadmins can change roles")
+  if (!caller || !["superadmin", "admin"].includes(caller.role)) {
+    throw new Error("Forbidden — only admins and superadmins can change roles")
+  }
+
+  // Fetch target user's current role
+  const { data: target } = await supabase
+    .from("users")
+    .select("role")
+    .eq("auth_id", validAuthId)
+    .single()
+
+  if (!target) throw new Error("Target user not found")
+
+  // Admins cannot modify superadmins
+  if (caller.role === "admin" && target.role === "superadmin") {
+    throw new Error("Admins cannot modify superadmin roles")
+  }
+
+  // Admins cannot grant superadmin privileges
+  if (caller.role === "admin" && validRole === "superadmin") {
+    throw new Error("Admins cannot grant superadmin privileges")
   }
 
   const { error } = await supabase
@@ -170,8 +189,8 @@ export async function deleteUserAccount(targetUserId: string) {
     .eq("auth_id", user.id)
     .single()
 
-  if (!caller || caller.role !== "superadmin") {
-    throw new Error("Forbidden — only superadmins can delete users")
+  if (!caller || !["superadmin", "admin"].includes(caller.role)) {
+    throw new Error("Forbidden — only admins and superadmins can delete users")
   }
 
   const { data: target } = await supabase
@@ -185,8 +204,10 @@ export async function deleteUserAccount(targetUserId: string) {
   }
 
   if (target.role === "superadmin") {
-    throw new Error("Cannot delete another superadmin")
+    throw new Error("Cannot delete a superadmin")
   }
+
+
 
   if (target.auth_id === user.id) {
     throw new Error("Self-deletion is not permitted here")

@@ -54,7 +54,10 @@ function UserProfileBlock() {
     userProfile.email ||
     "Archive Admin";
   const userRoleStr =
-    userProfile.role === "superadmin" ? "Superadmin" : "Creator";
+    userProfile.role === "superadmin" ? "Superadmin"
+    : userProfile.role === "admin" ? "Admin"
+    : userProfile.role === "editor" ? "Editor"
+    : "Creator";
 
   return (
     <div id="tour-profile" className="flex items-center gap-3">
@@ -181,17 +184,17 @@ export default function DashboardLayout({
     window.location.href = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
   }, [signOut]);
 
-  // Guard: redirect non-superadmins to the public web app
-  const isSuperAdmin = userProfile?.role === "superadmin";
+  // Guard: redirect unauthorized roles to the public web app
+  const isDashboardUser = ["admin", "superadmin", "editor"].includes(userProfile?.role || "");
   React.useEffect(() => {
-    if (isLoaded && user && !isSuperAdmin) {
+    if (isLoaded && user && !isDashboardUser) {
       const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
       window.location.href = webUrl;
     }
-  }, [isLoaded, user, isSuperAdmin]);
+  }, [isLoaded, user, isDashboardUser]);
 
-  // Show nothing while checking auth or redirecting non-admins
-  if (!isLoaded || !user || !isSuperAdmin) {
+  // Show nothing while checking auth or redirecting unauthorized users
+  if (!isLoaded || !user || !isDashboardUser) {
     return null;
   }
 

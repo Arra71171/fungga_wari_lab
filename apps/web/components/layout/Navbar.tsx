@@ -49,7 +49,7 @@ function Navbar() {
     setScrolled(latest > 20);
   });
 
-  const isSuperAdmin = userProfile?.role === "superadmin";
+  const isDashboardUser = ["admin", "superadmin", "editor"].includes(userProfile?.role || "");
   const isAuthenticated = isLoaded && !!user;
 
   async function handleSignOut() {
@@ -121,7 +121,7 @@ function Navbar() {
       <div className="hidden items-center gap-2 md:flex border-l-2 border-foreground/20 pl-6 h-8">
         {navItems.map((item) => {
           const isCollections = item.name === "Folklore";
-          const showDashboard = isCollections && isSuperAdmin;
+          const showDashboard = isCollections && isDashboardUser;
           const href = showDashboard ? DASHBOARD_URL : item.href;
           const name = showDashboard ? "Dashboard" : item.name;
 
@@ -249,8 +249,8 @@ function Navbar() {
                 </Link>
               ))}
 
-              {/* Dashboard shortcut — superadmins only */}
-              {isSuperAdmin && (
+              {/* Dashboard shortcut — authorized roles only */}
+              {isDashboardUser && (
                 <>
                   <div className="my-4 border-t border-border" />
                   <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3 pl-3">
@@ -313,9 +313,19 @@ function Navbar() {
                       <span className="text-xs font-mono text-foreground truncate">
                         {userProfile?.name || userProfile?.email || "User"}
                       </span>
-                      {isSuperAdmin && (
+                      {userProfile?.role === "superadmin" && (
                         <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
                           Superadmin
+                        </span>
+                      )}
+                      {userProfile?.role === "admin" && (
+                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                          Admin
+                        </span>
+                      )}
+                      {userProfile?.role === "editor" && (
+                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                          Editor
                         </span>
                       )}
                     </div>

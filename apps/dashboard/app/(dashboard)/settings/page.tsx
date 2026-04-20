@@ -23,18 +23,19 @@ import { OperativeDossier } from "@/components/settings/OperativeDossier";
 import { getAllUsers, updateUserRole, deleteUserAccount } from "@/actions/userActions";
 import { getGlobalContent, upsertGlobalContent } from "@/actions/assetActions";
 
-type Role = "superadmin" | "editor" | "viewer";
+type Role = "superadmin" | "admin" | "editor" | "viewer";
 type Member = Awaited<ReturnType<typeof getAllUsers>>[number];
 
 // ─── Role Meta ────────────────────────────────────────────────────────────────
 
 const ROLE_META: Record<Role, { label: string; icon: React.ReactNode }> = {
   superadmin: { label: "Superadmin", icon: <ShieldCheck className="size-3" /> },
+  admin: { label: "Admin", icon: <ShieldCheck className="size-3 opacity-80" /> },
   editor: { label: "Editor", icon: <UserCheck className="size-3" /> },
   viewer: { label: "Viewer", icon: <Eye className="size-3" /> },
 };
 
-const ROLE_CYCLE: Role[] = ["viewer", "editor", "superadmin"];
+const ROLE_CYCLE: Role[] = ["viewer", "editor", "admin", "superadmin"];
 
 // ─── RoleBadge ───────────────────────────────────────────────────────────────
 
@@ -45,6 +46,8 @@ function RoleBadge({ role }: { role: string }) {
       className={`flex items-center justify-center gap-2 px-3 py-1.5 border-2 text-[10px] font-mono tracking-widest uppercase shadow-brutal-sm ${
         role === "superadmin"
           ? "border-brand-ember text-brand-ember bg-brand-ember/5"
+          : role === "admin"
+          ? "border-primary text-primary bg-primary/5"
           : role === "editor"
           ? "border-brand-ochre text-brand-ochre bg-brand-ochre/5"
           : "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
@@ -66,6 +69,7 @@ function MemberRow({
   member: Member;
   currentUserAuthId?: string;
   isCallerAdmin: boolean;
+  isCallerSuperAdmin: boolean;
 }) {
   const [isPending, setIsPending] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -74,8 +78,13 @@ function MemberRow({
 
   const cycleRole = async () => {
     if (!member.auth_id) return;
-    const nextIndex = (ROLE_CYCLE.indexOf(currentRole) + 1) % ROLE_CYCLE.length;
-    const nextRole = ROLE_CYCLE[nextIndex]!;
+    const allowedCycle = isCallerSuperAdmin ? ROLE_CYCLE : ROLE_CYCLE.filter(r => r !== "superadmin");
+    const currentIndex = allowedCycle.indexOf(currentRole);
+    // If somehow current role isn't in allowed cycle (e.g. target is superadmin but caller is admin), do nothing
+    if (currentIndex === -1) return;
+    
+    const nextIndex = (currentIndex + 1) % allowedCycle.length;
+    const nextRole = allowedCycle[nextIndex]!;
     setIsPending(true);
     try {
       await updateUserRole(member.auth_id, nextRole);
@@ -139,16 +148,18 @@ function MemberRow({
         </div>
         {isCallerAdmin && !isSelf && (
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={cycleRole}
+            {(isCallerSuperAdmin || currentRole !== "superadmin") && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={cycleRole}
               disabled={isPending || isDeleting}
               className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] h-10 px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
             >
               {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
             </Button>
-            {currentRole !== "superadmin" && (
+            )}
+            {(isCallerSuperAdmin || currentRole !== "superadmin") && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -287,7 +298,8 @@ export default function SettingsPage() {
   const [members, setMembers] = useState<Member[] | null>(null);
 
   const myRole = userProfile?.role ?? "editor";
-  const isCallerAdmin = myRole === "superadmin";
+  const isCallerAdmin = myRole === "superadmin" || myRole === "admin";
+  const isCallerSuperAdmin = myRole === "superadmin";
 
   useEffect(() => {
     getAllUsers()
@@ -354,6 +366,7 @@ export default function SettingsPage() {
                     member={member}
                     currentUserAuthId={user?.id}
                     isCallerAdmin={isCallerAdmin}
+                    isCallerSuperAdmin={isCallerSuperAdmin}
                   />
                 ))}
               </div>
@@ -378,6 +391,7 @@ export default function SettingsPage() {
                 </div>
                 <p className="text-[10px] font-mono text-muted-foreground tracking-widest leading-relaxed uppercase">
                   {role === "superadmin" && "Root access level. Complete matrix control over configuration and roles."}
+                  {role === "admin" && "Administrative access. Can manage the operative roster and edit global configurations."}
                   {role === "editor" && "Authoring access. Ability to overwrite literature and sequence flows."}
                   {role === "viewer" && "Observer level. Access granted strictly for reading and verifying."}
                 </p>

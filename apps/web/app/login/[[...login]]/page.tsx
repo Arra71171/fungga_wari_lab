@@ -70,7 +70,8 @@ function LoginForm() {
         return
       }
 
-      if (profile?.role === "superadmin") {
+      const isDashboardUser = ["admin", "superadmin", "editor"].includes(profile?.role || "");
+      if (isDashboardUser) {
         const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000"
         window.location.href = dashboardUrl
         return
