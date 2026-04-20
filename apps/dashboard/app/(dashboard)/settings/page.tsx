@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
-import { ShieldCheck, UserCheck, Eye, Loader2, Settings2 } from "lucide-react";
+import { ShieldCheck, UserCheck, Eye, Loader2, Settings2, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 
 const RichTextEditor = dynamic(
@@ -20,7 +20,7 @@ const RichTextEditor = dynamic(
 );
 import type { JSONContent } from "@tiptap/core";
 import { OperativeDossier } from "@/components/settings/OperativeDossier";
-import { getAllUsers, updateUserRole } from "@/actions/userActions";
+import { getAllUsers, updateUserRole, deleteUserAccount } from "@/actions/userActions";
 import { getGlobalContent, upsertGlobalContent } from "@/actions/assetActions";
 
 type Role = "superadmin" | "editor" | "viewer";
@@ -68,6 +68,7 @@ function MemberRow({
   isCallerAdmin: boolean;
 }) {
   const [isPending, setIsPending] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const isSelf = member.auth_id === currentUserAuthId;
   const currentRole = (member.role ?? "viewer") as Role;
 
@@ -80,6 +81,22 @@ function MemberRow({
       await updateUserRole(member.auth_id, nextRole);
     } finally {
       setIsPending(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!member.id) return;
+    if (!window.confirm(`Are you sure you want to permanently delete operative ${member.email ?? member.id}? This action cannot be undone.`)) {
+      return;
+    }
+    setIsDeleting(true);
+    try {
+      await deleteUserAccount(member.id);
+      window.location.reload(); // Quick refresh to update the roster
+    } catch (e: any) {
+      alert(e.message || "Failed to delete user");
+      console.error(e);
+      setIsDeleting(false);
     }
   };
 
@@ -121,15 +138,29 @@ function MemberRow({
           <RoleBadge role={currentRole} />
         </div>
         {isCallerAdmin && !isSelf && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={cycleRole}
-            disabled={isPending}
-            className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] h-10 px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
-          >
-            {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={cycleRole}
+              disabled={isPending || isDeleting}
+              className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] h-10 px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
+            >
+              {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
+            </Button>
+            {currentRole !== "superadmin" && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleDelete}
+                disabled={isPending || isDeleting}
+                className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
+                title="Delete Operative"
+              >
+                {isDeleting ? <Loader2 className="size-4 animate-spin text-destructive" /> : <Trash2 className="size-4" />}
+              </Button>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -148,7 +179,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   useEffect(() => {
     setContentData(null);
     getGlobalContent(activeTab).then((data) => {
-      setContentData(data);
+      setContentData(data ?? ({} as any));
       if (data?.tiptap_content !== undefined) {
         setEditorContent(data.tiptap_content as JSONContent);
       } else {
@@ -224,6 +255,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               value={editorContent}
               onChange={setEditorContent}
               className="min-h-[400px] border-2 border-border-strong bg-cinematic-bg"
+              editable={isCallerAdmin}
             />
             {isCallerAdmin && (
               <div className="flex justify-end pt-4 items-center gap-4 border-t-2 border-border-strong mt-6 pt-6">

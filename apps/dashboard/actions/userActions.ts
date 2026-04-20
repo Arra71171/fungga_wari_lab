@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
 /**
  * syncUserToSupabase — DEPRECATED.
@@ -111,6 +112,73 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
     .eq("auth_id", targetAuthId)
 
   if (error) throw new Error(`Failed to update role: ${error.message}`)
+}
+
+/**
+ * deleteUserAccount — delete a user account (superadmin only).
+ * Target user must be specified by their public.users.id.
+ */
+export async function deleteUserAccount(targetUserId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+
+  // Verify caller is superadmin
+  const { data: caller } = await supabase
+    .from("users")
+    .select("role")
+    .eq("auth_id", user.id)
+    .single()
+
+  if (!caller || caller.role !== "superadmin") {
+    throw new Error("Forbidden — only superadmins can delete users")
+  }
+
+  // Get target user details
+  const { data: target } = await supabase
+    .from("users")
+    .select("auth_id, role")
+    .eq("id", targetUserId)
+    .single()
+
+  if (!target) {
+    throw new Error("Target user not found")
+  }
+
+  if (target.role === "superadmin") {
+    throw new Error("Cannot delete another superadmin")
+  }
+
+  if (target.auth_id === user.id) {
+    throw new Error("Self-deletion is not permitted here")
+  }
+
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceRoleKey) {
+    console.error("[deleteUserAccount] SUPABASE_SERVICE_ROLE_KEY is not configured")
+    throw new Error("Server configuration error: missing service role key")
+  }
+
+  // Use service role client to bypass RLS and use Admin API
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serviceRoleKey
+  )
+
+  if (target.auth_id) {
+    // Delete from auth.users, which cascades to public.users
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(target.auth_id)
+    if (error) throw new Error(`Failed to delete user auth: ${error.message}`)
+  } else {
+    // Legacy user with no auth_id, delete directly from public.users
+    const { error } = await supabaseAdmin
+      .from("users")
+      .delete()
+      .eq("id", targetUserId)
+    if (error) throw new Error(`Failed to delete legacy user: ${error.message}`)
+  }
+
+  return { success: true }
 }
 
 /**

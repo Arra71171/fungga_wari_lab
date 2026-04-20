@@ -7,7 +7,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Loader2, Fingerprint, Activity, BookOpen, CheckCircle2, ShieldCheck, ScanFace } from "lucide-react";
-import { getMyProfile, updateUserProfile } from "@/actions/userActions";
+import { getMyProfile, updateUserProfile, getOperativeStats } from "@/actions/userActions";
 
 type Profile = Awaited<ReturnType<typeof getMyProfile>>;
 
@@ -21,6 +21,7 @@ export function OperativeDossier() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [stats, setStats] = useState<{ missionsCompleted: number; loreAuthored: number } | null>(null);
 
   useEffect(() => {
     getMyProfile().then((profile) => {
@@ -28,6 +29,9 @@ export function OperativeDossier() {
       if (profile) {
         setAlias(profile.alias ?? "");
         setBio(profile.bio ?? "");
+        if (profile.auth_id) {
+          getOperativeStats(profile.auth_id).then(setStats).catch(console.error);
+        }
       }
     });
   }, []);
@@ -187,14 +191,14 @@ export function OperativeDossier() {
                   <CheckCircle2 className="size-3 text-brand-ember" />
                   <span className="uppercase tracking-widest text-[10px]">Missions</span>
                 </div>
-                <span className="text-brand-ember font-bold">0</span>
+                <span className="text-brand-ember font-bold">{stats?.missionsCompleted ?? 0}</span>
               </div>
               <div className="flex justify-between items-center text-xs font-mono">
                 <div className="flex items-center gap-2 text-foreground">
                   <BookOpen className="size-3 text-brand-ochre" />
                   <span className="uppercase tracking-widest text-[10px]">Fragments</span>
                 </div>
-                <span className="text-brand-ochre font-bold">0</span>
+                <span className="text-brand-ochre font-bold">{stats?.loreAuthored ?? 0}</span>
               </div>
             </div>
           </div>

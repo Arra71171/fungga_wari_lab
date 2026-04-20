@@ -1,0 +1,1 @@
+-- Empty migration since the constraint was dropped in 20260418234500_align_clerk_identity_columns.sql

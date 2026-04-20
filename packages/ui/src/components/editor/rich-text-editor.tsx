@@ -33,6 +33,8 @@ export interface RichTextEditorProps {
   onImageUpload?: (file: File) => Promise<string | undefined>;
   /** Available scenes to populate the Choice extension dropdown. */
   scenes?: SceneOption[];
+  /** Whether the editor is editable. Defaults to true. */
+  editable?: boolean;
 }
 
 // â”€â”€â”€ Minimal Toolbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -191,8 +193,9 @@ function EditorToolbar({
 
 // â”€â”€â”€ Main Editor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export function RichTextEditor({ value, onChange, className, onImageUpload, scenes = [] }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, className, onImageUpload, scenes = [], editable = true }: RichTextEditorProps) {
   const editor = useEditor({
+    editable,
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
@@ -280,7 +283,7 @@ export function RichTextEditor({ value, onChange, className, onImageUpload, scen
 
   return (
     <div className="relative w-full max-w-4xl mx-auto flex flex-col border border-border focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 transition-shadow">
-      <EditorToolbar editor={editor} onImageUpload={onImageUpload} />
+      {editable && <EditorToolbar editor={editor} onImageUpload={onImageUpload} />}
       <EditorContent editor={editor} className="w-full" />
     </div>
   );
