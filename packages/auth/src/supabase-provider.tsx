@@ -35,6 +35,10 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile] = React.useState<UserProfile | null>(null)
   const [isLoaded, setIsLoaded] = React.useState(false)
 
+  // Track whether the initial session load is done.
+  // onAuthStateChange must not flip isLoaded until after init completes.
+  const initializedRef = React.useRef(false)
+
   const fetchProfile = React.useCallback(async (authUser: User) => {
     const { data } = await supabase
       .from("users")
@@ -45,29 +49,49 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase])
 
   React.useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    let mounted = true
+
+    // ── Step 1: Resolve initial session synchronously ──────────────────────────
+    // This is the AUTHORITATIVE load. We await fetchProfile before setting
+    // isLoaded=true so the dashboard guard never sees a half-loaded state.
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!mounted) return
       const authUser = session?.user ?? null
       setUser(authUser)
-      setIsLoaded(true)
-      if (authUser) fetchProfile(authUser)
+      if (authUser) {
+        await fetchProfile(authUser)
+      }
+      initializedRef.current = true
+      if (mounted) setIsLoaded(true)
     })
 
-    // Listen for auth state changes
+    // ── Step 2: Listen for subsequent auth state changes ───────────────────────
+    // Only fires AFTER initialization is complete. We don't call setIsLoaded
+    // again here — it was already set in Step 1 and must not be re-toggled,
+    // which was causing the race condition and redirect loop.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
+        if (!mounted) return
         const authUser = session?.user ?? null
         setUser(authUser)
-        setIsLoaded(true)
         if (authUser) {
-          fetchProfile(authUser)
+          await fetchProfile(authUser)
         } else {
           setUserProfile(null)
+        }
+        // Only mark as loaded here if initialization somehow missed it
+        // (e.g., getSession() returned before the subscription was ready)
+        if (!initializedRef.current && mounted) {
+          initializedRef.current = true
+          setIsLoaded(true)
         }
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [supabase, fetchProfile])
 
   const signOut = React.useCallback(async () => {
