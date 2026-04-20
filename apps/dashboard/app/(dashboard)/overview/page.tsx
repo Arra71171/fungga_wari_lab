@@ -6,6 +6,7 @@ import { ActivityFeed } from "@/components/overview/ActivityFeed"
 import { EngagementChart } from "@/components/overview/EngagementChart"
 import { CategoryRadialChart } from "@/components/overview/CategoryRadialChart"
 import { CompletionDonutChart } from "@/components/overview/CompletionDonutChart"
+import { StoryPerformanceBarChart } from "@/components/overview/StoryPerformanceBarChart"
 import { BookOpen, Globe2, Clock, Eye, BookCheck, FileText, Send } from "lucide-react"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
@@ -76,6 +77,41 @@ async function getRecentActivity(limit = 20) {
   return data ?? []
 }
 
+async function getEngagementData() {
+  const supabase = await createClient()
+
+  const now = new Date()
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  
+  const { data } = await supabase
+    .from("interactions")
+    .select("type, created_at")
+    .gte("created_at", sevenDaysAgo.toISOString())
+    .order("created_at", { ascending: true })
+
+  const interactions = data ?? []
+
+  const grouped = interactions.reduce((acc, curr) => {
+    if (!curr.created_at) return acc;
+    const date = new Date(curr.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (!acc[date]) {
+      acc[date] = { date, views: 0, reads: 0 };
+    }
+    if (curr.type === 'view') acc[date].views += 1;
+    if (curr.type === 'read' || curr.type === 'complete') acc[date].reads += 1;
+    return acc;
+  }, {} as Record<string, { date: string; views: number; reads: number }>);
+
+  const result = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    result.push(grouped[dateStr] || { date: dateStr, views: 0, reads: 0 });
+  }
+
+  return result;
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function OverviewPage() {
@@ -96,10 +132,11 @@ export default async function OverviewPage() {
 
   const displayName = profile?.alias || profile?.name || user.email?.split("@")[0] || "Creator"
 
-  const [stats, topStories, activities] = await Promise.all([
+  const [stats, topStories, activities, engagementData] = await Promise.all([
     getOverviewData(),
     getTopStories(10),
     getRecentActivity(20),
+    getEngagementData(),
   ])
 
   return (
@@ -146,37 +183,37 @@ export default async function OverviewPage() {
         </div>
 
         {/* Publishing Pipeline Stepper */}
-        <div id="tour-overview-pipeline" className="border border-border-subtle bg-bg-panel p-4 md:p-8 flex flex-row items-center justify-between relative overflow-hidden">
+        <div id="tour-overview-pipeline" className="border border-border-subtle bg-bg-panel p-3 sm:p-4 md:p-8 flex flex-row items-center justify-between relative overflow-hidden">
           {/* Connector Line */}
           <div className="absolute top-[35%] md:top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
 
-          <div className="flex-1 flex flex-col items-center gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-1 md:px-4">
+          <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
             <div className="size-10 md:size-12 rounded-full border border-border bg-bg-base flex items-center justify-center">
               <FileText className="size-4 md:size-5 text-muted-foreground" />
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.draftStories}</div>
-              <div className="text-[10px] md:text-fine font-mono uppercase tracking-label text-muted-foreground mt-0.5 md:mt-1">Drafts</div>
+              <div className="text-[9px] sm:text-[10px] md:text-fine font-mono uppercase tracking-wider md:tracking-label text-muted-foreground mt-0.5 md:mt-1">Drafts</div>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-1 md:px-4">
+          <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
             <div className="size-10 md:size-12 rounded-full border border-brand-ochre/40 bg-brand-ochre/5 flex items-center justify-center">
               <Send className="size-4 md:size-5 text-brand-ochre" />
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.inReviewStories}</div>
-              <div className="text-[10px] md:text-fine font-mono uppercase tracking-label text-brand-ochre mt-0.5 md:mt-1">In Review</div>
+              <div className="text-[9px] sm:text-[10px] md:text-fine font-mono uppercase tracking-wider md:tracking-label text-brand-ochre mt-0.5 md:mt-1">In Review</div>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-1 md:px-4">
+          <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
             <div className="size-10 md:size-12 rounded-full border border-primary/40 bg-primary/5 flex items-center justify-center">
               <Globe2 className="size-4 md:size-5 text-primary" />
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.publishedStories}</div>
-              <div className="text-[10px] md:text-fine font-mono uppercase tracking-label text-primary mt-0.5 md:mt-1">Published</div>
+              <div className="text-[9px] sm:text-[10px] md:text-fine font-mono uppercase tracking-wider md:tracking-label text-primary mt-0.5 md:mt-1">Published</div>
             </div>
           </div>
         </div>
@@ -184,7 +221,7 @@ export default async function OverviewPage() {
         {/* Charts Row */}
         <div id="tour-overview-charts" className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
-            <EngagementChart data={undefined} isLoading={false} />
+            <EngagementChart data={engagementData} isLoading={false} />
           </div>
           <div className="border-2 border-border bg-background p-5">
             <Suspense fallback={<div className="h-64 animate-pulse bg-muted/20" />}>
@@ -193,7 +230,7 @@ export default async function OverviewPage() {
           </div>
         </div>
 
-        {/* Category Distribution */}
+        {/* Second Row of Charts */}
         <div className="grid gap-6 md:grid-cols-3">
           <div className="border-2 border-border bg-background p-5">
             <Suspense fallback={<div className="h-64 animate-pulse bg-muted/20" />}>
@@ -201,13 +238,16 @@ export default async function OverviewPage() {
             </Suspense>
           </div>
           <div className="md:col-span-2">
-            <TopStoriesTable stories={topStories} isLoading={false} />
+            <StoryPerformanceBarChart stories={topStories} isLoading={false} />
           </div>
         </div>
 
-        {/* Activity Feed */}
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-3">
+        {/* Top Stories Table & Activity Feed */}
+        <div id="tour-overview-tables" className="grid gap-6 lg:grid-cols-7">
+          <div className="lg:col-span-4">
+            <TopStoriesTable stories={topStories} isLoading={false} />
+          </div>
+          <div className="lg:col-span-3">
             <ActivityFeed 
               activities={activities.map(a => ({
                 _id: a.id,

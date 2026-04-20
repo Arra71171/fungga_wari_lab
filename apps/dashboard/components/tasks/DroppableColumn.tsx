@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { cn } from "@workspace/ui/lib/utils";
 
 
 interface DroppableColumnProps {
@@ -18,9 +19,7 @@ export function DroppableColumn({ id, title, children }: DroppableColumnProps) {
       </div>
       <div
         ref={setNodeRef}
-        className={`flex-1 rounded-none p-3 transition-colors ${
-          isOver ? "bg-muted/50" : "bg-transparent"
-        }`}
+        className={cn("flex-1 rounded-none p-3 transition-colors", isOver ? "bg-muted/50" : "bg-transparent")}
       >
         {children}
       </div>

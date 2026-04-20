@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { cn } from "@workspace/ui/lib/utils";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import type { Json } from "@workspace/ui/types/supabase";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
@@ -44,15 +45,13 @@ function RoleBadge({ role }: { role: string }) {
   const meta = ROLE_META[(role as Role) ?? "viewer"] ?? ROLE_META.viewer;
   return (
     <div
-      className={`flex items-center justify-center gap-2 px-3 py-1.5 border-2 text-fine font-mono tracking-widest uppercase shadow-brutal-sm ${
-        role === "superadmin"
-          ? "border-brand-ember text-brand-ember bg-brand-ember/5"
-          : role === "admin"
-          ? "border-primary text-primary bg-primary/5"
-          : role === "editor"
-          ? "border-brand-ochre text-brand-ochre bg-brand-ochre/5"
-          : "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
-      }`}
+      className={cn(
+        "flex items-center justify-center gap-2 px-3 py-1.5 border-2 text-fine font-mono tracking-widest uppercase shadow-brutal-sm whitespace-nowrap",
+        role === "superadmin" && "border-brand-ember text-brand-ember bg-brand-ember/5",
+        role === "admin" && "border-primary text-primary bg-primary/5",
+        role === "editor" && "border-brand-ochre text-brand-ochre bg-brand-ochre/5",
+        role !== "superadmin" && role !== "admin" && role !== "editor" && "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
+      )}
     >
       {meta.icon}
       {meta.label}
@@ -112,9 +111,9 @@ function MemberRow({
   };
 
   return (
-    <div className="flex items-center justify-between p-6 border-b-2 border-border-strong bg-cinematic-panel transition-all group hover:bg-bg-surface/5">
-      <div className="flex items-center gap-6 min-w-0">
-        <div className="border-2 border-border p-1 bg-cinematic-bg group-hover:border-primary transition-colors">
+    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-4 md:p-6 gap-4 border-b-2 border-border-strong bg-cinematic-panel transition-all group hover:bg-bg-surface/5">
+      <div className="flex items-start md:items-center gap-4 md:gap-6 min-w-0 flex-col sm:flex-row">
+        <div className="border-2 border-border p-1 bg-cinematic-bg group-hover:border-primary transition-colors shrink-0">
           <AvatarBadge
             src={member.avatar_url ?? undefined}
             alt={member.alias || member.name || "?"}
@@ -122,16 +121,16 @@ function MemberRow({
             className="rounded-none"
           />
         </div>
-        <div className="min-w-0">
-          <p className="font-heading text-xl text-foreground font-bold tracking-tight truncate flex items-center">
-            {member.alias || member.name || member.email?.split("@")[0] || "Unnamed Operative"}
+        <div className="min-w-0 w-full">
+          <p className="font-heading text-xl text-foreground font-bold tracking-tight truncate flex flex-wrap items-center gap-2">
+            <span className="truncate">{member.alias || member.name || member.email?.split("@")[0] || "Unnamed Operative"}</span>
             {isSelf && (
-              <span className="ml-4 px-2 py-0.5 text-nano font-mono font-bold text-brand-ember uppercase tracking-label border border-brand-ember/30 bg-brand-ember/5">
+              <span className="px-2 py-0.5 text-nano font-mono font-bold text-brand-ember uppercase tracking-label border border-brand-ember/30 bg-brand-ember/5 whitespace-nowrap shrink-0">
                 Active Uplink
               </span>
             )}
           </p>
-          <div className="flex items-center gap-3 mt-1.5">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-1.5">
             {member.alias && member.name && (
               <span className="text-fine font-mono tracking-widest text-muted-foreground/50 truncate border-r-2 border-border-strong pr-3">
                 {member.name}
@@ -144,19 +143,19 @@ function MemberRow({
         </div>
       </div>
 
-      <div className="flex items-center gap-8 shrink-0">
-        <div className="w-28 text-center">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4 xl:gap-8 shrink-0 mt-2 xl:mt-0 w-full xl:w-auto">
+        <div className="w-auto xl:min-w-[140px] flex justify-start text-center">
           <RoleBadge role={currentRole} />
         </div>
         {isCallerAdmin && !isSelf && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto xl:ml-0 flex-1 xl:flex-none justify-end">
             {(isCallerSuperAdmin || currentRole !== "superadmin") && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={cycleRole}
               disabled={isPending || isDeleting}
-              className="font-mono text-fine font-bold uppercase tracking-label h-10 px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
+              className="font-mono text-fine font-bold uppercase tracking-label h-10 px-4 sm:px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none flex-1 sm:flex-none whitespace-nowrap"
             >
               {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
             </Button>
@@ -167,7 +166,7 @@ function MemberRow({
                 size="icon"
                 onClick={handleDelete}
                 disabled={isPending || isDeleting}
-                className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none"
+                className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none shrink-0"
                 title="Delete Operative"
               >
                 {isDeleting ? <Loader2 className="size-4 animate-spin text-destructive" /> : <Trash2 className="size-4" />}
@@ -184,20 +183,22 @@ function MemberRow({
 
 function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   const [activeTab, setActiveTab] = useState<"manifesto" | "terms">("manifesto");
-  const [contentData, setContentData] = useState<Awaited<ReturnType<typeof getGlobalContent>> | null>(null);
+  // contentData is no longer needed since we use isLoading for skeleton state
   const [editorContent, setEditorContent] = useState<JSONContent | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
-    setContentData(null);
+    setIsLoading(true);
     getGlobalContent(activeTab).then((data) => {
-      setContentData(data ?? null);
-      if (data?.tiptap_content !== undefined) {
+      if (data?.tiptap_content !== undefined && data?.tiptap_content !== null) {
         setEditorContent(data.tiptap_content as JSONContent);
       } else {
-        setEditorContent(undefined);
+        setEditorContent({ type: "doc", content: [{ type: "paragraph" }] });
       }
+    }).catch(console.error).finally(() => {
+      setIsLoading(false);
     });
   }, [activeTab]);
 
@@ -223,7 +224,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
     <div className="border-2 border-border-strong bg-cinematic-bg relative overflow-hidden shadow-brutal mt-12">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      <div className="p-6 border-b-2 border-border flex justify-between items-end bg-bg-surface/10">
+      <div className="p-4 md:p-6 border-b-2 border-border flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4 bg-bg-surface/10">
         <div>
           <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
             Global Configurations
@@ -234,18 +235,19 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               : "Insufficient clearance to alter global content. View-only mode active."}
           </p>
         </div>
-        <div className="flex border-2 border-border-strong p-1 gap-1 bg-cinematic-panel">
+        <div className="flex flex-wrap border-2 border-border-strong p-1 gap-1 bg-cinematic-panel">
           {(["manifesto", "terms"] as const).map((tab) => (
             <Button
               key={tab}
               variant={activeTab === tab ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveTab(tab)}
-              className={`font-mono text-fine font-bold uppercase tracking-label rounded-none h-10 px-6 transition-colors ${
+              className={cn(
+                "font-mono text-fine font-bold uppercase tracking-label rounded-none h-10 px-6 transition-colors",
                 activeTab === tab
                   ? "bg-primary text-primary-foreground border-2 border-primary"
                   : "text-muted-foreground hover:bg-bg-overlay border-2 border-transparent"
-              }`}
+              )}
             >
               {tab === "manifesto" ? "Manifesto" : "Terms"}
             </Button>
@@ -254,7 +256,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
       </div>
 
       <div className="p-6">
-        {contentData === null ? (
+        {isLoading ? (
           <div className="animate-pulse h-[400px] border-2 border-border-strong bg-bg-surface/20 blur-sm" />
         ) : (
           <div className="space-y-4">
@@ -271,16 +273,16 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               editable={isCallerAdmin}
             />
             {isCallerAdmin && (
-              <div className="flex justify-end pt-4 items-center gap-4 border-t-2 border-border-strong mt-6 pt-6">
+              <div className="flex flex-col sm:flex-row justify-end pt-4 items-end sm:items-center gap-4 border-t-2 border-border-strong mt-6 pt-6">
                 {saveSuccess && (
-                  <span className="font-mono text-fine font-bold text-primary uppercase tracking-label">
+                  <span className="font-mono text-fine font-bold text-primary uppercase tracking-label text-right">
                     Protocol Overwritten Successfully
                   </span>
                 )}
                 <Button
                   onClick={handleSave}
                   disabled={isSaving || !editorContent}
-                  className="font-mono text-xs font-bold uppercase tracking-label rounded-none min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none"
+                  className="font-mono text-xs font-bold uppercase tracking-label rounded-none w-full sm:w-auto min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none"
                 >
                   {isSaving ? <Loader2 className="animate-spin size-4" /> : "Deploy Changes"}
                 </Button>

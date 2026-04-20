@@ -15,7 +15,7 @@ type Activity = {
 export function ActivityFeed({ activities, isLoading }: { activities?: Activity[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <div className="w-full h-full min-h-[300px] border border-border bg-background p-6 animate-pulse" />
+      <div className="w-full h-full min-h-[300px] border border-border bg-background p-4 md:p-6 animate-pulse" />
     );
   }
 
@@ -40,17 +40,17 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
   };
 
   return (
-    <div className="w-full h-[400px] border border-border-subtle bg-bg-surface p-6 flex flex-col relative group overflow-hidden">
+    <div className="w-full h-[400px] border border-border-subtle bg-bg-surface p-4 md:p-6 flex flex-col relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-      <div className="mb-6 flex flex-col items-start gap-1">
+      <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground">Recent Activity</h3>
-        <p className="text-fine font-mono tracking-label uppercase text-muted-foreground">
+        <p className="text-[10px] md:text-fine font-mono tracking-label uppercase text-muted-foreground">
           Real-Time Interaction Log
         </p>
       </div>
 
-      <ScrollArea className="flex-1 -mx-6 px-6">
-        <div className="space-y-6">
+      <ScrollArea className="flex-1 -mx-4 px-4 md:-mx-6 md:px-6">
+        <div className="space-y-6 pr-4">
           {!activities || activities.length === 0 ? (
             <div className="text-center py-6 text-muted-foreground font-mono text-xs uppercase tracking-widest">
               No recent activity.

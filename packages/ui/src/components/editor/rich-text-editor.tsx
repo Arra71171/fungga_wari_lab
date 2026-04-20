@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -276,6 +276,21 @@ export function RichTextEditor({ value, onChange, className, onImageUpload, scen
       onChange(editor.getJSON());
     },
   });
+
+  useEffect(() => {
+    if (editor && editor.isEditable !== editable) {
+      editor.setEditable(editable);
+    }
+  }, [editor, editable]);
+
+  useEffect(() => {
+    if (editor && value && !editor.isDestroyed) {
+      const currentContent = editor.getJSON();
+      if (JSON.stringify(currentContent) !== JSON.stringify(value)) {
+        editor.commands.setContent(value);
+      }
+    }
+  }, [editor, value]);
 
   if (!editor) {
     return null;

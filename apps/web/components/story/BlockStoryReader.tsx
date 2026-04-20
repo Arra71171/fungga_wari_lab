@@ -437,7 +437,9 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            <AnimatedThemeToggler />
+            <div className="hidden lg:block">
+              <AnimatedThemeToggler />
+            </div>
             {currentSceneId && firstSceneId && currentSceneId !== firstSceneId ? (
               <button
                 onClick={() => {

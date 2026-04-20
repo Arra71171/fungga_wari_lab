@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { cn } from "@workspace/ui/lib/utils";
 import { Loader2, ChevronLeft } from "lucide-react";
 import {
   Sheet,
@@ -125,9 +126,10 @@ export function StoryReaderShell({ slug }: { slug: string }) {
        * When closed, a minimal collapsed strip shows the re-open button.
        */}
       <div
-        className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out shrink-0 ${
+        className={cn(
+          "hidden lg:flex flex-col transition-all duration-300 ease-in-out shrink-0 overflow-hidden border-l border-cinematic-border bg-cinematic-panel/90 backdrop-blur-md",
           rightPanelOpen ? "w-80" : "w-10"
-        } overflow-hidden border-l border-cinematic-border bg-cinematic-panel/90 backdrop-blur-md`}
+        )}
         aria-label="Reader panel"
       >
         {rightPanelOpen ? (

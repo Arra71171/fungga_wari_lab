@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { cn } from "@workspace/ui/lib/utils";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Calendar, CheckSquare, Clock } from "lucide-react";
 import Link from "next/link";
@@ -146,11 +147,17 @@ export default function StoryTasksPage() {
                         className="focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember rounded-sm group-hover:scale-110 transition-transform"
                       >
                         <CheckSquare
-                          className={`size-4 ${isDone ? "text-brand-ember" : "text-muted-foreground/30 hover:text-brand-ember/50"}`}
+                          className={cn(
+                            "size-4",
+                            isDone ? "text-brand-ember" : "text-muted-foreground/30 hover:text-brand-ember/50"
+                          )}
                         />
                       </button>
                       <span
-                        className={`font-heading text-sm ${isDone ? "line-through text-muted-foreground/50" : "text-foreground"}`}
+                        className={cn(
+                          "font-heading text-sm",
+                          isDone ? "line-through text-muted-foreground/50" : "text-foreground"
+                        )}
                       >
                         {task.title}
                       </span>
@@ -158,11 +165,12 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-3">
                       <span
-                        className={`inline-flex items-center px-2 py-1 text-fine font-mono tracking-widest uppercase border ${
+                       className={cn(
+                          "inline-flex items-center px-2 py-1 text-fine font-mono tracking-widest uppercase border",
                           task.assignee_id
                             ? "border-brand-ember/20 bg-brand-ember/5 text-brand-ember/80"
                             : "border-dashed border-border-strong text-muted-foreground/50"
-                        }`}
+                        )}
                       >
                         {assigneeName}
                       </span>
@@ -175,13 +183,14 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-2 text-right flex justify-end">
                       <span
-                        className={`inline-flex items-center gap-2 px-2.5 py-1 text-fine font-mono tracking-relaxed uppercase border ${
+                        className={cn(
+                          "inline-flex items-center gap-2 px-2.5 py-1 text-fine font-mono tracking-relaxed uppercase border",
                           isDone
                             ? "border-brand-ember/50 text-brand-ember bg-brand-ember/10"
                             : isInProgress
                             ? "border-brand-ochre/30 text-brand-ochre bg-brand-ochre/10"
                             : "border-border text-muted-foreground/60 bg-cinematic-border"
-                        }`}
+                        )}
                       >
                         {isInProgress && <Clock className="size-3 animate-pulse" />}
                         {statusLabel}

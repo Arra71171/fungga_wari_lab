@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { cn } from "@workspace/ui/lib/utils";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
@@ -167,13 +168,12 @@ export function OperativeDossier() {
               {me?.email ?? userProfile?.email}
             </p>
             <div
-              className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 border-2 text-fine font-mono tracking-widest uppercase shadow-brutal-sm ${
-                role === "superadmin"
-                  ? "border-brand-ember text-brand-ember bg-brand-ember/5"
-                  : role === "editor"
-                  ? "border-brand-ochre text-brand-ochre bg-brand-ochre/5"
-                  : "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
-              }`}
+              className={cn(
+                "mt-3 inline-flex items-center gap-2 px-3 py-1.5 border-2 text-fine font-mono tracking-widest uppercase shadow-brutal-sm",
+                role === "superadmin" && "border-brand-ember text-brand-ember bg-brand-ember/5",
+                role === "editor" && "border-brand-ochre text-brand-ochre bg-brand-ochre/5",
+                role !== "superadmin" && role !== "editor" && "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
+              )}
             >
               {role === "superadmin" && <ShieldCheck className="size-3" />}
               {role} Level
@@ -240,20 +240,20 @@ export function OperativeDossier() {
           </div>
 
           {/* Save Controls */}
-          <div className="flex justify-between items-center pt-6 border-t-2 border-border-strong">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t-2 border-border-strong text-center sm:text-left">
             {saveSuccess ? (
-              <span className="font-mono text-fine font-bold text-primary uppercase tracking-label flex items-center gap-2">
+              <span className="font-mono text-fine font-bold text-primary uppercase tracking-label flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto">
                 <CheckCircle2 className="size-4" /> Sync Established.
               </span>
             ) : (
-              <span className="font-mono text-nano text-muted-foreground uppercase tracking-widest">
+              <span className="font-mono text-nano text-muted-foreground uppercase tracking-widest w-full sm:w-auto">
                 Data persists immediately upon sync
               </span>
             )}
             <Button
               onClick={handleSave}
               disabled={isSaving || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
-              className="h-12 px-6 font-mono text-xs font-bold uppercase tracking-label rounded-none border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none min-w-[200px]"
+              className="h-12 px-6 font-mono text-xs font-bold uppercase tracking-label rounded-none border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none w-full sm:w-auto min-w-[200px]"
             >
               {isSaving ? <Loader2 className="animate-spin size-4 mr-2" /> : <Activity className="size-4 mr-2" />}
               {isSaving ? "Syncing..." : "Sync Identity"}

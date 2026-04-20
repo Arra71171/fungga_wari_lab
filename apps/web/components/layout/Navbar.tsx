@@ -204,6 +204,7 @@ function Navbar() {
           <SheetContent
             side="right"
             className="w-[280px] p-0 flex flex-col bg-background border-l border-border"
+            aria-describedby={undefined}
           >
             <SheetHeader className="p-0">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>

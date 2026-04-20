@@ -223,7 +223,7 @@ export default function DashboardLayout({
                   <Menu className="size-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r border-border-subtle">
+              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r border-border-subtle" aria-describedby={undefined}>
                 <SheetHeader className="p-0 text-left">
                   <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 </SheetHeader>

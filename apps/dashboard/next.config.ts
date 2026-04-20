@@ -6,6 +6,8 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  // Allow HMR/WebSocket connections from LAN mobile devices
+  allowedDevOrigins: ['192.168.1.2'],
   transpilePackages: ["@workspace/ui", "@workspace/auth"],
   experimental: {
     // Cache fetch responses in Server Components across HMR refreshes — faster local dev
@@ -15,6 +17,10 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react", "@workspace/ui"],
   },
   images: {
+    // In dev, skip server-side optimization — avoids DNS failures when the
+    // dev machine cannot reach res.cloudinary.com (isolated network / VPN).
+    // Cloudinary's own URL-based transformations are still applied.
+    unoptimized: process.env.NODE_ENV === 'development',
     qualities: [25, 50, 75, 90, 100],
     // placehold.co returns SVG — must be enabled at the top level in Next.js 15+
     dangerouslyAllowSVG: true,

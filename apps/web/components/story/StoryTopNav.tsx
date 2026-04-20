@@ -4,6 +4,7 @@ import * as React from "react";
 import { Search, Maximize2, ChevronLeft, LayoutPanelLeft } from "lucide-react";
 import { FungaMark } from "@workspace/ui/components/BrandLogo";
 import { Button } from "@workspace/ui/components/button";
+import { cn } from "@workspace/ui/lib/utils";
 import Link from "next/link";
 import { useStoryReader } from "./StoryReaderContext";
 
@@ -53,7 +54,10 @@ export function StoryTopNav() {
           variant="ghost" 
           size="icon" 
           onClick={toggleFocus}
-          className={`${mode === 'focus' ? 'text-brand-ember' : 'text-cinematic-text-dim'} hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-none`}
+          className={cn(
+            "hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-none",
+            mode === "focus" ? "text-brand-ember" : "text-cinematic-text-dim"
+          )}
           title={mode === 'focus' ? "Standard Mode" : "Focus Mode"}
         >
           {mode === 'focus' ? <LayoutPanelLeft className="size-4" /> : <Maximize2 className="size-4" />}
