@@ -66,7 +66,7 @@ function Navbar() {
       animate={{ y: 0, opacity: 1, x: "-50%" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-6 left-1/2 z-50 flex items-center gap-3 px-4 py-3 transition-all duration-300",
+        "fixed top-6 left-1/2 z-50 flex items-center justify-between md:justify-center w-[calc(100%-2rem)] md:w-auto gap-3 px-4 py-3 transition-all duration-300",
         "rounded-none border border-border bg-background",
         scrolled ? "shadow-brutal-sm" : "shadow-brutal"
       )}
