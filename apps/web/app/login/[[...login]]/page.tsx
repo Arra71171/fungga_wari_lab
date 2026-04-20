@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { createBrowserClient } from "@supabase/ssr"
 import { cn } from "@workspace/ui/lib/utils"
-import { BrandLogo } from "@workspace/ui/components/BrandLogo"
+
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
@@ -133,41 +133,21 @@ function LoginForm() {
   )
 }
 
+import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
+
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-base px-4">
-      <div className="w-full max-w-sm space-y-8">
-        {/* Brand */}
-        <div className="flex flex-col items-center gap-4">
-          <BrandLogo variant="full" size="md" />
-          <div className="space-y-1 text-center">
-            <h1 className="font-heading text-xl tracking-tight text-foreground">
-              Welcome Back
-            </h1>
-            <p className="font-mono text-xs tracking-wide text-muted-foreground">
-              Enter the folklore archive
-            </p>
-          </div>
-        </div>
-
-        {/* Login Form */}
-        <div className="border border-border bg-card p-6 shadow-brutal-sm">
-          <React.Suspense fallback={null}>
-            <LoginForm />
-          </React.Suspense>
-        </div>
-
-        {/* Register Link */}
-        <p className="text-center text-xs font-mono text-muted-foreground">
-          New to the archive?{" "}
-          <Link
-            href="/register"
-            className="text-brand-ember hover:text-brand-ochre transition-colors underline underline-offset-4"
-          >
-            Create an account
-          </Link>
-        </p>
-      </div>
-    </div>
+    <AuthGatewayLayout
+      portalLabel="Public Archive"
+      headingText="Sign In."
+      portalDescription="Reader Access"
+      versionText="FW_LAB · Identity Protocol v2.4"
+      backLinkHref="/"
+      showSignUp={true}
+    >
+      <React.Suspense fallback={null}>
+        <LoginForm />
+      </React.Suspense>
+    </AuthGatewayLayout>
   )
 }
