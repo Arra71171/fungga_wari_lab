@@ -70,12 +70,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     // again here — it was already set in Step 1 and must not be re-toggled,
     // which was causing the race condition and redirect loop.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
         if (!mounted) return
         const authUser = session?.user ?? null
         setUser(authUser)
         if (authUser) {
-          await fetchProfile(authUser)
+          // Defer to avoid re-entering the Supabase client while it
+          // still holds its internal auth lock.
+          setTimeout(() => {
+            if (mounted) void fetchProfile(authUser)
+          }, 0)
         } else {
           setUserProfile(null)
         }

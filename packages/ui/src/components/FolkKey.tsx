@@ -10,9 +10,9 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
 }
 
-interface FolkKeyProps {
+type FolkKeyProps = {
   className?: string;
-}
+};
 
 export function FolkKey({ className }: FolkKeyProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);

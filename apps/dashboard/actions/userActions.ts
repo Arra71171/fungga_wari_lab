@@ -2,6 +2,28 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+import { z } from "zod"
+
+const updateUserProfileSchema = z.object({
+  alias: z.string().max(100).optional(),
+  bio: z.string().max(1000).optional(),
+  avatar_url: z.string().url().max(1000).optional(),
+})
+
+const updateUserRoleSchema = z.object({
+  targetAuthId: z.string().uuid(),
+  role: z.enum(["superadmin", "editor", "viewer"]),
+})
+
+const deleteUserAccountSchema = z.object({
+  targetUserId: z.string().min(1),
+})
+
+const createTeamMemberSchema = z.object({
+  name: z.string().min(1).max(255),
+  email: z.string().email().optional().or(z.literal("")),
+  phone: z.string().max(50).optional().or(z.literal("")),
+})
 
 /**
  * syncUserToSupabase — DEPRECATED.
@@ -43,13 +65,19 @@ export async function updateUserProfile(patch: {
   bio?: string
   avatar_url?: string
 }) {
+  const parsed = updateUserProfileSchema.safeParse(patch)
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validatedPatch = parsed.data
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("users")
-    .update(patch)
+    .update(validatedPatch)
     .eq("auth_id", user.id)
 
   if (error) throw new Error(`Failed to update profile: ${error.message}`)
@@ -91,6 +119,12 @@ export async function getAllUsers() {
  * Uses auth_id to identify target user.
  */
 export async function updateUserRole(targetAuthId: string, role: "superadmin" | "editor" | "viewer") {
+  const parsed = updateUserRoleSchema.safeParse({ targetAuthId, role })
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const { targetAuthId: validAuthId, role: validRole } = parsed.data
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -108,8 +142,8 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
 
   const { error } = await supabase
     .from("users")
-    .update({ role })
-    .eq("auth_id", targetAuthId)
+    .update({ role: validRole })
+    .eq("auth_id", validAuthId)
 
   if (error) throw new Error(`Failed to update role: ${error.message}`)
 }
@@ -119,6 +153,12 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
  * Target user must be specified by their public.users.id.
  */
 export async function deleteUserAccount(targetUserId: string) {
+  const parsed = deleteUserAccountSchema.safeParse({ targetUserId })
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validTargetUserId = parsed.data.targetUserId
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -134,11 +174,10 @@ export async function deleteUserAccount(targetUserId: string) {
     throw new Error("Forbidden — only superadmins can delete users")
   }
 
-  // Get target user details
   const { data: target } = await supabase
     .from("users")
     .select("auth_id, role")
-    .eq("id", targetUserId)
+    .eq("id", validTargetUserId)
     .single()
 
   if (!target) {
@@ -174,7 +213,7 @@ export async function deleteUserAccount(targetUserId: string) {
     const { error } = await supabaseAdmin
       .from("users")
       .delete()
-      .eq("id", targetUserId)
+      .eq("id", validTargetUserId)
     if (error) throw new Error(`Failed to delete legacy user: ${error.message}`)
   }
 
@@ -189,6 +228,12 @@ export async function createTeamMember(data: {
   email?: string
   phone?: string
 }) {
+  const parsed = createTeamMemberSchema.safeParse(data)
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validData = parsed.data
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -208,9 +253,9 @@ export async function createTeamMember(data: {
   const { data: member, error } = await supabase
     .from("users")
     .insert({
-      name: data.name,
-      email: data.email ?? null,
-      phone: data.phone ?? null,
+      name: validData.name,
+      email: validData.email ?? null,
+      phone: validData.phone ?? null,
       role: "editor",
     })
     .select("id")

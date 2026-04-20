@@ -39,12 +39,37 @@ export default async function middleware(req: NextRequest) {
 
   // Redirect unauthenticated users to login
   if (!user && !isPublicRoute(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/login", req.url))
+    const redirectResponse = NextResponse.redirect(new URL("/login", req.url))
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
   }
 
   // Redirect authenticated users away from login
   if (user && isPublicRoute(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/overview", req.url))
+    const redirectResponse = NextResponse.redirect(new URL("/overview", req.url))
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
+  }
+
+  // Enforce role-based access control for dashboard routes
+  if (user && !isPublicRoute(req.nextUrl.pathname)) {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("role")
+      .eq("auth_id", user.id)
+      .single()
+
+    if (!profile || !["admin", "superadmin", "editor"].includes(profile.role)) {
+      const redirectResponse = NextResponse.redirect(new URL("/login?error=unauthorized", req.url))
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+      })
+      return redirectResponse
+    }
   }
 
   return supabaseResponse

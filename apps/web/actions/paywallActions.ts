@@ -4,6 +4,15 @@ import { stripe } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const createCheckoutSessionSchema = z.object({
+  slug: z.string().optional(), // slug can be empty if general checkout
+});
+
+const verifyAndGrantAccessSchema = z.object({
+  sessionId: z.string().min(1),
+});
 
 const LIFETIME_PRICE_INR = 89900; // ₹899 in paise
 
@@ -14,6 +23,12 @@ const LIFETIME_PRICE_INR = 89900; // ₹899 in paise
  */
 export async function createCheckoutSession(slug: string, _formData: FormData) {
   void _formData;
+
+  const parsed = createCheckoutSessionSchema.safeParse({ slug });
+  if (!parsed.success) {
+    throw new Error("Invalid request data");
+  }
+  const validatedSlug = parsed.data.slug;
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -39,12 +54,12 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
   const baseUrl =
     process.env.NEXT_PUBLIC_WEB_URL ?? "http://localhost:3001";
 
-  const successUrl = slug
-    ? `${baseUrl}/stories/${slug}?payment=success&session_id={CHECKOUT_SESSION_ID}`
+  const successUrl = validatedSlug
+    ? `${baseUrl}/stories/${validatedSlug}?payment=success&session_id={CHECKOUT_SESSION_ID}`
     : `${baseUrl}/stories?payment=success&session_id={CHECKOUT_SESSION_ID}`;
 
-  const cancelUrl = slug
-    ? `${baseUrl}/stories/${slug}?payment=cancelled`
+  const cancelUrl = validatedSlug
+    ? `${baseUrl}/stories/${validatedSlug}?payment=cancelled`
     : `${baseUrl}/stories`;
 
   const session = await stripe.checkout.sessions.create({
@@ -90,13 +105,19 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
 export async function verifyAndGrantAccess(
   sessionId: string
 ): Promise<{ success: boolean; error?: string }> {
+  const parsed = verifyAndGrantAccessSchema.safeParse({ sessionId });
+  if (!parsed.success) {
+    return { success: false, error: "Invalid session ID" };
+  }
+  const validatedSessionId = parsed.data.sessionId;
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return { success: false, error: "Not authenticated" };
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(validatedSessionId);
 
     if (session.payment_status !== "paid") {
       return { success: false, error: "Payment not completed" };
