@@ -54,14 +54,25 @@ function generateSlug(title: string): string {
 
 // ─── Auth Note ────────────────────────────────────────────────────────────────
 //
-// stories.author_id is a TEXT column (no FK) that stores the Clerk userId string
-// directly (e.g. "user_2abc...").  We deliberately do NOT look up the Supabase
-// UUID from the users table — doing so would break all ownership filters because
-// the column contains Clerk strings, not UUIDs.
+// stories.author_id is a TEXT column (no FK) that may hold any of:
+//   - a legacy Clerk userId string (e.g. "user_2abc..."),
+//   - a Supabase auth.users UUID (stringified), or
+//   - a public.users.id UUID (stringified, for very old rows).
 //
-// Use `userId` from auth() directly in all .eq("author_id", userId) filters.
+// For ownership-scoped mutations, build `identityIds` from requireUser()'s
+// profile — [profile.clerk_id, profile.auth_id, String(profile.id)] — and
+// filter with `.in("author_id", identityIds)` so all three identity shapes match.
+// For new inserts, use `profile.clerk_id ?? profile.auth_id` as author_id.
 
 // ─── Queries ──────────────────────────────────────────────────────────────────
+
+type Profile = Awaited<ReturnType<typeof requireUser>>["profile"]
+
+function getIdentityIds(profile: Profile): string[] {
+  return [profile.clerk_id, profile.auth_id, String(profile.id)].filter(
+    (v): v is string => typeof v === "string" && v.length > 0
+  )
+}
 
 /**
  * getAllStoriesAdmin — all stories for dashboard overview (auth required).
@@ -239,7 +250,7 @@ export async function updateStory(
   }
 ) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = getIdentityIds(profile)
 
   const { error } = await supabase
     .from("stories")
@@ -256,7 +267,7 @@ export async function updateStory(
  */
 export async function publishStory(id: string) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = getIdentityIds(profile)
 
   // Fetch story to build searchable text + get current slug for update
   const { data: story } = await supabase
@@ -306,7 +317,7 @@ export async function publishStory(id: string) {
  */
 export async function unpublishStory(id: string) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = getIdentityIds(profile)
 
   const { error } = await supabase
     .from("stories")
@@ -323,7 +334,7 @@ export async function unpublishStory(id: string) {
  */
 export async function submitForReview(id: string) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = getIdentityIds(profile)
 
   const { error } = await supabase
     .from("stories")
@@ -360,10 +371,8 @@ export async function deleteStory(id: string) {
         return { success: false, error: `Story not found or unauthorized: ${authError?.message}` }
       }
 
-      const identityIds = [profile.clerk_id, profile.auth_id].filter(
-        (v): v is string => v !== null && v !== undefined
-      )
-      if (!identityIds.includes(story.author_id)) {
+      const identityIds = getIdentityIds(profile)
+      if (story.author_id === null || !identityIds.includes(story.author_id)) {
         return { success: false, error: "Unauthorized: You do not have permission to delete this story" }
       }
     }

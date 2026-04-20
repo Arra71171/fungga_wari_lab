@@ -168,6 +168,7 @@ function MemberRow({
                 disabled={isPending || isDeleting}
                 className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none shrink-0"
                 title="Delete Operative"
+                aria-label="Delete Operative"
               >
                 {isDeleting ? <Loader2 className="size-4 animate-spin text-destructive" /> : <Trash2 className="size-4" />}
               </Button>
