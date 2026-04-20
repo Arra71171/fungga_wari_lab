@@ -49,7 +49,7 @@ function CategoryRadialChart() {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-full min-h-48 border border-dashed border-border bg-secondary/10">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">
+        <p className="font-mono text-fine uppercase tracking-widest text-muted-foreground/50">
           No category data
         </p>
       </div>
@@ -76,7 +76,7 @@ function CategoryRadialChart() {
     <div className="flex flex-col gap-3 h-full">
       <div className="flex items-center gap-2 px-1">
         <div className="h-[2px] w-4 bg-primary" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold">
+        <span className="font-mono text-fine uppercase tracking-label text-muted-foreground font-bold">
           By Category
         </span>
       </div>
@@ -108,7 +108,7 @@ function CategoryRadialChart() {
         {chartData.map((d) => (
           <div key={d.name} className="flex items-center gap-1.5">
             <div className="size-2 shrink-0" style={{ backgroundColor: d.fill }} />
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+            <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground">
               {d.name} ({d.count})
             </span>
           </div>

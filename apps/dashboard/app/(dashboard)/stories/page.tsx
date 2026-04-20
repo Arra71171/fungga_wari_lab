@@ -120,7 +120,7 @@ export default function StoriesOverviewPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6 shrink-0 relative z-10">
         <div className="space-y-2">
-          <div className="flex items-center gap-3 text-brand-ember/80 font-mono text-xs uppercase tracking-[0.2em] mb-2">
+          <div className="flex items-center gap-3 text-brand-ember/80 font-mono text-xs uppercase tracking-label mb-2">
             <Sparkles className="size-3" />
             <span>Fungga Wari Archive</span>
           </div>
@@ -191,7 +191,7 @@ export default function StoriesOverviewPage() {
                   disabled={togglingId === story.id || deletingId === story.id}
                   onClick={(e) => handleTogglePublish(e, story.id, story.status)}
                   className={cn(
-                    "rounded-none text-[10px] font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm",
+                    "rounded-none text-fine font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm",
                     story.status === "published"
                       ? "border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
                       : "border-brand-ember/50 text-brand-ember hover:bg-brand-ember/10 bg-background/90",
@@ -212,7 +212,7 @@ export default function StoriesOverviewPage() {
                   size="sm"
                   disabled={deletingId === story.id || togglingId === story.id}
                   onClick={(e) => handleDelete(e, story.id, story.title)}
-                  className="rounded-none text-[10px] font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
+                  className="rounded-none text-fine font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
                   aria-label="Delete story"
                 >
                   {deletingId === story.id ? (

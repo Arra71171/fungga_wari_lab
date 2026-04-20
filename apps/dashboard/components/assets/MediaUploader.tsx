@@ -101,7 +101,7 @@ export function MediaUploader() {
     <div className="bg-bg-surface border border-border-subtle p-6 flex flex-col items-center justify-center space-y-4">
       <div className="flex gap-4 w-full max-w-sm mb-4">
         <div className="flex-1 space-y-1">
-          <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">Asset Type</Label>
+          <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">Asset Type</Label>
           <Select value={assetType} onValueChange={setAssetType} disabled={isUploading}>
             <SelectTrigger className="bg-bg-overlay border-border font-mono text-sm rounded-none">
               <SelectValue />
@@ -139,7 +139,7 @@ export function MediaUploader() {
             <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider group-hover:text-foreground">
               Drop or Browse Media
             </span>
-            <span className="font-mono text-[10px] text-muted-foreground/60">
+            <span className="font-mono text-fine text-muted-foreground/60">
               Served via Cloudinary CDN
             </span>
           </>

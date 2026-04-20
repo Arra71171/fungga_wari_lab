@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import {
@@ -10,8 +9,12 @@ import {
 import { Input } from "@workspace/ui/components/input";
 import { Search } from "lucide-react";
 import { useStoryReader } from "./StoryReaderContext";
+import type { StoryShape } from "./StoryReaderContext";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { cn } from "@workspace/ui/lib/utils";
+
+type ChapterWithScenes = StoryShape["chapters"][number];
+type SceneRow = ChapterWithScenes["scenes"][number];
 
 export function SceneSearchDialog() {
   const { story, currentSceneId, setCurrentSceneId } = useStoryReader();
@@ -39,12 +42,12 @@ export function SceneSearchDialog() {
     // but scenes are just structural nodes. For an immersive reader, we might just 
     // display "Chapter 1 - Scene 2" etc.
     let chapterNum = 1;
-    story.chapters.forEach((chap: any) => {
+    story.chapters.forEach((chap: ChapterWithScenes) => {
       let sceneNum = 1;
       if (chap.scenes && Array.isArray(chap.scenes)) {
-        chap.scenes.forEach((sceneId: string) => {
+        chap.scenes.forEach((scene: SceneRow) => {
           list.push({
-            id: sceneId,
+            id: scene.id,
             title: `Scene ${sceneNum}`,
             chapterTitle: chap.title || `Chapter ${chapterNum}`,
           });

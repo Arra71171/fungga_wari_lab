@@ -1,8 +1,11 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { useStoryReader } from "./StoryReaderContext";
+import type { StoryShape } from "./StoryReaderContext";
+
+type ChapterWithScenes = StoryShape["chapters"][number];
+type SceneRow = ChapterWithScenes["scenes"][number];
 
 export function ReadingProgressBar() {
   const { story, currentSceneId } = useStoryReader();
@@ -14,10 +17,10 @@ export function ReadingProgressBar() {
     let totalScenes = 0;
     let currentIdx = -1;
 
-    story.chapters.forEach((chap: any) => {
+    story.chapters.forEach((chap: ChapterWithScenes) => {
       if (chap.scenes && Array.isArray(chap.scenes)) {
-        chap.scenes.forEach((sceneId: string) => {
-          if (sceneId === currentSceneId) {
+        chap.scenes.forEach((scene: SceneRow) => {
+          if (scene.id === currentSceneId) {
             currentIdx = totalScenes;
           }
           totalScenes++;

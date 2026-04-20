@@ -156,7 +156,7 @@ function CoverImage({
           <div className="size-16 border border-brand-ember/20 flex items-center justify-center">
             <Flame className="size-8 text-brand-ember/40" />
           </div>
-          <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-brand-ember/30 text-center max-w-[120px] leading-relaxed">
+          <span className="font-mono text-micro uppercase tracking-caps text-brand-ember/30 text-center max-w-[120px] leading-relaxed">
             {alt}
           </span>
         </div>
@@ -203,7 +203,7 @@ function TickerBar() {
         {TICKER_ITEMS.map((item, i) => (
           <span
             key={i}
-            className="flex items-center gap-5 font-mono text-[10px] uppercase tracking-[0.25em] text-primary font-bold shrink-0"
+            className="flex items-center gap-5 font-mono text-fine uppercase tracking-eyebrow text-primary font-bold shrink-0"
           >
             <Minus className="size-3 shrink-0 opacity-60" />
             {item}
@@ -237,7 +237,7 @@ function StoryTelemetry({ story }: { story: Story }) {
 
       {/* Telemetry Block - shown in empty space */}
       <div className="hidden md:flex flex-col gap-3 mt-auto absolute bottom-24 left-6 md:left-8 lg:left-10 right-6 md:right-8 lg:right-10 opacity-30 group-hover:opacity-100 transition-opacity duration-700">
-        <div className="flex items-center gap-4 text-[8px] font-mono uppercase tracking-[0.3em] text-primary">
+        <div className="flex items-center gap-4 text-micro font-mono uppercase tracking-caps text-primary">
           <span>[ UID : {story._id.slice(-6)} ]</span>
           <span className="h-px bg-primary/30 flex-1" />
           <span>Cadence Trace</span>
@@ -256,7 +256,7 @@ function StoryTelemetry({ story }: { story: Story }) {
             ))}
           </div>
           <div className="h-8 border-l border-dashed border-primary/30 ml-3 pl-3 flex flex-col justify-end pb-0.5">
-            <span className="text-[8px] font-mono text-primary/50 tabular-nums uppercase tracking-widest leading-none">
+            <span className="text-micro font-mono text-primary/50 tabular-nums uppercase tracking-widest leading-none">
               {String(blockCount).padStart(2, "0")} Nodes
             </span>
           </div>
@@ -300,7 +300,7 @@ function HeroCard({ story }: { story: Story }) {
           )}
 
           {/* Featured badge */}
-          <span className="absolute top-4 left-4 z-10 font-mono text-[9px] uppercase tracking-[0.3em] text-primary-foreground bg-primary px-3 py-1.5 shadow-sm">
+          <span className="absolute top-4 left-4 z-10 font-mono text-nano uppercase tracking-caps text-primary-foreground bg-primary px-3 py-1.5 shadow-sm">
             Featured
           </span>
         </div>
@@ -316,11 +316,11 @@ function HeroCard({ story }: { story: Story }) {
               <motion.div variants={revealLine} initial="hidden" animate="visible" custom={0.3}
                 className="h-[2px] w-8 bg-primary"
               />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary font-bold">
+              <span className="text-fine font-mono uppercase tracking-caps text-primary font-bold">
                 {getCategoryLabel(story.category)}
               </span>
               <span className="text-muted-foreground/30">·</span>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+              <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground flex items-center gap-1">
                 <Globe className="size-2.5 text-primary" />
                 {getLanguageLabel(story.language)}
               </span>
@@ -349,13 +349,13 @@ function HeroCard({ story }: { story: Story }) {
             <div className="flex items-center gap-4">
               <div className="flex flex-wrap gap-2">
                 {story.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="text-[9px] font-mono uppercase tracking-widest text-foreground bg-secondary border border-border px-2 py-1">
+                  <span key={tag} className="text-nano font-mono uppercase tracking-widest text-foreground bg-secondary border border-border px-2 py-1">
                     {tag}
                   </span>
                 ))}
               </div>
               {story.chapterCount !== undefined && story.chapterCount > 0 && (
-                <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                <span className="text-nano font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1">
                   <BookOpen className="size-3 text-primary/60" />
                   {story.chapterCount} {story.chapterCount === 1 ? "chapter" : "chapters"}
                 </span>
@@ -394,14 +394,14 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
           />
 
           {/* Language badge */}
-          <span className="absolute top-2 left-2 z-10 font-mono text-[9px] uppercase tracking-widest bg-background/90 border border-border px-2 py-1 flex items-center gap-1 backdrop-blur-sm">
+          <span className="absolute top-2 left-2 z-10 font-mono text-nano uppercase tracking-widest bg-background/90 border border-border px-2 py-1 flex items-center gap-1 backdrop-blur-sm">
             <Globe className="size-2.5 text-primary" />
             {getLanguageLabel(story.language)}
           </span>
 
           {/* View count */}
           {(story.viewCount ?? 0) > 0 && (
-            <span className="absolute top-2 right-2 z-10 font-mono text-[8px] uppercase tracking-widest bg-background/90 border border-border px-2 py-1 flex items-center gap-1 backdrop-blur-sm text-muted-foreground">
+            <span className="absolute top-2 right-2 z-10 font-mono text-micro uppercase tracking-widest bg-background/90 border border-border px-2 py-1 flex items-center gap-1 backdrop-blur-sm text-muted-foreground">
               <Eye className="size-2.5" />
               {story.viewCount}
             </span>
@@ -423,18 +423,18 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
         {/* 3. Metadata Bento Bottom Split */}
         <div className="grid grid-cols-2 gap-px shrink-0">
           <div className="bg-background p-3 flex flex-col justify-center items-center text-center">
-             <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-1">Category</span>
-             <span className="text-[9px] uppercase font-bold tracking-[0.25em] font-mono text-primary truncate w-full px-1">
+             <span className="text-micro font-mono uppercase tracking-label text-muted-foreground mb-1">Category</span>
+             <span className="text-nano uppercase font-bold tracking-eyebrow font-mono text-primary truncate w-full px-1">
                {getCategoryLabel(story.category)}
              </span>
           </div>
 
           <div className="bg-background p-3 flex flex-col justify-center items-center text-center relative overflow-hidden group/arrow">
-             <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-1">
+             <span className="text-micro font-mono uppercase tracking-label text-muted-foreground mb-1">
                {story.chapterCount && story.chapterCount > 0 ? "Chapters" : "Read"}
              </span>
              <div className="flex items-center gap-2 transition-transform duration-300 group-hover/arrow:-translate-y-6">
-                <span className="text-[10px] uppercase font-mono text-muted-foreground/60 flex items-center gap-1">
+                <span className="text-fine uppercase font-mono text-muted-foreground/60 flex items-center gap-1">
                   {story.chapterCount && story.chapterCount > 0 ? (
                     <>
                       <BookOpen className="size-2.5" />
@@ -471,7 +471,7 @@ function ListRow({ story, index }: { story: Story; index: number }) {
         className="group flex items-center gap-5 py-4 border-b border-border hover:bg-secondary/30 px-3 -mx-3 transition-colors"
       >
         {/* Index */}
-        <span className="font-mono text-[10px] text-muted-foreground w-6 shrink-0 tabular-nums">
+        <span className="font-mono text-fine text-muted-foreground w-6 shrink-0 tabular-nums">
           {String(index + 1).padStart(2, "0")}
         </span>
 
@@ -490,7 +490,7 @@ function ListRow({ story, index }: { story: Story; index: number }) {
           <p className="font-heading font-black uppercase tracking-tighter text-sm leading-tight text-foreground group-hover:text-primary transition-colors truncate">
             {story.title}
           </p>
-          <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mt-0.5">
+          <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground mt-0.5">
             {getCategoryLabel(story.category)} · {getLanguageLabel(story.language)}
           </p>
         </div>
@@ -498,7 +498,7 @@ function ListRow({ story, index }: { story: Story; index: number }) {
         {/* Tags */}
         <div className="hidden md:flex items-center gap-2 shrink-0">
           {story.tags.slice(0, 2).map((t) => (
-            <span key={t} className="text-[8px] font-mono uppercase tracking-widest bg-secondary border border-border px-2 py-0.5">
+            <span key={t} className="text-micro font-mono uppercase tracking-widest bg-secondary border border-border px-2 py-0.5">
               {t}
             </span>
           ))}
@@ -556,21 +556,21 @@ function ArchiveStats({ stories }: { stories: Story[] }) {
     >
       <div className="flex items-center gap-2">
         <span className="font-mono text-2xl font-black text-primary tabular-nums">{totalStories}</span>
-        <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="font-mono text-nano uppercase tracking-label text-muted-foreground">
           {totalStories === 1 ? "Manuscript" : "Manuscripts"}
         </span>
       </div>
       <div className="h-4 w-px bg-border" />
       <div className="flex items-center gap-2">
         <span className="font-mono text-2xl font-black text-foreground tabular-nums">{languages.size}</span>
-        <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="font-mono text-nano uppercase tracking-label text-muted-foreground">
           {languages.size === 1 ? "Language" : "Languages"}
         </span>
       </div>
       <div className="h-4 w-px bg-border" />
       <div className="flex items-center gap-2">
         <span className="font-mono text-2xl font-black text-foreground tabular-nums">{categories.size}</span>
-        <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="font-mono text-nano uppercase tracking-label text-muted-foreground">
           {categories.size === 1 ? "Category" : "Categories"}
         </span>
       </div>
@@ -676,7 +676,7 @@ export default function StoriesPage() {
                 <motion.div variants={revealLine} initial="hidden" animate="visible" custom={0}
                   className="h-[2px] w-6 bg-primary"
                 />
-                <span className="text-[10px] font-mono uppercase tracking-[0.35em] text-primary font-bold">
+                <span className="text-fine font-mono uppercase tracking-ultra text-primary font-bold">
                   Manuscripts Archive
                 </span>
               </div>
@@ -706,7 +706,7 @@ export default function StoriesPage() {
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className={cn(
-                  "h-10 rounded-none border border-border font-mono uppercase text-[10px] tracking-widest gap-2 hover:border-primary transition-all shrink-0 relative",
+                  "h-10 rounded-none border border-border font-mono uppercase text-fine tracking-widest gap-2 hover:border-primary transition-all shrink-0 relative",
                   showFilters && "border-primary bg-primary/5",
                 )}
                 aria-label="Toggle filters"
@@ -714,7 +714,7 @@ export default function StoriesPage() {
                 <Filter className="size-3.5" />
                 Filter
                 {activeFilterCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 size-4 bg-primary text-primary-foreground font-mono text-[8px] flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-1.5 size-4 bg-primary text-primary-foreground font-mono text-micro flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -735,14 +735,14 @@ export default function StoriesPage() {
                 <div className="py-4 flex flex-col md:flex-row gap-6 border-b border-border">
                   {/* Category filters */}
                   <div className="flex-1">
-                    <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-muted-foreground block mb-2">Category</span>
+                    <span className="text-nano font-mono uppercase tracking-caps text-muted-foreground block mb-2">Category</span>
                     <div className="flex flex-wrap gap-1.5">
                       {CATEGORIES.map((cat) => (
                         <button
                           key={cat.value}
                           onClick={() => setActiveCategory(activeCategory === cat.value ? undefined : cat.value)}
                           className={cn(
-                            "text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 border transition-all",
+                            "text-nano font-mono uppercase tracking-widest px-2.5 py-1 border transition-all",
                             activeCategory === cat.value
                               ? "bg-primary text-primary-foreground border-primary"
                               : "bg-background text-foreground border-border hover:border-primary/50",
@@ -756,14 +756,14 @@ export default function StoriesPage() {
 
                   {/* Language filters */}
                   <div className="shrink-0">
-                    <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-muted-foreground block mb-2">Language</span>
+                    <span className="text-nano font-mono uppercase tracking-caps text-muted-foreground block mb-2">Language</span>
                     <div className="flex flex-wrap gap-1.5">
                       {LANGUAGES.map((lang) => (
                         <button
                           key={lang.value}
                           onClick={() => setActiveLanguage(activeLanguage === lang.value ? undefined : lang.value)}
                           className={cn(
-                            "text-[9px] font-mono uppercase tracking-widest px-2.5 py-1 border flex items-center gap-1.5 transition-all",
+                            "text-nano font-mono uppercase tracking-widest px-2.5 py-1 border flex items-center gap-1.5 transition-all",
                             activeLanguage === lang.value
                               ? "bg-primary text-primary-foreground border-primary"
                               : "bg-background text-foreground border-border hover:border-primary/50",
@@ -781,7 +781,7 @@ export default function StoriesPage() {
                     <div className="flex items-end">
                       <button
                         onClick={() => { setActiveCategory(undefined); setActiveLanguage(undefined); }}
-                        className="text-[9px] font-mono uppercase tracking-widest text-destructive flex items-center gap-1.5 hover:underline"
+                        className="text-nano font-mono uppercase tracking-widest text-destructive flex items-center gap-1.5 hover:underline"
                       >
                         <X className="size-3" />
                         Clear
@@ -870,7 +870,7 @@ export default function StoriesPage() {
                   <>
                     <div className="flex items-center gap-4 mb-6">
                       <motion.div variants={revealLine} initial="hidden" animate="visible" className="h-px flex-1 bg-border" />
-                      <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-muted-foreground shrink-0">
+                      <span className="font-mono text-nano uppercase tracking-ultra text-muted-foreground shrink-0">
                         Collection
                       </span>
                       <motion.div variants={revealLine} initial="hidden" animate="visible" className="h-px flex-1 bg-border" />
@@ -894,7 +894,7 @@ export default function StoriesPage() {
                   <>
                     <div className="flex items-center gap-4 my-8">
                       <motion.div variants={revealLine} initial="hidden" animate="visible" className="h-px flex-1 bg-border" />
-                      <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-muted-foreground shrink-0">
+                      <span className="font-mono text-nano uppercase tracking-ultra text-muted-foreground shrink-0">
                         Full Archive
                       </span>
                       <motion.div variants={revealLine} initial="hidden" animate="visible" className="h-px flex-1 bg-border" />
@@ -915,10 +915,10 @@ export default function StoriesPage() {
       {/* ── Footer ──────────────────────────────────────────────────────── */}
       <footer className="border-t border-border px-6 md:px-12 py-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
             Fungga Wari Lab © {new Date().getFullYear()}
           </span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
             Preserving Kangleipak folk traditions
           </span>
         </div>

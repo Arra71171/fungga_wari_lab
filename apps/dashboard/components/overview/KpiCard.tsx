@@ -37,7 +37,7 @@ export function KpiCard({ title, value, icon, trend, className, isLoading }: Kpi
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/0 group-hover:via-brand-ember/30 to-transparent transition-colors duration-500" />
       
       <div className="flex justify-between items-start">
-        <h3 className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/70 group-hover:text-muted-foreground transition-colors">
+        <h3 className="font-mono text-fine tracking-label uppercase text-muted-foreground/70 group-hover:text-muted-foreground transition-colors">
           {title}
         </h3>
         <div className="text-muted-foreground/50 group-hover:text-brand-ember/70 transition-colors">
@@ -51,7 +51,7 @@ export function KpiCard({ title, value, icon, trend, className, isLoading }: Kpi
         </span>
         {trend && (
           <span className={cn(
-            "font-mono text-[10px] tracking-widest uppercase",
+            "font-mono text-fine tracking-widest uppercase",
             trend.value >= 0 ? "text-brand-ember" : "text-destructive"
           )}>
             {trend.value > 0 ? "+" : ""}{trend.value}% {trend.label}

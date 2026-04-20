@@ -33,7 +33,7 @@ export function StoryTopNav() {
         )}
         <Link href="/stories" className="flex items-center gap-1 group mt-0.5">
           <FungaMark size={12} className="text-brand-ember/60 group-hover:text-brand-ember transition-colors" />
-          <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-cinematic-text-dim group-hover:text-brand-ember transition-colors">
+          <span className="text-nano font-mono uppercase tracking-label text-cinematic-text-dim group-hover:text-brand-ember transition-colors">
             Fungga Wari
           </span>
         </Link>

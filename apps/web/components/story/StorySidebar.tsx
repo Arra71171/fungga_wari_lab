@@ -58,7 +58,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
       {/* Logo */}
       <div className="flex items-center justify-between px-6 mb-8">
         <BrandLogo variant="icon" size="sm" className="text-brand-ember/60" />
-        <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
+        <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground/50">
           v1
         </span>
       </div>
@@ -68,7 +68,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
         <h2 className="font-heading font-medium text-sm text-cinematic-text tracking-wide truncate">
           {story?.title ?? "Loading…"}
         </h2>
-        <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60 mt-1">
+        <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground/60 mt-1">
           {story?.category ?? "Manuscript"}
         </p>
       </div>
@@ -90,7 +90,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                   aria-label={`Chapter ${chIdx + 1}: ${chapter.title}`}
                 >
                   <span className="flex items-center gap-2 text-left truncate">
-                    <span className="font-mono text-[10px] text-muted-foreground/40 tabular-nums shrink-0">
+                    <span className="font-mono text-fine text-muted-foreground/40 tabular-nums shrink-0">
                       {String(chIdx + 1).padStart(2, "0")}
                     </span>
                     <span className="truncate">{chapter.title}</span>
@@ -126,7 +126,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                           {isActive ? (
                             <div className="size-1.5 bg-brand-ember rounded-full shrink-0 shadow-[0_0_6px_var(--brand-ember)]" />
                           ) : (
-                            <span className="text-[10px] font-mono text-muted-foreground/40 w-4 shrink-0 tabular-nums">
+                            <span className="text-fine font-mono text-muted-foreground/40 w-4 shrink-0 tabular-nums">
                               {String(scIdx + 1).padStart(2, "0")}
                             </span>
                           )}
@@ -141,7 +141,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
 
                 {isExpanded && scenes.length === 0 && (
                   <div className="px-6 pb-3">
-                    <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/30">
+                    <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground/30">
                       No scenes yet
                     </span>
                   </div>
@@ -164,7 +164,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
 
       {/* Reading Progress */}
       <div className="px-6 mt-auto pt-6 border-t border-cinematic-border/40 space-y-3">
-        <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+        <div className="flex items-center justify-between text-nano font-mono uppercase tracking-widest text-muted-foreground">
           <span>Progress</span>
           <span className="text-cinematic-text tabular-nums">
             {currentSceneId ? Math.max(1, activeSceneIndex + 1) : 0} / {totalScenes}
@@ -185,7 +185,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
               <div className="size-1 bg-brand-ember/60 rounded-none" />
               <div className="size-1 bg-brand-ember rounded-none" />
             </div>
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40">
+            <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground/40">
               Fungga Wari
             </span>
           </div>

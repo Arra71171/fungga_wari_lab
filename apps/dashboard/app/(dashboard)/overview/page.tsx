@@ -111,7 +111,7 @@ export default async function OverviewPage() {
           <h1 className="text-4xl font-heading tracking-tight text-foreground">
             {`Welcome back, ${displayName}`}
           </h1>
-          <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70">
+          <p className="text-fine font-mono tracking-label uppercase text-muted-foreground/70">
             Fungga Wari Creator Studio — Analytics
           </p>
         </div>
@@ -156,7 +156,7 @@ export default async function OverviewPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-heading font-bold text-foreground">{stats.draftStories}</div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mt-1">Drafts</div>
+              <div className="text-fine font-mono uppercase tracking-label text-muted-foreground mt-1">Drafts</div>
             </div>
           </div>
 
@@ -166,7 +166,7 @@ export default async function OverviewPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-heading font-bold text-foreground">{stats.inReviewStories}</div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-brand-ochre mt-1">In Review</div>
+              <div className="text-fine font-mono uppercase tracking-label text-brand-ochre mt-1">In Review</div>
             </div>
           </div>
 
@@ -176,7 +176,7 @@ export default async function OverviewPage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-heading font-bold text-foreground">{stats.publishedStories}</div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary mt-1">Published</div>
+              <div className="text-fine font-mono uppercase tracking-label text-primary mt-1">Published</div>
             </div>
           </div>
         </div>

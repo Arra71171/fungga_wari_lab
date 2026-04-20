@@ -44,7 +44,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       <div className="mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground">Recent Activity</h3>
-        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground">
+        <p className="text-fine font-mono tracking-label uppercase text-muted-foreground">
           Real-Time Interaction Log
         </p>
       </div>
@@ -69,7 +69,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
                     {activity.storyTitle}
                   </span>
                 </p>
-                <time className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <time className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                 </time>
               </div>

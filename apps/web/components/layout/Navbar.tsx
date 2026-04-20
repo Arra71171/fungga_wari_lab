@@ -82,10 +82,10 @@ function Navbar() {
         </span>
         {/* Mobile wordmark: two stacked lines, compact mono */}
         <span className="flex flex-col leading-none md:hidden" aria-hidden="true">
-          <span className="font-mono font-black uppercase tracking-[0.12em] text-[10px] text-foreground">
+          <span className="font-mono font-black uppercase tracking-[0.12em] text-fine text-foreground">
             Fungga Wari
           </span>
-          <span className="font-mono font-bold text-[9px] text-muted-foreground/80 tracking-wider mt-0.5">
+          <span className="font-mono font-bold text-nano text-muted-foreground/80 tracking-wider mt-0.5">
             .Lab
           </span>
         </span>
@@ -215,7 +215,7 @@ function Navbar() {
 
             {/* Nav links */}
             <nav className="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
-              <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-4 pl-3">
+              <p className="font-mono text-nano tracking-label uppercase text-muted-foreground/60 mb-4 pl-3">
                 Navigation
               </p>
 
@@ -236,7 +236,7 @@ function Navbar() {
               {isDashboardUser && (
                 <>
                   <div className="my-4 border-t border-border" />
-                  <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3 pl-3">
+                  <p className="font-mono text-nano tracking-label uppercase text-muted-foreground/60 mb-3 pl-3">
                     Creator Studio
                   </p>
                   <a
@@ -297,17 +297,17 @@ function Navbar() {
                         {userProfile?.name || userProfile?.email || "User"}
                       </span>
                       {userProfile?.role === "superadmin" && (
-                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
                           Superadmin
                         </span>
                       )}
                       {userProfile?.role === "admin" && (
-                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
                           Admin
                         </span>
                       )}
                       {userProfile?.role === "editor" && (
-                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
                           Editor
                         </span>
                       )}

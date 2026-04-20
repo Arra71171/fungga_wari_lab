@@ -135,7 +135,7 @@ function StoryTicker() {
           <div className="flex flex-col items-start gap-2">
             <div className="flex items-center gap-3">
               <div className="h-[1px] w-8 bg-brand-ember" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-brand-ember font-bold">Catalogue Index</span>
+              <span className="text-fine font-mono uppercase tracking-caps text-brand-ember font-bold">Catalogue Index</span>
             </div>
             <h3 className="text-xl md:text-2xl font-heading font-black uppercase tracking-tighter text-foreground ml-3">
               Oral Tradition Archives
@@ -512,12 +512,12 @@ export default function Home() {
                 
                 {/* Watermark Overlay Element */}
                 <div className="absolute bottom-0 right-0 px-4 py-2 bg-background border-t border-l border-border z-20 pointer-events-auto">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-foreground font-bold">Loktak Lake</span>
+                  <span className="text-fine font-mono uppercase tracking-label text-foreground font-bold">Loktak Lake</span>
                 </div>
               </div>
 
               <div className="border-t border-border/60 pt-4 mt-4">
-                <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 text-[10px] font-mono tracking-tight uppercase text-foreground/80">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 text-fine font-mono tracking-tight uppercase text-foreground/80">
                   <div className="flex flex-col gap-1">
                     <span className="text-muted-foreground font-bold">Location:</span>
                     <span>Loktak Lake, Manipur</span>
@@ -561,7 +561,7 @@ export default function Home() {
                 <div className="w-3/4 h-6 bg-secondary/50" />
               </div>
             ) : manifestoContent && manifestoContent.tiptapContent ? (
-              <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-h2:text-4xl md:prose-h2:text-5xl prose-p:font-mono prose-p:text-sm md:prose-p:text-base prose-p:uppercase prose-p:tracking-[0.2em] prose-p:text-muted-foreground prose-p:leading-relaxed mx-auto text-center">
+              <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-h2:text-4xl md:prose-h2:text-5xl prose-p:font-mono prose-p:text-sm md:prose-p:text-base prose-p:uppercase prose-p:tracking-label prose-p:text-muted-foreground prose-p:leading-relaxed mx-auto text-center">
                  <RichTextRenderer content={manifestoContent.tiptapContent} />
               </div>
             ) : (
@@ -575,7 +575,7 @@ export default function Home() {
                 />
                 <div className="w-16 h-1 bg-brand-ember mx-auto mb-10 flex shadow-[0_0_10px_var(--brand-glow)]" />
                 <ScrollReveal direction="up" distance={30} duration={1} delay={0.4}>
-                  <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-[0.2em] leading-relaxed max-w-2xl mx-auto relative">
+                  <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-label leading-relaxed max-w-2xl mx-auto relative">
                     <span className="absolute -left-4 top-0 text-brand-ember/40 text-lg">&ldquo;</span>
                     We stand at the threshold of silence, recording the whispers of the hearth before they vanish into the ash of time.
                     <span className="absolute -right-4 bottom-0 text-brand-ember/40 text-lg">&rdquo;</span>
@@ -703,7 +703,7 @@ export default function Home() {
                       End-to-end systems for archiving endangered cultural data with modern stability.
                     </CardDescription>
                   </div>
-                  <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-mono text-[10px] uppercase text-muted-foreground">
+                  <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-mono text-fine uppercase text-muted-foreground">
                     Integrity: Verified
                   </div>
                 </div>

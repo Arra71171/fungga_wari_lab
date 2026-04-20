@@ -155,7 +155,7 @@ export const CommandMenuList = forwardRef((props: { items: CommandItemProps[]; c
           </div>
           <div className="flex flex-col text-left">
             <span className="font-medium">{item.title}</span>
-            <span className="text-[10px] text-muted-foreground">{item.description}</span>
+            <span className="text-fine text-muted-foreground">{item.description}</span>
           </div>
         </button>
       ))}

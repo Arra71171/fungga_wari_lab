@@ -93,7 +93,7 @@ export function AuthGatewayLayout({
           </motion.div>
 
           <div className="hidden sm:flex flex-col leading-none">
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-primary/60">
+            <span className="font-mono text-nano font-bold uppercase tracking-caps text-primary/60">
               fw_lab
             </span>
             <span className="font-heading text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors duration-200">
@@ -105,7 +105,7 @@ export function AuthGatewayLayout({
         {/* Version stamp — no theme toggle (page is always dark by design) */}
         <span
           aria-hidden="true"
-          className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/45 select-none"
+          className="font-mono text-fine font-bold uppercase tracking-caps text-muted-foreground/45 select-none"
         >
           {versionText}
         </span>
@@ -119,11 +119,11 @@ export function AuthGatewayLayout({
           variants={titleVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-[900px] mb-7 lg:mb-9"
+          className="w-full max-w-content mb-7 lg:mb-9"
         >
           <motion.p
             variants={lineVariants}
-            className="font-mono text-[11px] font-bold uppercase tracking-[0.35em] text-primary mb-3 flex items-center gap-2"
+            className="font-mono text-tight-label font-bold uppercase tracking-ultra text-primary mb-3 flex items-center gap-2"
           >
             <span className="size-1.5 bg-primary inline-block shrink-0" />
             {portalLabel}
@@ -141,7 +141,7 @@ export function AuthGatewayLayout({
           variants={cardVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-[900px] border-2 border-border bg-card overflow-hidden flex flex-col lg:grid lg:grid-cols-[1fr_360px]"
+          className="w-full max-w-content border-2 border-border bg-card overflow-hidden flex flex-col lg:grid lg:grid-cols-[1fr_360px]"
         >
           {/* LEFT: Folk key visual */}
           <div className="relative min-h-[260px] lg:min-h-0 border-b-2 lg:border-b-0 lg:border-r-2 border-border overflow-hidden bg-secondary">
@@ -159,10 +159,10 @@ export function AuthGatewayLayout({
 
             {/* Portal watermark */}
             <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between pointer-events-none select-none">
-              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.35em] text-primary/22">
+              <span className="font-mono text-nano font-bold uppercase tracking-ultra text-primary/22">
                 {portalLabel}
               </span>
-              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em] text-foreground/12">
+              <span className="font-mono text-nano font-bold uppercase tracking-eyebrow text-foreground/12">
                 sys.key
               </span>
             </div>
@@ -182,7 +182,7 @@ export function AuthGatewayLayout({
 
             {/* Sub-header */}
             <div className="pb-4 mb-5 border-b border-border">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+              <p className="font-mono text-fine font-bold uppercase tracking-[0.22em] text-muted-foreground">
                 {portalDescription}
               </p>
             </div>
@@ -195,7 +195,7 @@ export function AuthGatewayLayout({
             {/* Optional sign-up link */}
             {showSignUp && (
               <div className="pt-4 mt-3 border-t border-border">
-                <p className="font-mono text-[11px] text-muted-foreground">
+                <p className="font-mono text-tight-label text-muted-foreground">
                   No account?{" "}
                   <Link
                     href="/register"
@@ -210,7 +210,7 @@ export function AuthGatewayLayout({
             {/* Instance stamp */}
             <p
               aria-hidden="true"
-              className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/25 select-none"
+              className="mt-5 font-mono text-nano uppercase tracking-label text-muted-foreground/25 select-none"
             >
               {portalLabel} · sys.auth v2
             </p>

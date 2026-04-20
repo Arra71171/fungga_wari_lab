@@ -222,7 +222,7 @@ export function StoryAssetForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+          <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
             Story Title *
           </Label>
           <Input
@@ -235,7 +235,7 @@ export function StoryAssetForm() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+            <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
               Category
             </Label>
             <Select
@@ -255,7 +255,7 @@ export function StoryAssetForm() {
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+            <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
               Language
             </Label>
             <Select value={language} onValueChange={setLanguage}>
@@ -275,7 +275,7 @@ export function StoryAssetForm() {
       </div>
 
       <div className="space-y-2">
-        <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+        <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
           Brief Description / Synopsis
         </Label>
         <Textarea
@@ -318,14 +318,14 @@ export function StoryAssetForm() {
               </button>
             )}
 
-            <div className="font-mono text-[10px] text-brand-ochre uppercase tracking-[0.2em] mb-4">
+            <div className="font-mono text-fine text-brand-ochre uppercase tracking-label mb-4">
               Chapter {index + 1}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+                  <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
                     Chapter Title
                   </Label>
                   <Input
@@ -338,7 +338,7 @@ export function StoryAssetForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+                  <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
                     Manuscript Text
                   </Label>
                   <Textarea
@@ -353,7 +353,7 @@ export function StoryAssetForm() {
               </div>
 
               <div className="space-y-2">
-                <Label className="font-mono text-[10px] uppercase text-muted-foreground tracking-widest">
+                <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
                   Illustration
                 </Label>
                 <label className="relative flex w-full aspect-[3/4] min-h-56 flex-col items-center justify-center overflow-hidden border border-dashed border-border bg-bg-base transition-colors hover:border-brand-ember/50 hover:bg-bg-overlay/80 cursor-pointer group/upload">
@@ -366,7 +366,7 @@ export function StoryAssetForm() {
                         <p className="max-w-48 truncate bg-bg-base/80 px-2 text-xs font-mono text-brand-ochre">
                           {chapter.file.name}
                         </p>
-                        <p className="text-[9px] font-mono text-muted-foreground mt-1 uppercase tracking-widest">
+                        <p className="text-nano font-mono text-muted-foreground mt-1 uppercase tracking-widest">
                           Click to change
                         </p>
                       </div>
@@ -376,7 +376,7 @@ export function StoryAssetForm() {
                         <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-1 group-hover/upload:text-foreground">
                           Upload Image
                         </p>
-                        <p className="text-[10px] text-muted-foreground/60">
+                        <p className="text-fine text-muted-foreground/60">
                           JPG, PNG, WEBP
                         </p>
                       </>

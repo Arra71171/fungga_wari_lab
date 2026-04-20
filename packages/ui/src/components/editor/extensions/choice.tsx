@@ -23,7 +23,7 @@ declare module "@tiptap/core" {
   }
 }
 
-const ChoiceComponent = (props: NodeViewProps) => {
+function ChoiceComponent(props: NodeViewProps) {
   const { label, nextSceneId } = props.node.attrs as {
     label: string;
     nextSceneId: string;
@@ -41,12 +41,12 @@ const ChoiceComponent = (props: NodeViewProps) => {
       <div className="relative group flex flex-col gap-3 p-4 border-2 border-border bg-secondary/30 hover:border-brand-ember/50 transition-colors">
         <div className="flex items-center gap-3 text-brand-ochre">
           <MoveRight className="size-4" />
-          <span className="text-[10px] font-mono uppercase tracking-widest font-bold">Story Choice</span>
+          <span className="text-fine font-mono uppercase tracking-widest font-bold">Story Choice</span>
         </div>
 
         {/* Label */}
         <div className="flex flex-col gap-1">
-          <label className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+          <label className="text-nano font-mono uppercase tracking-widest text-muted-foreground">
             Choice Label
           </label>
           <input
@@ -61,7 +61,7 @@ const ChoiceComponent = (props: NodeViewProps) => {
 
         {/* Target Scene — dropdown when scenes are available, plain input as fallback */}
         <div className="flex flex-col gap-1">
-          <label className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+          <label className="text-nano font-mono uppercase tracking-widest text-muted-foreground">
             Jumps to Scene
           </label>
 

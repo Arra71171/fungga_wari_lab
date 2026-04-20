@@ -19,7 +19,7 @@ export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], 
     <div className="w-full border border-border bg-background p-6">
       <div className="mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground">Top Manuscripts</h3>
-        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground">
+        <p className="text-fine font-mono tracking-label uppercase text-muted-foreground">
           Ranked by View Engagement
         </p>
       </div>
@@ -27,10 +27,10 @@ export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], 
       <Table>
         <TableHeader>
           <TableRow className="border-border hover:bg-transparent">
-            <TableHead className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Title</TableHead>
-            <TableHead className="text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Views</TableHead>
-            <TableHead className="text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Reads</TableHead>
-            <TableHead className="text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Completion</TableHead>
+            <TableHead className="font-mono text-fine uppercase tracking-widest text-muted-foreground">Title</TableHead>
+            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Views</TableHead>
+            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Reads</TableHead>
+            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Completion</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

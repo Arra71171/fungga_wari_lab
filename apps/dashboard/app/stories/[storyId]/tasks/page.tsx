@@ -70,7 +70,7 @@ export default function StoryTasksPage() {
             </div>
           </Link>
           <div className="h-4 w-px bg-border/20" />
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-brand-ember/80 font-bold">
+          <span className="font-mono text-xs uppercase tracking-label text-brand-ember/80 font-bold">
             Workflow Engine
           </span>
           <span className="text-muted-foreground/30 px-2">/</span>
@@ -105,7 +105,7 @@ export default function StoryTasksPage() {
           {/* Task Grid */}
           <div className="grid grid-cols-1 gap-4">
             {/* Header Row */}
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-border text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-border text-fine font-mono uppercase tracking-label text-muted-foreground">
               <div className="col-span-5">Directive</div>
               <div className="col-span-3">Operative</div>
               <div className="col-span-2">Deadline</div>
@@ -158,7 +158,7 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-3">
                       <span
-                        className={`inline-flex items-center px-2 py-1 text-[10px] font-mono tracking-widest uppercase border ${
+                        className={`inline-flex items-center px-2 py-1 text-fine font-mono tracking-widest uppercase border ${
                           task.assignee_id
                             ? "border-brand-ember/20 bg-brand-ember/5 text-brand-ember/80"
                             : "border-dashed border-border-strong text-muted-foreground/50"
@@ -175,7 +175,7 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-2 text-right flex justify-end">
                       <span
-                        className={`inline-flex items-center gap-2 px-2.5 py-1 text-[10px] font-mono tracking-[0.15em] uppercase border ${
+                        className={`inline-flex items-center gap-2 px-2.5 py-1 text-fine font-mono tracking-[0.15em] uppercase border ${
                           isDone
                             ? "border-brand-ember/50 text-brand-ember bg-brand-ember/10"
                             : isInProgress

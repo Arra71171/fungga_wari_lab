@@ -108,10 +108,10 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
           <div className="p-2 border-t border-border flex items-center justify-between">
             <div className="truncate pr-2">
-              <p className="font-mono text-[9px] uppercase tracking-wider text-foreground truncate">
+              <p className="font-mono text-nano uppercase tracking-wider text-foreground truncate">
                 {asset.title}
               </p>
-              <p className="font-mono text-[8px] uppercase tracking-widest text-primary truncate">
+              <p className="font-mono text-micro uppercase tracking-widest text-primary truncate">
                 {asset.type.replace(/_/g, " ")}
               </p>
             </div>

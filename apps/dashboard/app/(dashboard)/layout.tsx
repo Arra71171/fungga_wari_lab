@@ -80,7 +80,7 @@ function UserProfileBlock() {
         <span className="text-xs font-mono text-foreground truncate h-4 leading-none">
           {displayName}
         </span>
-        <span className="text-[9px] font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
+        <span className="text-nano font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
           {userRoleStr}
         </span>
       </div>
@@ -98,7 +98,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
       </div>
 
       <nav className="flex-1 px-3 py-6 space-y-0.5 overflow-y-auto">
-        <div className="text-[9px] font-mono tracking-[0.2em] text-muted-foreground/60 uppercase mb-5 pl-3">
+        <div className="text-nano font-mono tracking-label text-muted-foreground/60 uppercase mb-5 pl-3">
           Creator Studio
         </div>
 
@@ -124,7 +124,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           );
         })}
 
-        <div className="text-[9px] font-mono tracking-[0.2em] text-muted-foreground/60 uppercase mt-8 mb-3 pl-3">
+        <div className="text-nano font-mono tracking-label text-muted-foreground/60 uppercase mt-8 mb-3 pl-3">
           Public Site
         </div>
         {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
@@ -158,7 +158,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
               onClick={onSignOut}
             >
               <LogOut className="size-4 mr-2" />
-              <span className="font-mono text-[10px] uppercase tracking-widest">Sign Out</span>
+              <span className="font-mono text-fine uppercase tracking-widest">Sign Out</span>
             </Button>
 
           <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">

@@ -16,7 +16,7 @@ declare module "@tiptap/core" {
   }
 }
 
-const DialogueComponent = (props: NodeViewProps) => {
+function DialogueComponent(props: NodeViewProps) {
   const { character, avatarUrl, quote } = props.node.attrs as {
     character: string;
     avatarUrl: string;

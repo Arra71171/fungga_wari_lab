@@ -89,7 +89,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
 
         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="title" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="title" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
               Task Designation
             </Label>
             <Input
@@ -103,7 +103,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="priority" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <Label htmlFor="priority" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
                 Priority
               </Label>
               <Select name="priority" defaultValue="medium">
@@ -119,7 +119,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="assigneeId" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <Label htmlFor="assigneeId" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
                 Assign To
               </Label>
               <Select name="assigneeId" defaultValue="none">
@@ -139,7 +139,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="description" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
               Briefing (Optional)
             </Label>
             <Textarea

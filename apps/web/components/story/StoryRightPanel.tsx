@@ -85,7 +85,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-2 text-muted-foreground">
           <BookOpen className="size-4 text-brand-ember/60" />
-          <span className="font-mono text-[9px] uppercase tracking-widest">
+          <span className="font-mono text-nano uppercase tracking-widest">
             Reader Panel
           </span>
         </div>
@@ -109,12 +109,12 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
         {/* Section label */}
         <div className="flex items-center gap-2 mb-4">
           <Mic2 className="size-3.5 text-brand-ember" />
-          <span className="font-mono text-[9px] uppercase tracking-widest text-brand-ember font-bold">
+          <span className="font-mono text-nano uppercase tracking-widest text-brand-ember font-bold">
             AI Narration
           </span>
           <span className="ml-auto flex items-center gap-1">
             <Zap className="size-2.5 text-brand-glow/70" />
-            <span className="font-mono text-[8px] uppercase tracking-widest text-brand-glow/70">
+            <span className="font-mono text-micro uppercase tracking-widest text-brand-glow/70">
               ElevenLabs
             </span>
           </span>
@@ -218,7 +218,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
           ) : null}
 
           {/* Status label */}
-          <span className="ml-auto font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
+          <span className="ml-auto font-mono text-nano uppercase tracking-widest text-muted-foreground/50">
             {isLoading && (
               <span className="text-brand-glow/80 animate-pulse">
                 Synthesising…
@@ -248,7 +248,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
                 : "bg-cinematic-border/30",
             )}
           />
-          <span className="font-mono text-[8px] uppercase tracking-widest text-muted-foreground/30">
+          <span className="font-mono text-micro uppercase tracking-widest text-muted-foreground/30">
             Powered by ElevenLabs AI
           </span>
           <div
@@ -266,12 +266,12 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
 
       {/* ── Story Metadata ─────────────────────────────────── */}
       <section aria-label="Story metadata" className="space-y-4">
-        <h3 className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/50">
+        <h3 className="font-mono text-nano uppercase tracking-widest text-muted-foreground/50">
           Manuscript Info
         </h3>
         {story?.title ? (
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 mb-1">
+            <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground/40 mb-1">
               Title
             </p>
             <p className="font-heading text-sm text-cinematic-text font-medium truncate">
@@ -281,20 +281,20 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
         ) : null}
         {story?.category ? (
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 mb-1">
+            <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground/40 mb-1">
               Category
             </p>
-            <p className="font-mono text-[10px] text-brand-ochre uppercase tracking-widest">
+            <p className="font-mono text-fine text-brand-ochre uppercase tracking-widest">
               {story.category}
             </p>
           </div>
         ) : null}
         {story?.language ? (
           <div>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 mb-1">
+            <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground/40 mb-1">
               Language
             </p>
-            <p className="font-mono text-[10px] text-cinematic-text uppercase tracking-widest">
+            <p className="font-mono text-fine text-cinematic-text uppercase tracking-widest">
               {story.language}
             </p>
           </div>

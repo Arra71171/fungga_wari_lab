@@ -376,8 +376,7 @@ function SceneBreakBlock() {
 
 // â”€â”€â”€ Block Registry â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const BLOCK_MAP: Record<BlockType, React.ComponentType<any>> = {
+export const BLOCK_MAP: Record<BlockType, React.ComponentType<Record<string, unknown>>> = {
   text: TextBlock,
   heading: HeadingBlock,
   image: ImageBlock,

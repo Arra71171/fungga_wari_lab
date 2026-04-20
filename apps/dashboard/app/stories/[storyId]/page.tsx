@@ -372,7 +372,7 @@ export default function StoryEditorPage() {
             Back to Dashboard
           </Link>
           <div className="p-4 space-y-1">
-            <div className="text-[10px] font-mono tracking-widest text-muted-foreground uppercase">
+            <div className="text-fine font-mono tracking-widest text-muted-foreground uppercase">
               Active Manuscript
             </div>
             <h2 className="font-heading text-base font-bold text-foreground leading-tight truncate">
@@ -381,7 +381,7 @@ export default function StoryEditorPage() {
             <div className="flex items-center gap-2 mt-1">
               <span
                 className={cn(
-                  "text-[9px] uppercase font-mono tracking-wider px-1.5 py-0.5 border",
+                  "text-nano uppercase font-mono tracking-wider px-1.5 py-0.5 border",
                   story.status === "published"
                     ? "bg-status-active/10 text-status-active border-status-active/20"
                     : "bg-muted/50 text-muted-foreground border-border"
@@ -414,7 +414,7 @@ export default function StoryEditorPage() {
               <p>No chapters yet</p>
               <Button
                 onClick={handleAddChapter}
-                className="w-full gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-mono text-[10px] tracking-widest uppercase"
+                className="w-full gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-mono text-fine tracking-widest uppercase"
                 size="sm"
               >
                 <Plus className="size-3" />
@@ -520,7 +520,7 @@ export default function StoryEditorPage() {
                     onClick={() => setEditorMode("tiptap")}
                     aria-label="Rich text editor mode"
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest transition-colors",
+                      "flex items-center gap-1.5 px-3 py-1.5 text-fine font-mono uppercase tracking-widest transition-colors",
                       editorMode === "tiptap"
                         ? "bg-brand-ember/15 text-brand-ember font-bold"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -532,7 +532,7 @@ export default function StoryEditorPage() {
                     onClick={() => setEditorMode("blocks")}
                     aria-label="Block editor mode"
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest transition-colors",
+                      "flex items-center gap-1.5 px-3 py-1.5 text-fine font-mono uppercase tracking-widest transition-colors",
                       editorMode === "blocks"
                         ? "bg-brand-ember/15 text-brand-ember font-bold"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -545,7 +545,7 @@ export default function StoryEditorPage() {
                 <div className="flex items-center gap-2">
                   <span
                     className={cn(
-                      "font-mono text-[10px] uppercase tracking-widest",
+                      "font-mono text-fine uppercase tracking-widest",
                       focusMode
                         ? "text-cinematic-text/40"
                         : "text-muted-foreground/60"
@@ -695,7 +695,7 @@ export default function StoryEditorPage() {
         )}
       >
         <div className="h-12 border-b border-border-subtle flex items-center justify-between px-5 shrink-0">
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-brand-ember/80 font-bold">
+          <span className="font-mono text-xs uppercase tracking-label text-brand-ember/80 font-bold">
             Manuscript Details
           </span>
           <button
@@ -710,7 +710,7 @@ export default function StoryEditorPage() {
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* Cover Image */}
           <div className="space-y-2">
-            <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+            <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
               Cover Image
             </Label>
             <CoverImageUpload
@@ -724,7 +724,7 @@ export default function StoryEditorPage() {
 
           {/* Story Status */}
           <div className="space-y-3">
-            <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+            <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
               Status
             </Label>
             <div className="p-3 border border-border-subtle bg-bg-surface space-y-2">
@@ -760,7 +760,7 @@ export default function StoryEditorPage() {
             <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
               {/* Title */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Title
                 </Label>
                 <Input
@@ -772,7 +772,7 @@ export default function StoryEditorPage() {
 
               {/* Description */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Description
                 </Label>
                 <Textarea
@@ -787,7 +787,7 @@ export default function StoryEditorPage() {
 
               {/* Category */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Category
                 </Label>
                 <Select
@@ -813,7 +813,7 @@ export default function StoryEditorPage() {
 
               {/* Language */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Language
                 </Label>
                 <Select
@@ -839,7 +839,7 @@ export default function StoryEditorPage() {
 
               {/* Moral */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Moral
                 </Label>
                 <Textarea
@@ -854,7 +854,7 @@ export default function StoryEditorPage() {
 
               {/* Tags */}
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Tags (comma-separated)
                 </Label>
                 <Input
@@ -879,7 +879,7 @@ export default function StoryEditorPage() {
             <div className="space-y-3">
               {story.description && (
                 <div className="space-y-1">
-                  <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                     Description
                   </Label>
                   <p className="text-xs text-foreground/80 font-mono leading-relaxed">
@@ -889,7 +889,7 @@ export default function StoryEditorPage() {
               )}
               {story.moral && (
                 <div className="space-y-1">
-                  <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                     Moral
                   </Label>
                   <p className="text-xs text-brand-ochre/80 font-mono italic border-l-2 border-brand-ochre/30 pl-2">
@@ -899,14 +899,14 @@ export default function StoryEditorPage() {
               )}
               {story.tags && story.tags.length > 0 && (
                 <div className="space-y-1">
-                  <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                     Tags
                   </Label>
                   <div className="flex flex-wrap gap-1.5">
                     {story.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-[9px] font-mono uppercase tracking-widest bg-secondary border border-border px-2 py-0.5"
+                        className="text-nano font-mono uppercase tracking-widest bg-secondary border border-border px-2 py-0.5"
                       >
                         {tag}
                       </span>
@@ -922,7 +922,7 @@ export default function StoryEditorPage() {
           {/* Scene Illustration */}
           {activeSceneData && (
             <div className="space-y-2">
-              <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+              <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                 <ImageIcon className="size-3" />
                 Scene Illustration
               </Label>
@@ -940,7 +940,7 @@ export default function StoryEditorPage() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-cinematic-text hover:text-cinematic-text hover:bg-cinematic-border font-mono text-[10px] uppercase tracking-widest"
+                      className="text-cinematic-text hover:text-cinematic-text hover:bg-cinematic-border font-mono text-fine uppercase tracking-widest"
                       onClick={async () => {
                         const input = document.createElement("input");
                         input.type = "file";
@@ -990,7 +990,7 @@ export default function StoryEditorPage() {
                   aria-label="Upload scene illustration"
                 >
                   <ImageIcon className="size-6" />
-                  <span className="font-mono text-[10px] uppercase tracking-widest">
+                  <span className="font-mono text-fine uppercase tracking-widest">
                     Add Illustration
                   </span>
                 </button>
@@ -1001,13 +1001,13 @@ export default function StoryEditorPage() {
           {/* Team Assignments */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+              <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                 Tasks
               </Label>
               <Link href={`/stories/${storyId}/tasks`}>
                 <Button
                   variant="link"
-                  className="text-[10px] font-mono uppercase tracking-[0.2em] text-brand-ember p-0 h-auto"
+                  className="text-fine font-mono uppercase tracking-label text-brand-ember p-0 h-auto"
                 >
                   Manage
                 </Button>
@@ -1017,7 +1017,7 @@ export default function StoryEditorPage() {
               <p className="text-xs text-muted-foreground/60 font-mono">
                 No tasks assigned to this scene
               </p>
-              <Button className="mt-2 w-full gap-2 rounded-none bg-transparent hover:bg-secondary text-brand-ember border border-brand-ember/30 font-mono text-[10px] tracking-widest uppercase transition-all h-8">
+              <Button className="mt-2 w-full gap-2 rounded-none bg-transparent hover:bg-secondary text-brand-ember border border-brand-ember/30 font-mono text-fine tracking-widest uppercase transition-all h-8">
                 <Plus className="size-3" /> Assign Task
               </Button>
             </div>
@@ -1044,7 +1044,7 @@ function ChapterScenes({
   return (
     <div className="space-y-0.5 py-1">
       {scenes.length === 0 ? (
-        <div className="text-[10px] text-muted-foreground/50 font-mono p-2 text-center">
+        <div className="text-fine text-muted-foreground/50 font-mono p-2 text-center">
           No scenes yet
         </div>
       ) : (
@@ -1076,7 +1076,7 @@ function ChapterScenes({
       <button
         onClick={onAddScene}
         aria-label="Add scene"
-        className="w-full flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground/50 hover:text-brand-ember hover:bg-secondary rounded-none transition-all"
+        className="w-full flex items-center gap-2 px-3 py-1.5 text-fine font-mono uppercase tracking-widest text-muted-foreground/50 hover:text-brand-ember hover:bg-secondary rounded-none transition-all"
       >
         <Plus className="size-3" />
         Add Scene

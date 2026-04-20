@@ -48,7 +48,7 @@ export function EngagementChart({ data, isLoading }: { data?: { date: string; vi
       
       <div className="mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground/90">Engagement Trends</h3>
-        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70">
+        <p className="text-fine font-mono tracking-label uppercase text-muted-foreground/70">
           Views & Reads over time
         </p>
       </div>

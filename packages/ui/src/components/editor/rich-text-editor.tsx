@@ -184,7 +184,7 @@ function EditorToolbar({
         </>
       )}
 
-      <div className="ml-auto font-mono text-[9px] uppercase tracking-widest text-muted-foreground/40 pr-1">
+      <div className="ml-auto font-mono text-nano uppercase tracking-widest text-muted-foreground/40 pr-1">
         Type &apos;/&apos; for slash commands
       </div>
     </div>

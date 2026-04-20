@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { Label, Pie, PieChart } from "recharts";
@@ -39,7 +39,7 @@ export function PublishPipeline({ data, totalStories, isLoading }: Props) {
     <div className="w-full border border-border-subtle bg-bg-surface p-6 relative group overflow-hidden">
       <div className="mb-2 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground/90">Publish Pipeline</h3>
-        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70">
+        <p className="text-fine font-mono tracking-label uppercase text-muted-foreground/70">
           Manuscripts by current stage
         </p>
       </div>
@@ -85,7 +85,7 @@ export function PublishPipeline({ data, totalStories, isLoading }: Props) {
       {/* Legend */}
       <div className="mt-4 flex flex-wrap gap-2">
         {(data ?? []).filter(d => d.count > 0).map(d => (
-          <span key={d.status} className="flex items-center gap-1 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+          <span key={d.status} className="flex items-center gap-1 font-mono text-nano uppercase tracking-widest text-muted-foreground">
             <span className="inline-block size-2 rounded-none" style={{ backgroundColor: d.fill }} />
             {d.status} ({d.count})
           </span>

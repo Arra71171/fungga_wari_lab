@@ -68,13 +68,13 @@ export function TaskCard({ task, onDeleted }: TaskCardProps) {
             {task.priority === "low" && (
               <span className="size-1.5 rounded-full bg-muted-foreground/50" />
             )}
-            <span className="uppercase tracking-widest text-[9px] font-bold">{task.priority}</span>
+            <span className="uppercase tracking-widest text-nano font-bold">{task.priority}</span>
           </div>
         </div>
 
         <div
           className={cn(
-            "flex items-center gap-1.5 px-2 py-1 border text-[9px] uppercase tracking-[0.2em] font-bold",
+            "flex items-center gap-1.5 px-2 py-1 border text-nano uppercase tracking-label font-bold",
             task.status === "done"
               ? "border-brand-ember/30 text-brand-ember bg-brand-ember/10"
               : task.status === "lore_gathering"

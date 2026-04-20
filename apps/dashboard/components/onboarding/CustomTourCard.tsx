@@ -45,7 +45,7 @@ export function CustomTourCard({
               </div>
             )}
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-brand-ember mb-1">
+              <p className="font-mono text-nano uppercase tracking-eyebrow text-brand-ember mb-1">
                 Step {currentStep + 1} of {totalSteps}
               </p>
               <h3 className="font-heading text-xl font-bold tracking-tight text-foreground leading-tight">
@@ -105,7 +105,7 @@ export function CustomTourCard({
               <Button
                 size="sm"
                 onClick={nextStep}
-                className="h-8 rounded-none bg-brand-ember px-5 font-mono text-[10px] uppercase tracking-widest text-primary-foreground hover:bg-brand-ember/90"
+                className="h-8 rounded-none bg-brand-ember px-5 font-mono text-fine uppercase tracking-widest text-primary-foreground hover:bg-brand-ember/90"
               >
                 {currentStep === totalSteps - 1 ? "Get Started" : "Next"}
                 {currentStep !== totalSteps - 1 && (

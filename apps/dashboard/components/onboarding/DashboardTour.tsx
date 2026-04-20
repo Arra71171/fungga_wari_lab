@@ -42,15 +42,15 @@ function WelcomeContent() {
           >
             <Icon className="mt-0.5 size-4 shrink-0 text-brand-ember" />
             <div>
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-wide text-foreground">
+              <p className="font-mono text-fine font-semibold uppercase tracking-wide text-foreground">
                 {label}
               </p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">{desc}</p>
+              <p className="mt-0.5 text-tight-label text-muted-foreground">{desc}</p>
             </div>
           </div>
         ))}
       </div>
-      <p className="text-[11px] text-muted-foreground/70">
+      <p className="text-tight-label text-muted-foreground/70">
         This tour takes ~30 seconds. You can skip anytime.
       </p>
     </div>
@@ -67,8 +67,8 @@ function OverviewContent() {
         <div className="flex items-center gap-3 border-l-2 border-brand-ember pl-3">
           <Eye className="size-4 shrink-0 text-brand-ochre" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">KPI Cards</p>
-            <p className="text-[11px] text-muted-foreground">Total Manuscripts · Total Views · Total Reads · Completion Rate</p>
+            <p className="text-tight-label font-semibold text-foreground">KPI Cards</p>
+            <p className="text-tight-label text-muted-foreground">Total Manuscripts · Total Views · Total Reads · Completion Rate</p>
           </div>
         </div>
         <div className="flex items-center gap-3 border-l-2 border-brand-ochre pl-3">
@@ -78,15 +78,15 @@ function OverviewContent() {
             <Globe2 className="size-3.5 text-primary" />
           </div>
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Publishing Pipeline</p>
-            <p className="text-[11px] text-muted-foreground">Drafts → In Review → Published. Track every story&apos;s progress.</p>
+            <p className="text-tight-label font-semibold text-foreground">Publishing Pipeline</p>
+            <p className="text-tight-label text-muted-foreground">Drafts → In Review → Published. Track every story&apos;s progress.</p>
           </div>
         </div>
         <div className="flex items-center gap-3 border-l-2 border-border-strong pl-3">
           <BookCheck className="size-4 shrink-0 text-muted-foreground" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Engagement Charts</p>
-            <p className="text-[11px] text-muted-foreground">Completion rate donuts, category distribution, recent activity feed.</p>
+            <p className="text-tight-label font-semibold text-foreground">Engagement Charts</p>
+            <p className="text-tight-label text-muted-foreground">Completion rate donuts, category distribution, recent activity feed.</p>
           </div>
         </div>
       </div>
@@ -104,22 +104,22 @@ function ContentToolsContent() {
         <div className="flex items-start gap-3 border border-border-subtle bg-bg-surface/30 p-3">
           <BookOpen className="mt-0.5 size-4 shrink-0 text-brand-ember" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Manuscripts</p>
-            <p className="text-[11px] text-muted-foreground">Create and edit stories with the block-based editor. Set status (Draft → In Review → Published), add cover art, manage chapters and scenes.</p>
+            <p className="text-tight-label font-semibold text-foreground">Manuscripts</p>
+            <p className="text-tight-label text-muted-foreground">Create and edit stories with the block-based editor. Set status (Draft → In Review → Published), add cover art, manage chapters and scenes.</p>
           </div>
         </div>
         <div className="flex items-start gap-3 border border-border-subtle bg-bg-surface/30 p-3">
           <ListTodo className="mt-0.5 size-4 shrink-0 text-brand-ochre" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Tasks</p>
-            <p className="text-[11px] text-muted-foreground">Manage translation, transcription, and editorial review tasks. Drag-and-drop Kanban board keeps the workflow moving.</p>
+            <p className="text-tight-label font-semibold text-foreground">Tasks</p>
+            <p className="text-tight-label text-muted-foreground">Manage translation, transcription, and editorial review tasks. Drag-and-drop Kanban board keeps the workflow moving.</p>
           </div>
         </div>
         <div className="flex items-start gap-3 border border-border-subtle bg-bg-surface/30 p-3">
           <Image className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Assets</p>
-            <p className="text-[11px] text-muted-foreground">Upload illustrations, audio, and media. All assets are optimized and served via Cloudinary CDN.</p>
+            <p className="text-tight-label font-semibold text-foreground">Assets</p>
+            <p className="text-tight-label text-muted-foreground">Upload illustrations, audio, and media. All assets are optimized and served via Cloudinary CDN.</p>
           </div>
         </div>
       </div>
@@ -137,22 +137,22 @@ function ProfileSettingsContent() {
         <div className="flex items-center gap-3 border-l-2 border-brand-ember pl-3">
           <UserCircle className="size-4 shrink-0 text-brand-ember" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Your Profile</p>
-            <p className="text-[11px] text-muted-foreground">Displays your name and role. Head to Settings to update your avatar and preferences.</p>
+            <p className="text-tight-label font-semibold text-foreground">Your Profile</p>
+            <p className="text-tight-label text-muted-foreground">Displays your name and role. Head to Settings to update your avatar and preferences.</p>
           </div>
         </div>
         <div className="flex items-center gap-3 border-l-2 border-brand-ochre pl-3">
           <Sun className="size-4 shrink-0 text-brand-ochre" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Theme Toggle</p>
-            <p className="text-[11px] text-muted-foreground">Switch between light and dark mode instantly — your preference is saved.</p>
+            <p className="text-tight-label font-semibold text-foreground">Theme Toggle</p>
+            <p className="text-tight-label text-muted-foreground">Switch between light and dark mode instantly — your preference is saved.</p>
           </div>
         </div>
         <div className="flex items-center gap-3 border-l-2 border-border-strong pl-3">
           <Globe className="size-4 shrink-0 text-muted-foreground" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">View Stories (Public Site)</p>
-            <p className="text-[11px] text-muted-foreground">Opens the immersive reader — see the archive exactly as your audience does.</p>
+            <p className="text-tight-label font-semibold text-foreground">View Stories (Public Site)</p>
+            <p className="text-tight-label text-muted-foreground">Opens the immersive reader — see the archive exactly as your audience does.</p>
           </div>
         </div>
       </div>

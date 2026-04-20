@@ -30,11 +30,11 @@ function Toaster({ ...props }: ToasterProps) {
           toast:
             "group font-mono text-xs bg-cinematic-panel border-2 border-border text-foreground shadow-none rounded-none",
           title: "font-mono text-xs font-bold uppercase tracking-widest",
-          description: "font-mono text-[10px] text-muted-foreground tracking-wide",
+          description: "font-mono text-fine text-muted-foreground tracking-wide",
           actionButton:
-            "font-mono text-[10px] uppercase tracking-widest bg-primary text-primary-foreground rounded-none",
+            "font-mono text-fine uppercase tracking-widest bg-primary text-primary-foreground rounded-none",
           cancelButton:
-            "font-mono text-[10px] uppercase tracking-widest bg-muted text-muted-foreground rounded-none",
+            "font-mono text-fine uppercase tracking-widest bg-muted text-muted-foreground rounded-none",
           closeButton:
             "border border-border bg-cinematic-panel text-muted-foreground hover:text-foreground rounded-none",
           success: "border-primary/40",
