@@ -65,6 +65,7 @@ function MemberRow({
   member,
   currentUserAuthId,
   isCallerAdmin,
+  isCallerSuperAdmin,
 }: {
   member: Member;
   currentUserAuthId?: string;

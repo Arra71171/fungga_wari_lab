@@ -136,7 +136,7 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
     .eq("auth_id", user.id)
     .single()
 
-  if (!caller || !["superadmin", "admin"].includes(caller.role)) {
+  if (!caller || !caller.role || !["superadmin", "admin"].includes(caller.role)) {
     throw new Error("Forbidden — only admins and superadmins can change roles")
   }
 
@@ -189,7 +189,7 @@ export async function deleteUserAccount(targetUserId: string) {
     .eq("auth_id", user.id)
     .single()
 
-  if (!caller || !["superadmin", "admin"].includes(caller.role)) {
+  if (!caller || !caller.role || !["superadmin", "admin"].includes(caller.role)) {
     throw new Error("Forbidden — only admins and superadmins can delete users")
   }
 
