@@ -21,7 +21,11 @@ export async function getAuthUser() {
  */
 export async function getAuthUserOrNull() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  return { user, userId: user?.id ?? null, supabase }
+  if (error || !user) {
+    return { user: null, userId: null, supabase }
+  }
+
+  return { user, userId: user.id, supabase }
 }

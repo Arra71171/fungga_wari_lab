@@ -26,7 +26,6 @@ import {
   Users,
   BookOpen,
   Home,
-  X,
 } from "lucide-react";
 
 const navItems = [
@@ -214,7 +213,7 @@ function Navbar() {
               aria-label="Open navigation menu"
               className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all"
             >
-              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+              <Menu className="size-5" />
             </button>
           </SheetTrigger>
 
@@ -260,7 +259,7 @@ function Navbar() {
                   <a
                     href={DASHBOARD_URL}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono font-bold uppercase tracking-widest text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/8 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono font-bold uppercase tracking-widest text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/10 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
                   >
                     <LayoutDashboard className="size-4 shrink-0" />
                     Dashboard

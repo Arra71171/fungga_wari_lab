@@ -11,7 +11,7 @@ export function AuthObserver() {
     if (!isLoaded) return;
 
     const prevState = sessionStorage.getItem("fw_auth_state");
-    const currentStr = user ? "true" : "false";
+    const currentStr = user?.id ? "true" : "false";
 
     if (currentStr === "true" && prevState === "false") {
       toast.success("Identity Verified", {
@@ -24,7 +24,7 @@ export function AuthObserver() {
     }
 
     sessionStorage.setItem("fw_auth_state", currentStr);
-  }, [user, isLoaded]);
+  }, [user?.id, isLoaded]);
 
   return null;
 }

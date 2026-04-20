@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./supabase-provider": "./src/supabase-provider.tsx",
-    "./clerk-provider": "./src/clerk-provider.tsx"
+    "./supabase-provider": "./src/supabase-provider.tsx"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

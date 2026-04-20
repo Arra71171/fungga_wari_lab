@@ -128,7 +128,7 @@ function StoryTicker() {
       <SectionDivider variant="smoke" position="bottom" className="opacity-80 text-background" />
 
       {/* Background Polish */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,var(--color-primary)/3%,transparent_70%)] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,color-mix(in_srgb,var(--color-primary)_3%,transparent),transparent_70%)] pointer-events-none z-0" />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-12 relative z-10">
         <ScrollReveal direction="up" distance={30} duration={0.8}>
@@ -495,7 +495,14 @@ export default function Home() {
 
               <div className="flex-1 flex items-center justify-center relative p-2 border border-border/50 bg-secondary/20 overflow-hidden">
                 <video
-                  src="/video/9X-ALPHA.mp4"
+                  ref={(el) => {
+                    if (el) {
+                      el.defaultMuted = true;
+                      el.muted = true;
+                      el.play().catch(() => {});
+                    }
+                  }}
+                  src="https://res.cloudinary.com/dlytqegcw/video/upload/v1776645841/tvyuk7g4k0ojvtdgz6lk.mp4"
                   autoPlay
                   loop
                   muted

@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 // Routes that don't require authentication
-const publicRoutes = ["/", "/login", "/register", "/story", "/api/webhooks"]
+const publicRoutes = ["/", "/login", "/register", "/stories", "/api/webhooks"]
 
 function isPublicRoute(pathname: string) {
   return publicRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"))
@@ -20,7 +20,7 @@ export default async function middleware(req: NextRequest) {
           return req.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             req.cookies.set(name, value)
           )
           supabaseResponse = NextResponse.next({ request: req })

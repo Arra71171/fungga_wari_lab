@@ -84,11 +84,15 @@ export default async function OverviewPage() {
   if (!user) return null
 
   // Get user profile for display name
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("users")
     .select("name, alias")
     .eq("auth_id", user.id)
-    .single()
+    .maybeSingle()
+
+  if (profileError) {
+    console.warn("[overview] profile lookup failed:", profileError.message)
+  }
 
   const displayName = profile?.alias || profile?.name || user.email?.split("@")[0] || "Creator"
 

@@ -1,10 +1,8 @@
 "use client"
 
 import React from "react"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { createBrowserClient } from "@supabase/ssr"
-import { cn } from "@workspace/ui/lib/utils"
 
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
@@ -14,7 +12,12 @@ import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react"
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get("redirect") || "/"
+  // Sanitize redirect to same-origin relative paths only (XSS prevention)
+  const redirectParam = searchParams.get("redirect")
+  const redirectTo =
+    redirectParam?.startsWith("/") && !redirectParam.startsWith("//")
+      ? redirectParam
+      : "/"
 
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
@@ -48,13 +51,24 @@ function LoginForm() {
     }
 
     // Check if the user is a superadmin and redirect accordingly
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    if (userError) {
+      setError("Unable to verify your session. Please try again.")
+      setIsLoading(false)
+      return
+    }
     if (user) {
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("users")
         .select("role")
         .eq("auth_id", user.id)
         .maybeSingle()
+
+      if (profileError) {
+        setError("Unable to load your profile. Please try again.")
+        setIsLoading(false)
+        return
+      }
 
       if (profile?.role === "superadmin") {
         const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000"
@@ -63,6 +77,7 @@ function LoginForm() {
       }
     }
 
+    setIsLoading(false)
     router.push(redirectTo)
     router.refresh()
   }
@@ -103,7 +118,7 @@ function LoginForm() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}

@@ -4,7 +4,33 @@
 -- 1. Add auth_id column to users table
 ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_id uuid UNIQUE;
 
--- 2. Create trigger function for auto-inserting users on signup
+-- 2. Backfill auth_id for existing users by matching on verified email.
+--    This is safe because Supabase Auth enforces unique, verified emails per project.
+UPDATE public.users AS u
+SET auth_id = au.id
+FROM auth.users AS au
+WHERE u.auth_id IS NULL
+  AND u.email IS NOT NULL
+  AND lower(u.email) = lower(au.email);
+
+-- Safety guard: abort if any privileged or active users remain unmapped.
+-- Comment this block out if you want to allow partial backfill on first run.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.users
+    WHERE auth_id IS NULL
+      AND (
+        role IN ('admin', 'superadmin')
+        OR has_lifetime_access IS TRUE
+      )
+  ) THEN
+    RAISE EXCEPTION 'Cannot switch RLS helpers: privileged users without auth_id remain. Backfill or manually map them first.';
+  END IF;
+END $$;
+
+-- 3. Create trigger function for auto-inserting users on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -26,7 +52,7 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 3. Update get_my_user_id() to use auth.uid() instead of clerk JWT
+-- 4. Update get_my_user_id() to use auth.uid() instead of clerk JWT
 CREATE OR REPLACE FUNCTION public.get_my_user_id()
 RETURNS uuid
 LANGUAGE sql
@@ -37,7 +63,7 @@ AS $$
   SELECT id FROM public.users WHERE auth_id = auth.uid() LIMIT 1;
 $$;
 
--- 4. Update is_admin() to use auth.uid() instead of clerk JWT
+-- 5. Update is_admin() to use auth.uid() instead of clerk JWT
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
 LANGUAGE sql
@@ -52,5 +78,5 @@ AS $$
   );
 $$;
 
--- 5. Index for fast auth lookups
+-- 6. Index for fast auth lookups
 CREATE INDEX IF NOT EXISTS idx_users_auth_id ON public.users (auth_id);

@@ -59,14 +59,29 @@ export async function updateUserProfile(patch: {
  */
 export async function getAllUsers() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError) throw new Error(`Failed to verify user: ${userError.message}`)
   if (!user) return []
 
-  const { data } = await supabase
+  // Enforce admin-only access
+  const { data: caller, error: callerError } = await supabase
+    .from("users")
+    .select("role")
+    .eq("auth_id", user.id)
+    .single()
+
+  if (callerError) throw new Error(`Failed to verify permissions: ${callerError.message}`)
+  if (caller?.role !== "superadmin") {
+    throw new Error("Forbidden — only superadmins can view users")
+  }
+
+  const { data, error } = await supabase
     .from("users")
     .select("id, auth_id, clerk_id, name, email, avatar_url, role, alias")
     .order("created_at", { ascending: false })
+    .limit(100)
 
+  if (error) throw new Error(`Failed to fetch users: ${error.message}`)
   return data ?? []
 }
 
@@ -110,6 +125,18 @@ export async function createTeamMember(data: {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
 
+  // Only superadmins can create team members
+  const { data: caller, error: callerError } = await supabase
+    .from("users")
+    .select("role")
+    .eq("auth_id", user.id)
+    .single()
+
+  if (callerError) throw new Error(`Failed to verify permissions: ${callerError.message}`)
+  if (caller?.role !== "superadmin") {
+    throw new Error("Forbidden — only superadmins can create team members")
+  }
+
   const { data: member, error } = await supabase
     .from("users")
     .insert({
@@ -131,16 +158,32 @@ export async function createTeamMember(data: {
 export async function getOperativeStats(authId: string) {
   const supabase = await createClient()
 
+  // Resolve internal users.id and legacy clerk_id for identity migration bridging
+  // stories.author_id and tasks.assignee_id may hold either format during transition
+  const { data: profile, error: profileError } = await supabase
+    .from("users")
+    .select("id, clerk_id")
+    .eq("auth_id", authId)
+    .single()
+
+  if (profileError) throw new Error(`Failed to load operative identity: ${profileError.message}`)
+
+  // Use both the internal numeric id and the legacy clerk_id to catch migrated rows
+  const identityIds = [String(profile.id), profile.clerk_id].filter((id): id is string => Boolean(id))
+
   const [storiesResult, tasksResult] = await Promise.all([
     supabase
       .from("stories")
       .select("id, chapter_count")
-      .eq("author_id", authId),
+      .in("author_id", identityIds),
     supabase
       .from("tasks")
       .select("id, status")
-      .eq("assignee_id", authId),
+      .in("assignee_id", identityIds),
   ])
+
+  if (storiesResult.error) throw new Error(`Failed to load stories: ${storiesResult.error.message}`)
+  if (tasksResult.error) throw new Error(`Failed to load tasks: ${tasksResult.error.message}`)
 
   const stories = storiesResult.data ?? []
   const tasks = tasksResult.data ?? []

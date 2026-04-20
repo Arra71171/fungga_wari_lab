@@ -34,7 +34,7 @@ function RegisterForm() {
     setError(null)
     setIsLoading(true)
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -50,8 +50,15 @@ function RegisterForm() {
       return
     }
 
-    router.push("/")
-    router.refresh()
+    if (signUpData.session) {
+      // Session exists — email confirmation is disabled, user is authenticated
+      router.push("/")
+      router.refresh()
+    } else {
+      // Email confirmation required — Supabase default
+      setIsLoading(false)
+      setError("Account created! Please check your email to confirm your address before signing in.")
+    }
   }
 
   return (
@@ -66,6 +73,8 @@ function RegisterForm() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Folklore Keeper"
+          required
+          minLength={2}
           autoComplete="name"
           className="bg-bg-surface border-border font-mono text-sm"
         />

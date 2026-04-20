@@ -8,16 +8,16 @@ import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 export function BookmarkToggle({ storyId }: { storyId: string }) {
   const [isBookmarked, setIsBookmarked] = React.useState<boolean | undefined>(undefined);
   const [isToggling, setIsToggling] = React.useState(false);
-  const { user, supabase, isLoaded } = useSupabaseAuth();
+  const { user, userProfile, supabase, isLoaded } = useSupabaseAuth();
 
   React.useEffect(() => {
     async function checkBookmark() {
-      if (!user || !storyId) return;
+      if (!userProfile?.id || !storyId) return;
       const { data, error } = await supabase
         .from('bookmarks')
         .select('id')
         .eq('story_id', storyId)
-        .eq('user_id', user.id)
+        .eq('user_id', userProfile.id)
         .maybeSingle();
       
       if (!error) {
@@ -25,30 +25,34 @@ export function BookmarkToggle({ storyId }: { storyId: string }) {
       }
     }
     checkBookmark();
-  }, [storyId, user, supabase]);
+  }, [storyId, userProfile?.id, supabase]);
 
   // Only show for authenticated users
-  if (!isLoaded || !user || isBookmarked === undefined) return null;
+  if (!isLoaded || !user || !userProfile || isBookmarked === undefined) return null;
 
   const handleToggle = async () => {
-    if (!user || isToggling) return;
+    if (!userProfile?.id || isToggling) return;
     setIsToggling(true);
     try {
       if (isBookmarked) {
-        await supabase
+        const { error } = await supabase
           .from('bookmarks')
           .delete()
           .eq('story_id', storyId)
-          .eq('user_id', user.id);
+          .eq('user_id', userProfile.id);
+        if (error) throw error;
         setIsBookmarked(false);
       } else {
-        await supabase
+        const { error } = await supabase
           .from('bookmarks')
-          .insert({ story_id: storyId, user_id: user.id });
+          .insert({ story_id: storyId, user_id: userProfile.id });
+        if (error) throw error;
         setIsBookmarked(true);
       }
     } catch (err) {
-      console.error(err);
+      console.error("BookmarkToggle: mutation failed", err);
+      // Rollback optimistic UI
+      setIsBookmarked(isBookmarked);
     } finally {
       setIsToggling(false);
     }

@@ -109,23 +109,23 @@ export async function verifyAndGrantAccess(
     }
 
     const adminSupabase = createAdminClient();
-    const email =
-      session.customer_details?.email ?? session.customer_email ?? "";
 
-    const { error } = await adminSupabase
+    const { data: updatedProfile, error } = await adminSupabase
       .from("users")
       .update({
         has_lifetime_access: true,
         updated_at: new Date().toISOString(),
       })
-      .eq("auth_id", user.id);
+      .eq("auth_id", user.id)
+      .select("id")
+      .maybeSingle();
 
-    if (error) {
-      console.error("verifyAndGrantAccess: DB update failed:", error);
+    if (error || !updatedProfile) {
+      console.error("verifyAndGrantAccess: DB update failed:", error ?? "No user row found for auth_id");
       return { success: false, error: "Database update failed" };
     }
 
-    console.log(`✅ Lifetime access granted via session verify: ${user.id}`);
+    console.log("✅ Lifetime access granted via session verify");
     return { success: true };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
