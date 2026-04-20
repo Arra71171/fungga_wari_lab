@@ -343,22 +343,29 @@ export async function deleteStory(id: string) {
   try {
     const { supabase, profile } = await requireUser()
 
-    // Verify ownership or superadmin role with the authenticated client first
-    const { data: story, error: authError } = await supabase
-      .from("stories")
-      .select("id, author_id")
-      .eq("id", id)
-      .single()
+    // Admins/superadmins can delete any story.
+    // Authors can only delete their own stories.
+    const isAdmin = profile.role === "superadmin" || profile.role === "admin"
 
-    if (authError || !story) {
-      return { success: false, error: `Story not found or unauthorized: ${authError?.message}` }
-    }
+    if (!isAdmin) {
+      // Ownership check: fetch the story using the authenticated (RLS-scoped) client.
+      // The stories_select_own policy permits this if author_id matches the JWT sub.
+      const { data: story, error: authError } = await supabase
+        .from("stories")
+        .select("id, author_id")
+        .eq("id", id)
+        .single()
 
-    const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter(Boolean)
-    const canDelete = identityIds.includes(story.author_id) || profile.role === "superadmin" || profile.role === "admin"
-    
-    if (!canDelete) {
-      return { success: false, error: "Unauthorized: You do not have permission to delete this story" }
+      if (authError || !story) {
+        return { success: false, error: `Story not found or unauthorized: ${authError?.message}` }
+      }
+
+      const identityIds = [profile.clerk_id, profile.auth_id].filter(
+        (v): v is string => v !== null && v !== undefined
+      )
+      if (!identityIds.includes(story.author_id)) {
+        return { success: false, error: "Unauthorized: You do not have permission to delete this story" }
+      }
     }
 
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -367,7 +374,8 @@ export async function deleteStory(id: string) {
       return { success: false, error: "Server configuration error: missing service role key" }
     }
 
-    // Use service role client to bypass RLS for the cascade delete
+    // Use service role client to bypass RLS for the cascade delete.
+    // FK ON DELETE CASCADE handles chapters → scenes → choices automatically.
     const supabaseAdmin = createSupabaseClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       serviceRoleKey
