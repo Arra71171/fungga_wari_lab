@@ -66,18 +66,56 @@ function Navbar() {
       animate={{ y: 0, opacity: 1, x: "-50%" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-6 left-1/2 z-50 flex items-center gap-2 px-3 py-2 transition-all duration-300",
+        "fixed top-6 left-1/2 z-50 flex items-center gap-3 px-4 py-3 transition-all duration-300",
         "rounded-none border border-border bg-background",
-        scrolled ? "shadow-sm" : "shadow-md"
+        scrolled ? "shadow-brutal-sm" : "shadow-brutal"
       )}
     >
-      {/* Brand */}
+      {/* Brand — compact on mobile: icon + stacked wordmark to prevent wrap */}
       <Link
         href="/"
-        className="mr-2 pl-1 hover:opacity-80 transition-opacity"
+        className="hover:opacity-80 transition-opacity shrink-0 flex items-center gap-2.5"
         aria-label="Fungga Wari Lab — Home"
       >
-        <BrandLogo variant="full" size="sm" />
+        {/* Icon glyph — always visible */}
+        <span className="inline-flex shrink-0 items-center justify-center border-2 border-border-strong bg-primary/10 p-1.5 text-primary">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
+            aria-hidden="true"
+          >
+            <line x1="4" y1="20" x2="20" y2="20" />
+            <line x1="8" y1="16" x2="16" y2="16" />
+            <path d="M12 16L12 9" />
+            <path d="M8 16L6 11" />
+            <path d="M16 16L18 11" />
+            <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none" />
+          </svg>
+        </span>
+        {/* Mobile wordmark: two stacked lines, compact mono */}
+        <span className="flex flex-col leading-none md:hidden" aria-hidden="true">
+          <span className="font-mono font-black uppercase tracking-[0.12em] text-[10px] text-foreground">
+            Fungga Wari
+          </span>
+          <span className="font-mono font-bold text-[9px] text-muted-foreground/80 tracking-wider mt-0.5">
+            .Lab
+          </span>
+        </span>
+        {/* Desktop wordmark: horizontal */}
+        <span className="hidden md:inline-flex items-center gap-1 leading-none">
+          <span className="font-mono font-black uppercase tracking-widest text-base text-foreground">
+            Fungga Wari
+          </span>
+          <span className="font-mono font-bold text-xs text-muted-foreground/80 opacity-90">
+            .Lab
+          </span>
+        </span>
       </Link>
 
       {/* ── Desktop nav links ─────────────────────────────────────── */}
@@ -167,16 +205,16 @@ function Navbar() {
       </div>
 
       {/* ── Mobile right side: theme + hamburger ──────────────────── */}
-      <div className="ml-auto flex items-center gap-2 md:hidden">
+      <div className="ml-auto flex items-center gap-3 md:hidden">
         <AnimatedThemeToggler />
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <button
               aria-label="Open navigation menu"
-              className="flex items-center justify-center size-8 border border-border bg-background text-foreground hover:bg-secondary transition-colors"
+              className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all"
             >
-              {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
           </SheetTrigger>
 
