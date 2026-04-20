@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
+import type { Json } from "@workspace/ui/types/supabase";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
 import { ShieldCheck, UserCheck, Eye, Loader2, Settings2, Trash2 } from "lucide-react";
@@ -78,7 +79,7 @@ function MemberRow({
   const currentRole = (member.role ?? "viewer") as Role;
 
   const cycleRole = async () => {
-    if (!member.auth_id) return;
+    if (!member.id) return;
     const allowedCycle = isCallerSuperAdmin ? ROLE_CYCLE : ROLE_CYCLE.filter(r => r !== "superadmin");
     const currentIndex = allowedCycle.indexOf(currentRole);
     // If somehow current role isn't in allowed cycle (e.g. target is superadmin but caller is admin), do nothing
@@ -88,7 +89,7 @@ function MemberRow({
     const nextRole = allowedCycle[nextIndex]!;
     setIsPending(true);
     try {
-      await updateUserRole(member.auth_id, nextRole);
+      await updateUserRole(String(member.id), nextRole);
     } finally {
       setIsPending(false);
     }
@@ -207,7 +208,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
       await upsertGlobalContent({
         slug: activeTab,
         title: activeTab === "manifesto" ? "Fungga Wari Manifesto" : "Terms of Hearth",
-        tiptap_content: editorContent as Record<string, unknown>,
+        tiptap_content: editorContent as Json,
       });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -296,7 +297,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
 
 export default function SettingsPage() {
   const { user, userProfile } = useSupabaseAuth();
-  const [members, setMembers] = useState<Member[] | null>(null);
+  const [members, setMembers] = useState<Member[] | undefined>(undefined);
 
   const myRole = userProfile?.role ?? "editor";
   const isCallerAdmin = myRole === "superadmin" || myRole === "admin";
@@ -349,7 +350,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            {members === null ? (
+            {members === undefined ? (
               <div className="animate-pulse flex flex-col p-4 gap-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="h-24 border-2 border-border bg-cinematic-bg" />

@@ -13,7 +13,7 @@ type Profile = Awaited<ReturnType<typeof getMyProfile>>;
 
 export function OperativeDossier() {
   const { userProfile } = useSupabaseAuth();
-  const [me, setMe] = useState<Profile | null>(null);
+  const [me, setMe] = useState<Profile | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [alias, setAlias] = useState("");
@@ -36,7 +36,7 @@ export function OperativeDossier() {
     });
   }, []);
 
-  if (me === undefined || (me === null && !userProfile)) {
+  if (me === undefined) {
     return (
       <div className="animate-pulse h-[300px] bg-bg-surface/20 border-2 border-border-strong rounded-none shadow-brutal-sm" />
     );

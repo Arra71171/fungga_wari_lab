@@ -21,7 +21,7 @@ type Story = Awaited<ReturnType<typeof getAllStoriesAdmin>>[number];
 
 export default function StoriesOverviewPage() {
   const router = useRouter();
-  const [stories, setStories] = React.useState<Story[] | null>(null);
+  const [stories, setStories] = React.useState<Story[] | undefined>(undefined);
   const [isCreating, setIsCreating] = React.useState(false);
   const [togglingId, setTogglingId] = React.useState<string | null>(null);
   const [deletingId, setDeletingId] = React.useState<string | null>(null);
@@ -93,7 +93,7 @@ export default function StoriesOverviewPage() {
         throw new Error(result.error || "Unknown server error");
       }
       toast.success("Manuscript Destroyed", { description: "The story has been permanently erased." });
-      setStories((prev) => prev?.filter((s) => s.id !== storyId) ?? null);
+      setStories((prev) => prev?.filter((s) => s.id !== storyId) ?? []);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Could not remove the manuscript.";
       toast.error("Deletion Failed", { description: message });
@@ -102,9 +102,9 @@ export default function StoriesOverviewPage() {
     }
   };
 
-  if (stories === null) {
+  if (stories === undefined) {
     return (
-      <div className="flex flex-col h-full space-y-6 p-4 md:p-10 max-w-7xl mx-auto animate-pulse">
+      <div className="flex flex-col h-full space-y-6 md:space-y-8 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto animate-pulse">
         <div className="h-20 bg-muted/30 rounded-none w-1/3" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (

@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@workspace/ui/types/supabase"
+import { requireUser } from "./authHelpers"
 
 type StoryCategory = Database["public"]["Enums"]["story_category"]
 
@@ -145,10 +146,9 @@ export async function getFullStoryById(id: string) {
  * createDraftStory — creates a blank draft for the current author.
  */
 export async function createDraftStory() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
-  const userId = user.id
+  const { supabase, profile } = await requireUser()
+  const authorId = profile.auth_id
+  if (!authorId) throw new Error("Cannot resolve author identity")
 
   // stories.author_id stores the Clerk userId string directly.
   const slug = generateDraftSlug()
@@ -161,7 +161,7 @@ export async function createDraftStory() {
       category: "other",
       language: "Meiteilon",
       status: "draft",
-      author_id: userId,
+      author_id: authorId,
       tags: [],
       chapter_count: 0,
     })
@@ -185,10 +185,9 @@ export async function createStory(args: {
   tags: string[]
   moral?: string
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
-  const userId = user.id
+  const { supabase, profile } = await requireUser()
+  const authorId = profile.auth_id
+  if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)
 
@@ -213,7 +212,7 @@ export async function createStory(args: {
       tags: args.tags,
       moral: args.moral ?? null,
       status: "draft",
-      author_id: userId,
+      author_id: authorId,
       chapter_count: 0,
     })
     .select("id")
@@ -239,16 +238,14 @@ export async function updateStory(
     attributed_author?: string
   }
 ) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
-  const userId = user.id
+  const { supabase, profile } = await requireUser()
+  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
 
   const { error } = await supabase
     .from("stories")
     .update(patch)
     .eq("id", id)
-    .eq("author_id", userId)
+    .in("author_id", identityIds)
 
   if (error) throw new Error(`Failed to update story: ${error.message}`)
   return id
@@ -258,9 +255,8 @@ export async function updateStory(
  * publishStory — set status to published + update searchable_text.
  */
 export async function publishStory(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { supabase, profile } = await requireUser()
+  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
 
   // Fetch story to build searchable text + get current slug for update
   const { data: story } = await supabase
@@ -299,7 +295,7 @@ export async function publishStory(id: string) {
       ...(needsCleanSlug ? { slug: cleanSlug } : {}),
     })
     .eq("id", id)
-    .eq("author_id", user.id)
+    .in("author_id", identityIds)
 
   if (error) throw new Error(`Failed to publish story: ${error.message}`)
   return { id, slug: cleanSlug }
@@ -309,16 +305,14 @@ export async function publishStory(id: string) {
  * unpublishStory — revert to draft.
  */
 export async function unpublishStory(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
-  const userId = user.id
+  const { supabase, profile } = await requireUser()
+  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
 
   const { error } = await supabase
     .from("stories")
     .update({ status: "draft" })
     .eq("id", id)
-    .eq("author_id", userId)
+    .in("author_id", identityIds)
 
   if (error) throw new Error(`Failed to unpublish story: ${error.message}`)
   return id
@@ -328,16 +322,14 @@ export async function unpublishStory(id: string) {
  * submitForReview — move story to in_review status.
  */
 export async function submitForReview(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
-  const userId = user.id
+  const { supabase, profile } = await requireUser()
+  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
 
   const { error } = await supabase
     .from("stories")
     .update({ status: "in_review" })
     .eq("id", id)
-    .eq("author_id", userId)
+    .in("author_id", identityIds)
 
   if (error) throw new Error(`Failed to submit for review: ${error.message}`)
   return id
@@ -349,21 +341,24 @@ export async function submitForReview(id: string) {
  */
 export async function deleteStory(id: string) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return { success: false, error: "Unauthenticated" }
-    }
+    const { supabase, profile } = await requireUser()
 
-    // Verify ownership with the authenticated (RLS-scoped) client first
+    // Verify ownership or superadmin role with the authenticated client first
     const { data: story, error: authError } = await supabase
       .from("stories")
-      .select("id")
+      .select("id, author_id")
       .eq("id", id)
       .single()
 
     if (authError || !story) {
       return { success: false, error: `Story not found or unauthorized: ${authError?.message}` }
+    }
+
+    const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter(Boolean)
+    const canDelete = identityIds.includes(story.author_id) || profile.role === "superadmin" || profile.role === "admin"
+    
+    if (!canDelete) {
+      return { success: false, error: "Unauthorized: You do not have permission to delete this story" }
     }
 
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -407,10 +402,9 @@ export async function createStoryWithInitialScene(args: {
   language: string
   cover_image_url?: string
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
-  const userId = user.id
+  const { supabase, profile } = await requireUser()
+  const authorId = profile.clerk_id ?? profile.auth_id
+  if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)
 
@@ -424,7 +418,7 @@ export async function createStoryWithInitialScene(args: {
       language: args.language,
       cover_image_url: args.cover_image_url ?? null,
       status: "draft",
-      author_id: userId,
+      author_id: authorId,
       tags: [],
       chapter_count: 1,
     })

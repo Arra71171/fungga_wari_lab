@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
+import { requireUser } from "./authHelpers"
 
 const updateUserProfileSchema = z.object({
   alias: z.string().max(100).optional(),
@@ -11,7 +12,7 @@ const updateUserProfileSchema = z.object({
 })
 
 const updateUserRoleSchema = z.object({
-  targetAuthId: z.string().uuid(),
+  targetUserId: z.string().min(1),
   role: z.enum(["superadmin", "admin", "editor", "viewer"]),
 })
 
@@ -118,25 +119,17 @@ export async function getAllUsers() {
  * updateUserRole — change a user's role (superadmin only).
  * Uses auth_id to identify target user.
  */
-export async function updateUserRole(targetAuthId: string, role: "superadmin" | "admin" | "editor" | "viewer") {
-  const parsed = updateUserRoleSchema.safeParse({ targetAuthId, role })
+export async function updateUserRole(targetUserId: string, role: "superadmin" | "admin" | "editor" | "viewer") {
+  const parsed = updateUserRoleSchema.safeParse({ targetUserId, role })
   if (!parsed.success) {
     throw new Error(`Validation error: ${parsed.error.message}`)
   }
-  const { targetAuthId: validAuthId, role: validRole } = parsed.data
+  const { targetUserId: validUserId, role: validRole } = parsed.data
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { supabase, profile: caller } = await requireUser()
 
-  // Verify caller is superadmin
-  const { data: caller } = await supabase
-    .from("users")
-    .select("role")
-    .eq("auth_id", user.id)
-    .single()
-
-  if (!caller || !caller.role || !["superadmin", "admin"].includes(caller.role)) {
+  // Verify caller is superadmin or admin
+  if (!caller.role || !["superadmin", "admin"].includes(caller.role)) {
     throw new Error("Forbidden — only admins and superadmins can change roles")
   }
 
@@ -144,7 +137,7 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
   const { data: target } = await supabase
     .from("users")
     .select("role")
-    .eq("auth_id", validAuthId)
+    .eq("id", validUserId)
     .single()
 
   if (!target) throw new Error("Target user not found")
@@ -162,7 +155,7 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
   const { error } = await supabase
     .from("users")
     .update({ role: validRole })
-    .eq("auth_id", validAuthId)
+    .eq("id", validUserId)
 
   if (error) throw new Error(`Failed to update role: ${error.message}`)
 }

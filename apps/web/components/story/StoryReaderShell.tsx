@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronLeft } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -141,15 +141,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
               className="size-8 flex items-center justify-center border border-cinematic-border/40 text-muted-foreground hover:text-cinematic-text hover:border-brand-ember/40 transition-all"
             >
               {/* Rotated chevron pointing left to indicate "expand right" */}
-              <svg
-                className="size-3.5 rotate-180"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <ChevronLeft className="size-3.5" />
             </button>
           </div>
         )}
