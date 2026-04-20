@@ -31,29 +31,6 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Don't try to polyfill Node.js core modules on the client
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        crypto: false,
-        os: false,
-      };
-    }
-
-    // Completely ignore .node files so Webpack never errors on them
-    config.module.rules.push({
-      test: /\.node$/,
-      type: "asset/resource",
-      generator: {
-        filename: "static/media/[name].[hash][ext]",
-      },
-    });
-
-    return config;
-  },
 };
 
 export default withBundleAnalyzer(nextConfig);

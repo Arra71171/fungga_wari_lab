@@ -4,10 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001 --webpack",
+    "dev": "next dev -p 3001",
     "dev:turbo": "next dev -p 3001 --turbopack",
-    "dev:mem": "NODE_OPTIONS='--max-old-space-size=4096' next dev -p 3001 --webpack",
-    "build": "next build --webpack",
+    "dev:mem": "NODE_OPTIONS='--max-old-space-size=4096' next dev -p 3001",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
