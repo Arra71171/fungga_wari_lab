@@ -104,7 +104,7 @@ export default function StoriesOverviewPage() {
 
   if (stories === null) {
     return (
-      <div className="flex flex-col h-full space-y-8 p-10 max-w-7xl mx-auto animate-pulse">
+      <div className="flex flex-col h-full space-y-6 p-4 md:p-10 max-w-7xl mx-auto animate-pulse">
         <div className="h-20 bg-muted/30 rounded-none w-1/3" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
@@ -116,7 +116,7 @@ export default function StoriesOverviewPage() {
   }
 
   return (
-    <div className="flex flex-col h-full space-y-8 animate-in fade-in duration-700 p-10 max-w-7xl mx-auto">
+    <div className="flex flex-col h-full space-y-6 md:space-y-8 animate-in fade-in duration-700 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6 shrink-0 relative z-10">
         <div className="space-y-2">
@@ -124,7 +124,7 @@ export default function StoriesOverviewPage() {
             <Sparkles className="size-3" />
             <span>Fungga Wari Archive</span>
           </div>
-          <h1 className="font-display text-5xl md:text-6xl italic tracking-tight text-foreground drop-shadow-lg">
+          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl italic tracking-tight text-foreground drop-shadow-lg">
             Manuscripts
           </h1>
           <p className="text-muted-foreground font-mono text-sm max-w-lg leading-relaxed">

@@ -213,14 +213,14 @@ export default function DashboardLayout({
         <main className="flex-1 w-full relative h-screen flex flex-col min-w-0 bg-bg-base">
           {/* Mobile Header Bar */}
           <header className="lg:hidden flex items-center h-[60px] px-4 border-b border-border-subtle bg-bg-panel shrink-0 sticky top-0 z-40">
+            {/* Mobile hamburger — visible on ALL sub-lg screens (matches sidebar breakpoint) */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden mr-2">
+                <Button variant="ghost" size="icon" className="mr-2" aria-label="Open navigation menu">
                   <Menu className="size-5" />
-                  <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r-border-subtle">
+              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r border-border-subtle">
                 <SheetHeader className="p-0 text-left">
                   <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 </SheetHeader>
@@ -228,10 +228,27 @@ export default function DashboardLayout({
               </SheetContent>
             </Sheet>
 
-            <div className="flex-1 flex items-center justify-center md:justify-start lg:hidden">
+            {/* Centered brand on mobile */}
+            <div className="flex-1 flex items-center justify-center">
               <Link href="/overview" className="hover:opacity-80 transition-opacity">
                 <BrandLogo variant="full" size="sm" />
               </Link>
+            </div>
+
+            {/* Quick actions on mobile header — sign out + theme */}
+            <div className="flex items-center gap-1 shrink-0">
+              <div className="border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
+                <AnimatedThemeToggler />
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleSignOut}
+                aria-label="Sign out"
+                className="size-[34px] text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="size-4" />
+              </Button>
             </div>
           </header>
 

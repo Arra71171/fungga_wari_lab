@@ -10,13 +10,30 @@ import { Button } from "@workspace/ui/components/button";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
-import { LogOut, User } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@workspace/ui/components/sheet";
+import {
+  LogOut,
+  User,
+  Menu,
+  LayoutDashboard,
+  Library,
+  Users,
+  BookOpen,
+  Home,
+  X,
+} from "lucide-react";
 
 const navItems = [
-  { name: "Library", href: "/stories" },
-  { name: "System", href: "/#features" },
-  { name: "Community", href: "/#community" },
-  { name: "Folklore", href: "/#archive" },
+  { name: "Library", href: "/stories", icon: BookOpen },
+  { name: "System", href: "/#features", icon: Home },
+  { name: "Community", href: "/#community", icon: Users },
+  { name: "Folklore", href: "/#archive", icon: Library },
 ];
 
 // Dashboard lives on a separate origin (dashboard app).
@@ -25,6 +42,7 @@ const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost
 function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user, userProfile, isLoaded, signOut } = useSupabaseAuth();
   const router = useRouter();
 
@@ -37,6 +55,7 @@ function Navbar() {
 
   async function handleSignOut() {
     await signOut();
+    setMobileOpen(false);
     router.push("/");
     router.refresh();
   }
@@ -47,19 +66,21 @@ function Navbar() {
       animate={{ y: 0, opacity: 1, x: "-50%" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-6 left-1/2 z-50 flex items-center gap-4 px-3 py-2 transition-all duration-300",
+        "fixed top-6 left-1/2 z-50 flex items-center gap-2 px-3 py-2 transition-all duration-300",
         "rounded-none border border-border bg-background",
         scrolled ? "shadow-sm" : "shadow-md"
       )}
     >
+      {/* Brand */}
       <Link
         href="/"
-        className="mr-4 pl-1 hover:opacity-80 transition-opacity"
+        className="mr-2 pl-1 hover:opacity-80 transition-opacity"
         aria-label="Fungga Wari Lab — Home"
       >
         <BrandLogo variant="full" size="sm" />
       </Link>
 
+      {/* ── Desktop nav links ─────────────────────────────────────── */}
       <div className="hidden items-center gap-2 md:flex border-l-2 border-foreground/20 pl-6 h-8">
         {navItems.map((item) => {
           const isCollections = item.name === "Folklore";
@@ -93,7 +114,8 @@ function Navbar() {
         })}
       </div>
 
-      <div className="ml-4 flex items-center gap-4">
+      {/* ── Desktop auth controls ─────────────────────────────────── */}
+      <div className="ml-2 hidden md:flex items-center gap-4">
         {isLoaded && !isAuthenticated && (
           <>
             <Button
@@ -115,7 +137,7 @@ function Navbar() {
           </>
         )}
         {isAuthenticated && (
-          <div className="ml-2 flex items-center gap-2">
+          <div className="flex items-center gap-2">
             {/* User avatar */}
             <div className="relative size-8 border border-border bg-secondary overflow-hidden flex items-center justify-center">
               {userProfile?.avatar_url ? (
@@ -130,7 +152,6 @@ function Navbar() {
                 <User className="size-4 text-muted-foreground" />
               )}
             </div>
-            {/* Sign out */}
             <button
               onClick={handleSignOut}
               className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
@@ -140,9 +161,140 @@ function Navbar() {
             </button>
           </div>
         )}
-        <div className="ml-2 pl-2 border-l border-border h-6 flex items-center">
+        <div className="pl-2 border-l border-border h-6 flex items-center">
           <AnimatedThemeToggler />
         </div>
+      </div>
+
+      {/* ── Mobile right side: theme + hamburger ──────────────────── */}
+      <div className="ml-auto flex items-center gap-2 md:hidden">
+        <AnimatedThemeToggler />
+
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <button
+              aria-label="Open navigation menu"
+              className="flex items-center justify-center size-8 border border-border bg-background text-foreground hover:bg-secondary transition-colors"
+            >
+              {mobileOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+            </button>
+          </SheetTrigger>
+
+          <SheetContent
+            side="right"
+            className="w-[280px] p-0 flex flex-col bg-background border-l border-border"
+          >
+            <SheetHeader className="p-0">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            </SheetHeader>
+
+            {/* Sheet header */}
+            <div className="flex items-center justify-between h-14 px-5 border-b border-border shrink-0">
+              <BrandLogo variant="full" size="sm" />
+            </div>
+
+            {/* Nav links */}
+            <nav className="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
+              <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-4 pl-3">
+                Navigation
+              </p>
+
+              {/* Standard nav items */}
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors border-l-2 border-transparent hover:border-primary"
+                >
+                  <item.icon className="size-4 shrink-0" />
+                  {item.name}
+                </Link>
+              ))}
+
+              {/* Dashboard shortcut — superadmins only */}
+              {isSuperAdmin && (
+                <>
+                  <div className="my-4 border-t border-border" />
+                  <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3 pl-3">
+                    Creator Studio
+                  </p>
+                  <a
+                    href={DASHBOARD_URL}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono font-bold uppercase tracking-widest text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/8 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
+                  >
+                    <LayoutDashboard className="size-4 shrink-0" />
+                    Dashboard
+                  </a>
+                </>
+              )}
+            </nav>
+
+            {/* Auth footer */}
+            <div className="border-t border-border bg-secondary/20 p-4 shrink-0 space-y-3">
+              {isLoaded && !isAuthenticated && (
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-none font-mono font-bold uppercase tracking-widest"
+                    asChild
+                  >
+                    <Link href="/login" onClick={() => setMobileOpen(false)}>
+                      Sign In
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="default"
+                    className="w-full rounded-none font-mono font-bold uppercase tracking-widest"
+                    asChild
+                  >
+                    <Link href="/register" onClick={() => setMobileOpen(false)}>
+                      Sign Up
+                    </Link>
+                  </Button>
+                </div>
+              )}
+
+              {isAuthenticated && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="relative size-8 shrink-0 border border-border bg-secondary overflow-hidden flex items-center justify-center">
+                      {userProfile?.avatar_url ? (
+                        <Image
+                          src={userProfile.avatar_url}
+                          alt="Avatar"
+                          fill
+                          sizes="32px"
+                          className="object-cover grayscale opacity-80"
+                        />
+                      ) : (
+                        <User className="size-4 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-mono text-foreground truncate">
+                        {userProfile?.name || userProfile?.email || "User"}
+                      </span>
+                      {isSuperAdmin && (
+                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                          Superadmin
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                    aria-label="Sign out"
+                  >
+                    <LogOut className="size-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </motion.nav>
   );

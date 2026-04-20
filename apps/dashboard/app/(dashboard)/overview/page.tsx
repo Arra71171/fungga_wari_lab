@@ -99,8 +99,8 @@ export default async function OverviewPage() {
   ])
 
   return (
-    <ScrollArea className="h-[calc(100vh-theme(spacing.16))]">
-      <div className="flex flex-col gap-8 p-8 max-w-7xl mx-auto">
+    <ScrollArea className="h-[calc(100vh-4rem)] lg:h-screen">
+      <div className="flex flex-col gap-6 md:gap-8 p-4 md:p-8 max-w-7xl mx-auto">
 
         {/* Page Header */}
         <div className="flex flex-col gap-2 border-l-[3px] border-brand-ember pl-5 py-1">
@@ -113,7 +113,7 @@ export default async function OverviewPage() {
         </div>
 
         {/* KPI Cards */}
-        <div id="tour-overview-stats" className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div id="tour-overview-stats" className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
           <KpiCard
             title="Total Manuscripts"
             value={stats.totalStories.toLocaleString()}
