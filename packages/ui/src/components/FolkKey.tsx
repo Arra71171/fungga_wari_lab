@@ -74,36 +74,39 @@ export function FolkKey({ className }: FolkKeyProps) {
 
       // ── Idle loop after entry ──────────────────────────────────────────────
       // Floats the key + breathes the halo — a living artefact.
-      tl.call(() => {
-        // Float oscillation
-        gsap.to(key, {
-          y: -8,
-          duration: 2.2,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          delay: 0.2,
-        });
+      // We declare these synchronously with a delay so useGSAP tracks and cleans them up,
+      // avoiding memory leaks from async tl.call().
+      const entryDuration = 1.06;
 
-        // Halo breath
-        gsap.to(halo, {
-          opacity: 0.22,
-          scale: 1.08,
-          duration: 2.6,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
+      // Float oscillation
+      gsap.to(key, {
+        y: -8,
+        duration: 2.2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: entryDuration + 0.2,
+      });
 
-        // Keyhole slow pulse
-        gsap.to(keyhole, {
-          opacity: 0.95,
-          duration: 1.8,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          delay: 0.6,
-        });
+      // Halo breath
+      gsap.to(halo, {
+        opacity: 0.22,
+        scale: 1.08,
+        duration: 2.6,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: entryDuration,
+      });
+
+      // Keyhole slow pulse
+      gsap.to(keyhole, {
+        opacity: 0.95,
+        duration: 1.8,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: entryDuration + 0.6,
       });
     },
     { scope: containerRef }

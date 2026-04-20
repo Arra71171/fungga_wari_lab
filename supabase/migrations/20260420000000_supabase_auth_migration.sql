@@ -48,9 +48,14 @@ BEGIN
     email = NEW.email,
     name = COALESCE(NEW.raw_user_meta_data->>'full_name', public.users.name),
     updated_at = now()
-  WHERE auth_id IS NULL
-    AND email IS NOT NULL
-    AND lower(email) = lower(NEW.email);
+  WHERE id = (
+    SELECT id FROM public.users
+    WHERE auth_id IS NULL
+      AND email IS NOT NULL
+      AND lower(email) = lower(NEW.email)
+    ORDER BY created_at DESC
+    LIMIT 1
+  );
 
   IF FOUND THEN
     RETURN NEW;
