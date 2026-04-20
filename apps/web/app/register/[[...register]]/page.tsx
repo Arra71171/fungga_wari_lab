@@ -33,6 +33,7 @@ function RegisterForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
+    setSuccess(null)
     setIsLoading(true)
 
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({

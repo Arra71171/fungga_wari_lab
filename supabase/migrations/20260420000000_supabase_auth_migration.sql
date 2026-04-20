@@ -9,9 +9,13 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_id uuid UNIQUE;
 UPDATE public.users AS u
 SET auth_id = au.id
 FROM auth.users AS au
-WHERE u.auth_id IS NULL
-  AND u.email IS NOT NULL
-  AND lower(u.email) = lower(au.email);
+WHERE u.id IN (
+  SELECT DISTINCT ON (lower(email)) id
+  FROM public.users
+  WHERE auth_id IS NULL AND email IS NOT NULL
+  ORDER BY lower(email), created_at DESC
+)
+AND lower(u.email) = lower(au.email);
 
 -- Safety guard: abort if any privileged or active users remain unmapped.
 -- Comment this block out if you want to allow partial backfill on first run.

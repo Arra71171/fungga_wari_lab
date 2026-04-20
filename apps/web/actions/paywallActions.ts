@@ -110,13 +110,19 @@ export async function verifyAndGrantAccess(
 
     const adminSupabase = createAdminClient();
 
+    const email = session.customer_details?.email ?? session.customer_email ?? "";
+
     const { data: updatedProfile, error } = await adminSupabase
       .from("users")
-      .update({
-        has_lifetime_access: true,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("auth_id", user.id)
+      .upsert(
+        {
+          auth_id: user.id,
+          email: email,
+          has_lifetime_access: true,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "auth_id" }
+      )
       .select("id")
       .maybeSingle();
 
