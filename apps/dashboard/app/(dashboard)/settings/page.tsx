@@ -102,7 +102,7 @@ function MemberRow({
     }
     setIsDeleting(true);
     try {
-      await deleteUserAccount(member.id);
+      await deleteUserAccount(String(member.id));
       window.location.reload(); // Quick refresh to update the roster
     } catch (e: any) {
       alert(e.message || "Failed to delete user");

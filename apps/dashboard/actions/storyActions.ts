@@ -147,7 +147,7 @@ export async function getFullStoryById(id: string) {
  */
 export async function createDraftStory() {
   const { supabase, profile } = await requireUser()
-  const authorId = profile.auth_id
+  const authorId = profile.clerk_id ?? profile.auth_id
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   // stories.author_id stores the Clerk userId string directly.
@@ -186,7 +186,7 @@ export async function createStory(args: {
   moral?: string
 }) {
   const { supabase, profile } = await requireUser()
-  const authorId = profile.auth_id
+  const authorId = profile.clerk_id ?? profile.auth_id
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)
@@ -239,7 +239,7 @@ export async function updateStory(
   }
 ) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
 
   const { error } = await supabase
     .from("stories")
@@ -256,7 +256,7 @@ export async function updateStory(
  */
 export async function publishStory(id: string) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
 
   // Fetch story to build searchable text + get current slug for update
   const { data: story } = await supabase
@@ -306,7 +306,7 @@ export async function publishStory(id: string) {
  */
 export async function unpublishStory(id: string) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
 
   const { error } = await supabase
     .from("stories")
@@ -323,7 +323,7 @@ export async function unpublishStory(id: string) {
  */
 export async function submitForReview(id: string) {
   const { supabase, profile } = await requireUser()
-  const identityIds = [profile.auth_id].filter((v): v is string => v !== null && v !== undefined)
+  const identityIds = [profile.clerk_id, profile.auth_id, String(profile.id)].filter((v): v is string => v !== null && v !== undefined)
 
   const { error } = await supabase
     .from("stories")
