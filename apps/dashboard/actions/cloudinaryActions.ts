@@ -1,13 +1,15 @@
 "use server"
 
-import crypto from "crypto";
-import { auth } from "@clerk/nextjs/server";
+import { createClient } from "@/lib/supabase/server"
+import crypto from "crypto"
 
 export async function getCloudinarySignature(folder: string = "fungga-wari-lab/assets") {
-  const { userId } = await auth();
-  if (!userId) {
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data.user) {
     throw new Error("Unauthenticated");
   }
+  const userId = data.user.id;
 
   const timestamp = Math.round(new Date().getTime() / 1000);
   const apiSecret = process.env.CLOUDINARY_API_SECRET;

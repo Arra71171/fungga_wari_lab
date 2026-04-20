@@ -84,7 +84,7 @@ function ScrollProgressBar() {
 
 function GridBackground() {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-15">
       <div 
         className="absolute inset-0 max-w-7xl mx-auto h-full bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px)] bg-[size:25%_100%] [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
       />
@@ -128,7 +128,7 @@ function StoryTicker() {
       <SectionDivider variant="smoke" position="bottom" className="opacity-80 text-background" />
 
       {/* Background Polish */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(64,115,260,0.03),transparent_70%)] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,color-mix(in_srgb,var(--color-primary)_3%,transparent),transparent_70%)] pointer-events-none z-0" />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-12 relative z-10">
         <ScrollReveal direction="up" distance={30} duration={0.8}>
@@ -167,7 +167,7 @@ function StoryTicker() {
                 <div key={i} className="group cursor-default px-8">
                   <span 
                     className="text-6xl md:text-8xl lg:text-9xl font-heading font-black uppercase tracking-tighter text-transparent group-hover:text-brand-ember transition-all duration-700 select-none"
-                    style={{ WebkitTextStroke: '1px var(--brand-ember, oklch(0.60 0.18 45))' }}
+                    style={{ WebkitTextStroke: '1px var(--brand-ember)' }}
                   >
                     {story}
                   </span>
@@ -314,15 +314,24 @@ export default function Home() {
 
   React.useEffect(() => {
     async function fetchManifesto() {
-      const { createClient } = await import("@/lib/supabase/client");
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("global_content")
-        .select("tiptap_content")
-        .eq("slug", "manifesto")
-        .single();
-      
-      setManifestoContent(data ? { tiptapContent: data.tiptap_content as Record<string, unknown> } : null);
+      try {
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from("global_content")
+          .select("tiptap_content")
+          .eq("slug", "manifesto")
+          .maybeSingle();
+        
+        if (error) {
+          console.warn("[manifesto] Failed to fetch:", error.message);
+          setManifestoContent(null);
+          return;
+        }
+        setManifestoContent(data ? { tiptapContent: data.tiptap_content as Record<string, unknown> } : null);
+      } catch {
+        setManifestoContent(null);
+      }
     }
     fetchManifesto();
   }, []);
@@ -486,7 +495,14 @@ export default function Home() {
 
               <div className="flex-1 flex items-center justify-center relative p-2 border border-border/50 bg-secondary/20 overflow-hidden">
                 <video
-                  src="/video/9X-ALPHA.mp4"
+                  ref={(el) => {
+                    if (el) {
+                      el.defaultMuted = true;
+                      el.muted = true;
+                      el.play().catch(() => {});
+                    }
+                  }}
+                  src="https://res.cloudinary.com/dlytqegcw/video/upload/v1776645841/tvyuk7g4k0ojvtdgz6lk.mp4"
                   autoPlay
                   loop
                   muted
@@ -557,7 +573,7 @@ export default function Home() {
                   stagger={0.06}
                   delay={0.2}
                 />
-                <div className="w-16 h-1 bg-brand-ember mx-auto mb-10 flex shadow-[0_0_10px_rgba(255,100,50,0.5)]" />
+                <div className="w-16 h-1 bg-brand-ember mx-auto mb-10 flex shadow-[0_0_10px_var(--brand-glow)]" />
                 <ScrollReveal direction="up" distance={30} duration={1} delay={0.4}>
                   <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-[0.2em] leading-relaxed max-w-2xl mx-auto relative">
                     <span className="absolute -left-4 top-0 text-brand-ember/40 text-lg">&ldquo;</span>
@@ -734,7 +750,7 @@ export default function Home() {
         />
 
         {/* ── Dark cinematic overlay: edges crushed to black, center breathes ── */}
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent_0%,oklch(0.08_0.01_50/0.55)_50%,oklch(0.05_0.01_50/0.92)_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent_0%,oklch(0.10_0.02_50/0.55)_50%,oklch(0.05_0.01_50/0.92)_100%)]" />
         {/* ── Bottom-to-top gradient to bleed into footer ── */}
         <div className="absolute inset-x-0 bottom-0 h-40 z-10 bg-gradient-to-t from-background to-transparent" />
         {/* ── Top-to-bottom gradient to bleed from previous section ── */}

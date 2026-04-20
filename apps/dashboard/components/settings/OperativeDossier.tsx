@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -12,7 +12,7 @@ import { getMyProfile, updateUserProfile } from "@/actions/userActions";
 type Profile = Awaited<ReturnType<typeof getMyProfile>>;
 
 export function OperativeDossier() {
-  const { user: clerkUser } = useUser();
+  const { userProfile } = useSupabaseAuth();
   const [me, setMe] = useState<Profile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,15 +32,15 @@ export function OperativeDossier() {
     });
   }, []);
 
-  if (me === undefined || (me === null && !clerkUser)) {
+  if (me === undefined || (me === null && !userProfile)) {
     return (
       <div className="animate-pulse h-[300px] bg-bg-surface/20 border-2 border-border-strong rounded-none shadow-brutal-sm" />
     );
   }
 
-  // Authoritative display name: alias > Clerk fullName > DB name > email
+  // Authoritative display name: alias > DB name > email
   const displayName =
-    me?.alias || clerkUser?.fullName || me?.name || me?.email || "Unnamed Operative";
+    me?.alias || me?.name || userProfile?.name || me?.email || "Unnamed Operative";
   const role = me?.role ?? "viewer";
 
   const handleSave = async () => {
@@ -95,8 +95,8 @@ export function OperativeDossier() {
     }
   };
 
-  // Priority: custom DB avatar_url > Clerk avatar
-  const currentAvatar = me?.avatar_url || clerkUser?.imageUrl;
+  // Priority: custom DB avatar_url > default
+  const currentAvatar = me?.avatar_url;
 
   return (
     <div className="border-2 border-border-strong bg-cinematic-panel relative overflow-hidden shadow-brutal transition-all">
@@ -126,7 +126,7 @@ export function OperativeDossier() {
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="w-full h-full relative overflow-hidden">
-              <AvatarBadge src={currentAvatar} alt={displayName} className="w-full h-full rounded-none" />
+              <AvatarBadge src={currentAvatar ?? undefined} alt={displayName} className="w-full h-full rounded-none" />
 
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-md">
                 {isUploading ? (
@@ -160,7 +160,7 @@ export function OperativeDossier() {
           <div className="w-full text-center space-y-1">
             <p className="font-display italic text-2xl text-foreground break-words">{displayName}</p>
             <p className="font-mono text-[10px] text-muted-foreground tracking-widest truncate">
-              {me?.email ?? clerkUser?.primaryEmailAddress?.emailAddress}
+              {me?.email ?? userProfile?.email}
             </p>
             <div
               className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 border-2 text-[10px] font-mono tracking-widest uppercase shadow-brutal-sm ${

@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@workspace/ui/types/supabase"
@@ -68,10 +67,10 @@ function generateSlug(title: string): string {
  * RLS: stories_select_public policy allows author to see their own drafts.
  */
 export async function getAllStoriesAdmin() {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const userId = user?.id
+  if (!userId) return []
 
   const { data } = await supabase
     .from("stories")
@@ -86,10 +85,10 @@ export async function getAllStoriesAdmin() {
  * getStoryById — single story by UUID (auth required).
  */
 export async function getStoryById(id: string) {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const userId = user?.id
+  if (!userId) return null
 
   const { data } = await supabase
     .from("stories")
@@ -104,10 +103,10 @@ export async function getStoryById(id: string) {
  * getFullStoryById — story + chapters + scenes + choices (auth required).
  */
 export async function getFullStoryById(id: string) {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const userId = user?.id
+  if (!userId) return null
 
   const { data: story } = await supabase
     .from("stories")
@@ -146,10 +145,10 @@ export async function getFullStoryById(id: string) {
  * createDraftStory — creates a blank draft for the current author.
  */
 export async function createDraftStory() {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   // stories.author_id stores the Clerk userId string directly.
   const slug = generateDraftSlug()
@@ -186,10 +185,10 @@ export async function createStory(args: {
   tags: string[]
   moral?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const slug = args.slug || generateSlug(args.title)
 
@@ -240,10 +239,10 @@ export async function updateStory(
     attributed_author?: string
   }
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const { error } = await supabase
     .from("stories")
@@ -259,10 +258,9 @@ export async function updateStory(
  * publishStory — set status to published + update searchable_text.
  */
 export async function publishStory(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   // Fetch story to build searchable text + get current slug for update
   const { data: story } = await supabase
@@ -301,7 +299,7 @@ export async function publishStory(id: string) {
       ...(needsCleanSlug ? { slug: cleanSlug } : {}),
     })
     .eq("id", id)
-    .eq("author_id", userId)
+    .eq("author_id", user.id)
 
   if (error) throw new Error(`Failed to publish story: ${error.message}`)
   return { id, slug: cleanSlug }
@@ -311,10 +309,10 @@ export async function publishStory(id: string) {
  * unpublishStory — revert to draft.
  */
 export async function unpublishStory(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const { error } = await supabase
     .from("stories")
@@ -330,10 +328,10 @@ export async function unpublishStory(id: string) {
  * submitForReview — move story to in_review status.
  */
 export async function submitForReview(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const { error } = await supabase
     .from("stories")
@@ -351,12 +349,11 @@ export async function submitForReview(id: string) {
  */
 export async function deleteStory(id: string) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return { success: false, error: "Unauthenticated" }
     }
-
-    const supabase = await createClient()
 
     // Verify ownership with the authenticated (RLS-scoped) client first
     const { data: story, error: authError } = await supabase
@@ -410,10 +407,10 @@ export async function createStoryWithInitialScene(args: {
   language: string
   cover_image_url?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
+  const userId = user.id
 
   const slug = args.slug || generateSlug(args.title)
 

@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Cinzel, Instrument_Serif, Poppins } from "next/font/google";
 import "@workspace/ui/globals.css";
-import { ClerkAuthProvider } from "@workspace/auth/clerk-provider";
+import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider";
 import { cn } from "@workspace/ui/lib/utils";
-import { SyncUserStore } from "@/components/sync-user";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@workspace/ui/components/sonner";
-import { AuthObserver } from "@/components/AuthObserver";
 
 // ── Folk-story heading: Literary, cinematic vibe (Mythological feel)
 const cinzel = Cinzel({
@@ -67,14 +64,10 @@ export default function RootLayout({
       )}
     >
       <body suppressHydrationWarning>
-        <ClerkAuthProvider>
-          <ThemeProvider>
-            <SyncUserStore />
-            <AuthObserver />
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </ClerkAuthProvider>
+        <SupabaseAuthProvider>
+          {children}
+          <Toaster />
+        </SupabaseAuthProvider>
       </body>
     </html>
   );

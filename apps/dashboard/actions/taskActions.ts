@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
@@ -13,10 +12,9 @@ type TaskPriority = Database["public"]["Enums"]["task_priority"]
  * getAllTasks — all tasks for the dashboard board view.
  */
 export async function getAllTasks() {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("tasks")
@@ -30,10 +28,9 @@ export async function getAllTasks() {
  * getTasksByStatus — filter tasks by pipeline status.
  */
 export async function getTasksByStatus(status: TaskStatus) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("tasks")
@@ -48,10 +45,9 @@ export async function getTasksByStatus(status: TaskStatus) {
  * getTasksByStoryId — tasks scoped to a specific story.
  */
 export async function getTasksByStoryId(storyId: string) {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
 
   const { data } = await supabase
     .from("tasks")
@@ -66,10 +62,10 @@ export async function getTasksByStoryId(storyId: string) {
  * getMyTasks — tasks assigned to the current user.
  */
 export async function getMyTasks() {
-  const { userId } = await auth()
-  if (!userId) return []
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const userId = user.id
 
   const { data } = await supabase
     .from("tasks")
@@ -96,10 +92,9 @@ export async function createTask(args: {
   chapterId?: string
   sceneId?: string
 }) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("tasks")
@@ -125,10 +120,9 @@ export async function createTask(args: {
  * updateTaskStatus — move task through the Kanban pipeline.
  */
 export async function updateTaskStatus(id: string, status: TaskStatus) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("tasks").update({ status }).eq("id", id)
   if (error) throw new Error(`Failed to update task status: ${error.message}`)
@@ -149,10 +143,9 @@ export async function updateTask(
     description?: Record<string, unknown>
   }
 ) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("tasks")
@@ -167,10 +160,9 @@ export async function updateTask(
  * deleteTask — delete a task.
  */
 export async function deleteTask(id: string) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthenticated")
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("tasks").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete task: ${error.message}`)
@@ -181,10 +173,9 @@ export async function deleteTask(id: string) {
  * getTaskStats — dashboard overview counts by status.
  */
 export async function getTaskStats() {
-  const { userId } = await auth()
-  if (!userId) return null
-
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
 
   const { data } = await supabase
     .from("tasks")

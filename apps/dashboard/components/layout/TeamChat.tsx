@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { MessageSquare, Send, X } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
@@ -28,7 +28,7 @@ export function TeamChat() {
   const [content, setContent] = React.useState("");
   const [messages, setMessages] = React.useState<Message[] | undefined>(undefined);
   const [isSending, setIsSending] = React.useState(false);
-  const { user } = useUser();
+  const { user } = useSupabaseAuth();
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   // ── Initial load ────────────────────────────────────────────────────────────

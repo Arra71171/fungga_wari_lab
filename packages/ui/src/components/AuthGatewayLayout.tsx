@@ -59,12 +59,10 @@ export function AuthGatewayLayout({
 }: AuthGatewayLayoutProps) {
   return (
     /*
-     * `dark` class is intentional — auth portals are ALWAYS cinematic/dark
-     * regardless of OS preference. This makes all CSS tokens resolve to their
-     * dark-mode values and prevents Clerk's light-theme stylesheet from
-     * overriding our appearance variables.
+     * Auth portals respect the user's theme preference from next-themes.
+     * All tokens use semantic design-system values that adapt to light/dark.
      */
-    <div className="dark relative min-h-screen bg-cinematic-bg text-foreground antialiased selection:bg-primary/30 overflow-x-hidden">
+    <div className="relative min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 overflow-x-hidden">
       <AmbientGrid />
       <NoiseOverlay opacity={0.028} />
 
@@ -143,10 +141,10 @@ export function AuthGatewayLayout({
           variants={cardVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-[900px] border-2 border-border bg-cinematic-panel overflow-hidden flex flex-col lg:grid lg:grid-cols-[1fr_360px]"
+          className="w-full max-w-[900px] border-2 border-border bg-card overflow-hidden flex flex-col lg:grid lg:grid-cols-[1fr_360px]"
         >
           {/* LEFT: Folk key visual */}
-          <div className="relative min-h-[260px] lg:min-h-0 border-b-2 lg:border-b-0 lg:border-r-2 border-border overflow-hidden bg-cinematic-bg">
+          <div className="relative min-h-[260px] lg:min-h-0 border-b-2 lg:border-b-0 lg:border-r-2 border-border overflow-hidden bg-secondary">
             <FolkKey />
 
             {/* Warm radial glow behind key */}
@@ -174,7 +172,7 @@ export function AuthGatewayLayout({
               aria-hidden="true"
               className="lg:hidden absolute inset-x-0 bottom-0 h-10 pointer-events-none"
               style={{
-                background: "linear-gradient(to bottom, transparent, var(--cinematic-panel))",
+                background: "linear-gradient(to bottom, transparent, var(--card))",
               }}
             />
           </div>
