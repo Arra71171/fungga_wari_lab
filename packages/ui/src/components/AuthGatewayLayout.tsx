@@ -182,7 +182,7 @@ export function AuthGatewayLayout({
 
             {/* Sub-header */}
             <div className="pb-4 mb-5 border-b border-border">
-              <p className="font-mono text-fine font-bold uppercase tracking-[0.22em] text-muted-foreground">
+              <p className="font-mono text-fine font-bold uppercase tracking-loose text-muted-foreground">
                 {portalDescription}
               </p>
             </div>

@@ -104,8 +104,8 @@ function MemberRow({
     try {
       await deleteUserAccount(String(member.id));
       window.location.reload(); // Quick refresh to update the roster
-    } catch (e: any) {
-      alert(e.message || "Failed to delete user");
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Failed to delete user");
       console.error(e);
       setIsDeleting(false);
     }
@@ -192,7 +192,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   useEffect(() => {
     setContentData(null);
     getGlobalContent(activeTab).then((data) => {
-      setContentData(data ?? ({} as any));
+      setContentData(data ?? null);
       if (data?.tiptap_content !== undefined) {
         setEditorContent(data.tiptap_content as JSONContent);
       } else {

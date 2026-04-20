@@ -9,7 +9,6 @@ export async function getCloudinarySignature(folder: string = "fungga-wari-lab/a
   if (error || !data.user) {
     throw new Error("Unauthenticated");
   }
-  const userId = data.user.id;
 
   const timestamp = Math.round(new Date().getTime() / 1000);
   const apiSecret = process.env.CLOUDINARY_API_SECRET;

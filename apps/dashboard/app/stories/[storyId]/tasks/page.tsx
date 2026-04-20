@@ -96,7 +96,7 @@ export default function StoryTasksPage() {
               <h1 className="font-display text-4xl md:text-5xl tracking-tight text-foreground drop-shadow-lg">
                 Team Assignments
               </h1>
-              <p className="text-muted-foreground font-mono text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-[0.1em] uppercase">
+              <p className="text-muted-foreground font-mono text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-subtle uppercase">
                 Coordinate the transcription and illustration pipeline.
               </p>
             </div>
@@ -175,7 +175,7 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-2 text-right flex justify-end">
                       <span
-                        className={`inline-flex items-center gap-2 px-2.5 py-1 text-fine font-mono tracking-[0.15em] uppercase border ${
+                        className={`inline-flex items-center gap-2 px-2.5 py-1 text-fine font-mono tracking-relaxed uppercase border ${
                           isDone
                             ? "border-brand-ember/50 text-brand-ember bg-brand-ember/10"
                             : isInProgress

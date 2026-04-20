@@ -82,7 +82,7 @@ function Navbar() {
         </span>
         {/* Mobile wordmark: two stacked lines, compact mono */}
         <span className="flex flex-col leading-none md:hidden" aria-hidden="true">
-          <span className="font-mono font-black uppercase tracking-[0.12em] text-fine text-foreground">
+          <span className="font-mono font-black uppercase tracking-snug text-fine text-foreground">
             Fungga Wari
           </span>
           <span className="font-mono font-bold text-nano text-muted-foreground/80 tracking-wider mt-0.5">
@@ -110,6 +110,7 @@ function Navbar() {
 
           if (showDashboard) {
             return (
+              /* eslint-disable-next-line no-restricted-syntax -- DASHBOARD_URL is cross-origin; next/link cannot be used */
               <a
                 key={item.name}
                 href={href}
@@ -239,6 +240,7 @@ function Navbar() {
                   <p className="font-mono text-nano tracking-label uppercase text-muted-foreground/60 mb-3 pl-3">
                     Creator Studio
                   </p>
+                  {/* eslint-disable-next-line no-restricted-syntax -- DASHBOARD_URL is cross-origin; next/link cannot be used */}
                   <a
                     href={DASHBOARD_URL}
                     onClick={() => setMobileOpen(false)}

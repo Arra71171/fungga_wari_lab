@@ -466,7 +466,7 @@ export default function Home() {
 
             {/* Ambient right margin text */}
             <div className="absolute -right-8 top-1/2 -translate-y-1/2 rotate-90 origin-center hidden xl:block pointer-events-none z-0">
-               <span className="text-xs font-mono uppercase tracking-[0.4em] text-muted-foreground/30">
+               <span className="text-xs font-mono uppercase tracking-ultra text-muted-foreground/30">
                  SYS.ARCHIVE_READY // STATUS: ONLINE
                </span>
             </div>
