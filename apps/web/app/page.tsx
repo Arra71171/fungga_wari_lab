@@ -372,12 +372,12 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 pt-40 lg:pt-48 pb-12 min-h-[90vh] flex items-center overflow-hidden"
+        className="relative px-6 md:px-12 pt-32 lg:pt-48 pb-16 md:pb-12 min-h-[90vh] flex items-center overflow-hidden"
       >
         <EmberParticles density={60} speed={0.5} className="z-0" />
         <motion.div
           style={{ opacity: heroOpacity }}
-          className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10"
+          className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center relative z-10"
         >
           {/* Hero Content */}
           <div className="lg:col-span-6 flex flex-col justify-center max-w-xl space-y-6">
@@ -458,7 +458,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="lg:col-span-5 lg:col-start-8 relative hidden lg:flex items-center justify-center w-full">
+          <div className="lg:col-span-5 lg:col-start-8 relative flex items-center justify-center w-full">
             {/* Ambient scroll-linked line */}
             <ScrollReveal direction="left" distance={100} duration={1.5} scrub={true}>
               <div className="absolute left-[-50px] top-1/2 w-48 h-[1px] bg-brand-ember/40 z-0 origin-left" />
@@ -473,7 +473,7 @@ export default function Home() {
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-md">
               <div 
-                className="relative w-full aspect-[3/4] bg-background border border-border p-4 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
+                className="relative w-full aspect-[3/4] max-w-xs mx-auto lg:max-w-md bg-background border border-border p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
               >
                 <BorderBeam size={150} duration={8} delay={1} />
                 {/* Glow */}
