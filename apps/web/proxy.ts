@@ -41,12 +41,22 @@ export default async function middleware(req: NextRequest) {
   if (!user && !isPublicRoute(req.nextUrl.pathname)) {
     const loginUrl = new URL("/login", req.url)
     loginUrl.searchParams.set("redirect", req.nextUrl.pathname)
-    return NextResponse.redirect(loginUrl)
+    const redirectResponse = NextResponse.redirect(loginUrl)
+    // Copy session cookies so token refresh is not lost
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
   }
 
   // Redirect authenticated users away from login/register
   if (user && (req.nextUrl.pathname === "/login" || req.nextUrl.pathname === "/register")) {
-    return NextResponse.redirect(new URL("/", req.url))
+    const redirectResponse = NextResponse.redirect(new URL("/", req.url))
+    // Copy session cookies so token refresh is not lost
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+    })
+    return redirectResponse
   }
 
   return supabaseResponse

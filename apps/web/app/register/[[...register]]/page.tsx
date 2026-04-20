@@ -18,6 +18,7 @@ function RegisterForm() {
   const [password, setPassword] = React.useState("")
   const [showPassword, setShowPassword] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [success, setSuccess] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
 
   const supabase = React.useMemo(
@@ -52,12 +53,13 @@ function RegisterForm() {
 
     if (signUpData.session) {
       // Session exists — email confirmation is disabled, user is authenticated
+      setIsLoading(false)
       router.push("/")
       router.refresh()
     } else {
       // Email confirmation required — Supabase default
       setIsLoading(false)
-      setError("Account created! Please check your email to confirm your address before signing in.")
+      setSuccess("Account created! Please check your email to confirm your address before signing in.")
     }
   }
 
@@ -126,6 +128,12 @@ function RegisterForm() {
       {error && (
         <div className="bg-destructive/10 border border-destructive/30 text-destructive text-xs font-mono px-3 py-2 rounded-sm">
           {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="bg-primary/10 border border-primary/30 text-primary text-xs font-mono px-3 py-2 rounded-sm">
+          {success}
         </div>
       )}
 

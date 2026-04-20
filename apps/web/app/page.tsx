@@ -750,7 +750,7 @@ export default function Home() {
         />
 
         {/* ── Dark cinematic overlay: edges crushed to black, center breathes ── */}
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent_0%,var(--cinematic-bg)/55%_50%,var(--cinematic-bg)/92%_100%)]" />
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent_0%,oklch(0.10_0.02_50/0.55)_50%,oklch(0.05_0.01_50/0.92)_100%)]" />
         {/* ── Bottom-to-top gradient to bleed into footer ── */}
         <div className="absolute inset-x-0 bottom-0 h-40 z-10 bg-gradient-to-t from-background to-transparent" />
         {/* ── Top-to-bottom gradient to bleed from previous section ── */}
