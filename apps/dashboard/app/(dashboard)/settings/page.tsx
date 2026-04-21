@@ -191,6 +191,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     getGlobalContent(activeTab).then((data) => {
       if (data?.tiptap_content !== undefined && data?.tiptap_content !== null) {

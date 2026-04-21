@@ -152,6 +152,7 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
       // Verify the saved scene still exists
       const allScenes = story.chapters.flatMap((ch) => ch.scenes);
       if (allScenes.some((s) => s.id === saved)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentSceneIdState(saved);
       }
     }
@@ -170,6 +171,8 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
         }
       }
     },
+    // story?.id keeps the callback stable when unrelated story fields change
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     [story?.id]
   );
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { useCallback, useRef } from "react";
@@ -80,6 +80,7 @@ export function AnimatedThemeToggler({
   }, [resolvedTheme, setTheme, duration]);
 
   const [mounted, setMounted] = React.useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   React.useEffect(() => { setMounted(true) }, []);
 
   // Clean, brutalist interactions without spinning

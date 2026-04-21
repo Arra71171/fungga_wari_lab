@@ -173,7 +173,9 @@ export const SlashCommand = Extension.create({
       suggestionCommand: ({ editor, range, props }: { editor: Editor; range: Range; props: { command: (args: { editor: Editor; range: Range }) => void } }) => {
         props.command({ editor, range });
       },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       items: ({ query }: { query: string }) => [] as any[],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: () => ({}) as any,
     };
   },
