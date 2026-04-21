@@ -364,6 +364,7 @@ export default function Home() {
   }, { scope: bentoGridRef });
 
   return (
+    <>
     <div className="relative min-h-screen bg-background text-foreground selection:bg-primary/30 overflow-x-hidden font-sans">
       <ScrollProgressBar />
       <Navbar />
@@ -808,9 +809,9 @@ export default function Home() {
         <SectionDivider variant="smoke" fill="bg-background" stroke="text-primary/30" className="opacity-50 -top-px rotate-180" />
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <span className="font-heading text-2xl font-black uppercase tracking-tighter flex items-center gap-2">
+            <span className="font-meetei text-2xl font-black tracking-wide flex items-center gap-2">
               <div className="size-4 bg-primary" />
-              Fungga Wari Lab
+              ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫ <span className="font-mono text-lg font-bold">.Lab</span>
             </span>
             <span className="text-3xs font-mono text-muted-foreground uppercase tracking-widest mt-2 border border-border px-2 py-1">
               Oral History Systems v2.0
@@ -833,6 +834,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
     </div>
+    </>
   );
 }

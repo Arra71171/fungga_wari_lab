@@ -82,8 +82,8 @@ function Navbar() {
         </span>
         {/* Mobile wordmark: two stacked lines, compact mono */}
         <span className="flex flex-col leading-none md:hidden" aria-hidden="true">
-          <span className="font-mono font-black uppercase tracking-snug text-fine text-foreground">
-            Fungga Wari
+          <span className="font-meetei font-black tracking-wide text-fine text-foreground">
+            ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫
           </span>
           <span className="font-mono font-bold text-nano text-muted-foreground/80 tracking-wider mt-0.5">
             .Lab
@@ -91,8 +91,8 @@ function Navbar() {
         </span>
         {/* Desktop wordmark: horizontal */}
         <span className="hidden md:inline-flex items-center gap-1 leading-none">
-          <span className="font-mono font-black uppercase tracking-widest text-base text-foreground">
-            Fungga Wari
+          <span className="font-meetei font-black tracking-wide text-base text-foreground">
+            ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫
           </span>
           <span className="font-mono font-bold text-xs text-muted-foreground/80 opacity-90">
             .Lab

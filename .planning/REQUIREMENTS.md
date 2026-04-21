@@ -14,7 +14,7 @@
 - [ ] R10: Story metadata — author, category (folk, legend, myth), language (Meitei/English)
 
 ### Creator Dashboard (`apps/dashboard`)
-- [ ] R11: Authentication via Convex Auth — team login with email/password + OAuth, roles stored in Convex schema (admin/editor/viewer)
+- [ ] R11: Authentication via Clerk Auth — team login with email/password + OAuth, roles stored in Supabase schema (admin/editor/viewer)
 - [ ] R12: Story management CRUD — create, edit, publish/draft, delete stories
 - [ ] R13: Rich text story editor (Tiptap) — write story content with formatting
 - [ ] R14: Illustration uploader — drag-and-drop image upload to Cloudinary, attach to story scenes
@@ -23,12 +23,12 @@
 - [ ] R18: Task management — create tasks, assign to team members, set priorities and due dates
 - [ ] R19: Task board (Kanban) — Todo / In Progress / Review / Done columns
 - [ ] R20: Progress tracking — view story completion status, task completion rates
-- [ ] R21: Team chat — real-time messaging within the workspace (Convex live queries)
+- [ ] R21: Team chat — real-time messaging within the workspace (Supabase Realtime)
 - [ ] R22: Story publish/draft toggle — control visibility on public platform
 
 ### Shared Infrastructure
-- [ ] R23: Convex backend — stories, chapters, scenes, tasks, team, messages schema
-- [ ] R24: Convex Auth integrated across both apps (session management, protected routes, role middleware)
+- [ ] R23: Supabase backend — stories, chapters, scenes, tasks, team, messages schema
+- [ ] R24: Clerk Auth integrated across both apps (session management, protected routes, role middleware)
 - [ ] R25: Cloudinary media integration (image upload)
 - [ ] R26: `@workspace/ui` component library extended with all shared primitives used across both apps
 - [ ] R27: Design system — extend `globals.css` with Fungga Wari brand tokens (firelight amber, ember, ochre)

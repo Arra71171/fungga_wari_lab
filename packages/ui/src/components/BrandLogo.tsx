@@ -88,8 +88,8 @@ function BrandLogo({ variant = "full", size = "md", className }: BrandLogoProps)
         data-slot="brand-logo"
         className={cn("inline-flex items-center gap-1", className)}
       >
-        <span className={cn("font-mono uppercase font-black tracking-widest text-foreground", text)}>
-          Fungga Wari
+        <span className={cn("font-meetei font-black tracking-wide text-foreground", text)}>
+          ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫
         </span>
         <span className={cn("font-mono font-bold text-muted-foreground/80 opacity-90", dot)}>.Lab</span>
       </span>
@@ -112,8 +112,8 @@ function BrandLogo({ variant = "full", size = "md", className }: BrandLogoProps)
 
       {/* Wordmark */}
       <span className="inline-flex items-center gap-1 leading-none mt-1">
-        <span className={cn("font-mono uppercase font-black tracking-widest text-foreground", text)}>
-          Fungga Wari
+        <span className={cn("font-meetei font-black tracking-wide text-foreground", text)}>
+          ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫
         </span>
         <span className={cn("font-mono font-bold text-muted-foreground/80 opacity-90", dot)}>.Lab</span>
       </span>
