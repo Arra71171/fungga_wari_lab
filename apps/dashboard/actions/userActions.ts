@@ -17,7 +17,7 @@ const updateUserRoleSchema = z.object({
 })
 
 const deleteUserAccountSchema = z.object({
-  targetUserId: z.string().min(1),
+  targetUserId: z.string().uuid(),
 })
 
 const createTeamMemberSchema = z.object({
@@ -222,13 +222,15 @@ export async function deleteUserAccount(targetUserId: string) {
     // Delete from auth.users, which cascades to public.users
     const { error } = await supabaseAdmin.auth.admin.deleteUser(target.auth_id)
     if (error) throw new Error(`Failed to delete user auth: ${error.message}`)
-  } else {
-    // Legacy user with no auth_id, delete directly from public.users
-    const { error } = await supabaseAdmin
-      .from("users")
-      .delete()
-      .eq("id", validTargetUserId)
-    if (error) throw new Error(`Failed to delete legacy user: ${error.message}`)
+  }
+
+  const { error: profileDeleteError } = await supabaseAdmin
+    .from("users")
+    .delete()
+    .eq("id", validTargetUserId)
+
+  if (profileDeleteError) {
+    throw new Error(`Failed to delete user profile: ${profileDeleteError.message}`)
   }
 
   return { success: true }

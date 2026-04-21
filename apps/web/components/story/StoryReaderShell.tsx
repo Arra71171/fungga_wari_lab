@@ -47,11 +47,20 @@ export function StoryReaderShell({ slug }: { slug: string }) {
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen flex flex-col items-center justify-center bg-cinematic-bg gap-4">
-        <Loader2 className="size-8 text-brand-ember animate-spin" />
-        <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-          Loading Story…
-        </span>
+      <div className="flex h-screen w-full bg-cinematic-bg text-cinematic-text overflow-hidden animate-pulse">
+        {/* Sidebar skeleton */}
+        <div className="hidden lg:flex w-72 border-r border-cinematic-border bg-cinematic-panel/20" />
+        
+        {/* Center skeleton */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 min-w-0">
+          <Loader2 className="size-8 text-brand-ember animate-spin" />
+          <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+            Loading Story…
+          </span>
+        </div>
+
+        {/* Right panel skeleton */}
+        <div className="hidden lg:flex w-80 border-l border-cinematic-border bg-cinematic-panel/20" />
       </div>
     );
   }

@@ -155,7 +155,7 @@ function MemberRow({
                 size="sm"
                 onClick={cycleRole}
               disabled={isPending || isDeleting}
-              className="font-mono text-fine font-bold uppercase tracking-label h-10 px-4 sm:px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none flex-1 sm:flex-none whitespace-nowrap"
+              className="font-mono text-fine font-bold uppercase tracking-label h-10 px-4 sm:px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none flex-1 sm:flex-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
             </Button>
@@ -166,7 +166,7 @@ function MemberRow({
                 size="icon"
                 onClick={handleDelete}
                 disabled={isPending || isDeleting}
-                className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none shrink-0"
+                className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 title="Delete Operative"
                 aria-label="Delete Operative"
               >

@@ -5,14 +5,16 @@ import { z } from "zod"
 import crypto from "crypto"
 
 const signatureSchema = z.object({
-  folder: z.string().min(1).default("fungga-wari-lab/assets"),
+  folder: z.enum(["fungga-wari-lab/assets"]).default("fungga-wari-lab/assets"),
 })
+
+const authorizedUploadRoles = new Set(["admin", "superadmin", "editor"])
 
 export async function getCloudinarySignature(folderInput: string = "fungga-wari-lab/assets") {
   const { profile } = await requireUser()
   
-  if (profile.role !== "superadmin" && profile.role !== "admin") {
-    // Optionally allow other roles if needed, but typically only authorized users can upload
+  if (!profile.role || !authorizedUploadRoles.has(profile.role)) {
+    throw new Error("Forbidden")
   }
 
   const { folder } = signatureSchema.parse({ folder: folderInput })

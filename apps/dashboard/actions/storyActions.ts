@@ -158,7 +158,7 @@ export async function getFullStoryById(id: string) {
  */
 export async function createDraftStory() {
   const { supabase, profile } = await requireUser()
-  const authorId = profile.clerk_id ?? profile.auth_id
+  const authorId = profile.auth_id ?? String(profile.id)
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   // stories.author_id stores the Clerk userId string directly.
@@ -197,7 +197,7 @@ export async function createStory(args: {
   moral?: string
 }) {
   const { supabase, profile } = await requireUser()
-  const authorId = profile.clerk_id ?? profile.auth_id
+  const authorId = profile.auth_id ?? String(profile.id)
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)
@@ -420,7 +420,7 @@ export async function createStoryWithInitialScene(args: {
   cover_image_url?: string
 }) {
   const { supabase, profile } = await requireUser()
-  const authorId = profile.clerk_id ?? profile.auth_id
+  const authorId = profile.auth_id ?? String(profile.id)
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)

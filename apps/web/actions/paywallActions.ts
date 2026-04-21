@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const createCheckoutSessionSchema = z.object({
-  slug: z.string().optional(), // slug can be empty if general checkout
+  slug: z.string().regex(/^[a-z0-9-]+$/).optional(), // slug can be empty if general checkout
 });
 
 const verifyAndGrantAccessSchema = z.object({
@@ -38,13 +38,17 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
   }
 
   // Check if user already has access
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("users")
     .select("has_lifetime_access, email")
     .eq("auth_id", user.id)
     .single();
 
-  if (profile?.has_lifetime_access) {
+  if (profileError || !profile) {
+    throw new Error("Failed to lookup user profile");
+  }
+
+  if (profile.has_lifetime_access) {
     // Already paid — just redirect back
     redirect(slug ? `/stories/${slug}` : "/stories");
   }
@@ -125,7 +129,22 @@ export async function verifyAndGrantAccess(
 
     // Security: verify this session was created for this user
     const sessionAuthId = session.metadata?.auth_id;
-    if (sessionAuthId !== user.id) {
+    const sessionClerkId = session.metadata?.user_id; // legacy clerk ID
+    
+    // Support legacy verify by looking up the clerk_id mapping
+    let isAuthorized = sessionAuthId === user.id;
+    
+    if (!isAuthorized && sessionClerkId) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("clerk_id")
+        .eq("auth_id", user.id)
+        .single();
+        
+      isAuthorized = profile?.clerk_id === sessionClerkId;
+    }
+
+    if (!isAuthorized) {
       return { success: false, error: "Session does not belong to this user" };
     }
 

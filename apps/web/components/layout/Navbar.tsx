@@ -36,7 +36,11 @@ const navItems = [
 ];
 
 // Dashboard lives on a separate origin (dashboard app).
-const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost:3000";
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || (
+  process.env.NODE_ENV === "production" 
+    ? "https://dashboard.funggawari.com" 
+    : "http://localhost:3000"
+);
 
 function Navbar() {
   const { scrollY } = useScroll();
@@ -164,7 +168,7 @@ function Navbar() {
               {userProfile?.avatar_url ? (
                 <Image
                   src={userProfile.avatar_url}
-                  alt="Avatar"
+                  alt={`${userProfile.name || "User"}'s avatar`}
                   fill
                   sizes="32px"
                   className="object-cover grayscale opacity-80"
@@ -175,7 +179,7 @@ function Navbar() {
             </div>
             <button
               onClick={handleSignOut}
-              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Sign out"
             >
               <LogOut className="size-4" />
@@ -195,7 +199,7 @@ function Navbar() {
           <SheetTrigger asChild>
             <button
               aria-label="Open navigation menu"
-              className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all"
+              className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Menu className="size-5" />
             </button>
@@ -286,7 +290,7 @@ function Navbar() {
                       {userProfile?.avatar_url ? (
                         <Image
                           src={userProfile.avatar_url}
-                          alt="Avatar"
+                          alt={`${userProfile.name || "User"}'s avatar`}
                           fill
                           sizes="32px"
                           className="object-cover grayscale opacity-80"
@@ -318,7 +322,7 @@ function Navbar() {
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                    className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Sign out"
                   >
                     <LogOut className="size-4" />
