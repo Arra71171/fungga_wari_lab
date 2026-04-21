@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { cn } from "@workspace/ui/lib/utils";
+import { cn, getAppUrl } from "@workspace/ui/lib/utils";
 import {
   BookOpen,
   Settings2,
@@ -130,11 +130,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
         {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
         <a
           id="tour-public"
-          href={
-            process.env.NEXT_PUBLIC_WEB_URL
-              ? `${process.env.NEXT_PUBLIC_WEB_URL}/stories`
-              : "http://localhost:3001/stories"
-          }
+          href={`${getAppUrl("web")}/stories`}
           target="_blank"
           rel="noopener noreferrer"
           className="block group outline-none"
@@ -181,14 +177,14 @@ export default function DashboardLayout({
   const handleSignOut = React.useCallback(async () => {
     toast.info("Signing Out", { description: "Re-sealing the archive..." });
     await signOut();
-    window.location.href = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
+    window.location.href = getAppUrl("web");
   }, [signOut]);
 
   // Guard: redirect unauthorized roles to the public web app
   const isDashboardUser = ["admin", "superadmin", "editor"].includes(userProfile?.role || "");
   React.useEffect(() => {
     if (isLoaded && user && !isDashboardUser) {
-      const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
+      const webUrl = getAppUrl("web");
       window.location.href = webUrl;
     }
   }, [isLoaded, user, isDashboardUser]);

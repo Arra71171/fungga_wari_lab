@@ -8,6 +8,7 @@ import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react"
+import { getAppUrl } from "@workspace/ui/lib/utils"
 
 function LoginForm() {
   const router = useRouter()
@@ -73,10 +74,10 @@ function LoginForm() {
       const isDashboardUser = ["admin", "superadmin", "editor"].includes(profile?.role || "");
       if (isDashboardUser) {
         // NEXT_PUBLIC_DASHBOARD_URL must be set in Vercel env vars for production.
-        // Fallback to relative /dashboard-redirect to avoid localhost bleed.
-        const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "/"
-        window.location.href = dashboardUrl
-        return
+        // Fallback to dynamic vercel origin or / to avoid localhost bleed.
+        const dashboardUrl = getAppUrl("dashboard");
+        window.location.href = dashboardUrl;
+        return;
       }
     }
 

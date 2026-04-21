@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { getAppUrl } from "@workspace/ui/lib/utils";
 
 const createCheckoutSessionSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/).optional(), // slug can be empty if general checkout
@@ -55,8 +56,7 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
 
   const email = profile?.email ?? user.email ?? undefined;
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_WEB_URL ?? "http://localhost:3001";
+  const baseUrl = getAppUrl("web");
 
   const successUrl = validatedSlug
     ? `${baseUrl}/stories/${validatedSlug}?payment=success&session_id={CHECKOUT_SESSION_ID}`

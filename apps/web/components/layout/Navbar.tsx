@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { cn } from "@workspace/ui/lib/utils";
+import { cn, getAppUrl } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { BrandLogo, FungaMark } from "@workspace/ui/components/BrandLogo";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
@@ -38,8 +38,7 @@ const navItems = [
 // Dashboard lives on a separate origin (dashboard app).
 // NEXT_PUBLIC_DASHBOARD_URL must be set as a Vercel env var for production.
 // Never hard-code localhost here — it bleeds into prod builds.
-const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? 
-  (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/");
+const DASHBOARD_URL = getAppUrl("dashboard");
 
 function Navbar() {
   const { scrollY } = useScroll();

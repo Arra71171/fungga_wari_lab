@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { dark } from "@clerk/themes"
 import { enUS } from "@clerk/localizations"
 import { useTheme } from "next-themes"
+import { getAppUrl } from "@workspace/ui/lib/utils"
 
 type Props = { children: React.ReactNode }
 
@@ -21,8 +22,8 @@ function ClerkWithTheme({ children }: Props) {
       allowedRedirectOrigins={[
         "http://localhost:3000",
         "http://localhost:3001",
-        process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost:3000",
-        process.env.NEXT_PUBLIC_WEB_URL ?? "http://localhost:3001",
+        getAppUrl("dashboard"),
+        getAppUrl("web"),
       ]}
       localization={{
         ...enUS,
