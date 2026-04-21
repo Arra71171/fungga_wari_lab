@@ -36,11 +36,10 @@ const navItems = [
 ];
 
 // Dashboard lives on a separate origin (dashboard app).
-const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || (
-  process.env.NODE_ENV === "production" 
-    ? "https://dashboard.funggawari.com" 
-    : "http://localhost:3000"
-);
+// NEXT_PUBLIC_DASHBOARD_URL must be set as a Vercel env var for production.
+// Never hard-code localhost here — it bleeds into prod builds.
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? 
+  (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/");
 
 function Navbar() {
   const { scrollY } = useScroll();
@@ -206,8 +205,8 @@ function Navbar() {
           </SheetTrigger>
 
           <SheetContent
-            side="right"
-            className="w-[280px] p-0 flex flex-col bg-background border-l border-border"
+            side="left"
+            className="w-[280px] p-0 flex flex-col bg-background border-r border-border"
             aria-describedby={undefined}
           >
             <SheetHeader className="p-0">

@@ -72,7 +72,9 @@ function LoginForm() {
 
       const isDashboardUser = ["admin", "superadmin", "editor"].includes(profile?.role || "");
       if (isDashboardUser) {
-        const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000"
+        // NEXT_PUBLIC_DASHBOARD_URL must be set in Vercel env vars for production.
+        // Fallback to relative /dashboard-redirect to avoid localhost bleed.
+        const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "/"
         window.location.href = dashboardUrl
         return
       }
