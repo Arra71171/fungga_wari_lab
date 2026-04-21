@@ -169,19 +169,22 @@ export const SlashCommand = Extension.create({
   name: "slashCommand",
   addOptions() {
     return {
-      suggestion: {
-        char: "/",
-        command: ({ editor, range, props }: { editor: Editor; range: Range; props: { command: (args: { editor: Editor; range: Range }) => void } }) => {
-          props.command({ editor, range });
-        },
+      char: "/",
+      suggestionCommand: ({ editor, range, props }: { editor: Editor; range: Range; props: { command: (args: { editor: Editor; range: Range }) => void } }) => {
+        props.command({ editor, range });
       },
+      items: ({ query }: { query: string }) => [] as any[],
+      render: () => ({}) as any,
     };
   },
   addProseMirrorPlugins() {
     return [
       Suggestion({
         editor: this.editor,
-        ...this.options.suggestion,
+        char: this.options.char,
+        command: this.options.suggestionCommand,
+        items: this.options.items,
+        render: this.options.render,
       }),
     ];
   },
@@ -238,8 +241,6 @@ export const renderItems: SuggestionOptions["render"] = () => {
 };
 
 export const slashCommandConfig = SlashCommand.configure({
-  suggestion: {
-    items: getSuggestionItems,
-    render: renderItems,
-  },
+  items: getSuggestionItems,
+  render: renderItems,
 });
