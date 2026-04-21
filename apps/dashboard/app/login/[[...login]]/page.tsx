@@ -6,6 +6,7 @@ import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { getAppUrl } from "@workspace/ui/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function LoginPage() {
       headingText="Access the Forge."
       portalDescription="Warekeepers Only"
       versionText="FW_LAB · Identity Protocol v2.4"
-      backLinkHref={process.env.NEXT_PUBLIC_LANDING_URL ?? "http://localhost:3001"}
+      backLinkHref={getAppUrl("web")}
       showSignUp={false}
     >
       <form onSubmit={handleSubmit} className="mt-4 w-full flex flex-col space-y-4">
