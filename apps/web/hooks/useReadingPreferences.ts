@@ -21,21 +21,18 @@ const defaultPreferences: ReadingPreferences = {
 };
 
 export function useReadingPreferences() {
-  const [preferences, setPreferences] = React.useState<ReadingPreferences>(defaultPreferences);
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    const saved = localStorage.getItem("foxstory-reading-prefs");
-    if (saved) {
-      try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPreferences(JSON.parse(saved));
-      } catch {
-        // ignore
-      }
+  const [preferences, setPreferences] = React.useState<ReadingPreferences>(() => {
+    if (typeof window === "undefined") return defaultPreferences;
+    try {
+      const saved = localStorage.getItem("foxstory-reading-prefs");
+      if (saved) return JSON.parse(saved) as ReadingPreferences;
+    } catch {
+      // ignore corrupt storage
     }
-    setIsLoaded(true);
-  }, []);
+    return defaultPreferences;
+  });
+  // isLoaded is true immediately on the client (lazy init reads localStorage synchronously)
+  const isLoaded = typeof window !== "undefined";
 
   const updatePreference = React.useCallback(
     <K extends keyof ReadingPreferences>(key: K, value: ReadingPreferences[K]) => {

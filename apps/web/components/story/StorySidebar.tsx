@@ -35,14 +35,15 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSceneId]);
 
-  // Auto-expand first chapter on initial load
+  const hasInitialized = React.useRef(false);
+
+  // Auto-expand first chapter on initial load — runs once when chapters first arrive
   React.useEffect(() => {
-    if (chapters.length && !expandedChapterId) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!hasInitialized.current && chapters.length && !expandedChapterId) {
       setExpandedChapterId(chapters[0]?.id ?? null);
+      hasInitialized.current = true;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chapters.length]);
+  }, [chapters, expandedChapterId]);
 
   const allScenes = chapters.flatMap((c) => c.scenes ?? []);
   const activeSceneIndex = allScenes.findIndex((s) => s.id === currentSceneId);

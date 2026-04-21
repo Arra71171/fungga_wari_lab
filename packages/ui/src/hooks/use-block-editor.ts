@@ -15,9 +15,9 @@ type UseBlockEditorReturn = {
 
 /**
  * Local optimistic state manager for blocks.
- * Designed to be used alongside Convex mutations —
- * call the mutation inside the callback, then let the
- * subscription update the source of truth.
+ * Designed to be used alongside Supabase mutations —
+ * call the Supabase update inside the callback, then let the
+ * Supabase real-time subscription update the source of truth.
  *
  * For now, this manages local state for immediate UI feedback.
  */
@@ -34,7 +34,7 @@ function useBlockEditor(
   const [blocks, setBlocks] = React.useState<BlockData[]>(initialBlocks)
   const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null)
 
-  // Sync from external data source (e.g., Convex subscription)
+  // Sync from external data source (e.g., remote or subscription update)
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setBlocks(initialBlocks)

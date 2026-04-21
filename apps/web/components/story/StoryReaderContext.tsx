@@ -171,7 +171,9 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
         }
       }
     },
-    [story]
+    // story?.id keeps the callback stable when unrelated story fields change
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
+    [story?.id]
   );
 
   // Derive the active scene from chapters
