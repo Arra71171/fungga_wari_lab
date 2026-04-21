@@ -26,6 +26,16 @@ export function getAppUrl(app: "web" | "dashboard"): string {
   // If running on Vercel and no valid URL is found, fallback to the dynamic Vercel origin.
   // Note: If apps are deployed separately, users MUST configure the NEXT_PUBLIC_* variables in Vercel.
   if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    // Prevent cross-app routing errors when variables are missing
+    const isDashboardDeployment = process.env.NEXT_PUBLIC_VERCEL_URL.includes("dashboard") || process.env.NEXT_PUBLIC_VERCEL_URL.includes("studio");
+    
+    if (app === "dashboard" && !isDashboardDeployment) {
+      return "https://funggawari-dashboard.vercel.app";
+    }
+    if (app === "web" && isDashboardDeployment) {
+      return "https://funggawari.vercel.app";
+    }
+    
     return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
   }
 

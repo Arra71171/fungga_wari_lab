@@ -48,6 +48,11 @@ export default async function middleware(req: NextRequest) {
 
   // Redirect authenticated users away from login
   if (user && isPublicRoute(req.nextUrl.pathname)) {
+    // If they have an unauthorized error, stay on the login page to show the error
+    if (req.nextUrl.searchParams.get("error") === "unauthorized") {
+      return supabaseResponse
+    }
+
     const redirectResponse = NextResponse.redirect(new URL("/overview", req.url))
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
