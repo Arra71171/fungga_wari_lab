@@ -9,36 +9,65 @@ export function cn(...inputs: ClassValue[]) {
  * Returns a domain-agnostic URL, preventing localhost bleed in production.
  */
 export function getAppUrl(app: "web" | "dashboard"): string {
-  const url = app === "web" 
-    ? process.env.NEXT_PUBLIC_WEB_URL 
-    : process.env.NEXT_PUBLIC_DASHBOARD_URL;
+  // 1. Prioritize explicitly defined environment variables.
+  // These should be set in the Vercel Dashboard (Settings -> Environment Variables).
+  const envUrl = app === "dashboard" 
+    ? process.env.NEXT_PUBLIC_DASHBOARD_URL 
+    : process.env.NEXT_PUBLIC_WEB_URL;
 
-  // In development, return the configured URL or fallback to standard local ports
-  if (process.env.NODE_ENV === "development") {
-    return url || (app === "web" ? "http://localhost:3001" : "http://localhost:3000");
+  // Only use the envUrl if it's not a localhost address in production
+  if (envUrl && (process.env.NODE_ENV !== "production" || !envUrl.includes("localhost"))) {
+    return envUrl.startsWith("http") ? envUrl : `https://${envUrl}`;
   }
 
-  // In production, aggressively ignore "localhost" configurations (often copied accidentally)
-  if (url && !url.includes("localhost")) {
-    return url;
+  // 2. Handle Local Development fallback
+  const isDev = process.env.NODE_ENV === "development" || !process.env.NEXT_PUBLIC_VERCEL_URL;
+  if (isDev) {
+    return app === "dashboard" ? "http://localhost:3000" : "http://localhost:3001";
   }
 
-  // If running on Vercel and no valid URL is found, fallback to the dynamic Vercel origin.
-  // Note: If apps are deployed separately, users MUST configure the NEXT_PUBLIC_* variables in Vercel.
-  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-    // Prevent cross-app routing errors when variables are missing
-    const isDashboardDeployment = process.env.NEXT_PUBLIC_VERCEL_URL.includes("dashboard") || process.env.NEXT_PUBLIC_VERCEL_URL.includes("studio");
+  // 3. Handle Client-Side Fallback
+  // If we are already on the correct app, we can use the current origin.
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    const isDashboardHost = host.includes("dashboard") || host.includes("studio") || host.startsWith("studio.");
     
-    if (app === "dashboard" && !isDashboardDeployment) {
-      return "https://funggawari-dashboard.vercel.app";
+    if ((app === "dashboard" && isDashboardHost) || (app === "web" && !isDashboardHost)) {
+      return window.location.origin;
     }
-    if (app === "web" && isDashboardDeployment) {
-      return "https://funggawari.vercel.app";
-    }
-    
-    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
   }
 
-  // Absolute fallback
-  return "/";
+  // 4. Production Fallback (Brittle without Env Vars)
+  // If we reach here, it means we are in production but NEXT_PUBLIC_DASHBOARD_URL/WEB_URL is missing.
+  // We use NEXT_PUBLIC_VERCEL_URL which is automatically provided by Vercel.
+  const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL!;
+
+  if (app === "dashboard") {
+    const isDashboardDeployment = vercelUrl.includes("dashboard") || vercelUrl.includes("studio");
+    if (!isDashboardDeployment) {
+      // IMPORTANT: Set NEXT_PUBLIC_DASHBOARD_URL in Vercel Environment Variables
+      // to the URL of your deployed dashboard Vercel project.
+      // Until then, this fallback will point to the web app which will cause a loop.
+      // See: https://vercel.com/docs/environment-variables
+      console.warn(
+        "[getAppUrl] NEXT_PUBLIC_DASHBOARD_URL is not set. " +
+        "Dashboard redirects will fail. " +
+        "Please deploy apps/dashboard as a separate Vercel project " +
+        "and set NEXT_PUBLIC_DASHBOARD_URL in your Vercel Environment Variables."
+      );
+      // Return the current origin rather than a non-existent domain
+      return typeof window !== "undefined" ? window.location.origin : `https://${vercelUrl}`;
+    }
+  } else {
+    const isDashboardDeployment = vercelUrl.includes("dashboard") || vercelUrl.includes("studio");
+    if (isDashboardDeployment) {
+      console.warn(
+        "[getAppUrl] NEXT_PUBLIC_WEB_URL is not set. " +
+        "Please set NEXT_PUBLIC_WEB_URL in your Vercel Environment Variables."
+      );
+      return typeof window !== "undefined" ? window.location.origin : `https://${vercelUrl}`;
+    }
+  }
+
+  return `https://${vercelUrl}`;
 }
