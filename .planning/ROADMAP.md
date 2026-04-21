@@ -12,8 +12,8 @@ Establish the Fungga Wari brand identity into the design system, create all shar
 - Extend `globals.css` with Fungga Wari brand tokens (amber/ochre/ember color palette for dark mode)
 - Build shared UI components: `StoryCard`, `ChapterItem`, `SceneBlock`, `ProgressBar`, `AvatarBadge`, `TaskCard`, `Badge`
 - Set up `apps/dashboard` as a new Next.js 15 app in the monorepo
-- Configure Clerk + Convex in both apps
-- Define and document the full Convex schema for all V1 data models
+- Configure Clerk + Supabase in both apps
+- Define and document the full Supabase schema for all V1 data models
 
 ---
 
@@ -33,7 +33,7 @@ Build the public-facing story reading experience — the heart of Fungga Wari La
 - Right panel: story progress tree, "What to do?" choice suggestions
 - Block renderer: text, image, dialogue character blocks
 - Chapter/scene navigation with smooth Framer Motion transitions
-- Progress persistence (localStorage → Convex sync later)
+- Progress persistence (localStorage → Supabase sync later)
 
 ---
 
@@ -70,7 +70,7 @@ Transform the dashboard into a full team workspace. Implements member management
 - Task manager: create tasks with title, description, assignee, priority, due date
 - Kanban board: drag-and-drop task cards across Todo / In Progress / Review / Done
 - Progress dashboard: story completion %, tasks by status, team activity feed
-- Real-time team chat: workspace-scoped messaging using Convex live queries
+- Real-time team chat: workspace-scoped messaging using Supabase Realtime
 - Notifications: task assignment alerts, chat mentions
 
 ---

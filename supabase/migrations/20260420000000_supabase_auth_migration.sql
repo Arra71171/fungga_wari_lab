@@ -9,9 +9,14 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_id uuid UNIQUE;
 UPDATE public.users AS u
 SET auth_id = au.id
 FROM auth.users AS au
-WHERE u.auth_id IS NULL
-  AND u.email IS NOT NULL
-  AND lower(u.email) = lower(au.email);
+WHERE u.id IN (
+  SELECT DISTINCT ON (lower(email)) id
+  FROM public.users
+  WHERE auth_id IS NULL AND email IS NOT NULL
+  ORDER BY lower(email), created_at DESC
+)
+AND lower(u.email) = lower(au.email)
+  AND au.email_confirmed_at IS NOT NULL;
 
 -- Safety guard: abort if any privileged or active users remain unmapped.
 -- Comment this block out if you want to allow partial backfill on first run.
@@ -22,7 +27,7 @@ BEGIN
     FROM public.users
     WHERE auth_id IS NULL
       AND (
-        role IN ('admin', 'superadmin')
+        role IN ('admin', 'superadmin', 'editor')
         OR has_lifetime_access IS TRUE
       )
   ) THEN
@@ -37,6 +42,25 @@ LANGUAGE plpgsql
 SECURITY DEFINER SET search_path = ''
 AS $$
 BEGIN
+  UPDATE public.users
+  SET
+    auth_id = NEW.id,
+    email = NEW.email,
+    name = COALESCE(NEW.raw_user_meta_data->>'full_name', public.users.name),
+    updated_at = now()
+  WHERE id = (
+    SELECT id FROM public.users
+    WHERE auth_id IS NULL
+      AND email IS NOT NULL
+      AND lower(email) = lower(NEW.email)
+    ORDER BY created_at DESC
+    LIMIT 1
+  );
+
+  IF FOUND THEN
+    RETURN NEW;
+  END IF;
+
   INSERT INTO public.users (auth_id, email, name, role)
   VALUES (NEW.id, NEW.email, NEW.raw_user_meta_data->>'full_name', 'viewer')
   ON CONFLICT (auth_id) DO UPDATE SET

@@ -82,7 +82,7 @@ export function MobileReaderBar({ onOpenChapters, onOpenSettings }: MobileReader
           className="flex items-center gap-2 px-3 py-2 text-muted-foreground hover:text-cinematic-text transition-colors"
         >
           <List className="size-5" />
-          <span className="font-mono text-[9px] uppercase tracking-widest">
+          <span className="font-mono text-nano uppercase tracking-widest">
             Ch. {String(activeChapterIndex + 1).padStart(2, "0")}
           </span>
         </button>
@@ -104,7 +104,7 @@ export function MobileReaderBar({ onOpenChapters, onOpenSettings }: MobileReader
           </button>
 
           {/* Scene counter */}
-          <span className="font-mono text-[10px] tabular-nums text-muted-foreground min-w-16 text-center">
+          <span className="font-mono text-fine tabular-nums text-muted-foreground min-w-16 text-center">
             {currentSceneId ? currentIndex + 1 : 0} / {totalScenes}
           </span>
 

@@ -7,8 +7,14 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Allow HMR/WebSocket connections from LAN mobile devices
+  allowedDevOrigins: ['192.168.1.2'],
   transpilePackages: ["@workspace/ui"],
   images: {
+    // In dev, skip server-side optimization — avoids DNS failures when the
+    // dev machine cannot reach res.cloudinary.com (isolated network / VPN).
+    // Cloudinary's own URL-based transformations are still applied.
+    unoptimized: process.env.NODE_ENV === 'development',
     qualities: [25, 50, 75, 90, 100],
     // placehold.co returns SVG — must be enabled at the top level in Next.js 15+
     dangerouslyAllowSVG: true,
@@ -30,29 +36,6 @@ const nextConfig = {
         hostname: "img.clerk.com",
       },
     ],
-  },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Don't try to polyfill Node.js core modules on the client
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        crypto: false,
-        os: false,
-      };
-    }
-
-    // Completely ignore .node files so Webpack never errors on them
-    config.module.rules.push({
-      test: /\.node$/,
-      type: "asset/resource",
-      generator: {
-        filename: "static/media/[name].[hash][ext]",
-      },
-    });
-
-    return config;
   },
 };
 

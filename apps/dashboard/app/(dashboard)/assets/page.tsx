@@ -26,7 +26,7 @@ export default function AssetsPage() {
           <h1 className="text-3xl font-heading text-brand-ochre tracking-tighter uppercase font-light">
             Asset Vault
           </h1>
-          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.2em] mt-2">
+          <p className="font-mono text-fine text-muted-foreground uppercase tracking-label mt-2">
             Global Media Library & Story Bundles
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function AssetsPage() {
                   key={tab.value}
                   onClick={() => setActiveFolder(tab.value)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest border transition-all",
+                    "flex items-center gap-2 px-3 py-1.5 font-mono text-fine uppercase tracking-widest border transition-all",
                     activeFolder === tab.value
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"

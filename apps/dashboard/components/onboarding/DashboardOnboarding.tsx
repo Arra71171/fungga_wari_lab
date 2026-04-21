@@ -32,13 +32,13 @@ function WelcomeContent() {
           <div key={label} className="flex items-start gap-2 border border-border-subtle bg-bg-surface/50 p-3">
             <Icon className="mt-0.5 size-4 shrink-0 text-brand-ember" />
             <div>
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-wide text-foreground">{label}</p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">{desc}</p>
+              <p className="font-mono text-fine font-semibold uppercase tracking-wide text-foreground">{label}</p>
+              <p className="mt-0.5 text-tight-label text-muted-foreground">{desc}</p>
             </div>
           </div>
         ))}
       </div>
-      <p className="text-[11px] text-muted-foreground/60">This tour takes ~30 seconds. You can skip anytime.</p>
+      <p className="text-tight-label text-muted-foreground/60">This tour takes ~30 seconds. You can skip anytime.</p>
     </div>
   );
 }
@@ -54,8 +54,8 @@ function AnalyticsContent() {
         <div className="flex items-start gap-3 border-l-2 border-brand-ember pl-3">
           <Eye className="mt-0.5 size-4 shrink-0 text-brand-ochre" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">KPI Cards</p>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-tight-label font-semibold text-foreground">KPI Cards</p>
+            <p className="text-tight-label text-muted-foreground">
               Total Manuscripts · Total Views · Total Reads · Completion Rate — live stats at a glance.
             </p>
           </div>
@@ -67,8 +67,8 @@ function AnalyticsContent() {
             <Globe2 className="size-3.5 text-primary" />
           </div>
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Publishing Pipeline</p>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-tight-label font-semibold text-foreground">Publishing Pipeline</p>
+            <p className="text-tight-label text-muted-foreground">
               Track every story&apos;s progress: Drafts → In Review → Published.
             </p>
           </div>
@@ -76,8 +76,8 @@ function AnalyticsContent() {
         <div className="flex items-start gap-3 border-l-2 border-border-strong pl-3">
           <BookCheck className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
           <div>
-            <p className="text-[11px] font-semibold text-foreground">Engagement Charts</p>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-tight-label font-semibold text-foreground">Engagement Charts</p>
+            <p className="text-tight-label text-muted-foreground">
               Completion rate donuts, category distribution, and a real-time activity feed.
             </p>
           </div>
@@ -114,8 +114,8 @@ function ContentToolsContent() {
           <div key={label} className="flex items-start gap-3 border border-border-subtle bg-bg-surface/30 p-3">
             <Icon className={cn("mt-0.5 size-4 shrink-0", color)} />
             <div>
-              <p className="text-[11px] font-semibold text-foreground">{label}</p>
-              <p className="text-[11px] text-muted-foreground">{desc}</p>
+              <p className="text-tight-label font-semibold text-foreground">{label}</p>
+              <p className="text-tight-label text-muted-foreground">{desc}</p>
             </div>
           </div>
         ))}
@@ -139,8 +139,8 @@ function ProfileContent() {
           <div key={label} className={cn("flex items-start gap-3 border-l-2 pl-3", color === "text-brand-ember" ? "border-brand-ember" : color === "text-brand-ochre" ? "border-brand-ochre" : "border-border-strong")}>
             <Icon className={cn("mt-0.5 size-4 shrink-0", color)} />
             <div>
-              <p className="text-[11px] font-semibold text-foreground">{label}</p>
-              <p className="text-[11px] text-muted-foreground">{desc}</p>
+              <p className="text-tight-label font-semibold text-foreground">{label}</p>
+              <p className="text-tight-label text-muted-foreground">{desc}</p>
             </div>
           </div>
         ))}
@@ -206,7 +206,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
               {step.icon}
             </div>
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-brand-ember mb-1">
+              <p className="font-mono text-nano uppercase tracking-eyebrow text-brand-ember mb-1">
                 Step {stepIndex + 1} of {totalSteps}
               </p>
               <h3 className="font-heading text-xl font-bold tracking-tight text-foreground leading-tight">
@@ -256,7 +256,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
             )}
             <button
               onClick={onNext}
-              className="flex h-8 items-center gap-1 bg-brand-ember px-5 font-mono text-[10px] uppercase tracking-widest text-primary-foreground transition-colors hover:bg-brand-ember/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex h-8 items-center gap-1 bg-brand-ember px-5 font-mono text-fine uppercase tracking-widest text-primary-foreground transition-colors hover:bg-brand-ember/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {stepIndex === totalSteps - 1 ? "Get Started" : "Next"}
               {stepIndex !== totalSteps - 1 && <ChevronRight className="size-3" />}

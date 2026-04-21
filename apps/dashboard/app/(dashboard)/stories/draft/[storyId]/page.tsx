@@ -470,7 +470,7 @@ export default function DraftEditorPage({
         <div className="flex items-center gap-3">
           <span
             className={cn(
-              "text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 border",
+              "text-fine font-mono uppercase tracking-widest px-2 py-0.5 border",
               isPublished
                 ? "text-status-active border-status-active/30 bg-status-active/10"
                 : "text-muted-foreground border-border"
@@ -533,7 +533,7 @@ export default function DraftEditorPage({
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-2">
               <PenTool className="size-4 text-brand-ember" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-brand-ember font-bold">
+              <span className="text-fine font-mono uppercase tracking-caps text-brand-ember font-bold">
                 Manuscript Core
               </span>
             </div>
@@ -547,7 +547,7 @@ export default function DraftEditorPage({
 
             <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6">
               <div className="space-y-2">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Cover Art
                 </Label>
                 <CoverImageUpload
@@ -558,7 +558,7 @@ export default function DraftEditorPage({
               </div>
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                     Short Description
                   </Label>
                   <Textarea
@@ -571,7 +571,7 @@ export default function DraftEditorPage({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                    <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                       Category
                     </Label>
                     <select
@@ -588,7 +588,7 @@ export default function DraftEditorPage({
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                    <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                       Language
                     </Label>
                     <select
@@ -680,7 +680,7 @@ export default function DraftEditorPage({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
-                <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Moral of the Story
                 </Label>
                 <Textarea
@@ -693,7 +693,7 @@ export default function DraftEditorPage({
 
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                     Original Attribution
                   </Label>
                   <Input
@@ -702,13 +702,13 @@ export default function DraftEditorPage({
                     placeholder="e.g. As told by Ene Ibetombi"
                     className="border-border h-11"
                   />
-                  <p className="text-[10px] text-muted-foreground font-mono">
+                  <p className="text-fine text-muted-foreground font-mono">
                     Who is the real-world source of this folk tale?
                   </p>
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                     Tags
                   </Label>
                   <Input

@@ -227,7 +227,7 @@ function ChoiceButtons({
   if (!choices.length) return null;
   return (
     <div className="flex flex-col items-center gap-3 py-16 px-4" aria-label="Story choices">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+      <p className="font-mono text-fine uppercase tracking-widest text-muted-foreground mb-2">
         Choose your path
       </p>
       {choices.map((choice) => (
@@ -382,7 +382,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                   aria-hidden
                 />
                 <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-8 px-6 pointer-events-none text-center">
-                  <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-brand-ember/90 mb-2 drop-shadow-md">
+                  <span className="font-mono text-nano md:text-fine uppercase tracking-caps text-brand-ember/90 mb-2 drop-shadow-md">
                     Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
                   </span>
                   <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-cinematic-text leading-tight drop-shadow-lg">
@@ -394,7 +394,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           </>
         ) : activeChapter ? (
           <div className="text-center px-6 relative z-10">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand-ember/60 mb-3 block">
+            <span className="font-mono text-fine uppercase tracking-caps text-brand-ember/60 mb-3 block">
               Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
             </span>
             <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-cinematic-text leading-tight">
@@ -422,7 +422,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             aria-label="Back to manuscripts archive"
           >
             <ArrowLeft className="size-3.5 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-[9px] font-mono uppercase tracking-widest">
+            <span className="text-nano font-mono uppercase tracking-widest">
               Archive
             </span>
           </Link>
@@ -430,14 +430,16 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           {/* Chapter indicator (mobile only, since desktop has it on the left) */}
           <div className="lg:hidden">
             {activeChapter && (
-              <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/40">
+              <span className="text-nano font-mono uppercase tracking-widest text-muted-foreground/40">
                 {String(activeChapterIndex + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-4">
-            <AnimatedThemeToggler />
+            <div className="hidden lg:block">
+              <AnimatedThemeToggler />
+            </div>
             {currentSceneId && firstSceneId && currentSceneId !== firstSceneId ? (
               <button
                 onClick={() => {
@@ -446,7 +448,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                     scrollContentToTop();
                   }
                 }}
-                className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground/40 hover:text-brand-ember transition-colors"
+                className="text-nano font-mono uppercase tracking-widest text-muted-foreground/40 hover:text-brand-ember transition-colors"
                 aria-label="Restart story"
               >
                 Restart
@@ -511,7 +513,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
 
                   {nextChapter && !hasNextScene && (
                     <div className="space-y-2">
-                      <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/50">
+                      <p className="font-mono text-nano uppercase tracking-eyebrow text-muted-foreground/50">
                         Next — Chapter {String(activeChapterIndex + 2).padStart(2, "0")}
                       </p>
                       <p className="font-heading text-lg md:text-xl font-bold uppercase tracking-tight text-cinematic-text/80 max-w-sm mx-auto">
@@ -558,13 +560,13 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                         if (firstSceneId) setCurrentSceneId(firstSceneId);
                         scrollContentToTop();
                       }}
-                      className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors"
+                      className="text-fine font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors"
                     >
                       Read Again
                     </button>
                     <Link
                       href="/stories"
-                      className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"
+                      className="text-fine font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"
                     >
                       Archive
                     </Link>

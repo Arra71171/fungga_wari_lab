@@ -135,7 +135,7 @@ function StoryTicker() {
           <div className="flex flex-col items-start gap-2">
             <div className="flex items-center gap-3">
               <div className="h-[1px] w-8 bg-brand-ember" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-brand-ember font-bold">Catalogue Index</span>
+              <span className="text-fine font-mono uppercase tracking-caps text-brand-ember font-bold">Catalogue Index</span>
             </div>
             <h3 className="text-xl md:text-2xl font-heading font-black uppercase tracking-tighter text-foreground ml-3">
               Oral Tradition Archives
@@ -364,6 +364,7 @@ export default function Home() {
   }, { scope: bentoGridRef });
 
   return (
+    <>
     <div className="relative min-h-screen bg-background text-foreground selection:bg-primary/30 overflow-x-hidden font-sans">
       <ScrollProgressBar />
       <Navbar />
@@ -372,12 +373,12 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 pt-40 lg:pt-48 pb-12 min-h-[90vh] flex items-center overflow-hidden"
+        className="relative px-6 md:px-12 pt-32 lg:pt-48 pb-16 md:pb-12 min-h-[90vh] flex items-center overflow-hidden"
       >
         <EmberParticles density={60} speed={0.5} className="z-0" />
         <motion.div
           style={{ opacity: heroOpacity }}
-          className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10"
+          className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center relative z-10"
         >
           {/* Hero Content */}
           <div className="lg:col-span-6 flex flex-col justify-center max-w-xl space-y-6">
@@ -458,7 +459,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="lg:col-span-5 lg:col-start-8 relative hidden lg:flex items-center justify-center w-full">
+          <div className="lg:col-span-5 lg:col-start-8 relative flex items-center justify-center w-full">
             {/* Ambient scroll-linked line */}
             <ScrollReveal direction="left" distance={100} duration={1.5} scrub={true}>
               <div className="absolute left-[-50px] top-1/2 w-48 h-[1px] bg-brand-ember/40 z-0 origin-left" />
@@ -466,14 +467,14 @@ export default function Home() {
 
             {/* Ambient right margin text */}
             <div className="absolute -right-8 top-1/2 -translate-y-1/2 rotate-90 origin-center hidden xl:block pointer-events-none z-0">
-               <span className="text-xs font-mono uppercase tracking-[0.4em] text-muted-foreground/30">
+               <span className="text-xs font-mono uppercase tracking-ultra text-muted-foreground/30">
                  SYS.ARCHIVE_READY // STATUS: ONLINE
                </span>
             </div>
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-md">
               <div 
-                className="relative w-full aspect-[3/4] bg-background border border-border p-4 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
+                className="relative w-full aspect-[3/4] sm:max-w-md mx-auto lg:max-w-md bg-background border border-border p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
               >
                 <BorderBeam size={150} duration={8} delay={1} />
                 {/* Glow */}
@@ -512,12 +513,12 @@ export default function Home() {
                 
                 {/* Watermark Overlay Element */}
                 <div className="absolute bottom-0 right-0 px-4 py-2 bg-background border-t border-l border-border z-20 pointer-events-auto">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-foreground font-bold">Loktak Lake</span>
+                  <span className="text-fine font-mono uppercase tracking-label text-foreground font-bold">Loktak Lake</span>
                 </div>
               </div>
 
               <div className="border-t border-border/60 pt-4 mt-4">
-                <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 text-[10px] font-mono tracking-tight uppercase text-foreground/80">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 text-fine font-mono tracking-tight uppercase text-foreground/80">
                   <div className="flex flex-col gap-1">
                     <span className="text-muted-foreground font-bold">Location:</span>
                     <span>Loktak Lake, Manipur</span>
@@ -561,7 +562,7 @@ export default function Home() {
                 <div className="w-3/4 h-6 bg-secondary/50" />
               </div>
             ) : manifestoContent && manifestoContent.tiptapContent ? (
-              <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-h2:text-4xl md:prose-h2:text-5xl prose-p:font-mono prose-p:text-sm md:prose-p:text-base prose-p:uppercase prose-p:tracking-[0.2em] prose-p:text-muted-foreground prose-p:leading-relaxed mx-auto text-center">
+              <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-h2:text-4xl md:prose-h2:text-5xl prose-p:font-mono prose-p:text-sm md:prose-p:text-base prose-p:uppercase prose-p:tracking-label prose-p:text-muted-foreground prose-p:leading-relaxed mx-auto text-center">
                  <RichTextRenderer content={manifestoContent.tiptapContent} />
               </div>
             ) : (
@@ -575,7 +576,7 @@ export default function Home() {
                 />
                 <div className="w-16 h-1 bg-brand-ember mx-auto mb-10 flex shadow-[0_0_10px_var(--brand-glow)]" />
                 <ScrollReveal direction="up" distance={30} duration={1} delay={0.4}>
-                  <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-[0.2em] leading-relaxed max-w-2xl mx-auto relative">
+                  <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-label leading-relaxed max-w-2xl mx-auto relative">
                     <span className="absolute -left-4 top-0 text-brand-ember/40 text-lg">&ldquo;</span>
                     We stand at the threshold of silence, recording the whispers of the hearth before they vanish into the ash of time.
                     <span className="absolute -right-4 bottom-0 text-brand-ember/40 text-lg">&rdquo;</span>
@@ -703,7 +704,7 @@ export default function Home() {
                       End-to-end systems for archiving endangered cultural data with modern stability.
                     </CardDescription>
                   </div>
-                  <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-mono text-[10px] uppercase text-muted-foreground">
+                  <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-mono text-fine uppercase text-muted-foreground">
                     Integrity: Verified
                   </div>
                 </div>
@@ -808,9 +809,9 @@ export default function Home() {
         <SectionDivider variant="smoke" fill="bg-background" stroke="text-primary/30" className="opacity-50 -top-px rotate-180" />
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <span className="font-heading text-2xl font-black uppercase tracking-tighter flex items-center gap-2">
+            <span className="font-meetei text-2xl font-black tracking-wide flex items-center gap-2">
               <div className="size-4 bg-primary" />
-              Fungga Wari Lab
+              ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫ <span className="font-mono text-lg font-bold">.Lab</span>
             </span>
             <span className="text-3xs font-mono text-muted-foreground uppercase tracking-widest mt-2 border border-border px-2 py-1">
               Oral History Systems v2.0
@@ -833,6 +834,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
     </div>
+    </>
   );
 }

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
-import { BrandLogo } from "@workspace/ui/components/BrandLogo";
+import { BrandLogo, FungaMark } from "@workspace/ui/components/BrandLogo";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 import {
@@ -36,7 +36,11 @@ const navItems = [
 ];
 
 // Dashboard lives on a separate origin (dashboard app).
-const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost:3000";
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || (
+  process.env.NODE_ENV === "production" 
+    ? "https://dashboard.funggawari.com" 
+    : "http://localhost:3000"
+);
 
 function Navbar() {
   const { scrollY } = useScroll();
@@ -49,7 +53,7 @@ function Navbar() {
     setScrolled(latest > 20);
   });
 
-  const isSuperAdmin = userProfile?.role === "superadmin";
+  const isDashboardUser = ["admin", "superadmin", "editor"].includes(userProfile?.role || "");
   const isAuthenticated = isLoaded && !!user;
 
   async function handleSignOut() {
@@ -78,38 +82,21 @@ function Navbar() {
       >
         {/* Icon glyph — always visible */}
         <span className="inline-flex shrink-0 items-center justify-center border-2 border-border-strong bg-primary/10 p-1.5 text-primary">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="square"
-            strokeLinejoin="miter"
-            aria-hidden="true"
-          >
-            <line x1="4" y1="20" x2="20" y2="20" />
-            <line x1="8" y1="16" x2="16" y2="16" />
-            <path d="M12 16L12 9" />
-            <path d="M8 16L6 11" />
-            <path d="M16 16L18 11" />
-            <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none" />
-          </svg>
+          <FungaMark size={18} />
         </span>
         {/* Mobile wordmark: two stacked lines, compact mono */}
         <span className="flex flex-col leading-none md:hidden" aria-hidden="true">
-          <span className="font-mono font-black uppercase tracking-[0.12em] text-[10px] text-foreground">
-            Fungga Wari
+          <span className="font-meetei font-black tracking-wide text-fine text-foreground">
+            ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫
           </span>
-          <span className="font-mono font-bold text-[9px] text-muted-foreground/80 tracking-wider mt-0.5">
+          <span className="font-mono font-bold text-nano text-muted-foreground/80 tracking-wider mt-0.5">
             .Lab
           </span>
         </span>
         {/* Desktop wordmark: horizontal */}
         <span className="hidden md:inline-flex items-center gap-1 leading-none">
-          <span className="font-mono font-black uppercase tracking-widest text-base text-foreground">
-            Fungga Wari
+          <span className="font-meetei font-black tracking-wide text-base text-foreground">
+            ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫
           </span>
           <span className="font-mono font-bold text-xs text-muted-foreground/80 opacity-90">
             .Lab
@@ -121,12 +108,13 @@ function Navbar() {
       <div className="hidden items-center gap-2 md:flex border-l-2 border-foreground/20 pl-6 h-8">
         {navItems.map((item) => {
           const isCollections = item.name === "Folklore";
-          const showDashboard = isCollections && isSuperAdmin;
+          const showDashboard = isCollections && isDashboardUser;
           const href = showDashboard ? DASHBOARD_URL : item.href;
           const name = showDashboard ? "Dashboard" : item.name;
 
           if (showDashboard) {
             return (
+              /* eslint-disable-next-line no-restricted-syntax -- DASHBOARD_URL is cross-origin; next/link cannot be used */
               <a
                 key={item.name}
                 href={href}
@@ -180,7 +168,7 @@ function Navbar() {
               {userProfile?.avatar_url ? (
                 <Image
                   src={userProfile.avatar_url}
-                  alt="Avatar"
+                  alt={`${userProfile.name || "User"}'s avatar`}
                   fill
                   sizes="32px"
                   className="object-cover grayscale opacity-80"
@@ -191,7 +179,7 @@ function Navbar() {
             </div>
             <button
               onClick={handleSignOut}
-              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Sign out"
             >
               <LogOut className="size-4" />
@@ -211,7 +199,7 @@ function Navbar() {
           <SheetTrigger asChild>
             <button
               aria-label="Open navigation menu"
-              className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all"
+              className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Menu className="size-5" />
             </button>
@@ -220,6 +208,7 @@ function Navbar() {
           <SheetContent
             side="right"
             className="w-[280px] p-0 flex flex-col bg-background border-l border-border"
+            aria-describedby={undefined}
           >
             <SheetHeader className="p-0">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
@@ -232,7 +221,7 @@ function Navbar() {
 
             {/* Nav links */}
             <nav className="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
-              <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-4 pl-3">
+              <p className="font-mono text-nano tracking-label uppercase text-muted-foreground/60 mb-4 pl-3">
                 Navigation
               </p>
 
@@ -249,13 +238,14 @@ function Navbar() {
                 </Link>
               ))}
 
-              {/* Dashboard shortcut — superadmins only */}
-              {isSuperAdmin && (
+              {/* Dashboard shortcut — authorized roles only */}
+              {isDashboardUser && (
                 <>
                   <div className="my-4 border-t border-border" />
-                  <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3 pl-3">
+                  <p className="font-mono text-nano tracking-label uppercase text-muted-foreground/60 mb-3 pl-3">
                     Creator Studio
                   </p>
+                  {/* eslint-disable-next-line no-restricted-syntax -- DASHBOARD_URL is cross-origin; next/link cannot be used */}
                   <a
                     href={DASHBOARD_URL}
                     onClick={() => setMobileOpen(false)}
@@ -300,7 +290,7 @@ function Navbar() {
                       {userProfile?.avatar_url ? (
                         <Image
                           src={userProfile.avatar_url}
-                          alt="Avatar"
+                          alt={`${userProfile.name || "User"}'s avatar`}
                           fill
                           sizes="32px"
                           className="object-cover grayscale opacity-80"
@@ -313,16 +303,26 @@ function Navbar() {
                       <span className="text-xs font-mono text-foreground truncate">
                         {userProfile?.name || userProfile?.email || "User"}
                       </span>
-                      {isSuperAdmin && (
-                        <span className="text-[9px] font-mono tracking-widest uppercase text-brand-ember">
+                      {userProfile?.role === "superadmin" && (
+                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
                           Superadmin
+                        </span>
+                      )}
+                      {userProfile?.role === "admin" && (
+                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
+                          Admin
+                        </span>
+                      )}
+                      {userProfile?.role === "editor" && (
+                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
+                          Editor
                         </span>
                       )}
                     </div>
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                    className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label="Sign out"
                   >
                     <LogOut className="size-4" />

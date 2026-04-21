@@ -53,7 +53,6 @@ export function PaymentSuccessHandler() {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, sessionId]);
 
   if (!isSuccess) return null;

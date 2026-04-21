@@ -56,7 +56,7 @@ export function MagneticBackLink({
         {/* Label block */}
         <div className="flex flex-col">
           <span className={cn(
-            "font-mono text-[10px] uppercase tracking-[0.25em]",
+            "font-mono text-fine uppercase tracking-eyebrow",
             variant === "primary" ? "text-primary/80" : "text-muted-foreground"
           )}>
             {sublabel}

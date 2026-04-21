@@ -82,9 +82,11 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
   );
   const supabase = React.useMemo(() => createClient(), []);
 
+  const initialStoryRef = React.useRef(initialStory);
+
   React.useEffect(() => {
     async function loadData() {
-      if (!slug || initialStory) return;
+      if (!slug || initialStoryRef.current) return;
 
       const { data: storyData, error: storyError } = await supabase
         .from("stories")

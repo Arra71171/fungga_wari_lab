@@ -14,7 +14,7 @@ export interface CommandItemProps {
   command: ({ editor, range }: { editor: Editor; range: Range }) => void;
 }
 
-const getSuggestionItems = ({ query }: { query: string }) => {
+function getSuggestionItems({ query }: { query: string }) {
   return [
     {
       title: "Text",
@@ -100,9 +100,9 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       },
     },
   ].filter((item) => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10);
-};
+}
 
-export const CommandMenuList = forwardRef((props: { items: CommandItemProps[]; command: (item: CommandItemProps) => void }, ref) => {
+export const CommandMenuList = forwardRef(function CommandMenuList(props: { items: CommandItemProps[]; command: (item: CommandItemProps) => void }, ref) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [prevItems, setPrevItems] = useState(props.items);
 
@@ -155,7 +155,7 @@ export const CommandMenuList = forwardRef((props: { items: CommandItemProps[]; c
           </div>
           <div className="flex flex-col text-left">
             <span className="font-medium">{item.title}</span>
-            <span className="text-[10px] text-muted-foreground">{item.description}</span>
+            <span className="text-fine text-muted-foreground">{item.description}</span>
           </div>
         </button>
       ))}

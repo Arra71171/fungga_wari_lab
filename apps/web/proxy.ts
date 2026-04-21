@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 // Routes that don't require authentication
-const publicRoutes = ["/", "/login", "/register", "/stories", "/api/webhooks"]
+const publicRoutes = ["/", "/login", "/register", "/stories", "/api/webhooks", "/api/wise-epu"]
 
 function isPublicRoute(pathname: string) {
   return publicRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"))

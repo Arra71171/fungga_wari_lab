@@ -72,7 +72,7 @@ export default function LoginPage() {
         <div className="space-y-1.5">
           <label
             htmlFor="dashboard-email"
-            className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em]"
+            className="font-mono text-tight-label text-muted-foreground uppercase tracking-subtle"
           >
             Email Address
           </label>
@@ -92,7 +92,7 @@ export default function LoginPage() {
         <div className="space-y-1.5">
           <label
             htmlFor="dashboard-password"
-            className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.1em]"
+            className="font-mono text-tight-label text-muted-foreground uppercase tracking-subtle"
           >
             Password
           </label>
@@ -126,7 +126,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting || !email || !password}
-          className="w-full rounded-none bg-primary text-primary-foreground font-mono text-[11px] font-black uppercase tracking-[0.22em] h-11 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-none bg-primary text-primary-foreground font-mono text-tight-label font-black uppercase tracking-loose h-11 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "ACCESSING..." : "ACCESS ARCHIVE"}
         </button>

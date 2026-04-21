@@ -239,6 +239,25 @@
     --tracking-wide: calc(var(--tracking-normal) + 0.025em);
     --tracking-wider: calc(var(--tracking-normal) + 0.05em);
     --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+    --tracking-subtle: 0.1em;
+    --tracking-snug: 0.12em;
+    --tracking-relaxed: 0.15em;
+    --tracking-loose: 0.22em;
+    --tracking-label: 0.2em;
+    --tracking-eyebrow: 0.25em;
+    --tracking-caps: 0.3em;
+    --tracking-ultra: 0.35em;
+    
+    --text-micro: 0.5rem;
+    --text-nano: 0.5625rem;
+    --text-fine: 0.625rem;
+    --text-tight-label: 0.6875rem;
+    --text-fluid-heading: clamp(2.4rem, 5vw, 3.75rem);
+
+    --max-w-content: 56.25rem;
+    --perspective-card: 1000px;
+    --min-h-screen-content: calc(100vh - 3.5rem);
+    --width-auth-form: 22.5rem; /* 360px */
 
     --animate-slide-left: slide-left 20s linear infinite;
 
@@ -273,6 +292,30 @@
     animation: none;
     mix-blend-mode: normal;
   }
+}
+
+@utility bg-radial-primary-glow {
+  background-image: radial-gradient(ellipse 50% 40% at 50% 50%, color-mix(in oklch, var(--primary) 8%, transparent), transparent 70%);
+}
+
+@utility bg-fade-to-card {
+  background-image: linear-gradient(to bottom, transparent, var(--card));
+}
+
+@utility grid-cols-auth {
+  grid-template-columns: 1fr var(--width-auth-form);
+}
+
+@utility aspect-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+@utility max-w-content {
+  max-width: var(--max-w-content);
+}
+
+@utility min-h-screen-content {
+  min-height: var(--min-h-screen-content);
 }
 
 /* Hide Clerk Watermark globally */

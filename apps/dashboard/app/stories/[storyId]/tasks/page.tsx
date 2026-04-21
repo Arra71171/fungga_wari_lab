@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { cn } from "@workspace/ui/lib/utils";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Calendar, CheckSquare, Clock } from "lucide-react";
 import Link from "next/link";
@@ -70,7 +71,7 @@ export default function StoryTasksPage() {
             </div>
           </Link>
           <div className="h-4 w-px bg-border/20" />
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-brand-ember/80 font-bold">
+          <span className="font-mono text-xs uppercase tracking-label text-brand-ember/80 font-bold">
             Workflow Engine
           </span>
           <span className="text-muted-foreground/30 px-2">/</span>
@@ -96,7 +97,7 @@ export default function StoryTasksPage() {
               <h1 className="font-display text-4xl md:text-5xl tracking-tight text-foreground drop-shadow-lg">
                 Team Assignments
               </h1>
-              <p className="text-muted-foreground font-mono text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-[0.1em] uppercase">
+              <p className="text-muted-foreground font-mono text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-subtle uppercase">
                 Coordinate the transcription and illustration pipeline.
               </p>
             </div>
@@ -105,7 +106,7 @@ export default function StoryTasksPage() {
           {/* Task Grid */}
           <div className="grid grid-cols-1 gap-4">
             {/* Header Row */}
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-border text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-border text-fine font-mono uppercase tracking-label text-muted-foreground">
               <div className="col-span-5">Directive</div>
               <div className="col-span-3">Operative</div>
               <div className="col-span-2">Deadline</div>
@@ -146,11 +147,17 @@ export default function StoryTasksPage() {
                         className="focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember rounded-sm group-hover:scale-110 transition-transform"
                       >
                         <CheckSquare
-                          className={`size-4 ${isDone ? "text-brand-ember" : "text-muted-foreground/30 hover:text-brand-ember/50"}`}
+                          className={cn(
+                            "size-4",
+                            isDone ? "text-brand-ember" : "text-muted-foreground/30 hover:text-brand-ember/50"
+                          )}
                         />
                       </button>
                       <span
-                        className={`font-heading text-sm ${isDone ? "line-through text-muted-foreground/50" : "text-foreground"}`}
+                        className={cn(
+                          "font-heading text-sm",
+                          isDone ? "line-through text-muted-foreground/50" : "text-foreground"
+                        )}
                       >
                         {task.title}
                       </span>
@@ -158,11 +165,12 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-3">
                       <span
-                        className={`inline-flex items-center px-2 py-1 text-[10px] font-mono tracking-widest uppercase border ${
+                       className={cn(
+                          "inline-flex items-center px-2 py-1 text-fine font-mono tracking-widest uppercase border",
                           task.assignee_id
                             ? "border-brand-ember/20 bg-brand-ember/5 text-brand-ember/80"
                             : "border-dashed border-border-strong text-muted-foreground/50"
-                        }`}
+                        )}
                       >
                         {assigneeName}
                       </span>
@@ -175,13 +183,14 @@ export default function StoryTasksPage() {
 
                     <div className="col-span-2 text-right flex justify-end">
                       <span
-                        className={`inline-flex items-center gap-2 px-2.5 py-1 text-[10px] font-mono tracking-[0.15em] uppercase border ${
+                        className={cn(
+                          "inline-flex items-center gap-2 px-2.5 py-1 text-fine font-mono tracking-relaxed uppercase border",
                           isDone
                             ? "border-brand-ember/50 text-brand-ember bg-brand-ember/10"
                             : isInProgress
                             ? "border-brand-ochre/30 text-brand-ochre bg-brand-ochre/10"
                             : "border-border text-muted-foreground/60 bg-cinematic-border"
-                        }`}
+                        )}
                       >
                         {isInProgress && <Clock className="size-3 animate-pulse" />}
                         {statusLabel}

@@ -146,7 +146,7 @@ export function ChapterBuilderCard({
           <GripVertical className="size-4" />
         </div>
 
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand-ember font-bold shrink-0">
+        <span className="font-mono text-fine uppercase tracking-eyebrow text-brand-ember font-bold shrink-0">
           Ch {String(order).padStart(2, "0")}
         </span>
 
@@ -182,7 +182,7 @@ export function ChapterBuilderCard({
         <div className="px-6 py-8 space-y-8">
           {/* Chapter Title */}
           <div className="space-y-2">
-            <Label className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+            <Label className="text-fine font-mono uppercase tracking-label text-muted-foreground">
               Chapter Title
             </Label>
             <Input
@@ -198,7 +198,7 @@ export function ChapterBuilderCard({
             <button
               type="button"
               onClick={() => setShowIllustration((v) => !v)}
-              className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground hover:text-brand-ember transition-colors"
+              className="flex items-center gap-2 text-fine font-mono uppercase tracking-label text-muted-foreground hover:text-brand-ember transition-colors"
             >
               <ImageIcon className="size-3" />
               <span>Chapter Illustration</span>
@@ -215,7 +215,7 @@ export function ChapterBuilderCard({
                     onChange={(url) => onUpdate(id, "illustrationUrl", url)}
                     className="w-full aspect-[3/4]"
                   />
-                  <p className="text-[10px] text-muted-foreground font-mono text-center leading-relaxed">
+                  <p className="text-fine text-muted-foreground font-mono text-center leading-relaxed">
                     Portrait format · 3∶4 ratio required
                   </p>
                 </div>
@@ -225,10 +225,10 @@ export function ChapterBuilderCard({
 
           {/* Story Content — the main blog-post editor */}
           <div className="space-y-3">
-            <Label className="text-[10px] font-mono uppercase tracking-[0.2em] text-brand-ember font-bold">
+            <Label className="text-fine font-mono uppercase tracking-label text-brand-ember font-bold">
               Story Content
             </Label>
-            <div className="text-[11px] text-muted-foreground font-mono bg-bg-surface px-4 py-2 border-l-2 border-brand-ember/40 leading-relaxed">
+            <div className="text-tight-label text-muted-foreground font-mono bg-bg-surface px-4 py-2 border-l-2 border-brand-ember/40 leading-relaxed">
               Write the narrative for this chapter. Use bold, italics, and
               headings to shape the reading experience.
             </div>
@@ -246,7 +246,7 @@ export function ChapterBuilderCard({
 
             {/* Plain-text fallback — collapsed dev tool */}
             <details>
-              <summary className="text-[10px] uppercase tracking-widest font-mono text-muted-foreground/40 cursor-pointer hover:text-muted-foreground mt-4">
+              <summary className="text-fine uppercase tracking-widest font-mono text-muted-foreground/40 cursor-pointer hover:text-muted-foreground mt-4">
                 Plain-text fallback (dev)
               </summary>
               <Textarea
@@ -263,7 +263,7 @@ export function ChapterBuilderCard({
             <button
               type="button"
               onClick={() => setShowChoices((v) => !v)}
-              className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors w-full"
+              className="flex items-center gap-2 text-fine font-mono uppercase tracking-label text-muted-foreground hover:text-foreground transition-colors w-full"
             >
               <SplitSquareHorizontal className="size-3 text-brand-ember" />
               <span>Branching Choices</span>
@@ -280,7 +280,7 @@ export function ChapterBuilderCard({
             {showChoices && (
               <div className="space-y-4 pl-2">
                 {choices.length === 0 ? (
-                  <p className="text-[11px] text-muted-foreground font-mono">
+                  <p className="text-tight-label text-muted-foreground font-mono">
                     No branches yet. The story will progress linearly to the
                     next chapter.
                   </p>
@@ -292,7 +292,7 @@ export function ChapterBuilderCard({
                         className="flex items-start gap-3 bg-bg-surface p-3 border border-border border-l-2 border-l-brand-ember/50"
                       >
                         <div className="space-y-2 flex-1">
-                          <Label className="text-[9px] font-mono uppercase text-muted-foreground">
+                          <Label className="text-nano font-mono uppercase text-muted-foreground">
                             Choice Text
                           </Label>
                           <Input
@@ -306,7 +306,7 @@ export function ChapterBuilderCard({
                           />
                         </div>
                         <div className="space-y-2 flex-1">
-                          <Label className="text-[9px] font-mono uppercase text-muted-foreground">
+                          <Label className="text-nano font-mono uppercase text-muted-foreground">
                             Next Chapter
                           </Label>
                           <select
@@ -353,7 +353,7 @@ export function ChapterBuilderCard({
                   variant="outline"
                   size="sm"
                   onClick={onAddChoice}
-                  className="rounded-none border-border h-7 text-[10px] uppercase font-mono tracking-wider hover:border-brand-ember"
+                  className="rounded-none border-border h-7 text-fine uppercase font-mono tracking-wider hover:border-brand-ember"
                 >
                   <Plus className="size-3 mr-1" /> Add Choice
                 </Button>

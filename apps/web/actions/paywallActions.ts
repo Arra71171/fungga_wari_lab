@@ -4,6 +4,15 @@ import { stripe } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const createCheckoutSessionSchema = z.object({
+  slug: z.string().regex(/^[a-z0-9-]+$/).optional(), // slug can be empty if general checkout
+});
+
+const verifyAndGrantAccessSchema = z.object({
+  sessionId: z.string().min(1),
+});
 
 const LIFETIME_PRICE_INR = 89900; // ₹899 in paise
 
@@ -15,6 +24,12 @@ const LIFETIME_PRICE_INR = 89900; // ₹899 in paise
 export async function createCheckoutSession(slug: string, _formData: FormData) {
   void _formData;
 
+  const parsed = createCheckoutSessionSchema.safeParse({ slug });
+  if (!parsed.success) {
+    throw new Error("Invalid request data");
+  }
+  const validatedSlug = parsed.data.slug;
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -23,13 +38,17 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
   }
 
   // Check if user already has access
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("users")
     .select("has_lifetime_access, email")
     .eq("auth_id", user.id)
     .single();
 
-  if (profile?.has_lifetime_access) {
+  if (profileError || !profile) {
+    throw new Error("Failed to lookup user profile");
+  }
+
+  if (profile.has_lifetime_access) {
     // Already paid — just redirect back
     redirect(slug ? `/stories/${slug}` : "/stories");
   }
@@ -39,12 +58,12 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
   const baseUrl =
     process.env.NEXT_PUBLIC_WEB_URL ?? "http://localhost:3001";
 
-  const successUrl = slug
-    ? `${baseUrl}/stories/${slug}?payment=success&session_id={CHECKOUT_SESSION_ID}`
+  const successUrl = validatedSlug
+    ? `${baseUrl}/stories/${validatedSlug}?payment=success&session_id={CHECKOUT_SESSION_ID}`
     : `${baseUrl}/stories?payment=success&session_id={CHECKOUT_SESSION_ID}`;
 
-  const cancelUrl = slug
-    ? `${baseUrl}/stories/${slug}?payment=cancelled`
+  const cancelUrl = validatedSlug
+    ? `${baseUrl}/stories/${validatedSlug}?payment=cancelled`
     : `${baseUrl}/stories`;
 
   const session = await stripe.checkout.sessions.create({
@@ -90,13 +109,19 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
 export async function verifyAndGrantAccess(
   sessionId: string
 ): Promise<{ success: boolean; error?: string }> {
+  const parsed = verifyAndGrantAccessSchema.safeParse({ sessionId });
+  if (!parsed.success) {
+    return { success: false, error: "Invalid session ID" };
+  }
+  const validatedSessionId = parsed.data.sessionId;
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return { success: false, error: "Not authenticated" };
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(validatedSessionId);
 
     if (session.payment_status !== "paid") {
       return { success: false, error: "Payment not completed" };
@@ -104,19 +129,40 @@ export async function verifyAndGrantAccess(
 
     // Security: verify this session was created for this user
     const sessionAuthId = session.metadata?.auth_id;
-    if (sessionAuthId !== user.id) {
+    const sessionClerkId = session.metadata?.user_id; // legacy clerk ID
+    
+    // Support legacy verify by looking up the clerk_id mapping
+    let isAuthorized = sessionAuthId === user.id;
+    
+    if (!isAuthorized && sessionClerkId) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("clerk_id")
+        .eq("auth_id", user.id)
+        .single();
+        
+      isAuthorized = profile?.clerk_id === sessionClerkId;
+    }
+
+    if (!isAuthorized) {
       return { success: false, error: "Session does not belong to this user" };
     }
 
     const adminSupabase = createAdminClient();
 
+    const email = session.customer_details?.email ?? session.customer_email ?? "";
+
     const { data: updatedProfile, error } = await adminSupabase
       .from("users")
-      .update({
-        has_lifetime_access: true,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("auth_id", user.id)
+      .upsert(
+        {
+          auth_id: user.id,
+          email: email,
+          has_lifetime_access: true,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "auth_id" }
+      )
       .select("id")
       .maybeSingle();
 

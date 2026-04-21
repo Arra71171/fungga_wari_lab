@@ -51,39 +51,43 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     let mounted = true
 
-    // ── Step 1: Resolve initial session synchronously ──────────────────────────
-    // This is the AUTHORITATIVE load. We await fetchProfile before setting
-    // isLoaded=true so the dashboard guard never sees a half-loaded state.
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    async function initializeSession() {
+      const { data: { session } } = await supabase.auth.getSession()
       if (!mounted) return
+      
       const authUser = session?.user ?? null
       setUser(authUser)
+      
       if (authUser) {
         await fetchProfile(authUser)
       }
+      
       initializedRef.current = true
       if (mounted) setIsLoaded(true)
-    })
+    }
 
-    // ── Step 2: Listen for subsequent auth state changes ───────────────────────
-    // Only fires AFTER initialization is complete. We don't call setIsLoaded
-    // again here — it was already set in Step 1 and must not be re-toggled,
-    // which was causing the race condition and redirect loop.
+    // Start initialization
+    void initializeSession()
+
+    // Listen for subsequent auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (event, session) => {
         if (!mounted) return
+        
+        // Ignore INITIAL_SESSION as we handle it explicitly above
+        if (event === 'INITIAL_SESSION') return
+
         const authUser = session?.user ?? null
         setUser(authUser)
+        
         if (authUser) {
-          await fetchProfile(authUser)
+          // Defer to avoid re-entering the Supabase client while it
+          // still holds its internal auth lock.
+          setTimeout(() => {
+            if (mounted) void fetchProfile(authUser)
+          }, 0)
         } else {
           setUserProfile(null)
-        }
-        // Only mark as loaded here if initialization somehow missed it
-        // (e.g., getSession() returned before the subscription was ready)
-        if (!initializedRef.current && mounted) {
-          initializedRef.current = true
-          setIsLoaded(true)
         }
       }
     )

@@ -86,7 +86,7 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
 
         {/* Heading */}
         <div className="text-center space-y-2">
-          <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-brand-ember drop-shadow-md">
+          <p className="text-fine font-mono tracking-caps uppercase text-brand-ember drop-shadow-md">
             Archive Access Required
           </p>
           <h2 className="font-heading text-2xl text-cinematic-text leading-tight drop-shadow-md">
@@ -107,7 +107,7 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
               <Icon className="size-4 text-brand-ember shrink-0 mt-0.5 drop-shadow-sm" aria-hidden="true" />
               <div>
                 <span className="text-xs font-mono text-cinematic-text font-semibold drop-shadow-sm">{label}</span>
-                <p className="text-[11px] text-muted-foreground mt-0.5 drop-shadow-sm">{detail}</p>
+                <p className="text-tight-label text-muted-foreground mt-0.5 drop-shadow-sm">{detail}</p>
               </div>
             </li>
           ))}
@@ -119,7 +119,7 @@ function PaywallOverlay({ onUnlock, storySlug, className }: PaywallOverlayProps)
           <SubmitButton />
         </form>
 
-        <p className="text-[10px] font-mono text-muted-foreground/80 text-center tracking-wide drop-shadow-sm">
+        <p className="text-fine font-mono text-muted-foreground/80 text-center tracking-wide drop-shadow-sm">
           One-time payment · No subscription · Secure checkout via Stripe
         </p>
       </div>

@@ -1,7 +1,8 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
-import type { Database } from "@workspace/ui/types/supabase"
+import type { Database, Json } from "@workspace/ui/types/supabase"
+import { requireUser } from "./authHelpers"
 
 type AssetType = Database["public"]["Enums"]["asset_type"]
 
@@ -181,22 +182,21 @@ export async function getGlobalContent(slug: string) {
 export async function upsertGlobalContent(args: {
   slug: string
   title: string
-  tiptap_content?: Record<string, unknown>
+  tiptap_content?: Json
 }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { supabase, profile } = await requireUser()
+  
+  if (profile.role !== "superadmin" && profile.role !== "admin") {
+    throw new Error("Forbidden — only admins and superadmins can update global content")
+  }
 
   const { data, error } = await supabase
     .from("global_content")
-    .upsert(
-      {
-        slug: args.slug,
-        title: args.title,
-        tiptap_content: (args.tiptap_content ?? null) as never,
-      },
-      { onConflict: "slug" }
-    )
+    .upsert({
+      slug: args.slug,
+      title: args.title,
+      tiptap_content: args.tiptap_content ?? null,
+    }, { onConflict: "slug" })
     .select("id")
     .single()
 

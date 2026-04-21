@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Cinzel, Instrument_Serif, Cardo } from "next/font/google"
+import { JetBrains_Mono, Cinzel, Instrument_Serif, Cardo, Noto_Sans_Meetei_Mayek } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider"
 import { cn } from "@workspace/ui/lib/utils"
 import { Toaster } from "@workspace/ui/components/sonner"
 import { NoiseOverlay } from "@workspace/ui/components/NoiseOverlay"
+import { WiseEpu } from "@workspace/ui/components/WiseEpu"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 // ── Folk-story serif body: warm, literary feel for the reader experience
@@ -37,6 +38,13 @@ const instrumentSerif = Instrument_Serif({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
+})
+
+const meeteiMayek = Noto_Sans_Meetei_Mayek({
+  weight: ["400", "700"],
+  subsets: ["meetei-mayek"],
+  variable: "--font-meetei",
   display: "swap",
 })
 
@@ -84,7 +92,8 @@ export default function RootLayout({
         cardo.variable,
         jetbrainsMono.variable,
         cinzel.variable,
-        instrumentSerif.variable
+        instrumentSerif.variable,
+        meeteiMayek.variable
       )}
     >
       <body suppressHydrationWarning>
@@ -92,6 +101,7 @@ export default function RootLayout({
         <SupabaseAuthProvider>
           {children}
           <Toaster />
+          <WiseEpu apiRoute="/api/wise-epu" />
         </SupabaseAuthProvider>
         <SpeedInsights />
         <Analytics />

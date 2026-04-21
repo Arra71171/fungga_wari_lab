@@ -43,12 +43,12 @@ export function EngagementChart({ data, isLoading }: { data?: { date: string; vi
   }
 
   return (
-    <div className="w-full border border-border-subtle bg-bg-surface p-6 relative group overflow-hidden">
+    <div className="w-full border border-border-subtle bg-bg-surface p-4 md:p-6 relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
-      <div className="mb-6 flex flex-col items-start gap-1">
+      <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground/90">Engagement Trends</h3>
-        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground/70">
+        <p className="text-[10px] md:text-fine font-mono tracking-label uppercase text-muted-foreground/70">
           Views & Reads over time
         </p>
       </div>

@@ -13,8 +13,8 @@ type SceneRow = Database["public"]["Tables"]["scenes"]["Row"]
  */
 export async function getChaptersByStory(storyId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return []
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) return []
 
   const { data } = await supabase
     .from("chapters")
@@ -34,8 +34,8 @@ export async function createChapter(args: {
   order: number
 }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("chapters")
@@ -80,8 +80,8 @@ export async function updateChapter(
   patch: Partial<Pick<ChapterRow, "title" | "order" | "illustration_url" | "content" | "tiptap_content">>
 ) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("chapters")
@@ -97,8 +97,8 @@ export async function updateChapter(
  */
 export async function deleteChapter(id: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   // Get story_id before deletion for count decrement
   const { data: chapter } = await supabase
@@ -124,8 +124,8 @@ export async function deleteChapter(id: string) {
  */
 export async function getScenesByChapter(chapterId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return []
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) return []
 
   const { data } = await supabase
     .from("scenes")
@@ -141,8 +141,8 @@ export async function getScenesByChapter(chapterId: string) {
  */
 export async function getSceneById(id: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) return null
 
   const { data } = await supabase
     .from("scenes")
@@ -167,8 +167,8 @@ export async function createScene(args: {
   order: number
 }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("scenes")
@@ -200,8 +200,8 @@ export async function updateSceneContent(
   }
 ) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const patch: Partial<SceneRow> = {}
   if (args.content !== undefined) patch.content = args.content
@@ -223,8 +223,8 @@ export async function updateScene(
   patch: Partial<Pick<SceneRow, "title" | "order" | "illustration_url" | "is_draft">>
 ) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("scenes").update(patch).eq("id", id)
   if (error) throw new Error(`Failed to update scene: ${error.message}`)
@@ -236,8 +236,8 @@ export async function updateScene(
  */
 export async function publishScene(id: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   // Get current version
   const { data: scene } = await supabase
@@ -260,8 +260,8 @@ export async function publishScene(id: string) {
  */
 export async function deleteScene(id: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("scenes").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete scene: ${error.message}`)
@@ -279,8 +279,8 @@ export async function addChoice(args: {
   nextSceneId: string
 }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { data, error } = await supabase
     .from("choices")
@@ -301,8 +301,8 @@ export async function addChoice(args: {
  */
 export async function deleteChoice(id: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) throw new Error("Unauthenticated")
 
   const { error } = await supabase.from("choices").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete choice: ${error.message}`)

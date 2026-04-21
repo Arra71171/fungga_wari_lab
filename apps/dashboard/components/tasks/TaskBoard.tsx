@@ -69,7 +69,7 @@ export function TaskBoard() {
       {renderedGroups.length === 0 ? (
         <div className="flex-1 border border-dashed border-border-subtle flex flex-col items-center justify-center p-10 bg-bg-surface/20">
           <Users className="size-10 text-muted-foreground/30 mb-4" />
-          <p className="text-[10px] font-mono tracking-[0.2em] text-muted-foreground uppercase">
+          <p className="text-fine font-mono tracking-label text-muted-foreground uppercase">
             No active tasks discovered
           </p>
         </div>
@@ -92,7 +92,7 @@ export function TaskBoard() {
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="inline-block size-1.5 bg-brand-ochre rounded-full" />
-                    <p className="text-[10px] font-mono text-muted-foreground/80 tracking-widest uppercase">
+                    <p className="text-fine font-mono text-muted-foreground/80 tracking-widest uppercase">
                       {group.tasks.length} Active {group.tasks.length === 1 ? "Task" : "Tasks"}
                     </p>
                   </div>

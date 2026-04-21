@@ -70,7 +70,8 @@ function LoginForm() {
         return
       }
 
-      if (profile?.role === "superadmin") {
+      const isDashboardUser = ["admin", "superadmin", "editor"].includes(profile?.role || "");
+      if (isDashboardUser) {
         const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000"
         window.location.href = dashboardUrl
         return
@@ -150,6 +151,22 @@ function LoginForm() {
 
 import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
 
+function LoginFormSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="space-y-2">
+        <div className="h-3 w-12 bg-muted rounded-sm"></div>
+        <div className="h-10 w-full bg-muted/50 rounded-sm"></div>
+      </div>
+      <div className="space-y-2">
+        <div className="h-3 w-20 bg-muted rounded-sm"></div>
+        <div className="h-10 w-full bg-muted/50 rounded-sm"></div>
+      </div>
+      <div className="h-10 w-full bg-primary/20 rounded-sm mt-6"></div>
+    </div>
+  )
+}
+
 export default function LoginPage() {
   return (
     <AuthGatewayLayout
@@ -160,7 +177,7 @@ export default function LoginPage() {
       backLinkHref="/"
       showSignUp={true}
     >
-      <React.Suspense fallback={null}>
+      <React.Suspense fallback={<LoginFormSkeleton />}>
         <LoginForm />
       </React.Suspense>
     </AuthGatewayLayout>

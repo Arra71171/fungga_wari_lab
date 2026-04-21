@@ -11,26 +11,28 @@ type TopStory = {
 export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <div className="w-full h-full min-h-[300px] border border-border bg-background p-6 animate-pulse" />
+      <div className="w-full h-full min-h-[300px] border border-border bg-background p-4 md:p-6 animate-pulse" />
     );
   }
 
   return (
-    <div className="w-full border border-border bg-background p-6">
-      <div className="mb-6 flex flex-col items-start gap-1">
+    <div className="w-full border border-border bg-background p-4 md:p-6">
+      <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground">Top Manuscripts</h3>
-        <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-muted-foreground">
+        <p className="text-[10px] md:text-fine font-mono tracking-label uppercase text-muted-foreground">
           Ranked by View Engagement
         </p>
       </div>
 
+      <div className="w-full overflow-x-auto pb-4">
+
       <Table>
         <TableHeader>
           <TableRow className="border-border hover:bg-transparent">
-            <TableHead className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Title</TableHead>
-            <TableHead className="text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Views</TableHead>
-            <TableHead className="text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Reads</TableHead>
-            <TableHead className="text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Completion</TableHead>
+            <TableHead className="font-mono text-fine uppercase tracking-widest text-muted-foreground">Title</TableHead>
+            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Views</TableHead>
+            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Reads</TableHead>
+            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Completion</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,6 +75,7 @@ export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], 
           })}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }

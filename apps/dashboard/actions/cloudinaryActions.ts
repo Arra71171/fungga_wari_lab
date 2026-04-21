@@ -1,15 +1,23 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
+import { requireUser } from "./authHelpers"
+import { z } from "zod"
 import crypto from "crypto"
 
-export async function getCloudinarySignature(folder: string = "fungga-wari-lab/assets") {
-  const supabase = await createClient()
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data.user) {
-    throw new Error("Unauthenticated");
+const signatureSchema = z.object({
+  folder: z.enum(["fungga-wari-lab/assets"]).default("fungga-wari-lab/assets"),
+})
+
+const authorizedUploadRoles = new Set(["admin", "superadmin", "editor"])
+
+export async function getCloudinarySignature(folderInput: string = "fungga-wari-lab/assets") {
+  const { profile } = await requireUser()
+  
+  if (!profile.role || !authorizedUploadRoles.has(profile.role)) {
+    throw new Error("Forbidden")
   }
-  const userId = data.user.id;
+
+  const { folder } = signatureSchema.parse({ folder: folderInput })
 
   const timestamp = Math.round(new Date().getTime() / 1000);
   const apiSecret = process.env.CLOUDINARY_API_SECRET;

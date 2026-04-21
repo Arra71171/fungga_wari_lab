@@ -54,7 +54,10 @@ function UserProfileBlock() {
     userProfile.email ||
     "Archive Admin";
   const userRoleStr =
-    userProfile.role === "superadmin" ? "Superadmin" : "Creator";
+    userProfile.role === "superadmin" ? "Superadmin"
+    : userProfile.role === "admin" ? "Admin"
+    : userProfile.role === "editor" ? "Editor"
+    : "Creator";
 
   return (
     <div id="tour-profile" className="flex items-center gap-3">
@@ -77,7 +80,7 @@ function UserProfileBlock() {
         <span className="text-xs font-mono text-foreground truncate h-4 leading-none">
           {displayName}
         </span>
-        <span className="text-[9px] font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
+        <span className="text-nano font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
           {userRoleStr}
         </span>
       </div>
@@ -95,7 +98,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
       </div>
 
       <nav className="flex-1 px-3 py-6 space-y-0.5 overflow-y-auto">
-        <div className="text-[9px] font-mono tracking-[0.2em] text-muted-foreground/60 uppercase mb-5 pl-3">
+        <div className="text-nano font-mono tracking-label text-muted-foreground/60 uppercase mb-5 pl-3">
           Creator Studio
         </div>
 
@@ -121,7 +124,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           );
         })}
 
-        <div className="text-[9px] font-mono tracking-[0.2em] text-muted-foreground/60 uppercase mt-8 mb-3 pl-3">
+        <div className="text-nano font-mono tracking-label text-muted-foreground/60 uppercase mt-8 mb-3 pl-3">
           Public Site
         </div>
         {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
@@ -155,7 +158,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
               onClick={onSignOut}
             >
               <LogOut className="size-4 mr-2" />
-              <span className="font-mono text-[10px] uppercase tracking-widest">Sign Out</span>
+              <span className="font-mono text-fine uppercase tracking-widest">Sign Out</span>
             </Button>
 
           <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
@@ -181,17 +184,17 @@ export default function DashboardLayout({
     window.location.href = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
   }, [signOut]);
 
-  // Guard: redirect non-superadmins to the public web app
-  const isSuperAdmin = userProfile?.role === "superadmin";
+  // Guard: redirect unauthorized roles to the public web app
+  const isDashboardUser = ["admin", "superadmin", "editor"].includes(userProfile?.role || "");
   React.useEffect(() => {
-    if (isLoaded && user && !isSuperAdmin) {
+    if (isLoaded && user && !isDashboardUser) {
       const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3001";
       window.location.href = webUrl;
     }
-  }, [isLoaded, user, isSuperAdmin]);
+  }, [isLoaded, user, isDashboardUser]);
 
-  // Show nothing while checking auth or redirecting non-admins
-  if (!isLoaded || !user || !isSuperAdmin) {
+  // Show nothing while checking auth or redirecting unauthorized users
+  if (!isLoaded || !user || !isDashboardUser) {
     return null;
   }
 
@@ -220,7 +223,7 @@ export default function DashboardLayout({
                   <Menu className="size-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r border-border-subtle">
+              <SheetContent side="left" className="w-[280px] p-0 flex flex-col bg-bg-panel border-r border-border-subtle" aria-describedby={undefined}>
                 <SheetHeader className="p-0 text-left">
                   <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 </SheetHeader>
@@ -235,20 +238,11 @@ export default function DashboardLayout({
               </Link>
             </div>
 
-            {/* Quick actions on mobile header — sign out + theme */}
-            <div className="flex items-center gap-1 shrink-0">
+            {/* Quick actions on mobile header — theme */}
+            <div className="flex items-center shrink-0">
               <div className="border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
                 <AnimatedThemeToggler />
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleSignOut}
-                aria-label="Sign out"
-                className="size-[34px] text-muted-foreground hover:text-foreground"
-              >
-                <LogOut className="size-4" />
-              </Button>
             </div>
           </header>
 

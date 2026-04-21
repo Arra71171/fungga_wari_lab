@@ -1,8 +1,8 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from "react";
 import { useStoryReader } from "./StoryReaderContext";
+import type { StoryShape } from "./StoryReaderContext";
 import { 
   Sheet, 
   SheetContent, 
@@ -13,6 +13,9 @@ import {
 import { Map } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 
+type ChapterWithScenes = StoryShape["chapters"][number];
+type SceneRow = ChapterWithScenes["scenes"][number];
+
 export function StoryMapSidebar() {
   const { story, currentSceneId, setCurrentSceneId } = useStoryReader();
   const [open, setOpen] = React.useState(false);
@@ -22,7 +25,7 @@ export function StoryMapSidebar() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors flex items-center gap-2">
+        <button className="text-fine font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors flex items-center gap-2">
           <Map className="size-3" />
           Map
         </button>
@@ -32,17 +35,17 @@ export function StoryMapSidebar() {
           <SheetTitle className="font-heading text-lg font-black uppercase tracking-widest text-brand-ember">
             Story Map
           </SheetTitle>
-          <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+          <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground">
             Navigate the manuscript
           </p>
         </SheetHeader>
         
         <div className="flex-1 overflow-y-auto p-6 scrollbar-none">
           <div className="space-y-8">
-            {story.chapters.map((chapter: any, index: number) => (
-              <div key={chapter._id} className="space-y-4">
+            {story.chapters.map((chapter: ChapterWithScenes, index: number) => (
+              <div key={chapter.id} className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-[10px] text-muted-foreground/50 tabular-nums">
+                  <span className="font-mono text-fine text-muted-foreground/50 tabular-nums">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3 className="font-heading text-sm uppercase tracking-wider text-muted-foreground">
@@ -52,13 +55,13 @@ export function StoryMapSidebar() {
                 
                 {chapter.scenes && chapter.scenes.length > 0 ? (
                   <div className="pl-6 border-l border-brand-ember/20 ml-2 space-y-3">
-                    {chapter.scenes.map((scene: any) => {
-                      const isActive = scene._id === currentSceneId;
+                    {chapter.scenes.map((scene: SceneRow) => {
+                      const isActive = scene.id === currentSceneId;
                       return (
                         <button
-                          key={scene._id}
+                          key={scene.id}
                           onClick={() => {
-                            setCurrentSceneId(scene._id);
+                            setCurrentSceneId(scene.id);
                             setOpen(false);
                           }}
                           className={cn(
@@ -71,7 +74,7 @@ export function StoryMapSidebar() {
                             isActive ? "bg-brand-ember shadow-[0_0_8px_rgba(255,165,0,0.5)]" : "bg-muted-foreground/50 group-hover:bg-brand-ember/50"
                           )} />
                           <span className={cn(
-                            "font-mono text-[10px] uppercase tracking-widest truncate",
+                            "font-mono text-fine uppercase tracking-widest truncate",
                             isActive ? "text-brand-ember font-bold" : "text-muted-foreground"
                           )}>
                             {scene.title || "Scene"}
@@ -82,7 +85,7 @@ export function StoryMapSidebar() {
                   </div>
                 ) : (
                   <div className="pl-6 border-l border-border/10 ml-2">
-                    <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/30">
+                    <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground/30">
                       Fragments lost to time
                     </span>
                   </div>

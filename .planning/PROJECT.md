@@ -29,14 +29,14 @@ The system is **two products in one**:
 | Icons | Lucide React ONLY |
 | Fonts | DM Sans (heading), Geist (body), JetBrains Mono (code) |
 | Styling | Tailwind v4 + semantic OKLCH CSS tokens — NO hardcoded colors |
-| Backend | Convex (real-time, serverless — replaces API routes for data) |
-| Auth | Convex Auth (built-in — email/password + OAuth, roles via Convex schema) |
+| Backend | Supabase (PostgreSQL + Auth + Realtime + Storage) |
+| Auth | Clerk (integrated with Supabase RLS) |
 | Media Storage | Cloudinary (illustration uploads) |
-| AI | Vercel AI SDK + OpenAI GPT-4.1 (narration, story enhancement, task assist) |
+| AI | Vercel AI SDK + OpenRouter (google/gemma-3-27b-it:free) |
 | Animations | Framer Motion |
 | Rich Text Editor | Tiptap (for CMS story content editing) |
-| State (Client) | React useState/useReducer + Zustand for story playback only |
-| Realtime Chat | Convex live queries (team workspace chat) |
+| State (Client) | React useState/useReducer |
+| Realtime Chat | Supabase Realtime |
 
 ## Key Constraints
 

@@ -1,6 +1,30 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+import { z } from "zod"
+import { requireUser } from "./authHelpers"
+
+const updateUserProfileSchema = z.object({
+  alias: z.string().max(100).optional(),
+  bio: z.string().max(1000).optional(),
+  avatar_url: z.string().url().max(1000).optional(),
+})
+
+const updateUserRoleSchema = z.object({
+  targetUserId: z.string().min(1),
+  role: z.enum(["superadmin", "admin", "editor", "viewer"]),
+})
+
+const deleteUserAccountSchema = z.object({
+  targetUserId: z.string().uuid(),
+})
+
+const createTeamMemberSchema = z.object({
+  name: z.string().min(1).max(255),
+  email: z.string().email().optional().or(z.literal("")),
+  phone: z.string().max(50).optional().or(z.literal("")),
+})
 
 /**
  * syncUserToSupabase — DEPRECATED.
@@ -42,13 +66,19 @@ export async function updateUserProfile(patch: {
   bio?: string
   avatar_url?: string
 }) {
+  const parsed = updateUserProfileSchema.safeParse(patch)
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validatedPatch = parsed.data
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
 
   const { error } = await supabase
     .from("users")
-    .update(patch)
+    .update(validatedPatch)
     .eq("auth_id", user.id)
 
   if (error) throw new Error(`Failed to update profile: ${error.message}`)
@@ -71,8 +101,8 @@ export async function getAllUsers() {
     .single()
 
   if (callerError) throw new Error(`Failed to verify permissions: ${callerError.message}`)
-  if (caller?.role !== "superadmin") {
-    throw new Error("Forbidden — only superadmins can view users")
+  if (caller?.role !== "superadmin" && caller?.role !== "admin") {
+    throw new Error("Forbidden — only admins and superadmins can view users")
   }
 
   const { data, error } = await supabase
@@ -89,7 +119,58 @@ export async function getAllUsers() {
  * updateUserRole — change a user's role (superadmin only).
  * Uses auth_id to identify target user.
  */
-export async function updateUserRole(targetAuthId: string, role: "superadmin" | "editor" | "viewer") {
+export async function updateUserRole(targetUserId: string, role: "superadmin" | "admin" | "editor" | "viewer") {
+  const parsed = updateUserRoleSchema.safeParse({ targetUserId, role })
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const { targetUserId: validUserId, role: validRole } = parsed.data
+
+  const { supabase, profile: caller } = await requireUser()
+
+  // Verify caller is superadmin or admin
+  if (!caller.role || !["superadmin", "admin"].includes(caller.role)) {
+    throw new Error("Forbidden — only admins and superadmins can change roles")
+  }
+
+  // Fetch target user's current role
+  const { data: target } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", validUserId)
+    .single()
+
+  if (!target) throw new Error("Target user not found")
+
+  // Admins cannot modify superadmins
+  if (caller.role === "admin" && target.role === "superadmin") {
+    throw new Error("Admins cannot modify superadmin roles")
+  }
+
+  // Admins cannot grant superadmin privileges
+  if (caller.role === "admin" && validRole === "superadmin") {
+    throw new Error("Admins cannot grant superadmin privileges")
+  }
+
+  const { error } = await supabase
+    .from("users")
+    .update({ role: validRole })
+    .eq("id", validUserId)
+
+  if (error) throw new Error(`Failed to update role: ${error.message}`)
+}
+
+/**
+ * deleteUserAccount — delete a user account (superadmin only).
+ * Target user must be specified by their public.users.id.
+ */
+export async function deleteUserAccount(targetUserId: string) {
+  const parsed = deleteUserAccountSchema.safeParse({ targetUserId })
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validTargetUserId = parsed.data.targetUserId
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -101,16 +182,58 @@ export async function updateUserRole(targetAuthId: string, role: "superadmin" | 
     .eq("auth_id", user.id)
     .single()
 
-  if (!caller || caller.role !== "superadmin") {
-    throw new Error("Forbidden — only superadmins can change roles")
+  if (!caller || !caller.role || !["superadmin", "admin"].includes(caller.role)) {
+    throw new Error("Forbidden — only admins and superadmins can delete users")
   }
 
-  const { error } = await supabase
+  const { data: target } = await supabase
     .from("users")
-    .update({ role })
-    .eq("auth_id", targetAuthId)
+    .select("auth_id, role")
+    .eq("id", validTargetUserId)
+    .single()
 
-  if (error) throw new Error(`Failed to update role: ${error.message}`)
+  if (!target) {
+    throw new Error("Target user not found")
+  }
+
+  if (target.role === "superadmin") {
+    throw new Error("Cannot delete a superadmin")
+  }
+
+
+
+  if (target.auth_id === user.id) {
+    throw new Error("Self-deletion is not permitted here")
+  }
+
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceRoleKey) {
+    console.error("[deleteUserAccount] SUPABASE_SERVICE_ROLE_KEY is not configured")
+    throw new Error("Server configuration error: missing service role key")
+  }
+
+  // Use service role client to bypass RLS and use Admin API
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    serviceRoleKey
+  )
+
+  if (target.auth_id) {
+    // Delete from auth.users, which cascades to public.users
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(target.auth_id)
+    if (error) throw new Error(`Failed to delete user auth: ${error.message}`)
+  }
+
+  const { error: profileDeleteError } = await supabaseAdmin
+    .from("users")
+    .delete()
+    .eq("id", validTargetUserId)
+
+  if (profileDeleteError) {
+    throw new Error(`Failed to delete user profile: ${profileDeleteError.message}`)
+  }
+
+  return { success: true }
 }
 
 /**
@@ -121,6 +244,12 @@ export async function createTeamMember(data: {
   email?: string
   phone?: string
 }) {
+  const parsed = createTeamMemberSchema.safeParse(data)
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validData = parsed.data
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -140,9 +269,9 @@ export async function createTeamMember(data: {
   const { data: member, error } = await supabase
     .from("users")
     .insert({
-      name: data.name,
-      email: data.email ?? null,
-      phone: data.phone ?? null,
+      name: validData.name,
+      email: validData.email ?? null,
+      phone: validData.phone ?? null,
       role: "editor",
     })
     .select("id")
@@ -152,18 +281,28 @@ export async function createTeamMember(data: {
   return member
 }
 
+const getOperativeStatsSchema = z.object({
+  authId: z.string().uuid(),
+})
+
 /**
  * getOperativeStats — aggregate task completion and lore authored counts.
  */
 export async function getOperativeStats(authId: string) {
-  const supabase = await createClient()
+  const parsed = getOperativeStatsSchema.safeParse({ authId })
+  if (!parsed.success) {
+    throw new Error(`Validation error: ${parsed.error.message}`)
+  }
+  const validAuthId = parsed.data.authId
 
+  const supabase = await createClient()
+  
   // Resolve internal users.id and legacy clerk_id for identity migration bridging
   // stories.author_id and tasks.assignee_id may hold either format during transition
   const { data: profile, error: profileError } = await supabase
     .from("users")
     .select("id, clerk_id")
-    .eq("auth_id", authId)
+    .eq("auth_id", validAuthId)
     .single()
 
   if (profileError) throw new Error(`Failed to load operative identity: ${profileError.message}`)
