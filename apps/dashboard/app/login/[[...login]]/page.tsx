@@ -19,12 +19,13 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  // If already logged in, redirect
+  // If already logged in and no unauthorized error, redirect
   React.useEffect(() => {
-    if (isLoaded && user) {
+    const isUnauthorized = searchParams.get("error") === "unauthorized";
+    if (isLoaded && user && !isUnauthorized) {
       router.replace(redirectUrl);
     }
-  }, [isLoaded, user, router, redirectUrl]);
+  }, [isLoaded, user, router, redirectUrl, searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -69,6 +70,11 @@ export default function LoginPage() {
       showSignUp={false}
     >
       <form onSubmit={handleSubmit} className="mt-4 w-full flex flex-col space-y-4">
+        {searchParams.get("error") === "unauthorized" && (
+          <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm p-3 font-mono">
+            Unauthorized Access. Your account does not have permission to enter the Creator Studio.
+          </div>
+        )}
         {/* Email Field */}
         <div className="space-y-1.5">
           <label
