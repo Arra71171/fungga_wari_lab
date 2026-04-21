@@ -49,7 +49,7 @@ export function useReadingProgress(slug: string) {
     if (prevSlugRef.current === slug) return;
     prevSlugRef.current = slug;
     const map = getProgressMap();
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     setProgress(map[slug]?.progress ?? 0);
   }, [slug]);
 

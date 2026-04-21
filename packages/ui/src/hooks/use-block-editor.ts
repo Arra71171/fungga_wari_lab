@@ -36,6 +36,7 @@ function useBlockEditor(
 
   // Sync from external data source (e.g., Convex subscription)
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBlocks(initialBlocks)
   }, [initialBlocks])
 

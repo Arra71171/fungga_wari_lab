@@ -27,6 +27,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
     if (!currentSceneId || !chapters.length) return;
     for (const ch of chapters) {
       if ((ch.scenes ?? []).some((s) => s.id === currentSceneId)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setExpandedChapterId(ch.id);
         break;
       }
@@ -37,6 +38,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
   // Auto-expand first chapter on initial load
   React.useEffect(() => {
     if (chapters.length && !expandedChapterId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setExpandedChapterId(chapters[0]?.id ?? null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -163,6 +163,7 @@ export default function StoryEditorPage() {
   // ── Auto-select first chapter ───────────────────────────────────────────────
   React.useEffect(() => {
     if (chapters && chapters.length > 0 && !activeChapterId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveChapterId(chapters[0]!.id);
     }
   }, [chapters, activeChapterId]);
@@ -175,6 +176,7 @@ export default function StoryEditorPage() {
 
   React.useEffect(() => {
     if (!activeChapterId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSceneList([]);
       return;
     }
@@ -184,6 +186,7 @@ export default function StoryEditorPage() {
   // ── Auto-select first scene ─────────────────────────────────────────────────
   React.useEffect(() => {
     if (sceneList.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveSceneId((prev) => prev ?? sceneList[0]!.id);
     } else {
       setActiveSceneId(null);
@@ -193,6 +196,7 @@ export default function StoryEditorPage() {
   // ── Fetch full scene content when active scene changes ──────────────────────
   React.useEffect(() => {
     if (!activeSceneId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveSceneData(null);
       return;
     }

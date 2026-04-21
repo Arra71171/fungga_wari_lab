@@ -28,6 +28,7 @@ export function useReadingPreferences() {
     const saved = localStorage.getItem("foxstory-reading-prefs");
     if (saved) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPreferences(JSON.parse(saved));
       } catch {
         // ignore

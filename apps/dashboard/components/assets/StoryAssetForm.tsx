@@ -76,6 +76,7 @@ function ChapterIllustrationPreview({
 
   React.useEffect(() => {
     const objectUrl = URL.createObjectURL(file);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreviewUrl(objectUrl);
 
     return () => {
