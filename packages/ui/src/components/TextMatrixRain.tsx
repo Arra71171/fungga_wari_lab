@@ -41,12 +41,16 @@ function TextMatrixRain({
   }, [hoverRescramble]);
 
   React.useEffect(() => {
-    // Respect prefers-reduced-motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!containerRef.current) return;
 
     const el = containerRef.current;
     const finalText = children;
+
+    // Respect prefers-reduced-motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = finalText;
+      return;
+    }
     const matrixChars =
       "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789";
 

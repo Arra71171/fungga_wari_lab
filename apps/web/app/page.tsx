@@ -403,13 +403,18 @@ export default function Home() {
             </motion.div>
 
             {/* Split-text headline */}
-            <ScrollReveal direction="up" distance={30} duration={1} delay={0.2} scrub={1}>
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.2 }}
+            >
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-heading font-black tracking-tighter uppercase leading-[0.9] text-foreground max-w-[12ch]">
                 <TextMatrixRain duration={2.5} repeat={false} hoverRescramble>
                   Where stories outlive silence.
                 </TextMatrixRain>
               </h1>
-            </ScrollReveal>
+            </motion.div>
 
             {/* Subtext */}
             <motion.div
