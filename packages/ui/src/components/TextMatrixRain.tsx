@@ -46,11 +46,6 @@ function TextMatrixRain({
     const el = containerRef.current;
     const finalText = children;
 
-    // Respect prefers-reduced-motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      el.textContent = finalText;
-      return;
-    }
     const matrixChars =
       "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789";
 
@@ -163,11 +158,12 @@ function TextMatrixRain({
      * This avoids CLS (cumulative layout shift) on mount.
      */
     <span
-      className={cn("relative inline-block cursor-default", className)}
+      className={cn("relative inline-block cursor-pointer", className)}
       aria-label={children}
       aria-live="off"
       onMouseEnter={handleInteraction}
       onTouchStart={handleInteraction}
+      onClick={handleInteraction}
     >
       {/* Invisible text — gives the container its natural dimensions pre-JS */}
       <span className="invisible select-none pointer-events-none" aria-hidden="true">
