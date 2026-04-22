@@ -2,8 +2,8 @@ import * as React from "react";
 
 export type TTSState = "idle" | "loading" | "playing" | "paused" | "error";
 
-// Default voice fallback
-const DEFAULT_VOICE_ID = process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID || "bY54gWrN4O4G9QOFtXwl";
+// Default voice — George ("Warm, Captivating Storyteller", premade, free tier confirmed)
+const DEFAULT_VOICE_ID = process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID || "JBFqnCBsd6RMkjVDRZzb";
 
 /**
  * useElevenLabsTTS — Streams TTS audio from our /api/tts proxy (ElevenLabs backend).
