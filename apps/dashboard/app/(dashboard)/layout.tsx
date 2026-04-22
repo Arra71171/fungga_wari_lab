@@ -212,10 +212,15 @@ export default function DashboardLayout({
         <main className="flex-1 w-full relative h-screen flex flex-col min-w-0 bg-bg-base">
           {/* Mobile Header Bar */}
           <header className="lg:hidden flex items-center h-[60px] px-4 border-b border-border-subtle bg-bg-panel shrink-0 sticky top-0 z-40">
-            {/* Mobile hamburger — visible on ALL sub-lg screens (matches sidebar breakpoint) */}
+            {/* Hamburger — left side */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="mr-2" aria-label="Open navigation menu">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 text-muted-foreground hover:text-foreground hover:bg-bg-surface border border-transparent hover:border-border-subtle transition-all"
+                  aria-label="Open navigation menu"
+                >
                   <Menu className="size-5" />
                 </Button>
               </SheetTrigger>
@@ -234,12 +239,8 @@ export default function DashboardLayout({
               </Link>
             </div>
 
-            {/* Quick actions on mobile header — theme */}
-            <div className="flex items-center shrink-0">
-              <div className="border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
-                <AnimatedThemeToggler />
-              </div>
-            </div>
+            {/* Right spacer to balance the hamburger — no duplicate theme toggle */}
+            <div className="size-9 shrink-0" aria-hidden="true" />
           </header>
 
           <div id="tour-main-content" className="flex-1 w-full h-full overflow-y-auto">

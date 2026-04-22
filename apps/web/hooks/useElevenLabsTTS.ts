@@ -2,8 +2,8 @@ import * as React from "react";
 
 export type TTSState = "idle" | "loading" | "playing" | "paused" | "error";
 
-// Default voice — Elli (MF3mGyEYCl7XYWbV9V6O) - Young female, great for storytelling
-const DEFAULT_VOICE_ID = process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID || "MF3mGyEYCl7XYWbV9V6O";
+// Default voice fallback
+const DEFAULT_VOICE_ID = process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID || "bY54gWrN4O4G9QOFtXwl";
 
 /**
  * useElevenLabsTTS — Streams TTS audio from our /api/tts proxy (ElevenLabs backend).

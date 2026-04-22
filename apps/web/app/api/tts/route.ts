@@ -4,8 +4,8 @@ import https from "node:https";
 
 const requestSchema = z.object({
   text: z.string().min(1).max(2500),
-  // Default to Elli (MF3mGyEYCl7XYWbV9V6O) or custom voice ID from env
-  voiceId: z.string().default(process.env.ELEVENLABS_VOICE_ID || "MF3mGyEYCl7XYWbV9V6O"),
+  // Default to custom voice ID from env or fallback to user preferred voice (bY54gWrN4O4G9QOFtXwl)
+  voiceId: z.string().default(process.env.ELEVENLABS_VOICE_ID || "bY54gWrN4O4G9QOFtXwl"),
 });
 
 // eleven_turbo_v2_5 — lowest latency, free tier compatible

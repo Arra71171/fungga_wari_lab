@@ -273,12 +273,19 @@
 }
 
 @layer base {
+  html {
+    overflow-x: hidden;
+    /* Prevent horizontal scroll caused by fixed/absolute positioned elements (e.g. floating navbar) */
+    overscroll-behavior-x: none;
+  }
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
   }
   ::selection {
     @apply bg-primary/30 text-primary-foreground;
