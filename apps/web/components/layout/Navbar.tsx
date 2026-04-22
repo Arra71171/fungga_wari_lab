@@ -35,10 +35,9 @@ const navItems = [
   { name: "Folklore", href: "/#archive", icon: Library },
 ];
 
-// Dashboard lives on a separate origin (dashboard app).
-// NEXT_PUBLIC_DASHBOARD_URL must be set as a Vercel env var for production.
-// Never hard-code localhost here — it bleeds into prod builds.
-const DASHBOARD_URL = getAppUrl("dashboard");
+// Dashboard is now served via Next.js rewrites on the same origin.
+// This solves the cross-origin cookie limitation on .vercel.app domains.
+const DASHBOARD_URL = "/dashboard";
 
 function Navbar() {
   const { scrollY } = useScroll();

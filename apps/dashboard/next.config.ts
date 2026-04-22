@@ -6,6 +6,8 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  // Use a basePath so that we can rewrite from the web app
+  basePath: "/dashboard",
   // Allow HMR/WebSocket connections from LAN mobile devices
   allowedDevOrigins: ['192.168.1.2'],
   transpilePackages: ["@workspace/ui", "@workspace/auth"],

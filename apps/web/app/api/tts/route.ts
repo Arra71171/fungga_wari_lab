@@ -4,8 +4,8 @@ import https from "node:https";
 
 const requestSchema = z.object({
   text: z.string().min(1).max(2500),
-  // Sarah — warm, expressive female narration voice (free tier, premade)
-  voiceId: z.string().default("EXAVITQu4vr4xnSDxMaL"),
+  // Default to Elli (MF3mGyEYCl7XYWbV9V6O) or custom voice ID from env
+  voiceId: z.string().default(process.env.ELEVENLABS_VOICE_ID || "MF3mGyEYCl7XYWbV9V6O"),
 });
 
 // eleven_turbo_v2_5 — lowest latency, free tier compatible

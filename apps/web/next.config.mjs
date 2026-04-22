@@ -7,6 +7,18 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/dashboard",
+        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/dashboard`,
+      },
+      {
+        source: "/dashboard/:path*",
+        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/dashboard/:path*`,
+      },
+    ];
+  },
   // Allow HMR/WebSocket connections from LAN mobile devices
   allowedDevOrigins: ['192.168.1.2'],
   transpilePackages: ["@workspace/ui"],
