@@ -35,10 +35,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile] = React.useState<UserProfile | null>(null)
   const [isLoaded, setIsLoaded] = React.useState(false)
 
-  // Track whether the initial session load is done.
-  // onAuthStateChange must not flip isLoaded until after init completes.
-  const initializedRef = React.useRef(false)
-
   const fetchProfile = React.useCallback(async (authUser: User) => {
     const { data } = await supabase
       .from("users")
@@ -51,38 +47,42 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     let mounted = true
 
+    /**
+     * Use getUser() (not getSession()) for the initial check.
+     * getSession() reads from localStorage and can return a stale, server-invalid
+     * session — causing a 403 when the middleware immediately validates it.
+     * getUser() always makes a round-trip to validate with the Supabase server.
+     */
     async function initializeSession() {
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { user: authUser } } = await supabase.auth.getUser()
       if (!mounted) return
-      
-      const authUser = session?.user ?? null
+
       setUser(authUser)
-      
+
       if (authUser) {
         await fetchProfile(authUser)
       }
-      
-      initializedRef.current = true
+
       if (mounted) setIsLoaded(true)
     }
 
-    // Start initialization
     void initializeSession()
 
-    // Listen for subsequent auth state changes
+    // Listen for subsequent auth state changes (sign in / sign out / token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!mounted) return
-        
-        // Ignore INITIAL_SESSION as we handle it explicitly above
-        if (event === 'INITIAL_SESSION') return
+
+        // INITIAL_SESSION fires before our initializeSession() getUser() resolves.
+        // Skip it — we handle initialization above with a server-validated getUser().
+        if (event === "INITIAL_SESSION") return
 
         const authUser = session?.user ?? null
         setUser(authUser)
-        
+
         if (authUser) {
-          // Defer to avoid re-entering the Supabase client while it
-          // still holds its internal auth lock.
+          // Defer slightly to let Supabase release its internal auth lock before
+          // we fire another request.
           setTimeout(() => {
             if (mounted) void fetchProfile(authUser)
           }, 0)

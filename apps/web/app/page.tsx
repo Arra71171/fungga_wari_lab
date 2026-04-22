@@ -40,6 +40,7 @@ import { RichTextRenderer } from "@workspace/ui/components/editor/rich-text-rend
 import { EmberParticles } from "@workspace/ui/components/EmberParticles";
 import { SectionDivider } from "@workspace/ui/components/SectionDivider";
 import { ScrollReveal } from "@workspace/ui/components/ScrollReveal";
+import { WiseEpu } from "@workspace/ui/components/WiseEpu";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -841,6 +842,8 @@ export default function Home() {
       </footer>
 
     </div>
+    {/* WiseEpu — lore keeper chatbot, scoped to landing page only */}
+    <WiseEpu apiRoute="/api/wise-epu" />
     </>
   );
 }

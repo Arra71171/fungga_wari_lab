@@ -1,17 +1,16 @@
 "use client"
 
 import React from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { createBrowserClient } from "@supabase/ssr"
 
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react"
-import { getAppUrl } from "@workspace/ui/lib/utils"
+import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
 
 function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   // Sanitize redirect to same-origin relative paths only (XSS prevention)
   const redirectParam = searchParams.get("redirect")
@@ -51,17 +50,19 @@ function LoginForm() {
       return
     }
 
-    // Check if the user is a superadmin and redirect accordingly
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
-    if (userError) {
-      setError("Unable to verify your session. Please try again.")
-      setIsLoading(false)
-      return
-    }
-
-    setIsLoading(false)
-    router.push(redirectTo)
-    router.refresh()
+    /**
+     * Use a hard navigation (window.location) instead of router.push() + router.refresh().
+     *
+     * Why: router.push() is a client-side navigation that reuses the existing page
+     * context. router.refresh() then re-runs the middleware which calls getUser() —
+     * but at that exact moment, the new session cookies may not yet be fully
+     * propagated into the server-side cookie store, causing a 403 "Session not found"
+     * and a redirect back to /login (i.e., the double-sign-in bug).
+     *
+     * A full page reload guarantees the browser sends the fresh cookies on every
+     * request, including the initial middleware check — eliminating the race.
+     */
+    window.location.replace(redirectTo)
   }
 
   return (
@@ -129,8 +130,6 @@ function LoginForm() {
     </form>
   )
 }
-
-import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
 
 function LoginFormSkeleton() {
   return (

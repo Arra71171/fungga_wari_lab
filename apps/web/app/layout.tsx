@@ -6,7 +6,6 @@ import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider"
 import { cn } from "@workspace/ui/lib/utils"
 import { Toaster } from "@workspace/ui/components/sonner"
 import { NoiseOverlay } from "@workspace/ui/components/NoiseOverlay"
-import { WiseEpu } from "@workspace/ui/components/WiseEpu"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 // ── Folk-story serif body: warm, literary feel for the reader experience
@@ -101,7 +100,6 @@ export default function RootLayout({
         <SupabaseAuthProvider>
           {children}
           <Toaster />
-          <WiseEpu apiRoute="/api/wise-epu" />
         </SupabaseAuthProvider>
         <SpeedInsights />
         <Analytics />

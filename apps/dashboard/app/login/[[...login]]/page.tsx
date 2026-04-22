@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { Eye, EyeOff } from "lucide-react";
@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { getAppUrl } from "@workspace/ui/lib/utils";
 
 export default function LoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect_url") ?? "/overview";
   const { supabase, user, isLoaded } = useSupabaseAuth();
@@ -19,13 +18,15 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  // If already logged in and no unauthorized error, redirect
+  // If already logged in and no unauthorized error, do a hard redirect.
+  // We use window.location instead of router.replace to ensure fresh cookies
+  // are sent with the next request — preventing the double-login race.
   React.useEffect(() => {
     const isUnauthorized = searchParams.get("error") === "unauthorized";
     if (isLoaded && user && !isUnauthorized) {
-      router.replace(redirectUrl);
+      window.location.replace(redirectUrl);
     }
-  }, [isLoaded, user, router, redirectUrl, searchParams]);
+  }, [isLoaded, user, redirectUrl, searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -49,8 +50,9 @@ export default function LoginPage() {
         description: "Access granted to the Forge.",
       });
 
-      router.replace(redirectUrl);
-      router.refresh();
+      // Hard navigation — forces browser to send fresh session cookies to the
+      // middleware on the very first request, eliminating the 403 race condition.
+      window.location.replace(redirectUrl);
     } catch {
       toast.error("Connection Error", {
         description: "Unable to reach authentication server.",
