@@ -35,7 +35,7 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect(`/login?redirect=${validatedSlug ? `/stories/${validatedSlug}` : "/stories"}`);
   }
 
   // Check if user already has access

@@ -53,16 +53,13 @@ function LoginForm() {
     /**
      * Use a hard navigation (window.location) instead of router.push() + router.refresh().
      *
-     * Why: router.push() is a client-side navigation that reuses the existing page
-     * context. router.refresh() then re-runs the middleware which calls getUser() —
-     * but at that exact moment, the new session cookies may not yet be fully
-     * propagated into the server-side cookie store, causing a 403 "Session not found"
-     * and a redirect back to /login (i.e., the double-sign-in bug).
-     *
-     * A full page reload guarantees the browser sends the fresh cookies on every
-     * request, including the initial middleware check — eliminating the race.
+     * We add a slight delay to ensure the @supabase/ssr auth listener has time to
+     * write the session into document.cookie. Without this delay, the redirect can
+     * fire before the cookie is set, causing a double-login bug.
      */
-    window.location.replace(redirectTo)
+    setTimeout(() => {
+      window.location.replace(redirectTo)
+    }, 500)
   }
 
   return (

@@ -6,7 +6,6 @@ import { PaywallGate } from "@/components/story/PaywallGate";
 import { checkUserAccess } from "@/actions/paywallActions";
 import { PaymentSuccessHandler } from "@/components/story/PaymentSuccessHandler";
 import type { StoryShape } from "@/components/story/StoryReaderContext";
-import { WiseEpuReader } from "@/components/story/WiseEpuReader";
 
 type StoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -163,8 +162,6 @@ export default async function StoryPage({ params }: StoryPageProps) {
           <StoryReaderShell slug={slug} />
         </PaywallGate>
       </div>
-      {/* WiseEpu — lore keeper chatbot, available in the cinematic reader */}
-      <WiseEpuReader />
     </div>
   );
 }

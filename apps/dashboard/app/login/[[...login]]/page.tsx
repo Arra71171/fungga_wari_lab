@@ -51,8 +51,11 @@ export default function LoginPage() {
       });
 
       // Hard navigation — forces browser to send fresh session cookies to the
-      // middleware on the very first request, eliminating the 403 race condition.
-      window.location.replace(redirectUrl);
+      // middleware on the very first request. We add a slight delay to ensure
+      // the @supabase/ssr auth listener has time to write the session into document.cookie.
+      setTimeout(() => {
+        window.location.replace(redirectUrl);
+      }, 500);
     } catch {
       toast.error("Connection Error", {
         description: "Unable to reach authentication server.",
