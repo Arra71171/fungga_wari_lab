@@ -58,28 +58,6 @@ function LoginForm() {
       setIsLoading(false)
       return
     }
-    if (user) {
-      const { data: profile, error: profileError } = await supabase
-        .from("users")
-        .select("role")
-        .eq("auth_id", user.id)
-        .maybeSingle()
-
-      if (profileError) {
-        setError("Unable to load your profile. Please try again.")
-        setIsLoading(false)
-        return
-      }
-
-      const isDashboardUser = ["admin", "superadmin", "editor"].includes(profile?.role || "");
-      if (isDashboardUser) {
-        // NEXT_PUBLIC_DASHBOARD_URL must be set in Vercel env vars for production.
-        // Fallback to dynamic vercel origin or / to avoid localhost bleed.
-        const dashboardUrl = getAppUrl("dashboard");
-        window.location.href = dashboardUrl;
-        return;
-      }
-    }
 
     setIsLoading(false)
     router.push(redirectTo)
