@@ -48,41 +48,79 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     let mounted = true
 
     /**
-     * Use getUser() (not getSession()) for the initial check.
-     * getSession() reads from localStorage and can return a stale, server-invalid
-     * session — causing a 403 when the middleware immediately validates it.
-     * getUser() always makes a round-trip to validate with the Supabase server.
+     * Auth initialization strategy — two-phase to avoid IndexedDB lock contention:
+     *
+     * Phase 1 (instant): onAuthStateChange fires INITIAL_SESSION synchronously
+     *   from the cached localStorage session — sets user state and marks isLoaded
+     *   immediately so the UI can render without waiting for a network round-trip.
+     *
+     * Phase 2 (background): After a 50ms delay, getUser() validates the session
+     *   server-side. We delay to avoid racing with the subscription's internal
+     *   token-refresh which steals the IndexedDB lock if called simultaneously.
+     *   If the lock is stolen anyway, we catch the AbortError gracefully — the
+     *   session is already correctly set by Phase 1.
      */
-    async function initializeSession() {
-      const { data: { user: authUser } } = await supabase.auth.getUser()
+    async function validateSessionServerSide() {
+      // Short delay so the subscription's INITIAL_SESSION handler fully releases
+      // the Supabase internal auth lock before we attempt getUser().
+      await new Promise<void>((resolve) => setTimeout(resolve, 50))
       if (!mounted) return
 
-      setUser(authUser)
-
-      if (authUser) {
-        await fetchProfile(authUser)
-      }
-
-      if (mounted) setIsLoaded(true)
-    }
-
-    void initializeSession()
-
-    // Listen for subsequent auth state changes (sign in / sign out / token refresh)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      try {
+        const { data: { user: authUser }, error } = await supabase.auth.getUser()
         if (!mounted) return
 
-        // INITIAL_SESSION fires before our initializeSession() getUser() resolves.
-        // Skip it — we handle initialization above with a server-validated getUser().
-        if (event === "INITIAL_SESSION") return
+        if (error) {
+          // AbortError = lock contention — session already set by INITIAL_SESSION
+          // This is non-fatal; the listener handles state correctly.
+          if (error.name === "AbortError" || error.message?.includes("steal")) {
+            console.warn("[Auth] getUser lock contention — session managed by auth listener")
+            return
+          }
+          console.error("[Auth] getUser error:", error.message)
+          return
+        }
+
+        // Server-validated user — override any stale cached session value
+        setUser(authUser)
+        if (authUser) {
+          await fetchProfile(authUser)
+        } else {
+          setUserProfile(null)
+        }
+      } catch (err) {
+        // Catch AbortError thrown as an exception (browser-level)
+        if (err instanceof Error && err.name === "AbortError") {
+          console.warn("[Auth] getUser aborted — session managed by auth state listener")
+          return
+        }
+        console.error("[Auth] Unexpected error during session validation:", err)
+      }
+    }
+
+    // Phase 1: Subscribe first — INITIAL_SESSION fires synchronously with cached session
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) return
 
         const authUser = session?.user ?? null
+
+        if (event === "INITIAL_SESSION") {
+          // Set user state from cached session immediately — no network required
+          setUser(authUser)
+          if (authUser) {
+            await fetchProfile(authUser)
+          }
+          // Mark auth as loaded so UI can render immediately
+          if (mounted) setIsLoaded(true)
+          return
+        }
+
+        // Subsequent events: sign in, sign out, token refresh
         setUser(authUser)
 
         if (authUser) {
-          // Defer slightly to let Supabase release its internal auth lock before
-          // we fire another request.
+          // Defer to let Supabase release its internal auth lock before another request
           setTimeout(() => {
             if (mounted) void fetchProfile(authUser)
           }, 0)
@@ -91,6 +129,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     )
+
+    // Phase 2: Background server-side validation (non-blocking)
+    void validateSessionServerSide()
 
     return () => {
       mounted = false

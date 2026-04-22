@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Send, Loader, X } from "lucide-react";
@@ -22,6 +23,9 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
+  // Gate portal mount to client-only — prevents SSR hydration mismatch
+  const [portalMounted, setPortalMounted] = React.useState(false);
+  React.useEffect(() => { setPortalMounted(true); }, []);
 
   const { messages, sendMessage, status, error, clearError } = useChat({
     transport: new DefaultChatTransport({ api: apiRoute }),
@@ -51,8 +55,13 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
     setInputValue("");
   }
 
-  return (
-    // Fixed to the viewport — outside any overflow-clipping parent
+  // Render nothing during SSR — portal only works on the client
+  if (!portalMounted) return null;
+
+  return ReactDOM.createPortal(
+    // Portaled directly into document.body — bypasses ALL ancestor CSS
+    // containing blocks (flex on <html>, Framer Motion transforms, etc.).
+    // position: fixed will always be relative to the true viewport.
     <div
       data-slot="wise-epu"
       className={cn(
@@ -322,7 +331,8 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
           )}
         </AnimatePresence>
       </button>
-    </div>
+    </div>,
+    document.body
   );
 }
 

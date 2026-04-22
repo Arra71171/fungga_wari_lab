@@ -102,6 +102,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
         <SheetContent
           side="left"
           showCloseButton={false}
+          aria-describedby={undefined}
           className="w-[85vw] max-w-80 p-0 bg-cinematic-panel border-cinematic-border"
         >
           <SheetTitle className="sr-only">Chapter Navigation</SheetTitle>
@@ -114,6 +115,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
         <SheetContent
           side="bottom"
           showCloseButton
+          aria-describedby={undefined}
           className="max-h-[70vh] p-0 bg-cinematic-panel border-cinematic-border rounded-t-xl"
         >
           <SheetTitle className="sr-only">Reader Settings</SheetTitle>

@@ -409,8 +409,8 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
         </div>
 
         {/* 2. Main Content Compartment */}
-        <div className="flex flex-col flex-1 p-4 gap-2 bg-background">
-          <h3 className="font-heading text-lg font-black uppercase tracking-tighter leading-[0.92] text-foreground group-hover:text-primary transition-colors line-clamp-2">
+        <div className="flex flex-col flex-1 p-4 md:p-5 gap-3 bg-background">
+          <h3 className="font-heading text-base md:text-lg font-black uppercase tracking-tighter leading-[0.92] text-foreground group-hover:text-primary transition-colors line-clamp-2">
             {story.title}
           </h3>
           {story.description && (
@@ -552,7 +552,7 @@ function ArchiveStats({ stories }: { stories: Story[] }) {
       initial="hidden"
       animate="visible"
       custom={0.5}
-      className="flex items-center gap-6 py-4"
+      className="flex items-center gap-6 py-4 mb-4"
     >
       <div className="flex items-center gap-2">
         <span className="font-mono text-2xl font-black text-primary tabular-nums">{totalStories}</span>
@@ -663,12 +663,12 @@ export default function StoriesPage() {
       <Navbar />
 
       {/* ── Compact Page Header ────────────────────────────────────────── */}
-      <section className="pt-28 pb-0 px-6 md:px-12">
+      <section className="pt-28 pb-6 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
 
           {/* Eyebrow + Title Row */}
           <motion.div
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6"
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8"
             variants={fadeUp} initial="hidden" animate="visible" custom={0}
           >
             <div className="space-y-2">
@@ -797,12 +797,10 @@ export default function StoriesPage() {
       </section>
 
       {/* ── Ticker ──────────────────────────────────────────────────────── */}
-      <div className="mt-6">
-        <TickerBar />
-      </div>
+      <TickerBar />
 
       {/* ── Main Content ────────────────────────────────────────────────── */}
-      <section className="py-12 px-6 md:px-12">
+      <section className="py-16 md:py-20 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
             {/* Loading state */}
@@ -860,7 +858,7 @@ export default function StoriesPage() {
 
                 {/* ── Featured Hero ── */}
                 {featured && (
-                  <div className="mb-8">
+                  <div className="mb-12">
                     <HeroCard story={featured} />
                   </div>
                 )}
@@ -868,7 +866,7 @@ export default function StoriesPage() {
                 {/* ── Portrait Grid ── */}
                 {gridStories.length > 0 && (
                   <>
-                    <div className="flex items-center gap-4 mb-6">
+                    <div className="flex items-center gap-4 mb-8">
                       <motion.div variants={revealLine} initial="hidden" animate="visible" className="h-px flex-1 bg-border" />
                       <span className="font-mono text-nano uppercase tracking-ultra text-muted-foreground shrink-0">
                         Collection
@@ -880,7 +878,7 @@ export default function StoriesPage() {
                       variants={staggerContainer}
                       initial="hidden"
                       animate="visible"
-                      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"
+                      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6 mb-10"
                     >
                       {gridStories.map((s, i) => (
                         <StoryCard key={s._id} story={s} index={i} />
