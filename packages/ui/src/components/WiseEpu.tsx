@@ -57,6 +57,8 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
       data-slot="wise-epu"
       className={cn(
         "fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-3 pointer-events-none",
+        // Respect iOS home-indicator safe area so the trigger doesn't hide behind it
+        "[padding-bottom:env(safe-area-inset-bottom,0px)]",
         className,
       )}
     >
@@ -69,7 +71,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="w-[calc(100vw-3rem)] sm:w-[360px] h-[520px] max-h-[80dvh] flex flex-col border border-border bg-background shadow-brutal overflow-hidden origin-bottom-right pointer-events-auto"
+            className="w-[calc(100vw-3rem)] sm:w-[360px] h-[min(520px,80dvh)] max-h-[80dvh] flex flex-col border border-border bg-background shadow-brutal overflow-hidden origin-bottom-right pointer-events-auto"
             role="dialog"
             aria-label="Wise-Epu — Ancient Lore Keeper"
             aria-modal="false"
@@ -108,7 +110,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
             </div>
 
             {/* ── Messages ─────────────────────────────────────────────────── */}
-            <div className="overflow-y-auto p-4 space-y-3 flex-1 min-h-0 flex flex-col">
+            <div className="overflow-y-auto overscroll-contain p-4 space-y-3 flex-1 min-h-0 flex flex-col">
               {/* Empty state — vertically centered within fixed panel */}
               {messages.length === 0 && (
                 <div className="flex-1 flex flex-col items-center justify-center text-center px-2">
@@ -251,7 +253,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
                 placeholder="Ask the elder…"
                 disabled={isLoading}
                 aria-label="Message to Wise-Epu"
-                className="flex-1 px-4 py-3 text-[11px] font-mono bg-transparent text-foreground placeholder:text-muted-foreground/50 border-none outline-none disabled:opacity-40"
+                className="flex-1 px-4 py-3 text-base sm:text-[11px] font-mono bg-transparent text-foreground placeholder:text-muted-foreground/50 border-none outline-none disabled:opacity-40"
               />
               <Button
                 type="submit"

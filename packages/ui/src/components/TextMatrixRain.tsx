@@ -34,7 +34,7 @@ function TextMatrixRain({
   // Incrementing this causes the useEffect to re-run the full animation
   const [triggerCount, setTriggerCount] = React.useState(0);
 
-  const handleMouseEnter = React.useCallback(() => {
+  const handleInteraction = React.useCallback(() => {
     if (hoverRescramble) {
       setTriggerCount((c) => c + 1);
     }
@@ -166,7 +166,8 @@ function TextMatrixRain({
       className={cn("relative inline-block cursor-default", className)}
       aria-label={children}
       aria-live="off"
-      onMouseEnter={handleMouseEnter}
+      onMouseEnter={handleInteraction}
+      onTouchStart={handleInteraction}
     >
       {/* Invisible text — gives the container its natural dimensions pre-JS */}
       <span className="invisible select-none pointer-events-none" aria-hidden="true">
