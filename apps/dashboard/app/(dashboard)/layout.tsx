@@ -197,7 +197,7 @@ export default function DashboardLayout({
   return (
     <>
       <DashboardOnboarding />
-      <div className="flex min-h-screen bg-bg-base text-foreground">
+      <div className="flex min-h-screen bg-bg-base text-foreground overflow-x-hidden" style={{ touchAction: "pan-y pinch-zoom" }}>
         {/* Desktop Sidebar */}
         <aside
           className={cn(

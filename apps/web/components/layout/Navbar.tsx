@@ -3,9 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { cn, getAppUrl } from "@workspace/ui/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { BrandLogo, FungaMark } from "@workspace/ui/components/BrandLogo";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
@@ -44,7 +44,6 @@ function Navbar() {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user, userProfile, isLoaded, signOut } = useSupabaseAuth();
-  const router = useRouter();
 
   useMotionValueEvent(scrollY, "change", (latest: number) => {
     setScrolled(latest > 20);
@@ -56,8 +55,8 @@ function Navbar() {
   async function handleSignOut() {
     await signOut();
     setMobileOpen(false);
-    router.push("/");
-    router.refresh();
+    // Use hard navigation to ensure cookie cleanup completes before redirect
+    window.location.replace("/");
   }
 
   return (

@@ -828,11 +828,16 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 text-2xs font-mono text-muted-foreground uppercase tracking-widest font-bold">
-            {["Archive", "Sys_Status", "Protocol", "Data Terms"].map((label, index) => (
-              <ScrollReveal direction="up" distance={20} duration={0.8} delay={index * 0.15} key={label}>
+            {[
+              { label: "Archive", href: "/archive" },
+              { label: "Sys_Status", href: "/sys-status" },
+              { label: "Protocol", href: "/protocol" },
+              { label: "Data Terms", href: "/data-terms" },
+            ].map((item, index) => (
+              <ScrollReveal direction="up" distance={20} duration={0.8} delay={index * 0.15} key={item.label}>
                 <motion.span whileHover={{ color: "var(--primary)" }} className="cursor-pointer block">
-                  <Link href="#" className="hover:underline underline-offset-4 decoration-2 transition-all">
-                    {label}
+                  <Link href={item.href} className="hover:underline underline-offset-4 decoration-2 transition-all">
+                    {item.label}
                   </Link>
                 </motion.span>
               </ScrollReveal>

@@ -4,11 +4,11 @@ import React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createBrowserClient } from "@supabase/ssr"
-import { BrandLogo } from "@workspace/ui/components/BrandLogo"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { Eye, EyeOff, UserPlus, Loader2 } from "lucide-react"
+import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
 
 function RegisterForm() {
   const router = useRouter()
@@ -118,7 +118,7 @@ function RegisterForm() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -154,39 +154,52 @@ function RegisterForm() {
   )
 }
 
+function RegisterFormSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="space-y-2">
+        <div className="h-3 w-12 bg-muted rounded-sm"></div>
+        <div className="h-10 w-full bg-muted/50 rounded-sm"></div>
+      </div>
+      <div className="space-y-2">
+        <div className="h-3 w-12 bg-muted rounded-sm"></div>
+        <div className="h-10 w-full bg-muted/50 rounded-sm"></div>
+      </div>
+      <div className="space-y-2">
+        <div className="h-3 w-20 bg-muted rounded-sm"></div>
+        <div className="h-10 w-full bg-muted/50 rounded-sm"></div>
+      </div>
+      <div className="h-10 w-full bg-primary/20 rounded-sm mt-6"></div>
+    </div>
+  )
+}
+
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-base px-4">
-      <div className="w-full max-w-sm space-y-8">
-        {/* Brand */}
-        <div className="flex flex-col items-center gap-4">
-          <BrandLogo variant="full" size="md" />
-          <div className="space-y-1 text-center">
-            <h1 className="font-heading text-xl tracking-tight text-foreground">
-              Join the Archive
-            </h1>
-            <p className="font-mono text-xs tracking-wide text-muted-foreground">
-              Become a keeper of folklore
-            </p>
-          </div>
-        </div>
+    <AuthGatewayLayout
+      portalLabel="Archive Access"
+      headingText="Join."
+      portalDescription="Create Access"
+      versionText="FW_LAB · Identity Protocol v2.4"
+      backLinkHref="/"
+      showSignUp={false}
+    >
+      <React.Suspense fallback={<RegisterFormSkeleton />}>
+        <RegisterForm />
+      </React.Suspense>
 
-        {/* Register Form */}
-        <div className="border border-border bg-card p-6 shadow-brutal-sm">
-          <RegisterForm />
-        </div>
-
-        {/* Login Link */}
-        <p className="text-center text-xs font-mono text-muted-foreground">
+      {/* Sign-in link */}
+      <div className="pt-4 mt-3 border-t border-border">
+        <p className="font-mono text-tight-label text-muted-foreground">
           Already a keeper?{" "}
           <Link
             href="/login"
-            className="text-brand-ember hover:text-brand-ochre transition-colors underline underline-offset-4"
+            className="text-primary font-bold uppercase tracking-wide hover:text-primary/70 transition-colors duration-200"
           >
-            Sign in
+            Sign in →
           </Link>
         </p>
       </div>
-    </div>
+    </AuthGatewayLayout>
   )
 }
