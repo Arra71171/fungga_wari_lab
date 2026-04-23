@@ -1,0 +1,771 @@
+[
+  {
+    "id": "TC001",
+    "title": "Browse the story catalogue and open a story in the reader",
+    "description": "Verifies a visitor can discover stories from the catalogue and enter the immersive reader from a story card.",
+    "category": "Story Catalogue (Public Listing)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Wait for story cards to load"
+      },
+      {
+        "type": "action",
+        "description": "Click a story card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the immersive story reader is displayed with chapter navigation available"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Complete landing-to-reader discovery journey",
+    "description": "Verifies a visitor can go from the landing page to the story catalogue and open a story in the immersive reader with chapters visible.",
+    "category": "Cinematic Story Reader (Immersive Reader)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the primary call-to-action to browse stories"
+      },
+      {
+        "type": "action",
+        "description": "Click a story card from the story catalogue"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the immersive story reader is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a chapter list or chapter navigation control is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Primary hero CTA routes to the story catalogue",
+    "description": "Verifies the primary landing page call-to-action takes the user to the Story Catalogue page.",
+    "category": "Landing Page Hero",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the hero section to finish initial rendering"
+      },
+      {
+        "type": "action",
+        "description": "Click the primary hero call-to-action to browse stories"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the story catalogue page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Navigate through primary site pages from the global navbar",
+    "description": "Verifies a visitor can use global navigation to reach core pages and return home without dead ends.",
+    "category": "Navbar & Global Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the Stories navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Click the Archive navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Click the Protocol navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Click the brand link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the landing page hero section is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Hero section loads and scroll progress responds",
+    "description": "Verifies the landing hero renders without blocking errors and the scroll progress indicator updates when the user scrolls.",
+    "category": "Landing Page Hero",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the hero section to finish initial rendering"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down further"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the scroll progress indicator reflects the new scroll position"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Navigate between chapters while reading",
+    "description": "Verifies a reader can switch chapters from the chapter navigation and see the reader update to the newly selected chapter content.",
+    "category": "Cinematic Story Reader (Immersive Reader)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Click a story card from the story catalogue"
+      },
+      {
+        "type": "action",
+        "description": "Scroll through the chapter content"
+      },
+      {
+        "type": "action",
+        "description": "Use the chapter list or sidebar to select a different chapter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chapter content updates to the newly selected chapter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chapter navigation reflects the newly selected chapter"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "CTA takes user to the story catalogue",
+    "description": "Verifies that activating the primary CTA on the landing page navigates the user to the story catalogue.",
+    "category": "Full-bleed CTA Section",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down until the CTA section comes into view"
+      },
+      {
+        "type": "action",
+        "description": "Activate the primary CTA action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the story catalogue page"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Send a message and receive a streaming WiseEpu response",
+    "description": "Verifies a visitor can submit a prompt and see the assistant stream a response in the chat panel.",
+    "category": "WiseEpu AI Chatbot",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the floating chat trigger button"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"suggest a published story\" into the chat input"
+      },
+      {
+        "type": "action",
+        "description": "Submit the chat message"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the assistant response to start streaming"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an assistant response message is displayed in the chat thread"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Theme toggle applies across routes and persists on refresh",
+    "description": "Verifies a visitor can toggle the theme, see it apply across pages, and have it persist after a refresh.",
+    "category": "Navbar & Global Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Toggle dark/light theme"
+      },
+      {
+        "type": "action",
+        "description": "Click the Stories navigation link"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the story catalogue grid to load"
+      },
+      {
+        "type": "action",
+        "description": "Refresh the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected theme is still applied after refresh"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "TTS narration can play and pause in the reader",
+    "description": "Verifies a reader can start TTS narration and then pause it using the reader controls.",
+    "category": "Cinematic Story Reader (Immersive Reader)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Click a story card from the story catalogue"
+      },
+      {
+        "type": "action",
+        "description": "Start TTS narration from the reader controls"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the narration playback state to change"
+      },
+      {
+        "type": "action",
+        "description": "Pause TTS narration from the reader controls"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the narration is in a paused state"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Open and close the WiseEpu chat panel from the floating trigger",
+    "description": "Verifies a visitor can open the AI assistant panel and dismiss it without leaving the current page.",
+    "category": "WiseEpu AI Chatbot",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the floating chat trigger button"
+      },
+      {
+        "type": "action",
+        "description": "Click the chat panel close control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chat panel is not visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Marquee renders published story titles",
+    "description": "Verifies the landing marquee loads and displays a scrolling set of published story titles.",
+    "category": "Story Ticker / Marquee",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the story ticker / marquee section"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the marquee content to render"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a list of story titles is displayed in the marquee"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC013",
+    "title": "Use catalogue filtering or browsing controls to change visible stories",
+    "description": "Verifies a visitor can use the listing controls to narrow or change the set/order of story cards shown.",
+    "category": "Story Catalogue (Public Listing)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Wait for story cards to load"
+      },
+      {
+        "type": "action",
+        "description": "Use the catalogue filter or sort control to change the listing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the visible set or order of story cards changes"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC014",
+    "title": "Chapter illustrations update when switching chapters",
+    "description": "Verifies that changing chapters updates the illustration area alongside the text.",
+    "category": "Cinematic Story Reader (Immersive Reader)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Click a story card from the story catalogue"
+      },
+      {
+        "type": "action",
+        "description": "Observe the chapter illustration area"
+      },
+      {
+        "type": "action",
+        "description": "Use the chapter list or sidebar to select a different chapter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the illustration area updates for the newly selected chapter"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC015",
+    "title": "Browse archive listings",
+    "description": "Verifies a visitor can navigate to the archive page and view archived story listings for browsing.",
+    "category": "Manifest Archive / Footer",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation link to the archive"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify archived story listings are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC016",
+    "title": "Reader supports keyboard-only chapter navigation",
+    "description": "Verifies a keyboard-only user can focus chapter navigation controls and change chapters without using a mouse.",
+    "category": "Cinematic Story Reader (Immersive Reader)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Click a story card from the story catalogue"
+      },
+      {
+        "type": "action",
+        "description": "Press Tab repeatedly to move focus into the chapter navigation area"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter on a non-active chapter option"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chapter content updates to the selected chapter"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC017",
+    "title": "Secondary hero CTA opens the platform explanation area",
+    "description": "Verifies the secondary hero call-to-action reveals platform information content on the landing experience.",
+    "category": "Landing Page Hero",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the hero section to finish initial rendering"
+      },
+      {
+        "type": "action",
+        "description": "Click the secondary hero call-to-action to explore the platform"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify platform explanation content is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC018",
+    "title": "Chat input prevents submitting an empty message",
+    "description": "Verifies the chat UI blocks or ignores empty submissions so no new user message is created.",
+    "category": "WiseEpu AI Chatbot",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the floating chat trigger button"
+      },
+      {
+        "type": "action",
+        "description": "Submit the chat message with the input empty"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no new user message appears in the chat thread"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Manifesto shows loading skeleton then renders content",
+    "description": "Verifies the manifesto section shows a skeleton while loading and then renders mission content when loaded.",
+    "category": "Manifesto Section",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the manifesto section"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the manifesto fetch/render cycle to complete"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the manifesto section displays rich text content or a fallback quote"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "CTA section renders when reached",
+    "description": "Verifies that the full-bleed CTA section is visible when scrolled into view and presents an actionable primary CTA.",
+    "category": "Full-bleed CTA Section",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down until the CTA section comes into view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the CTA section and its primary action are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Sign In navigation opens the login page",
+    "description": "Verifies a visitor can reach the sign-in page from global navigation.",
+    "category": "Navbar & Global Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the sign-in navigation link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the sign-in page is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC022",
+    "title": "Bento grid reveals on scroll",
+    "description": "Verifies that the bento grid becomes visible when the user scrolls down the landing page and remains usable after the reveal.",
+    "category": "Feature Bento Grid",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down until the bento grid section comes into view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the bento grid cards are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC023",
+    "title": "Navigate to data terms from site chrome",
+    "description": "Verifies a visitor can reach the data terms page via global navigation or footer and view the policy content.",
+    "category": "Manifest Archive / Footer",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the footer"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view data terms"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the data terms content is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC024",
+    "title": "Marquee hover highlights a story title",
+    "description": "Verifies hovering a story title in the marquee produces a visible focus/highlight change for that item.",
+    "category": "Story Ticker / Marquee",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the story ticker / marquee section"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the marquee content to render"
+      },
+      {
+        "type": "action",
+        "description": "Move pointer over a story title in the marquee"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the hovered story title shows a visible highlight or focus state"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC025",
+    "title": "Capabilities section animates into view on scroll",
+    "description": "Verifies that the capabilities section appears when scrolled into view and its visual elements render without blocking the content.",
+    "category": "Capabilities Section",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down until the capabilities section comes into view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the capabilities section content is displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC026",
+    "title": "Navigate to system status from site chrome",
+    "description": "Verifies a visitor can reach the system status page via global navigation or footer and view the status dashboard content.",
+    "category": "Manifest Archive / Footer",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the footer"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to view system status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the system status dashboard content is displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC027",
+    "title": "Story catalogue remains usable when a story card lacks a cover image",
+    "description": "Verifies story cards render without breaking layout or interaction when a cover image is missing.",
+    "category": "Story Catalogue (Public Listing)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Wait for story cards to load"
+      },
+      {
+        "type": "action",
+        "description": "Scroll through the story grid to locate a card that displays a cover placeholder or missing image state (if present)"
+      },
+      {
+        "type": "action",
+        "description": "Click that story card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the immersive story reader opens successfully"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC028",
+    "title": "Bento grid provides hover interaction feedback",
+    "description": "Verifies that hovering a bento card shows interaction feedback and the grid remains stable and readable.",
+    "category": "Feature Bento Grid",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down until the bento grid section comes into view"
+      },
+      {
+        "type": "action",
+        "description": "Move the pointer over a bento grid card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the hovered bento card shows hover feedback"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC029",
+    "title": "Capabilities cells provide hover interaction feedback",
+    "description": "Verifies that hovering a capability cell shows interaction feedback while keeping the capability content accessible.",
+    "category": "Capabilities Section",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll down until the capabilities section comes into view"
+      },
+      {
+        "type": "action",
+        "description": "Move the pointer over a capability cell"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the hovered capability cell shows hover feedback"
+      }
+    ],
+    "priority": "Low"
+  }
+]

@@ -9,6 +9,8 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 
+// EXCEPTION: Recharts ChartConfig requires literal CSS color strings — not Tailwind token classes.
+// These oklch values are chosen to match the design system tokens but must be hardcoded per library constraint.
 const chartConfig = {
   stories: { label: "Manuscripts" },
   Draft: { label: "Draft", color: "oklch(0.55 0.06 50)" },

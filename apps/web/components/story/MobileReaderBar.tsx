@@ -134,7 +134,7 @@ export function MobileReaderBar({ onOpenChapters, onOpenSettings }: MobileReader
           </button>
           <AnimatedThemeToggler
             aria-label="Toggle reader theme"
-            className="size-9 border-cinematic-border/30 bg-transparent hover:bg-cinematic-border"
+            className="size-9 border-cinematic-border/30 bg-transparent hover:bg-accent"
           />
         </div>
       </div>

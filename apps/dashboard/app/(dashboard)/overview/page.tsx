@@ -9,6 +9,7 @@ import { CompletionDonutChart } from "@/components/overview/CompletionDonutChart
 import { StoryPerformanceBarChart } from "@/components/overview/StoryPerformanceBarChart"
 import { BookOpen, Globe2, Clock, Eye, BookCheck, FileText, Send } from "lucide-react"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard"
 
 // ─── Server-side data fetching ────────────────────────────────────────────────
 
@@ -183,7 +184,7 @@ export default async function OverviewPage() {
         </div>
 
         {/* Publishing Pipeline Stepper */}
-        <div id="tour-overview-pipeline" className="border border-border-subtle bg-bg-panel p-3 sm:p-4 md:p-8 flex flex-row items-center justify-between relative overflow-hidden">
+        <BrutalistCard variant="panel" padding="none" id="tour-overview-pipeline" className="p-3 sm:p-4 md:p-8 flex flex-row items-center justify-between relative overflow-hidden">
           {/* Connector Line */}
           <div className="absolute top-[35%] md:top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
 
@@ -213,30 +214,29 @@ export default async function OverviewPage() {
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.publishedStories}</div>
-              <div className="text-[9px] sm:text-[10px] md:text-fine font-mono uppercase tracking-wider md:tracking-label text-primary mt-0.5 md:mt-1">Published</div>
             </div>
           </div>
-        </div>
+        </BrutalistCard>
 
         {/* Charts Row */}
         <div id="tour-overview-charts" className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
             <EngagementChart data={engagementData} isLoading={false} />
           </div>
-          <div className="border-2 border-border bg-background p-5">
+          <BrutalistCard variant="panel" padding="none" className="p-5">
             <Suspense fallback={<div className="h-64 animate-pulse bg-muted/20" />}>
               <CompletionDonutChart />
             </Suspense>
-          </div>
+          </BrutalistCard>
         </div>
 
         {/* Second Row of Charts */}
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="border-2 border-border bg-background p-5">
+          <BrutalistCard variant="panel" padding="none" className="p-5">
             <Suspense fallback={<div className="h-64 animate-pulse bg-muted/20" />}>
               <CategoryRadialChart />
             </Suspense>
-          </div>
+          </BrutalistCard>
           <div className="md:col-span-2">
             <StoryPerformanceBarChart stories={topStories} isLoading={false} />
           </div>

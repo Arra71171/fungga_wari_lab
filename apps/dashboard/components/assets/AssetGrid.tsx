@@ -7,6 +7,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { getAllAssets, deleteAsset } from "@/actions/assetActions";
 import type { Database } from "@workspace/ui/types/supabase";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 type AssetRow = Database["public"]["Tables"]["assets"]["Row"];
 
@@ -46,10 +47,12 @@ function AssetGrid({ filterType }: AssetGridProps) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div
+          <BrutalistCard
             key={i}
+            variant="ghost"
+            padding="none"
             className={cn(
-              "bg-muted/30 animate-pulse border border-border",
+              "bg-muted/30 animate-pulse border-border-subtle",
               filterType === "illustration" || !filterType ? "aspect-[3/4]" : "aspect-square"
             )}
           />
@@ -60,14 +63,14 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
   if (assets.length === 0) {
     return (
-      <div className="flex items-center justify-center p-12 border border-dashed border-border">
+      <BrutalistCard variant="panel" className="flex items-center justify-center p-12 border-dashed">
         <div className="text-center space-y-2">
           <Flame className="size-8 text-primary/20 mx-auto" />
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground/50">
             {filterType ? `No ${filterType.replace(/_/g, " ")} assets` : "Vault is empty"}
           </p>
         </div>
-      </div>
+      </BrutalistCard>
     );
   }
 
@@ -76,9 +79,11 @@ function AssetGrid({ filterType }: AssetGridProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {assets.map((asset) => (
-        <div
+        <BrutalistCard
           key={asset.id}
-          className="group relative border border-border bg-background overflow-hidden flex flex-col hover:border-primary/30 transition-all"
+          variant="interactive"
+          padding="none"
+          className="group relative overflow-hidden flex flex-col transition-all"
         >
           {asset.type.includes("audio") ? (
             <div className="flex-1 flex flex-col items-center justify-center bg-brand-ochre/5 aspect-square p-2">
@@ -138,7 +143,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
               </button>
             </div>
           </div>
-        </div>
+        </BrutalistCard>
       ))}
     </div>
   );

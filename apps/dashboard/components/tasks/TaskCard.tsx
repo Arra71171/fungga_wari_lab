@@ -5,6 +5,8 @@ import { cn } from "@workspace/ui/lib/utils";
 import { deleteTask } from "@/actions/taskActions";
 import type { Database } from "@workspace/ui/types/supabase";
 
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+
 type TaskStatus = Database["public"]["Enums"]["task_status"];
 type TaskPriority = Database["public"]["Enums"]["task_priority"];
 
@@ -26,13 +28,13 @@ export function TaskCard({ task, onDeleted }: TaskCardProps) {
   };
 
   return (
-    <div
+    <BrutalistCard
+      variant="interactive"
       className={cn(
-        "group relative p-5 border transition-all duration-300",
-        "bg-bg-surface hover:bg-bg-panel",
+        "group relative p-5",
         task.priority === "high"
-          ? "border-brand-ember/40 hover:border-brand-ember"
-          : "border-border-subtle"
+          ? "border-brand-ember/60 hover:border-brand-ember"
+          : ""
       )}
     >
       {/* Priority Indicator Line */}
@@ -88,6 +90,6 @@ export function TaskCard({ task, onDeleted }: TaskCardProps) {
           <span>{task.status.replace(/_/g, " ")}</span>
         </div>
       </div>
-    </div>
+    </BrutalistCard>
   );
 }

@@ -18,7 +18,7 @@ export async function getChaptersByStory(storyId: string) {
 
   const { data } = await supabase
     .from("chapters")
-    .select("id, story_id, title, \"order\", illustration_url, created_at, updated_at")
+    .select("id, story_id, title, \"order\", illustration_url, audio_url, created_at, updated_at")
     .eq("story_id", storyId)
     .order("order", { ascending: true })
 
@@ -77,7 +77,7 @@ export async function createChapter(args: {
  */
 export async function updateChapter(
   id: string,
-  patch: Partial<Pick<ChapterRow, "title" | "order" | "illustration_url" | "content" | "tiptap_content">>
+  patch: Partial<Pick<ChapterRow, "title" | "order" | "illustration_url" | "audio_url" | "content" | "tiptap_content">>
 ) {
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()

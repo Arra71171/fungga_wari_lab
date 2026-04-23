@@ -115,19 +115,21 @@ export async function getStoryById(id: string) {
  * getFullStoryById — story + chapters + scenes + choices (auth required).
  */
 export async function getFullStoryById(id: string) {
+  console.log(`[getFullStoryById] Called with id: ${id}`)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const userId = user?.id
+  
   if (!userId) return null
 
-  const { data: story } = await supabase
+  const { data: story, error } = await supabase
     .from("stories")
     .select(`
       id, title, slug, description, category, language, status,
       cover_image_url, tags, moral, attributed_author, author_id,
       chapter_count, view_count, read_count, published_at, created_at, updated_at,
       chapters (
-        id, title, "order", content, illustration_url, tiptap_content,
+        id, title, "order", content, illustration_url, audio_url, tiptap_content,
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
           is_draft, version, reading_time, excerpt,
@@ -138,7 +140,7 @@ export async function getFullStoryById(id: string) {
     .eq("id", id)
     .single()
 
-  if (!story) return null
+  if (error || !story) return null
 
   // Sort chapters and scenes by order
   const sortedChapters = (story.chapters ?? [])
@@ -157,8 +159,8 @@ export async function getFullStoryById(id: string) {
  * createDraftStory — creates a blank draft for the current author.
  */
 export async function createDraftStory() {
-  const { supabase, profile } = await requireUser()
-  const authorId = profile.auth_id ?? String(profile.id)
+  const { supabase, user } = await requireUser()
+  const authorId = user.id
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   // stories.author_id stores the Clerk userId string directly.
@@ -196,8 +198,8 @@ export async function createStory(args: {
   tags: string[]
   moral?: string
 }) {
-  const { supabase, profile } = await requireUser()
-  const authorId = profile.auth_id ?? String(profile.id)
+  const { supabase, user } = await requireUser()
+  const authorId = user.id
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)
@@ -419,8 +421,8 @@ export async function createStoryWithInitialScene(args: {
   language: string
   cover_image_url?: string
 }) {
-  const { supabase, profile } = await requireUser()
-  const authorId = profile.auth_id ?? String(profile.id)
+  const { supabase, user } = await requireUser()
+  const authorId = user.id
   if (!authorId) throw new Error("Cannot resolve author identity")
 
   const slug = args.slug || generateSlug(args.title)

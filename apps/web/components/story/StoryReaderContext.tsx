@@ -4,6 +4,7 @@ import * as React from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useViewTracking } from "@/hooks/useViewTracking";
+import { saveReadingProgress } from "@/actions/readingProgressActions";
 
 export type ReadingMode = "standard" | "focus" | "immersive";
 
@@ -32,6 +33,7 @@ type ChapterWithScenes = {
   title: string;
   order: number;
   illustration_url: string | null;
+  audio_url: string | null;
   tiptap_content: Record<string, unknown> | null;
   scenes: SceneRow[];
 };
@@ -64,6 +66,8 @@ interface StoryReaderContextValue {
   story: StoryShape | null;
   chapters: ChapterWithScenes[];
   activeScene: SceneRow | null;
+  /** ID of the chapter that contains the currently active scene */
+  currentChapterId: string | null;
   isLoading: boolean;
   mode: ReadingMode;
   setMode: (mode: ReadingMode) => void;
@@ -96,7 +100,7 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
           chapter_count, view_count, read_count, published_at,
           created_at, updated_at,
           chapters (
-            id, title, "order", illustration_url, tiptap_content,
+            id, title, "order", illustration_url, audio_url, tiptap_content,
             scenes (
               id, title, "order", content, tiptap_content, illustration_url,
               is_draft, version, reading_time, excerpt
@@ -171,19 +175,41 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
         }
       }
     },
-    // story?.id keeps the callback stable when unrelated story fields change
-    // eslint-disable-next-line react-hooks/preserve-manual-memoization
-    [story?.id]
+    [story]
   );
 
-  // Derive the active scene from chapters
-  const activeScene = React.useMemo<SceneRow | null>(() => {
-    if (!story || !currentSceneId) return null;
+  // Silently sync reading position to Supabase when signed in
+  React.useEffect(() => {
+    if (!story?.id || !currentSceneId) return;
+
+    // Derive the chapter that owns this scene
+    let owningChapterId: string | null = null;
+    for (const ch of story.chapters) {
+      if (ch.scenes.some((s) => s.id === currentSceneId)) {
+        owningChapterId = ch.id;
+        break;
+      }
+    }
+
+    // Fire-and-forget — failure is non-blocking (guest users will get auth error silently)
+    void saveReadingProgress({
+      storyId: story.id,
+      chapterId: owningChapterId,
+      sceneId: currentSceneId,
+    });
+  }, [story?.id, story?.chapters, currentSceneId]);
+
+  // Derive the active scene and its parent chapter from chapters
+  const { activeScene, currentChapterId } = React.useMemo<{
+    activeScene: SceneRow | null;
+    currentChapterId: string | null;
+  }>(() => {
+    if (!story || !currentSceneId) return { activeScene: null, currentChapterId: null };
     for (const ch of story.chapters) {
       const found = ch.scenes.find((s) => s.id === currentSceneId);
-      if (found) return found;
+      if (found) return { activeScene: found, currentChapterId: ch.id };
     }
-    return null;
+    return { activeScene: null, currentChapterId: null };
   }, [story, currentSceneId]);
 
   const isLoading = story === undefined;
@@ -193,13 +219,14 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
       story: story ?? null,
       chapters: story?.chapters ?? [],
       activeScene,
+      currentChapterId,
       isLoading,
       mode,
       setMode,
       currentSceneId,
       setCurrentSceneId,
     }),
-    [story, activeScene, isLoading, mode, currentSceneId, setCurrentSceneId]
+    [story, activeScene, currentChapterId, isLoading, mode, currentSceneId, setCurrentSceneId]
   );
 
   return <StoryReaderContext.Provider value={value}>{children}</StoryReaderContext.Provider>;

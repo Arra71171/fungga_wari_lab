@@ -21,6 +21,7 @@ import { createStory } from "@/actions/storyActions";
 import { createChapter, updateChapter, updateSceneContent } from "@/actions/chapterActions";
 import { createAsset } from "@/actions/assetActions";
 import type { Database } from "@workspace/ui/types/supabase";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 type StoryCategory = Database["public"]["Enums"]["story_category"];
 
@@ -208,10 +209,11 @@ export function StoryAssetForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-bg-surface border border-border p-6 md:p-8 space-y-8 relative"
-    >
+    <BrutalistCard variant="panel" padding="none">
+      <form
+        onSubmit={handleSubmit}
+        className="p-6 md:p-8 space-y-8 relative"
+      >
       <div>
         <h2 className="text-xl font-heading text-brand-ochre uppercase font-light tracking-wide mb-1">
           Story Bundle
@@ -424,5 +426,6 @@ export function StoryAssetForm() {
         </div>
       )}
     </form>
+    </BrutalistCard>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 import { 
   ChartConfig, 
   ChartContainer, 
@@ -24,26 +25,26 @@ const chartConfig = {
 export function EngagementChart({ data, isLoading }: { data?: { date: string; views: number; reads: number }[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <div className="w-full h-[350px] bg-bg-surface border border-border-subtle animate-pulse flex items-center justify-center">
+      <BrutalistCard variant="panel" className="w-full h-[350px] animate-pulse flex items-center justify-center">
         <div className="text-muted-foreground/30 font-mono text-sm uppercase tracking-widest">
           Loading Metrics...
         </div>
-      </div>
+      </BrutalistCard>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <div className="w-full h-[350px] bg-bg-surface border border-border-subtle flex items-center justify-center">
+      <BrutalistCard variant="panel" className="w-full h-[350px] flex items-center justify-center">
         <div className="text-muted-foreground/50 font-mono text-sm uppercase tracking-widest">
           No data available
         </div>
-      </div>
+      </BrutalistCard>
     );
   }
 
   return (
-    <div className="w-full border border-border-subtle bg-bg-surface p-4 md:p-6 relative group overflow-hidden">
+    <BrutalistCard variant="panel" className="w-full h-full relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
       <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
@@ -100,6 +101,6 @@ export function EngagementChart({ data, isLoading }: { data?: { date: string; vi
           />
         </AreaChart>
       </ChartContainer>
-    </div>
+    </BrutalistCard>
   );
 }

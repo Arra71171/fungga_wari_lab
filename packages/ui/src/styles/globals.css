@@ -79,16 +79,15 @@
     --brand-glow: oklch(0.80 0.15 55);
 
     /* ── Cinematic Reader — Parchment Mode (light) ─────────────────────── */
-    /* Reading surface: warm ivory — lightest layer */
-    --cinematic-bg: oklch(0.97 0.022 80);
-    /* Left/right panels: aged parchment — CLEARLY darker than reading bg */
-    --cinematic-panel: oklch(0.86 0.038 70);
-    /* Body text: rich manuscript ink */
+    /* All cinematic surfaces share hue 75 (warm amber-parchment).         */
+    /* Chroma ladder: bg(0.015) < panel(0.018) < border(0.025)             */
+    /* Lightness ladder: bg(97%) > panel(93%) > border(75%)                */
+    --cinematic-bg: oklch(0.97 0.015 75);
+    --cinematic-panel: oklch(0.93 0.018 75);
     --cinematic-text: oklch(0.10 0.03 45);
-    /* Accent: amber fire */
     --cinematic-accent: oklch(0.58 0.21 43);
-    /* Borders: dark enough to actually see panel edges */
-    --cinematic-border: oklch(0 0 0 / 22%);
+    /* Warm brown line — NOT cold black opacity */
+    --cinematic-border: oklch(0.75 0.025 65);
 
     /* ── Depth Layer Tokens (light) ─────────────────────────────────────── */
     --bg-base: oklch(0.92 0.03 72);
@@ -157,7 +156,7 @@
     --cinematic-bg: oklch(0.10 0.02 50);
     --cinematic-panel: oklch(0.14 0.03 50);
     --cinematic-text: oklch(0.90 0.02 60);
-    --cinematic-accent: oklch(0.65 0.20 50);
+    --cinematic-accent: oklch(0.65 0.20 45);
     --cinematic-border: oklch(1 0 0 / 8%);
 
     /* Depth Layer Tokens (dark) */
@@ -346,6 +345,22 @@
     var(--illustration-overlay-from),
     var(--illustration-overlay-via),
     transparent
+  );
+}
+
+/**
+ * scanline-overlay
+ * CRT-style repeating horizontal lines for the AI narration visualiser.
+ * Uses the cinematic-border token so it adapts to both themes.
+ * Replaces the inline oklch() value that was hardcoded in StoryRightPanel.
+ */
+@utility scanline-overlay {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--cinematic-border) 2px,
+    var(--cinematic-border) 3px
   );
 }
 

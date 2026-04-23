@@ -131,7 +131,7 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
       return (
         <pre
           key={index}
-          className="bg-cinematic-panel/80 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
+          className="bg-cinematic-bg/60 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
         >
           <code className="font-mono text-sm text-brand-glow">
             {extractText(node)}
@@ -353,8 +353,10 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
       >
         {activeChapter?.illustration_url ? (
           <>
-            {/* Blurred background to fill the pane */}
-            <div className="absolute inset-0 opacity-30 dark:opacity-20 blur-[60px] scale-110 pointer-events-none" aria-hidden>
+            {/* Blurred background halo — warm ambient glow from the illustration.
+               Light mode: very low opacity (10%) so dark illustrations don't create
+               a cold murky wash over the parchment surface. */}
+            <div className="absolute inset-0 opacity-10 dark:opacity-20 blur-[60px] scale-110 pointer-events-none" aria-hidden>
               <Image
                 src={activeChapter.illustration_url}
                 alt=""
@@ -362,6 +364,9 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 className="object-cover"
               />
             </div>
+            {/* Warm tint overlay — ensures the halo blends with the parchment palette
+               even when the source illustration is very dark (e.g. night scenes) */}
+            <div className="absolute inset-0 bg-cinematic-bg/60 dark:bg-transparent pointer-events-none" aria-hidden />
 
             {/* Uncropped Illustration Container */}
             <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
@@ -464,7 +469,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           
           {/* Chapter Audio Player */}
           {activeChapter?.audio_url && (
-            <div className="mb-10 lg:mb-14 border border-cinematic-border/20 bg-cinematic-panel/30 p-4 lg:p-5 rounded-none backdrop-blur-sm">
+            <div className="mb-10 lg:mb-14 border border-cinematic-border/40 bg-cinematic-panel/40 p-4 lg:p-5 rounded-none backdrop-blur-sm">
               <div className="flex items-center gap-2 mb-3">
                 <Music className="size-3.5 text-brand-ember" />
                 <span className="font-mono text-nano uppercase tracking-widest text-brand-ember/90">Chapter Audio</span>

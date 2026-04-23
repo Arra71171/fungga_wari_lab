@@ -7,7 +7,7 @@ import { ProgressBar } from "@workspace/ui/components/ProgressBar"
 import { Flame, BookOpen, Globe2 } from "lucide-react"
 
 const storyCardVariants = cva(
-  "group relative flex flex-col overflow-hidden border border-border transition-colors duration-300 hover:border-primary cursor-pointer hover:-translate-y-0.5",
+  "group relative flex flex-col overflow-hidden border-2 border-border shadow-brutal-sm bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-brutal cursor-pointer hover:-translate-y-1 rounded-none",
   {
     variants: {
       variant: {
@@ -35,6 +35,7 @@ export interface StoryCardProps
   status?: string
   chapterCount?: number
   language?: string
+  priority?: boolean
 }
 
 function StoryCard({
@@ -50,6 +51,7 @@ function StoryCard({
   status,
   chapterCount,
   language,
+  priority = false,
   ...props
 }: StoryCardProps) {
   const isCompact = variant === "compact"
@@ -72,6 +74,7 @@ function StoryCard({
               src={coverUrl}
               alt={title}
               fill
+              priority={priority}
               sizes={compactImageSizes}
               className="h-full w-full object-cover grayscale transition-transform duration-500 group-hover:grayscale-0 group-hover:scale-105"
               unoptimized
@@ -121,6 +124,7 @@ function StoryCard({
             src={coverUrl}
             alt={title}
             fill
+            priority={priority}
             sizes={portraitImageSizes}
             className="h-full w-full object-cover grayscale-[20%] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.03]"
             unoptimized

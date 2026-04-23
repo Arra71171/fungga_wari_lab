@@ -8,6 +8,7 @@ import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
 import { ShieldCheck, UserCheck, Eye, Loader2, Settings2, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 const RichTextEditor = dynamic(
   () => import("@workspace/ui/components/editor/rich-text-editor").then((mod) => mod.RichTextEditor),
@@ -223,7 +224,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   };
 
   return (
-    <div className="border-2 border-border-strong bg-cinematic-bg relative overflow-hidden shadow-brutal mt-12">
+    <BrutalistCard variant="panel" padding="none" className="bg-cinematic-bg overflow-hidden mt-12 relative">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       <div className="p-4 md:p-6 border-b-2 border-border flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4 bg-bg-surface/10">
@@ -293,7 +294,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
           </div>
         )}
       </div>
-    </div>
+    </BrutalistCard>
   );
 }
 
@@ -337,7 +338,7 @@ export default function SettingsPage() {
         <OperativeDossier />
 
         {/* Roster Sector */}
-        <div className="border-2 border-border-strong bg-cinematic-panel relative overflow-hidden shadow-brutal">
+        <BrutalistCard variant="panel" padding="none" className="bg-cinematic-panel overflow-hidden relative">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
           <div className="p-6 border-b-2 border-border flex justify-between items-end bg-bg-surface/10">
@@ -378,10 +379,10 @@ export default function SettingsPage() {
               </div>
             )}
           </div>
-        </div>
+        </BrutalistCard>
 
         {/* Role Legend */}
-        <div className="p-6 border-2 border-border-strong bg-cinematic-bg mt-6">
+        <BrutalistCard variant="panel" className="bg-cinematic-bg mt-6">
           <div className="flex items-center gap-3 mb-6">
             <span className="size-2 bg-primary" />
             <h3 className="font-mono text-xs font-bold tracking-label uppercase text-foreground">
@@ -404,7 +405,7 @@ export default function SettingsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </BrutalistCard>
 
         {/* Global Content */}
         <GlobalContentSection isCallerAdmin={isCallerAdmin} />

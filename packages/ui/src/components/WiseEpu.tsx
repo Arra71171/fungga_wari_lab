@@ -25,6 +25,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   // Gate portal mount to client-only — prevents SSR hydration mismatch
   const [portalMounted, setPortalMounted] = React.useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   React.useEffect(() => { setPortalMounted(true); }, []);
 
   const { messages, sendMessage, status, error, clearError } = useChat({

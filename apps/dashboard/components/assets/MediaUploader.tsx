@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { Label } from "@workspace/ui/components/label";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 // ─── Cloudinary config ───────────────────────────────────────────────────────
 // Files are uploaded directly to Cloudinary CDN using signed requests.
@@ -98,7 +99,7 @@ export function MediaUploader() {
   };
 
   return (
-    <div className="bg-bg-surface border border-border-subtle p-6 flex flex-col items-center justify-center space-y-4">
+    <BrutalistCard variant="panel" className="p-6 flex flex-col items-center justify-center space-y-4">
       <div className="flex gap-4 w-full max-w-sm mb-4">
         <div className="flex-1 space-y-1">
           <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">Asset Type</Label>
@@ -145,6 +146,6 @@ export function MediaUploader() {
           </>
         )}
       </Button>
-    </div>
+    </BrutalistCard>
   );
 }

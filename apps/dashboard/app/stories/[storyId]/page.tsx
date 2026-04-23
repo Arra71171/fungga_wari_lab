@@ -944,7 +944,7 @@ export default function StoryEditorPage() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-cinematic-text hover:text-cinematic-text hover:bg-cinematic-border font-mono text-fine uppercase tracking-widest"
+                      className="text-cinematic-text hover:text-cinematic-text hover:bg-accent font-mono text-fine uppercase tracking-widest"
                       onClick={async () => {
                         const input = document.createElement("input");
                         input.type = "file";

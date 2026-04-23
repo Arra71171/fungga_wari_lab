@@ -3,6 +3,13 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { ReactNodeViewRenderer, NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import { MoveRight } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../select";
 
 export type SceneOption = {
   id: string;
@@ -66,19 +73,21 @@ function ChoiceComponent(props: NodeViewProps) {
           </label>
 
           {scenes.length > 0 ? (
-            <select
+            <Select
               value={nextSceneId}
-              onChange={(e) => updateAttributes({ nextSceneId: e.target.value })}
-              className="w-full bg-transparent border-b border-border pb-1 focus:outline-none focus:border-brand-ember font-mono text-xs text-foreground cursor-pointer transition-colors appearance-none"
-              aria-label="Target scene for this choice"
+              onValueChange={(value) => updateAttributes({ nextSceneId: value })}
             >
-              <option value="" disabled>— Select a scene —</option>
-              {scenes.map((s) => (
-                <option key={s.id} value={s.id} className="bg-cinematic-bg text-foreground">
-                  {s.title}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full bg-transparent border-x-0 border-t-0 border-b border-border pb-1 focus-visible:outline-none focus-visible:ring-0 focus-visible:border-brand-ember font-mono text-xs text-foreground rounded-none shadow-none h-auto px-0 pt-0">
+                <SelectValue placeholder="— Select a scene —" />
+              </SelectTrigger>
+              <SelectContent>
+                {scenes.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
             <input
               type="text"

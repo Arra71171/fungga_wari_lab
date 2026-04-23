@@ -147,6 +147,7 @@ export type Database = {
       }
       chapters: {
         Row: {
+          audio_url: string | null
           content: string | null
           created_at: string | null
           id: string
@@ -158,6 +159,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          audio_url?: string | null
           content?: string | null
           created_at?: string | null
           id?: string
@@ -169,6 +171,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          audio_url?: string | null
           content?: string | null
           created_at?: string | null
           id?: string
@@ -365,6 +368,65 @@ export type Database = {
             columns: ["task_id"]
             isOneToOne: false
             referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reading_progress: {
+        Row: {
+          chapter_id: string | null
+          created_at: string | null
+          id: string
+          scene_id: string | null
+          story_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          chapter_id?: string | null
+          created_at?: string | null
+          id?: string
+          scene_id?: string | null
+          story_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string | null
+          created_at?: string | null
+          id?: string
+          scene_id?: string | null
+          story_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_progress_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "scenes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]

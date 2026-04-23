@@ -88,7 +88,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                 {/* Chapter header */}
                 <button
                   onClick={() => setExpandedChapterId(isExpanded ? null : chapter.id)}
-                  className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-cinematic-border rounded-none transition-colors"
+                  className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-accent rounded-none transition-colors"
                   aria-expanded={isExpanded}
                   aria-label={`Chapter ${chIdx + 1}: ${chapter.title}`}
                 >
@@ -122,8 +122,8 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                           className={cn(
                             "w-full flex items-center gap-3 px-3 py-2 text-xs rounded-none cursor-pointer transition-all text-left",
                             isActive
-                              ? "bg-brand-ember/10 border-l-2 border-brand-ember text-cinematic-text font-medium"
-                              : "text-muted-foreground hover:text-cinematic-text hover:bg-cinematic-border border-l-2 border-transparent"
+                              ? "bg-brand-ember/15 border-l-2 border-brand-ember text-cinematic-text font-medium"
+                              : "text-muted-foreground hover:text-cinematic-text hover:bg-accent border-l-2 border-transparent"
                           )}
                         >
                           {isActive ? (
@@ -195,7 +195,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
           {/* Theme toggle — controls cinematic reader light/dark */}
           <AnimatedThemeToggler
             aria-label="Toggle reader theme"
-            className="size-7 border-cinematic-border/40 bg-cinematic-panel hover:bg-cinematic-border"
+            className="size-7 border-cinematic-border/40 bg-cinematic-panel hover:bg-accent"
           />
         </div>
       </div>

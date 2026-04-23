@@ -12,12 +12,20 @@ import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
 import { CoverImageUpload } from "@/components/cover-image-upload";
 import { ChapterBuilderCard } from "./_components/chapter-builder-card";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 import {
   getFullStoryById,
   updateStory,
   publishStory,
   unpublishStory,
 } from "@/actions/storyActions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import {
   createChapter,
   createScene,
@@ -66,6 +74,7 @@ export type ChapterLocal = {
   content: string;
   tiptapContent?: Record<string, unknown>;
   illustrationUrl?: string;
+  audioUrl?: string;
   isNew?: boolean;
   choices: ChoiceLocal[];
 };
@@ -106,7 +115,12 @@ export default function DraftEditorPage({
   React.useEffect(() => {
     let cancelled = false;
     getFullStoryById(storyId).then((story) => {
-      if (cancelled || !story) return;
+      if (cancelled) return;
+      if (!story) {
+        toast.error("Manuscript not found or unauthorized");
+        router.replace("/stories");
+        return;
+      }
       setDbStory(story);
 
       setTitle(story.title);
@@ -130,6 +144,7 @@ export default function DraftEditorPage({
           content: primaryScene?.content || c.content || "",
           tiptapContent: (primaryScene?.tiptap_content || c.tiptap_content) as Record<string, unknown> | undefined,
           illustrationUrl: c.illustration_url ?? undefined,
+          audioUrl: c.audio_url ?? undefined,
           choices: sceneChoices.map((choice: { id: string; label: string; next_scene_id?: string }) => ({
             id: choice.id,
             label: choice.label,
@@ -151,7 +166,7 @@ export default function DraftEditorPage({
     return () => {
       cancelled = true;
     };
-  }, [storyId]);
+  }, [storyId, router]);
 
   // -- Handlers --
 
@@ -322,6 +337,7 @@ export default function DraftEditorPage({
           title: ch.title || `Chapter ${ch.order}`,
           order: ch.order,
           illustration_url: ch.illustrationUrl ?? null,
+          audio_url: ch.audioUrl ?? null,
         });
 
         await updateSceneContent(newSceneId, {
@@ -345,6 +361,7 @@ export default function DraftEditorPage({
           title: ch.title,
           order: ch.order,
           illustration_url: ch.illustrationUrl ?? null,
+          audio_url: ch.audioUrl ?? null,
         });
 
         let sceneId = ch.sceneId;
@@ -542,19 +559,21 @@ export default function DraftEditorPage({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="The Tale of the Bamboo Cutter"
-              className="font-heading text-4xl font-bold h-16 border-none bg-transparent px-0 focus-visible:ring-0 focus-visible:border-transparent placeholder:text-muted-foreground/30"
+              className="font-heading text-4xl font-bold h-16 border-2 border-border-strong bg-bg-surface px-4 shadow-brutal-sm focus-visible:ring-2 focus-visible:ring-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6">
+            <BrutalistCard variant="panel" padding="md" className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6 bg-bg-panel border-border-strong">
               <div className="space-y-2">
                 <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                   Cover Art
                 </Label>
-                <CoverImageUpload
-                  value={coverImageUrl}
-                  onChange={setCoverImageUrl}
-                  className="w-full aspect-[3/4]"
-                />
+                <div className="border-2 border-border-strong bg-bg-surface h-full min-h-[250px]">
+                  <CoverImageUpload
+                    value={coverImageUrl}
+                    onChange={setCoverImageUrl}
+                    className="w-full h-full aspect-[3/4]"
+                  />
+                </div>
               </div>
               <div className="space-y-6">
                 <div className="space-y-2">
@@ -565,7 +584,7 @@ export default function DraftEditorPage({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="A brief summary of the story..."
-                    className="min-h-[100px] resize-none border-border"
+                    className="min-h-[100px] resize-none border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                 </div>
 
@@ -574,48 +593,48 @@ export default function DraftEditorPage({
                     <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                       Category
                     </Label>
-                    <select
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="flex h-10 w-full border border-border bg-transparent px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground"
-                      aria-label="Story category"
-                    >
-                      {STORY_CATEGORIES.map((cat) => (
-                        <option key={cat.value} value={cat.value}>
-                          {cat.label}
-                        </option>
-                      ))}
-                    </select>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger className="flex h-10 w-full border-2 border-border-strong bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                        <SelectValue placeholder="Select Category" />
+                      </SelectTrigger>
+                      <SelectContent className="border-2 border-border-strong rounded-none shadow-brutal-sm bg-bg-surface">
+                        {STORY_CATEGORIES.map((cat) => (
+                          <SelectItem key={cat.value} value={cat.value} className="font-mono text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                            {cat.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
                     <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
                       Language
                     </Label>
-                    <select
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                      className="flex h-10 w-full border border-border bg-transparent px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground"
-                      aria-label="Story language"
-                    >
-                      {STORY_LANGUAGES.map((lang) => (
-                        <option key={lang.value} value={lang.value}>
-                          {lang.label}
-                        </option>
-                      ))}
-                    </select>
+                    <Select value={language} onValueChange={setLanguage}>
+                      <SelectTrigger className="flex h-10 w-full border-2 border-border-strong bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                        <SelectValue placeholder="Select Language" />
+                      </SelectTrigger>
+                      <SelectContent className="border-2 border-border-strong rounded-none shadow-brutal-sm bg-bg-surface">
+                        {STORY_LANGUAGES.map((lang) => (
+                          <SelectItem key={lang.value} value={lang.value} className="font-mono text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                            {lang.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
-            </div>
+            </BrutalistCard>
           </div>
 
-          <hr className="border-border" />
+          <hr className="border-2 border-border-strong" />
 
           {/* Chapters Builder */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
+          <BrutalistCard variant="panel" padding="md" className="space-y-6 bg-bg-panel border-border-strong">
+            <div className="flex items-center justify-between border-b-2 border-border-strong pb-4 mb-4">
               <div>
-                <h2 className="font-heading text-2xl font-bold">Chapters</h2>
+                <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground">Chapters</h2>
                 <p className="text-xs font-mono text-muted-foreground tracking-wide mt-1">
                   Compose the linear sequence of your story.
                 </p>
@@ -624,7 +643,7 @@ export default function DraftEditorPage({
                 variant="outline"
                 size="sm"
                 onClick={handleAddChapter}
-                className="rounded-none border-border hover:border-brand-ember hover:bg-brand-ember/10"
+                className="rounded-none border-2 border-border-strong hover:border-brand-ember hover:bg-brand-ember/10 font-mono tracking-widest uppercase text-xs shadow-brutal-sm active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
               >
                 <Plus className="size-4 mr-2" /> Add Chapter
               </Button>
@@ -656,27 +675,27 @@ export default function DraftEditorPage({
               ))}
 
               {chapters.length === 0 && (
-                <div className="border border-dashed border-border p-12 text-center bg-bg-surface group">
-                  <p className="text-sm font-mono text-muted-foreground mb-4">
+                <div className="border-2 border-dashed border-border-strong p-12 text-center bg-bg-surface group hover:border-brand-ember/50 transition-colors">
+                  <p className="text-sm font-mono text-muted-foreground mb-4 uppercase tracking-widest">
                     No chapters yet.
                   </p>
                   <Button
                     variant="default"
                     onClick={handleAddChapter}
-                    className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-none"
+                    className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-none shadow-brutal active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                   >
                     <Plus className="size-4 mr-2" /> Start the first chapter
                   </Button>
                 </div>
               )}
             </div>
-          </div>
+          </BrutalistCard>
 
-          <hr className="border-border" />
+          <hr className="border-2 border-border-strong" />
 
           {/* Post-Story Metadata */}
-          <div className="space-y-8 bg-bg-surface p-8 border border-border">
-            <h2 className="font-heading text-xl font-bold">Closing Details</h2>
+          <BrutalistCard variant="panel" padding="md" className="space-y-8 bg-bg-panel border-border-strong">
+            <h2 className="font-heading text-xl font-black uppercase tracking-tighter text-foreground border-b-2 border-border-strong pb-4">Closing Details</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
@@ -687,7 +706,7 @@ export default function DraftEditorPage({
                   value={moral}
                   onChange={(e) => setMoral(e.target.value)}
                   placeholder="What is the key takeaway?"
-                  className="min-h-[100px] border-border"
+                  className="min-h-[100px] border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                 />
               </div>
 
@@ -700,7 +719,7 @@ export default function DraftEditorPage({
                     value={attributedAuthor}
                     onChange={(e) => setAttributedAuthor(e.target.value)}
                     placeholder="e.g. As told by Ene Ibetombi"
-                    className="border-border h-11"
+                    className="h-11 border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                   <p className="text-fine text-muted-foreground font-mono">
                     Who is the real-world source of this folk tale?
@@ -715,12 +734,12 @@ export default function DraftEditorPage({
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                     placeholder="folklore, bamboo, ritual"
-                    className="border-border h-11"
+                    className="h-11 border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                 </div>
               </div>
             </div>
-          </div>
+          </BrutalistCard>
         </div>
       </div>
     </div>

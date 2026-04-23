@@ -191,7 +191,7 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
               type="button"
               size="sm"
               variant="ghost"
-              className="text-cinematic-text hover:text-cinematic-text hover:bg-cinematic-border"
+              className="text-cinematic-text hover:text-cinematic-text hover:bg-accent"
               onClick={() => inputRef.current?.click()}
             >
               <Upload className="size-4 mr-2" /> Change
