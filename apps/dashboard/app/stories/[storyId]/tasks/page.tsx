@@ -125,7 +125,7 @@ export default function StoryTasksPage() {
             ) : (
               tasks.map((task) => {
                 const assignee = task.assignee_id
-                  ? users.find((u) => u.clerk_id === task.assignee_id)
+                  ? users.find((u) => u.id === task.assignee_id)
                   : null;
                 const assigneeName = assignee
                   ? (assignee.alias ?? assignee.name ?? "Unknown Operative")

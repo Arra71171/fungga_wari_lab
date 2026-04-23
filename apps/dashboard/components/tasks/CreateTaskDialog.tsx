@@ -27,7 +27,6 @@ import type { Database } from "@workspace/ui/types/supabase";
 type User = {
   id: string;
   name?: string | null;
-  clerk_id?: string | null;
   email?: string | null;
 };
 
@@ -129,7 +128,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                 <SelectContent className="rounded-none border-border bg-bg-panel">
                   <SelectItem value="none" className="font-mono text-sm italic opacity-50">Unassigned</SelectItem>
                   {users.map((u) => (
-                    <SelectItem key={u.id} value={u.clerk_id ?? u.id} className="font-mono text-sm">
+                    <SelectItem key={u.id} value={u.id} className="font-mono text-sm">
                       {u.name ?? u.email ?? "Unknown User"}
                     </SelectItem>
                   ))}

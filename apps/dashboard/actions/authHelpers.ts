@@ -10,7 +10,7 @@ export async function requireUser() {
 
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("id, auth_id, clerk_id, role")
+    .select("id, auth_id, role")
     .eq("auth_id", user.id)
     .single()
 

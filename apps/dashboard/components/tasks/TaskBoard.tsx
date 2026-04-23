@@ -36,12 +36,12 @@ export function TaskBoard() {
 
   const renderedGroups = [
     ...users.map((user) => ({
-      id: user.clerk_id ?? user.id,
+      id: user.id,
       name: user.name ?? "Unknown Operative",
       user,
       avatarUrl: user.avatar_url ?? undefined,
       tasks: tasks.filter(
-        (t) => t.assignee_id === user.clerk_id || t.assignee_id === user.id
+        (t) => t.assignee_id === user.id
       ),
     })),
     {

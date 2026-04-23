@@ -129,20 +129,7 @@ export async function verifyAndGrantAccess(
 
     // Security: verify this session was created for this user
     const sessionAuthId = session.metadata?.auth_id;
-    const sessionClerkId = session.metadata?.user_id; // legacy clerk ID
-    
-    // Support legacy verify by looking up the clerk_id mapping
-    let isAuthorized = sessionAuthId === user.id;
-    
-    if (!isAuthorized && sessionClerkId) {
-      const { data: profile } = await supabase
-        .from("users")
-        .select("clerk_id")
-        .eq("auth_id", user.id)
-        .single();
-        
-      isAuthorized = profile?.clerk_id === sessionClerkId;
-    }
+    const isAuthorized = sessionAuthId === user.id;
 
     if (!isAuthorized) {
       return { success: false, error: "Session does not belong to this user" };
