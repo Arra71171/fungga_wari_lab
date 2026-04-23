@@ -6,6 +6,52 @@
 --   assets.uploaded_by, bookmarks.user_id, interactions.user_id, and tasks.assignee_id.
 -- - Fresh db resets therefore diverged from the deployed schema and broke RLS parity.
 
+DROP POLICY IF EXISTS "stories_select_public" ON stories;
+DROP POLICY IF EXISTS "stories_insert_author" ON stories;
+DROP POLICY IF EXISTS "stories_update_author" ON stories;
+DROP POLICY IF EXISTS "stories_delete_author" ON stories;
+
+DROP POLICY IF EXISTS "chapters_select" ON chapters;
+DROP POLICY IF EXISTS "chapters_insert_author" ON chapters;
+DROP POLICY IF EXISTS "chapters_update_author" ON chapters;
+DROP POLICY IF EXISTS "chapters_delete_author" ON chapters;
+
+DROP POLICY IF EXISTS "scenes_select" ON scenes;
+DROP POLICY IF EXISTS "scenes_insert_author" ON scenes;
+DROP POLICY IF EXISTS "scenes_update_author" ON scenes;
+DROP POLICY IF EXISTS "scenes_delete_author" ON scenes;
+
+DROP POLICY IF EXISTS "blocks_select" ON blocks;
+DROP POLICY IF EXISTS "blocks_insert_author" ON blocks;
+DROP POLICY IF EXISTS "blocks_update_author" ON blocks;
+DROP POLICY IF EXISTS "blocks_delete_author" ON blocks;
+
+DROP POLICY IF EXISTS "assets_select" ON assets;
+DROP POLICY IF EXISTS "assets_insert_author" ON assets;
+DROP POLICY IF EXISTS "assets_update_author" ON assets;
+DROP POLICY IF EXISTS "assets_delete_author" ON assets;
+
+DROP POLICY IF EXISTS "bookmarks_select" ON bookmarks;
+DROP POLICY IF EXISTS "bookmarks_insert" ON bookmarks;
+DROP POLICY IF EXISTS "bookmarks_delete" ON bookmarks;
+
+DROP POLICY IF EXISTS "interactions_select" ON interactions;
+DROP POLICY IF EXISTS "interactions_insert" ON interactions;
+
+DROP POLICY IF EXISTS "tasks_select" ON tasks;
+DROP POLICY IF EXISTS "tasks_insert_author" ON tasks;
+DROP POLICY IF EXISTS "tasks_update_author" ON tasks;
+DROP POLICY IF EXISTS "tasks_delete_author" ON tasks;
+
+DROP POLICY IF EXISTS "messages_select" ON messages;
+DROP POLICY IF EXISTS "messages_insert" ON messages;
+DROP POLICY IF EXISTS "messages_delete" ON messages;
+
+DROP POLICY IF EXISTS "choices_select" ON choices;
+DROP POLICY IF EXISTS "choices_insert_author" ON choices;
+DROP POLICY IF EXISTS "choices_update_author" ON choices;
+DROP POLICY IF EXISTS "choices_delete_author" ON choices;
+
 ALTER TABLE stories DROP CONSTRAINT IF EXISTS stories_author_id_fkey;
 ALTER TABLE assets DROP CONSTRAINT IF EXISTS assets_uploaded_by_fkey;
 ALTER TABLE bookmarks DROP CONSTRAINT IF EXISTS bookmarks_user_id_fkey;
@@ -105,10 +151,7 @@ AS $$
   );
 $$;
 
-DROP POLICY IF EXISTS "stories_select_public" ON stories;
-DROP POLICY IF EXISTS "stories_insert_author" ON stories;
-DROP POLICY IF EXISTS "stories_update_author" ON stories;
-DROP POLICY IF EXISTS "stories_delete_author" ON stories;
+
 
 CREATE POLICY "stories_select_public" ON stories
   FOR SELECT USING (
@@ -135,10 +178,7 @@ CREATE POLICY "stories_delete_author" ON stories
     OR is_admin()
   );
 
-DROP POLICY IF EXISTS "chapters_select" ON chapters;
-DROP POLICY IF EXISTS "chapters_insert_author" ON chapters;
-DROP POLICY IF EXISTS "chapters_update_author" ON chapters;
-DROP POLICY IF EXISTS "chapters_delete_author" ON chapters;
+
 
 CREATE POLICY "chapters_select" ON chapters
   FOR SELECT USING (
@@ -184,10 +224,7 @@ CREATE POLICY "chapters_delete_author" ON chapters
     )
   );
 
-DROP POLICY IF EXISTS "scenes_select" ON scenes;
-DROP POLICY IF EXISTS "scenes_insert_author" ON scenes;
-DROP POLICY IF EXISTS "scenes_update_author" ON scenes;
-DROP POLICY IF EXISTS "scenes_delete_author" ON scenes;
+
 
 CREATE POLICY "scenes_select" ON scenes
   FOR SELECT USING (
@@ -237,10 +274,7 @@ CREATE POLICY "scenes_delete_author" ON scenes
     )
   );
 
-DROP POLICY IF EXISTS "blocks_select" ON blocks;
-DROP POLICY IF EXISTS "blocks_insert_author" ON blocks;
-DROP POLICY IF EXISTS "blocks_update_author" ON blocks;
-DROP POLICY IF EXISTS "blocks_delete_author" ON blocks;
+
 
 CREATE POLICY "blocks_select" ON blocks
   FOR SELECT USING (
@@ -286,10 +320,7 @@ CREATE POLICY "blocks_delete_author" ON blocks
     )
   );
 
-DROP POLICY IF EXISTS "assets_select" ON assets;
-DROP POLICY IF EXISTS "assets_insert_author" ON assets;
-DROP POLICY IF EXISTS "assets_update_author" ON assets;
-DROP POLICY IF EXISTS "assets_delete_author" ON assets;
+
 
 CREATE POLICY "assets_select" ON assets
   FOR SELECT USING (
@@ -321,9 +352,7 @@ CREATE POLICY "assets_delete_author" ON assets
     OR is_admin()
   );
 
-DROP POLICY IF EXISTS "bookmarks_select" ON bookmarks;
-DROP POLICY IF EXISTS "bookmarks_insert" ON bookmarks;
-DROP POLICY IF EXISTS "bookmarks_delete" ON bookmarks;
+
 
 CREATE POLICY "bookmarks_select" ON bookmarks
   FOR SELECT USING (matches_current_identity(user_id) OR is_admin());
@@ -334,8 +363,7 @@ CREATE POLICY "bookmarks_insert" ON bookmarks
 CREATE POLICY "bookmarks_delete" ON bookmarks
   FOR DELETE USING (matches_current_identity(user_id) OR is_admin());
 
-DROP POLICY IF EXISTS "interactions_select" ON interactions;
-DROP POLICY IF EXISTS "interactions_insert" ON interactions;
+
 
 CREATE POLICY "interactions_select" ON interactions
   FOR SELECT USING (
@@ -347,10 +375,7 @@ CREATE POLICY "interactions_select" ON interactions
 CREATE POLICY "interactions_insert" ON interactions
   FOR INSERT WITH CHECK (true);
 
-DROP POLICY IF EXISTS "tasks_select" ON tasks;
-DROP POLICY IF EXISTS "tasks_insert_author" ON tasks;
-DROP POLICY IF EXISTS "tasks_update_author" ON tasks;
-DROP POLICY IF EXISTS "tasks_delete_author" ON tasks;
+
 
 CREATE POLICY "tasks_select" ON tasks
   FOR SELECT USING (
@@ -376,6 +401,75 @@ CREATE POLICY "tasks_delete_author" ON tasks
   FOR DELETE USING (
     is_story_owner(story_id)
     OR is_admin()
+  );
+
+CREATE POLICY "messages_select" ON messages
+  FOR SELECT USING (
+    matches_current_identity(author_id::text)
+    OR (story_id IS NOT NULL AND is_story_owner(story_id))
+    OR is_admin()
+  );
+
+CREATE POLICY "messages_insert" ON messages
+  FOR INSERT WITH CHECK (
+    matches_current_identity(author_id::text)
+  );
+
+CREATE POLICY "messages_delete" ON messages
+  FOR DELETE USING (
+    matches_current_identity(author_id::text) OR is_admin()
+  );
+
+CREATE POLICY "choices_select" ON choices
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1
+      FROM scenes
+      JOIN chapters ON chapters.id = scenes.chapter_id
+      JOIN stories ON stories.id = chapters.story_id
+      WHERE scenes.id = choices.scene_id
+        AND (
+          stories.status = 'published'
+          OR matches_current_identity(stories.author_id::text)
+          OR is_admin()
+        )
+    )
+  );
+
+CREATE POLICY "choices_insert_author" ON choices
+  FOR INSERT WITH CHECK (
+    EXISTS (
+      SELECT 1
+      FROM scenes
+      JOIN chapters ON chapters.id = scenes.chapter_id
+      JOIN stories ON stories.id = chapters.story_id
+      WHERE scenes.id = choices.scene_id
+        AND (matches_current_identity(stories.author_id::text) OR is_admin())
+    )
+  );
+
+CREATE POLICY "choices_update_author" ON choices
+  FOR UPDATE USING (
+    EXISTS (
+      SELECT 1
+      FROM scenes
+      JOIN chapters ON chapters.id = scenes.chapter_id
+      JOIN stories ON stories.id = chapters.story_id
+      WHERE scenes.id = choices.scene_id
+        AND (matches_current_identity(stories.author_id::text) OR is_admin())
+    )
+  );
+
+CREATE POLICY "choices_delete_author" ON choices
+  FOR DELETE USING (
+    EXISTS (
+      SELECT 1
+      FROM scenes
+      JOIN chapters ON chapters.id = scenes.chapter_id
+      JOIN stories ON stories.id = chapters.story_id
+      WHERE scenes.id = choices.scene_id
+        AND (matches_current_identity(stories.author_id::text) OR is_admin())
+    )
   );
 
 CREATE INDEX IF NOT EXISTS idx_assets_uploaded_by ON assets (uploaded_by);
