@@ -95,6 +95,15 @@
     --bg-panel: oklch(0.89 0.03 70);
     --bg-surface: oklch(0.96 0.022 75);
     --bg-overlay: oklch(0.99 0.010 72);
+
+    /* ── Illustration Overlay System (theme-independent — always dark) ─── */
+    /* Intentionally IDENTICAL in :root and .dark. The cinematic gradient   */
+    /* over chapter illustrations must always be dark so the image and      */
+    /* title text remain legible regardless of the active colour scheme.    */
+    --illustration-overlay-from: oklch(0.06 0.02 45 / 0.78);
+    --illustration-overlay-via:  oklch(0.06 0.02 45 / 0.24);
+    /* Text on the dark illustration overlay — always near-white */
+    --illustration-title: oklch(0.96 0.01 75);
 }
 
 
@@ -156,6 +165,11 @@
     --bg-panel: oklch(0.14 0.03 50);
     --bg-surface: oklch(0.18 0.04 50);
     --bg-overlay: oklch(0.22 0.05 50);
+
+    /* Illustration Overlay System — same values as :root (always dark) */
+    --illustration-overlay-from: oklch(0.06 0.02 45 / 0.78);
+    --illustration-overlay-via:  oklch(0.06 0.02 45 / 0.24);
+    --illustration-title: oklch(0.96 0.01 75);
 }
 
 @theme inline {
@@ -222,6 +236,9 @@
     --color-bg-panel: var(--bg-panel);
     --color-bg-surface: var(--bg-surface);
     --color-bg-overlay: var(--bg-overlay);
+
+    /* Illustration Overlay System */
+    --color-illustration-title: var(--illustration-title);
 
     /* Cinematic alias tokens — map dim/hover/heavy variants to existing tokens */
     --color-cinematic-text-dim: var(--muted-foreground);
@@ -315,6 +332,21 @@
 
 @utility aspect-portrait {
   aspect-ratio: 3 / 4;
+}
+
+/**
+ * illustration-gradient-overlay
+ * Always-dark cinematic gradient for chapter illustration bottom fades.
+ * Uses theme-independent tokens — identical in light and dark mode.
+ * Replace `from-cinematic-bg via-cinematic-bg/30 to-transparent` with this.
+ */
+@utility illustration-gradient-overlay {
+  background: linear-gradient(
+    to top,
+    var(--illustration-overlay-from),
+    var(--illustration-overlay-via),
+    transparent
+  );
 }
 
 @utility max-w-content {
