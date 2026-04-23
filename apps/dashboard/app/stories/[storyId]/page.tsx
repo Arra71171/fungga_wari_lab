@@ -67,6 +67,7 @@ import {
   updateScene as updateSceneAction,
 } from "@/actions/chapterActions";
 import { createAsset } from "@/actions/assetActions";
+import { getCloudinarySignature } from "@/actions/cloudinaryActions";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -263,16 +264,19 @@ export default function StoryEditorPage() {
       try {
         const CLOUDINARY_CLOUD_NAME =
           process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-        const CLOUDINARY_UPLOAD_PRESET =
-          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-        if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+        if (!CLOUDINARY_CLOUD_NAME) {
           throw new Error("Missing Cloudinary configuration");
         }
 
+        const { timestamp, signature, apiKey, folder } = await getCloudinarySignature();
+
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+        formData.append("api_key", apiKey);
+        formData.append("timestamp", timestamp.toString());
+        formData.append("signature", signature);
+        formData.append("folder", folder);
 
         const res = await fetch(
           `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,

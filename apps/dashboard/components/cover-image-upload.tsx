@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
 import { createAsset } from "@/actions/assetActions";
+import { getCloudinarySignature } from "@/actions/cloudinaryActions";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 import Image from "next/image";
@@ -96,11 +97,10 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
       setUploadStatus("Compressing...");
 
       const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-      const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-      if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+      if (!CLOUDINARY_CLOUD_NAME) {
         throw new Error(
-          "Missing Cloudinary configuration. Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in .env.local",
+          "Missing Cloudinary configuration. Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME in .env.local",
         );
       }
 
@@ -109,10 +109,14 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
 
       setUploadStatus("Uploading...");
 
+      const { timestamp, signature, apiKey, folder } = await getCloudinarySignature("fungga-wari/covers");
+
       const formData = new FormData();
       formData.append("file", compressed);
-      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-      formData.append("folder", "fungga-wari/covers");
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
 
       const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 

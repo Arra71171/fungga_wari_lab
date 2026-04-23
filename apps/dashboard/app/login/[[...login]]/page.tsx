@@ -10,7 +10,14 @@ import { getAppUrl } from "@workspace/ui/lib/utils";
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect_url") ?? "/overview";
+  // window.location.replace() is a raw browser API — it has NO knowledge of the
+  // Next.js basePath ("/dashboard"). We must manually prepend the basePath so that
+  // the browser navigates to http://localhost:3000/dashboard/overview, not /overview.
+  const DASHBOARD_BASE = "/dashboard";
+  const rawRedirect = searchParams.get("redirect_url") ?? "/overview";
+  const redirectUrl = rawRedirect.startsWith(DASHBOARD_BASE)
+    ? rawRedirect
+    : `${DASHBOARD_BASE}${rawRedirect}`;
   const { supabase, user, isLoaded } = useSupabaseAuth();
 
   const [email, setEmail] = React.useState("");

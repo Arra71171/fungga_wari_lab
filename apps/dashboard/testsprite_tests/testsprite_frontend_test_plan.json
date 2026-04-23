@@ -1,0 +1,736 @@
+[
+  {
+    "id": "TC001",
+    "title": "Create a new story draft and see it in the stories list",
+    "description": "Verifies a creator can create a new story with a required title and the new story appears in the stories list after saving.",
+    "category": "Story Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/stories"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new story"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Test Story TC001\" into the story title field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the create story form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new story appears in the stories list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Create a story, add a chapter with rich text and illustration, and confirm it persists after refresh",
+    "description": "Verifies a creator can add a chapter, write rich text, attach an illustration, save, refresh, and still see the chapter, content, and illustration in the draft outline and editor.",
+    "category": "Chapter Builder",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/stories"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new story"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Test Story TC004\" into the story title field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the create story form"
+      },
+      {
+        "type": "action",
+        "description": "Open the draft editor for \"Test Story TC004\""
+      },
+      {
+        "type": "action",
+        "description": "Add a new chapter"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Chapter 1\" into the chapter title field"
+      },
+      {
+        "type": "action",
+        "description": "Enter rich text content into the chapter editor"
+      },
+      {
+        "type": "action",
+        "description": "Upload a valid portrait-format image file as the chapter illustration"
+      },
+      {
+        "type": "action",
+        "description": "Save the chapter"
+      },
+      {
+        "type": "action",
+        "description": "Press F5"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the chapter is listed in the draft outline and its content and illustration are present"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Edit story metadata from story details and see updates reflected in the list",
+    "description": "Verifies a creator can open a story’s details, update metadata, save, and see the updated metadata reflected back in the stories list.",
+    "category": "Story Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/stories"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new story"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Test Story TC002\" into the story title field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the create story form"
+      },
+      {
+        "type": "action",
+        "description": "Open the story details for \"Test Story TC002\""
+      },
+      {
+        "type": "action",
+        "description": "Edit the story metadata fields with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Save the story metadata changes"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation control to return to the stories list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the stories list reflects the updated story metadata"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Update dossier alias, bio, and avatar and see preview reflect saved changes",
+    "description": "Verifies a creator can update alias, bio, and avatar on Settings and that the dossier preview reflects the saved updates.",
+    "category": "Settings (Operative Dossier)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with superadmin@funggawari.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with FungaW@ri2026!"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open settings"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Agent Alias QA\" into the alias field"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"QA bio update for automated test.\" into the bio field"
+      },
+      {
+        "type": "action",
+        "description": "Upload a valid image file as the avatar"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dossier preview displays the updated alias, bio, and avatar"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Upload an image asset and see it appear in the library grid",
+    "description": "Verifies a creator can select image asset type, upload a valid image file, and see the uploaded image appear in the asset grid.",
+    "category": "Asset Library",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/library"
+      },
+      {
+        "type": "action",
+        "description": "Select the image asset type"
+      },
+      {
+        "type": "action",
+        "description": "Upload a valid image file"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the uploaded image asset appears in the asset grid"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Saved dossier changes persist after page reload",
+    "description": "Verifies that after saving dossier updates, reloading the page rehydrates the latest saved alias and bio in the Settings view.",
+    "category": "Settings (Operative Dossier)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with superadmin@funggawari.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with FungaW@ri2026!"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open settings"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"ReloadPersistAlias\" into the alias field"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Reload persistence check.\" into the bio field"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "action",
+        "description": "Reload the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the alias field shows \"ReloadPersistAlias\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the bio field shows \"Reload persistence check.\""
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Delete a chapter and confirm it is removed from the draft outline",
+    "description": "Verifies a creator can add a chapter, delete it, and the chapter is removed from the draft outline after the delete action completes.",
+    "category": "Chapter Builder",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/stories"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new story"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Test Story TC005\" into the story title field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the create story form"
+      },
+      {
+        "type": "action",
+        "description": "Open the draft editor for \"Test Story TC005\""
+      },
+      {
+        "type": "action",
+        "description": "Add a new chapter"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Chapter To Delete\" into the chapter title field"
+      },
+      {
+        "type": "action",
+        "description": "Save the chapter"
+      },
+      {
+        "type": "action",
+        "description": "Delete the chapter named \"Chapter To Delete\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the deleted chapter no longer appears in the draft outline"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC008",
+    "title": "Cancel avatar change before saving keeps previously saved avatar",
+    "description": "Verifies a creator can abandon an avatar change and the previously saved avatar remains unchanged in the dossier preview.",
+    "category": "Settings (Operative Dossier)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with superadmin@funggawari.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with FungaW@ri2026!"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open settings"
+      },
+      {
+        "type": "action",
+        "description": "Upload a valid image file as the avatar"
+      },
+      {
+        "type": "action",
+        "description": "Cancel changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the avatar in the dossier preview remains unchanged from before the upload"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify there is no indication that changes were saved"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC009",
+    "title": "Assign tags or metadata to an uploaded asset and confirm it persists after refresh",
+    "description": "Verifies a creator can upload an asset, assign tags or metadata, refresh the page, and still see the metadata displayed for the asset in the grid.",
+    "category": "Asset Library",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/library"
+      },
+      {
+        "type": "action",
+        "description": "Select the image asset type"
+      },
+      {
+        "type": "action",
+        "description": "Upload a valid image file"
+      },
+      {
+        "type": "action",
+        "description": "Open the uploaded asset details or edit panel from the grid"
+      },
+      {
+        "type": "action",
+        "description": "Assign a tag \"tc009\" to the asset"
+      },
+      {
+        "type": "action",
+        "description": "Save the asset metadata changes"
+      },
+      {
+        "type": "action",
+        "description": "Press F5"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the asset shows the tag \"tc009\" in the library grid or asset details"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC010",
+    "title": "Unsaved text changes are not persisted when leaving settings without saving",
+    "description": "Verifies that editing alias/bio without saving does not persist after navigating away and returning to Settings.",
+    "category": "Settings (Operative Dossier)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with superadmin@funggawari.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with FungaW@ri2026!"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open settings"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"UnsavedAliasChange\" into the alias field"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"This should not persist without save.\" into the bio field"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open stories"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the Settings fields do not show the unsaved alias and bio values"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC011",
+    "title": "Prevent saving when alias is too short and allow correction",
+    "description": "Verifies that entering a too-short alias blocks saving with an inline validation error and that correcting the alias allows saving.",
+    "category": "Settings (Operative Dossier)",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with superadmin@funggawari.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with FungaW@ri2026!"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open settings"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"ab\" into the alias field"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an alias validation error is visible"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"ValidAliasQA\" into the alias field"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a success confirmation is visible"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC012",
+    "title": "Require a title when creating a new story",
+    "description": "Verifies the create story flow blocks submission without a required title and shows an inline validation error without creating a story.",
+    "category": "Story Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/stories"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new story"
+      },
+      {
+        "type": "action",
+        "description": "Submit the create story form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a title validation error is visible"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC013",
+    "title": "Block unsupported chapter illustration file types",
+    "description": "Verifies the illustration uploader rejects an unsupported file type and shows a file validation error without attaching an illustration.",
+    "category": "Chapter Builder",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/stories"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new story"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Test Story TC006\" into the story title field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the create story form"
+      },
+      {
+        "type": "action",
+        "description": "Open the draft editor for \"Test Story TC006\""
+      },
+      {
+        "type": "action",
+        "description": "Add a new chapter"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to upload an unsupported file type as the chapter illustration"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an illustration file validation error is visible"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC014",
+    "title": "Reject unsupported or oversized asset uploads in the library",
+    "description": "Verifies the library upload flow blocks an unsupported or oversized file and shows an inline validation error without adding a new asset to the grid.",
+    "category": "Asset Library",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/library"
+      },
+      {
+        "type": "action",
+        "description": "Select an asset type"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to upload an unsupported or oversized file"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an upload validation error is visible"
+      }
+    ],
+    "priority": "Low"
+  }
+]

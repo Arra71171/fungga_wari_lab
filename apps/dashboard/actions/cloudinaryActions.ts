@@ -5,7 +5,12 @@ import { z } from "zod"
 import crypto from "crypto"
 
 const signatureSchema = z.object({
-  folder: z.enum(["fungga-wari-lab/assets"]).default("fungga-wari-lab/assets"),
+  folder: z.enum([
+    "fungga-wari-lab/assets",
+    "fungga-wari/covers",
+    "fungga-wari/audio",
+    "fungga-wari/avatars"
+  ]).default("fungga-wari-lab/assets"),
 })
 
 const authorizedUploadRoles = new Set(["admin", "superadmin", "editor"])
