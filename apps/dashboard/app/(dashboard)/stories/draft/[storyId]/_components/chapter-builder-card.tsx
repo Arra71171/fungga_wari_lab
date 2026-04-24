@@ -18,7 +18,7 @@ import {
 import { cn } from "@workspace/ui/lib/utils";
 import { CoverImageUpload } from "@/components/cover-image-upload";
 import { ChapterAudioUpload } from "@/components/chapter-audio-upload";
-import { useSortable } from "@dnd-kit/sortable";
+
 import dynamic from "next/dynamic";
 import {
   Select,
