@@ -4,6 +4,7 @@ import "@workspace/ui/globals.css";
 import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider";
 import { cn } from "@workspace/ui/lib/utils";
 import { Toaster } from "@workspace/ui/components/sonner";
+import { AuthObserver } from "@/components/AuthObserver";
 
 // ── Folk-story heading: Literary, cinematic vibe (Mythological feel)
 const cinzel = Cinzel({
@@ -66,6 +67,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <SupabaseAuthProvider>
           {children}
+          <AuthObserver />
           <Toaster />
         </SupabaseAuthProvider>
       </body>

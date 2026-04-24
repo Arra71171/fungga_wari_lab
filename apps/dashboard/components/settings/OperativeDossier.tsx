@@ -33,11 +33,16 @@ export function OperativeDossier() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Eagerly clear any dirty form state so the UI never flashes stale values.
-    setMe(undefined);
-    setAlias("");
-    setBio("");
-    setAliasError("");
+    // TC010 FIX: Eagerly reset to undefined/empty so the skeleton shows while
+    // the new profile loads, preventing stale data flashing on route changes.
+    // Wrap in startTransition so React batches this as a low-priority update
+    // alongside the subsequent fetch completion — avoids cascading renders.
+    React.startTransition(() => {
+      setMe(undefined);
+      setAlias("");
+      setBio("");
+      setAliasError("");
+    });
 
     const refetch = () => {
       getMyProfile().then((profile) => {
@@ -59,7 +64,6 @@ export function OperativeDossier() {
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   if (me === undefined) {

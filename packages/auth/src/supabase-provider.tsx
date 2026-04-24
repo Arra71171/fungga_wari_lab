@@ -36,11 +36,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoaded, setIsLoaded] = React.useState(false)
 
   const fetchProfile = React.useCallback(async (authUser: User) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("users")
       .select("id, email, name, alias, avatar_url, role")
       .eq("auth_id", authUser.id)
       .maybeSingle()
+    if (error) {
+      // Non-fatal: user row may not exist yet (first sign-in before sync trigger runs)
+      console.warn("[Auth] fetchProfile error:", error.message)
+    }
     setUserProfile(data as UserProfile | null)
   }, [supabase])
 
