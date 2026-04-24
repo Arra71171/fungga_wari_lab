@@ -4,6 +4,7 @@ import * as React from "react";
 import { Upload, X, Loader2, Music } from "lucide-react";
 import { createAsset } from "@/actions/assetActions";
 import { getCloudinarySignature } from "@/actions/cloudinaryActions";
+import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -25,7 +26,7 @@ export function ChapterAudioUpload({ value, onChange, className }: ChapterAudioU
     // Validate size (e.g. 50MB)
     const MAX_FILE_SIZE_MB = 50;
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      alert(`File too large. Please select a file smaller than ${MAX_FILE_SIZE_MB}MB.`);
+      toast.error(`File too large. Please select a file smaller than ${MAX_FILE_SIZE_MB}MB.`);
       return;
     }
 
@@ -81,6 +82,7 @@ export function ChapterAudioUpload({ value, onChange, className }: ChapterAudioU
       onChange(uploadResponse.secure_url);
     } catch (err) {
       console.error("Upload failed:", err);
+      toast.error(err instanceof Error ? err.message : "Upload to Cloudinary failed");
     } finally {
       setIsUploading(false);
       setUploadStatus("");

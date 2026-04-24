@@ -479,6 +479,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 className="w-full h-10 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ember/50" 
                 src={activeChapter.audio_url} 
                 preload="metadata"
+                aria-label={`Chapter audio for ${activeChapter.title || 'this chapter'}`}
               />
             </div>
           )}

@@ -17,8 +17,7 @@ async def run_test():
             args=[
                 "--window-size=1280,720",         # Set the browser window size
                 "--disable-dev-shm-usage",        # Avoid using /dev/shm which can cause issues in containers
-                "--ipc=host",                     # Use host-level IPC for better stability
-                "--single-process"                # Run the browser in a single process mode
+                "--ipc=host"# Use host-level IPC for better stability
             ],
         )
 
@@ -42,7 +41,7 @@ async def run_test():
         # --> Test passed — verified by AI agent
         frame = context.pages[-1]
         current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        await expect(page).not_to_have_url("about:blank")
         await asyncio.sleep(5)
 
     finally:

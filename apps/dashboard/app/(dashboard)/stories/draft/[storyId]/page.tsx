@@ -701,6 +701,7 @@ export default function DraftEditorPage({
                   content={ch.content}
                   tiptapContent={ch.tiptapContent}
                   illustrationUrl={ch.illustrationUrl}
+                  audioUrl={ch.audioUrl}
                   choices={ch.choices}
                   allChapters={chapters}
                   isExpanded={expandedChapterIds.has(ch.id)}

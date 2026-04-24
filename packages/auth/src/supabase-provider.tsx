@@ -113,7 +113,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         // TypeError: Failed to fetch = transient browser network failure.
         // Session state is already correct via INITIAL_SESSION + server proxy.
-        if (err instanceof TypeError || err.message?.includes("Failed to fetch") || err.message?.includes("NetworkError")) {
+        if ((err instanceof TypeError && err.message?.includes("Failed to fetch")) || err.message?.includes("NetworkError")) {
           console.warn("[Auth] getUser network error — session managed by auth state listener")
           return
         }

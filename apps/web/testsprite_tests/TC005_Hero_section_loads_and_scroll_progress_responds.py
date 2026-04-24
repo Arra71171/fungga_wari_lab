@@ -17,8 +17,7 @@ async def run_test():
             args=[
                 "--window-size=1280,720",         # Set the browser window size
                 "--disable-dev-shm-usage",        # Avoid using /dev/shm which can cause issues in containers
-                "--ipc=host",                     # Use host-level IPC for better stability
-                "--single-process"                # Run the browser in a single process mode
+                "--ipc=host"# Use host-level IPC for better stability
             ],
         )
 
