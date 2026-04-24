@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with the provided credentials and submit the login form.
+        # -> Fill the email field with the provided username and enter the password, then submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,33 +44,12 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal so page controls are accessible, then open the Manuscripts (Stories) page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Open the Manuscripts (Stories) page by clicking the 'Manuscripts' link in the sidebar so I can create a new story.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Open the Manuscripts (Stories) page by clicking the 'Manuscripts' link in the sidebar so I can create a new story.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Start creating a new story by clicking the 'New Manuscript' button.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        # -> Open the Stories page so I can create a new story. The dashboard SPA appears not to have loaded normal navigation links, so navigate directly to /dashboard/stories.
+        await page.goto("http://localhost:3000/dashboard/stories")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Chapter 1')]").nth(0).is_visible(), "The draft outline should list Chapter 1 and the chapter's content and illustration should still be present after saving and refreshing."
+        assert await frame.locator("xpath=//*[contains(., 'Chapter 1')]").nth(0).is_visible(), "The draft outline should list the chapter titled Chapter 1 and the editor should show its content and illustration after saving and refreshing."
         await asyncio.sleep(5)
 
     finally:

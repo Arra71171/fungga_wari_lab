@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with the provided superadmin credentials, then submit the login form.
+        # -> Fill the email field with superadmin@funggawari.com
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,13 +44,13 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal so the Settings entry in the nav can be accessed.
+        # -> Click the 'Skip onboarding tour' button to dismiss the tour modal so we can access the Settings link.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Settings' nav item to open the Settings page and locate the Avatar / dossier preview controls.
+        # -> Open the Settings page from the left navigation so we can access profile/avatar upload controls.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
@@ -58,8 +58,8 @@ async def run_test():
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Dossier preview')]").nth(0).is_visible(), "The dossier preview should still show the previously saved avatar after cancelling the upload.",
-        assert await frame.locator("xpath=//*[contains(., 'Save changes')]").nth(0).is_visible(), "The Save changes button should still be visible after cancelling so there is no indication that changes were saved."
+        assert await frame.locator("xpath=//*[contains(., 'Current avatar')]").nth(0).is_visible(), "The dossier preview should still show the Current avatar after cancelling the upload"
+        assert not await frame.locator("xpath=//*[contains(., 'Changes saved')]").nth(0).is_visible(), "The page should not show a 'Changes saved' confirmation after cancelling the avatar upload"
         await asyncio.sleep(5)
 
     finally:

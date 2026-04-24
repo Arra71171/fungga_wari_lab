@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with the provided credentials and submit the login form.
+        # -> Fill the email and password fields and submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,37 +44,15 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal so the left navigation (including Settings) is accessible, then open Settings to update alias, bio, and avatar.
+        # -> Click the 'Skip onboarding tour' button to close the modal, then open the Settings page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the Settings page from the left navigation so I can update alias, bio, and avatar.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
-        await asyncio.sleep(3); await elem.click()
+        await page.goto("http://localhost:3000/dashboard/settings")
         
-        # -> Click the left-navigation 'Settings' link to open the Settings page and observe alias, bio, and avatar fields so we can update them.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the left-navigation 'Settings' link to open the Settings page so alias, bio, and avatar fields become visible.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the left-navigation 'Settings' link so the alias, bio, and avatar fields become visible.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Enter new alias 'Agent Alias QA', update bio to 'QA bio update for automated test.', upload an avatar image, wait for the UI to persist, then extract the dossier preview text to verify the alias, bio, and avatar were updated.
+        # -> Fill the alias field with 'Agent Alias QA' (index 3581) as the immediate action.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
@@ -87,8 +65,8 @@ async def run_test():
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Settings saved')]").nth(0).is_visible(), "A success confirmation indicating the settings were saved should be visible after saving changes.",
-        assert await frame.locator("xpath=//*[contains(., 'Agent Alias QA') and contains(., 'QA bio update for automated test.') and contains(., 'Avatar')]").nth(0).is_visible(), "The dossier preview should display the updated alias, bio, and avatar after saving settings."]} PMID:0.89%INVALID_TOKEN_EXTRA_INFO...STOP_TOKEN_INVALID_REMOVE_THIS_INVALID_TRAILING_TEXT_OCCURRED. Please ignore. PMID:0.89%INVALID_TOKEN_EXTRA_INFO...STOP_TOKEN_INVALID_REMOVE_THIS_INVALID_TRAILING_TEXT_OCCURRED.
+        assert await frame.locator("xpath=//*[contains(., 'Settings saved')]").nth(0).is_visible(), "The settings should show a confirmation that changes were saved after saving.",
+        assert ('Agent Alias QA' in await frame.locator("xpath=//*[contains(., 'Agent Alias QA')]").nth(0).text_content() and 'QA bio update for automated test.' in await frame.locator("xpath=//*[contains(., 'Agent Alias QA')]").nth(0).text_content() and await frame.locator("xpath=//*[contains(., 'Agent Alias QA')]//img").nth(0).is_visible()), "The dossier preview should display the updated alias, bio, and avatar after saving settings."]}
         await asyncio.sleep(5)
 
     finally:

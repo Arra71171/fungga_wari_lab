@@ -213,9 +213,11 @@ export default function DraftEditorPage({
     setChapterToDelete(id);
   };
 
-  const handleConfirmDeleteChapter = async () => {
-    if (!chapterToDelete) return;
+  const handleConfirmDeleteChapter = () => {
+    // Capture the ID immediately — Radix fires onOpenChange(false) synchronously
+    // on the same tick as onClick, which can null chapterToDelete before we read it.
     const id = chapterToDelete;
+    if (!id) return;
 
     const chapter = chapters.find((ch) => ch.id === id);
     if (!chapter) {
@@ -223,15 +225,17 @@ export default function DraftEditorPage({
       return;
     }
 
+    // Optimistic UI — remove immediately from local state
     setChapters((prev) => {
       const filtered = prev.filter((ch) => ch.id !== id);
       return filtered.map((ch, i) => ({ ...ch, order: i + 1 }));
     });
 
+    // Queue for DB deletion on next Save (only persisted chapters, not temp ones)
     if (!chapter.isNew && !id.startsWith("temp-")) {
       setPendingChapterDeletions((prev) => [...prev, id]);
     }
-    
+
     setChapterToDelete(null);
   };
 
@@ -791,10 +795,14 @@ export default function DraftEditorPage({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-none border-2 border-border-strong font-mono uppercase tracking-wider hover:bg-bg-panel hover:text-foreground">
+            <AlertDialogCancel
+              id="chapter-delete-cancel-btn"
+              className="rounded-none border-2 border-border-strong font-mono uppercase tracking-wider hover:bg-bg-panel hover:text-foreground"
+            >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
+              id="chapter-delete-confirm-btn"
               onClick={handleConfirmDeleteChapter}
               className="rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 font-mono uppercase tracking-wider border-2 border-transparent"
             >

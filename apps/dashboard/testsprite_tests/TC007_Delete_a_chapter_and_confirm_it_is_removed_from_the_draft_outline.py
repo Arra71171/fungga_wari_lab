@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields, then submit the login form (press Enter).
+        # -> Log in using the provided credentials (superadmin@funggawari.com / FungaW@ri2026!) by filling the email and password fields and submitting the form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,42 +44,52 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Close the onboarding modal so navigation and story actions are accessible, then open the Stories/Manuscripts list (navigate to /dashboard/stories).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
+        # -> Navigate to /dashboard/stories and wait for the page to load so I can create a story.
         await page.goto("http://localhost:3000/dashboard/stories")
         
-        # -> Click the 'New Manuscript' button to start creating a new story (this will open the create story form).
+        # -> Toggle the theme to make hidden UI elements visible, then re-examine the page for a 'New Story' / 'Create' / 'New Manuscript' action or any button to open a draft editor. If found, proceed to create a story and follow the add/delete chapter flow; if not found, report feature missing.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/div[2]/div[2]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'New Manuscript' button to start creating a new story titled 'Test Story TC005'.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Add Chapter' button to begin creating a chapter (observe any newly revealed fields before proceeding).
+        # -> Click the 'Add Chapter' (Start the first chapter) button to open the chapter creation UI so we can add a chapter titled 'Chapter To Delete'.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the chapter's Delete button, wait for the UI to update, then extract the list of chapter titles to verify the chapter has been removed.
+        # -> Finish by returning the final result (done).
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Chapter To Delete')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click Confirm in the Remove Chapter dialog to delete the chapter, then extract the visible chapter titles under CHAPTERS to verify the chapter was removed.
+        # -> Click the 'Confirm' button in the 'Remove Chapter?' dialog to finalize deletion, then finish the test.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div[2]/button[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # --> Test passed — verified by AI agent
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert not await frame.locator("xpath=//*[contains(., 'Chapter To Delete')]").nth(0).is_visible(), "The deleted chapter should no longer be visible in the draft outline after deletion."
         await asyncio.sleep(5)
 
     finally:

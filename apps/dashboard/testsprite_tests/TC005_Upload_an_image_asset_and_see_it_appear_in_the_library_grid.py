@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with provided credentials and submit the login form.
+        # -> Fill the email and password fields with the provided credentials and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,12 +44,24 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Navigate to /dashboard/library and wait for the page to render so I can locate the Image asset type selection and the upload control.
+        # -> Navigate to /dashboard/library to access the asset library and proceed to select image asset type.
         await page.goto("http://localhost:3000/dashboard/library")
+        
+        # -> Try interacting with the visible Notifications section to see if it reveals navigation or causes the SPA to render the rest of the library UI.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/section').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Asset Type combobox so an image asset type can be selected (click element index 3346).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div[2]/div/div/div/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'test-image.png')]").nth(0).is_visible(), "The uploaded image test-image.png should appear in the asset grid after upload."
+        assert await frame.locator("xpath=//*[contains(., 'uploaded-image.png')]").nth(0).is_visible(), "The uploaded image asset 'uploaded-image.png' should appear in the asset grid after uploading a valid image file"
         await asyncio.sleep(5)
 
     finally:

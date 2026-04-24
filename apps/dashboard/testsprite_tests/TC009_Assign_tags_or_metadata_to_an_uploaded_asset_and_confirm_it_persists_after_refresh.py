@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field with the provided username (index 7) and the password field (index 8), then submit the form.
+        # -> Enter provided credentials into the email and password fields and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,10 +44,10 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Wait for the SPA to finish loading. If the page stays blank, navigate directly to /dashboard/library to continue the test.
+        # -> Wait briefly for the SPA to finish loading; if it remains blank, navigate directly to /dashboard/library to continue the asset upload and tagging flow.
         await page.goto("http://localhost:3000/dashboard/library")
         
-        # -> Open the Assets section from the left navigation to reveal the assets grid and upload controls.
+        # -> Click the 'Assets' link in the left sidebar to open the assets library so I can upload an asset.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
@@ -55,7 +55,7 @@ async def run_test():
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'tc009')]").nth(0).is_visible(), "The asset should show the tag tc009 in the library grid after refresh"
+        assert await frame.locator("xpath=//*[contains(., 'tc009')]").nth(0).is_visible(), "The asset should show the tag tc009 in the library grid after saving metadata and refreshing the page."
         await asyncio.sleep(5)
 
     finally:
