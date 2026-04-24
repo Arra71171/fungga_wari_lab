@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field with the provided username (element index 7).
+        # -> Fill the login form (email + password) and submit (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,21 +44,43 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Close the onboarding modal so the navigation is accessible, then go to the Stories list.
+        # -> Close or skip the onboarding tour modal so the underlying dashboard is fully accessible (click the 'Skip onboarding tour' button).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        await page.goto("http://localhost:3000/dashboard/stories")
+        # -> Open the Manuscripts (stories) list by clicking 'Manuscripts' in the left navigation so I can create or open a story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Manuscript' button to start creating a new story (open the create story form).
+        # -> Open the Manuscripts (stories) list by clicking the 'Manuscripts' link in the left navigation so I can create or open a story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' link in the left navigation to open the stories/manuscripts list (index 543).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' link in left navigation to open the stories/manuscripts list and wait for the list page to load so we can create/open a story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click 'New Manuscript' to create a new story (so we can open its details and update metadata).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Change the manuscript title to 'Test Story TC002', save the manuscript, return to the Manuscripts list, and verify the updated title appears in the list.
+        # -> Set the manuscript title to 'Test Story TC002', save the manuscript, return to the Manuscripts list, and verify the updated title appears in the list.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div/input').nth(0)
@@ -69,15 +91,22 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
+        # -> Return to the Manuscripts list (click the 'Manuscripts' link) and verify that 'Test Story TC002' appears in the list with the updated metadata.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' sidebar link to return to the stories list, then verify the list contains the updated title 'Test Story TC002'.
+        # -> Return to the Manuscripts list (click 'Manuscripts') and verify that 'Test Story TC002' appears in the list with the updated metadata.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[3]').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the 'Test Story TC002' details page so metadata fields can be edited (click the card's Publish button).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[3]/div[9]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

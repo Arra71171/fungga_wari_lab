@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with the provided credentials and submit the login form.
+        # -> Fill the email and password fields and submit the login form (send Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,39 +44,52 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal so the page controls (Settings link) are accessible. Then open Settings from the sidebar.
+        # -> Dismiss the onboarding modal so the Settings navigation is accessible (click 'Skip onboarding tour').
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Settings' link in the left sidebar so we can open the profile settings page (interactive element index 1279).
+        # -> Click the Settings link in the left navigation to open the Settings page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the alias field with 'Agent Alias QA' (index 3405), fill the bio with 'QA bio update for automated test.' (index 3411), then capture the page content to verify the changes are reflected in the dossier preview.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('Agent Alias QA')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div[2]/textarea').nth(0)
-        await asyncio.sleep(3); await elem.fill('QA bio update for automated test.')
-        
-        # -> Click the 'Sync Identity' button to save the alias and bio, wait for the UI to update, then extract the visible alias, bio, and any avatar marker to verify the dossier preview reflects the saved values.
+        # -> Open the Settings page by clicking the Settings link and wait for the page to load so we can edit alias, bio, and avatar.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div[2]/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Settings page so we can edit alias, bio, and avatar.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the Settings link in the left navigation to open the Settings page (use element index 557).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Create a small avatar file (avatar.svg) in the local environment, then click the Settings link to open the Settings page so we can edit alias, bio, and upload the avatar.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Create a small avatar SVG file (avatar.svg) in the test environment, then click the Settings link (interactive element index 558) to open the Settings page so we can edit alias, bio, and upload the avatar.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Identity synced')]").nth(0).is_visible(), "The success confirmation should be visible after saving identity changes.",
-        assert await frame.locator("xpath=//*[contains(., 'Agent Alias QA') and contains(., 'QA bio update for automated test.')]").nth(0).is_visible(), "The dossier preview should display the updated alias, bio, and avatar after saving changes."]}
+        assert await frame.locator("xpath=//*[contains(., 'Settings saved')]").nth(0).is_visible(), "The settings save confirmation should be visible after saving changes"
+        assert (await frame.locator("xpath=//*[contains(., 'Agent Alias QA')]").nth(0).is_visible()) and (await frame.locator("xpath=//*[contains(., 'QA bio update for automated test.')]").nth(0).is_visible()) and (await frame.locator("xpath=//*[contains(., 'avatar.svg')]").nth(0).is_visible()), "The dossier preview should display the updated alias, bio, and avatar after saving changes"
         await asyncio.sleep(5)
 
     finally:

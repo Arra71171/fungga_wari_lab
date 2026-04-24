@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field with the provided creator account email.
+        # -> Fill the email field with the provided username (superadmin@funggawari.com).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,22 +44,27 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Navigate to /dashboard/stories (use direct navigation because the current SPA page is blank/unresponsive) so I can continue the test flow.
+        # -> Close the onboarding tour (click 'Skip onboarding tour'), then navigate to /dashboard/stories to start creating the test story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         await page.goto("http://localhost:3000/dashboard/stories")
         
-        # -> Click the 'New Manuscript' button to start creating 'Test Story TC005'.
+        # -> Open the 'New Manuscript' creation form by clicking the 'New Manuscript' button so we can create 'Test Story TC005'.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Add Chapter' button to open the chapter editor so the test can create a chapter titled 'Chapter To Delete'.
+        # -> Click the 'Add Chapter' button to create a new chapter (this will reveal the chapter fields so we can fill the title).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the chapter title field with 'Chapter To Delete', save the chapter, then delete it and verify it no longer appears in the draft outline.
+        # -> Fill the chapter title with 'Chapter To Delete', save the manuscript, click the chapter's delete button, then confirm the chapter no longer appears in the chapters list.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div/input').nth(0)
@@ -70,6 +75,21 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
+        # -> Click the chapter's delete button to remove 'Chapter To Delete' from the draft outline, then observe the UI to confirm the chapter no longer appears.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the chapter's delete button again to remove 'Chapter To Delete', wait for the UI to update, then verify the chapter no longer appears in the chapters list.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # --> Assertions to verify final state
+        frame = context.pages[-1]
+        assert not await frame.locator("xpath=//*[contains(., 'Chapter To Delete')]").nth(0).is_visible(), "The chapter named 'Chapter To Delete' should be removed from the draft outline after deletion."
         await asyncio.sleep(5)
 
     finally:

@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field with the provided username and the password field, then submit the login form (send Enter). Then wait for the app to respond.
+        # -> Fill the email and password fields and submit the login form (send Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,17 +44,12 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal (click 'Skip onboarding tour'), then navigate to the Library page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
+        # -> Navigate to /dashboard/library, wait for the page to load, then locate the library upload controls to attempt an unsupported/oversized file upload and observe inline validation error.
         await page.goto("http://localhost:3000/dashboard/library")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'This file type is not supported')]").nth(0).is_visible(), "The upload validation error should be visible after attempting to upload an unsupported or oversized file"
+        assert await frame.locator("xpath=//*[contains(., 'Unsupported file type')]").nth(0).is_visible(), "An inline upload validation error should be visible after attempting to upload an unsupported or oversized file"
         await asyncio.sleep(5)
 
     finally:

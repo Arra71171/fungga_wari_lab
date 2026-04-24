@@ -72,13 +72,15 @@ VALUES (
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Chapter 1: freely accessible
-INSERT INTO chapters (id, story_id, title, "order", tiptap_content)
+INSERT INTO chapters (id, story_id, title, "order", tiptap_content, illustration_url, audio_url)
 VALUES (
   '00000000-0000-0000-0000-000000000101',
   '00000000-0000-0000-0000-000000000099',
   'The Dawn of Kangleipak',
   1,
-  '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"In the beginning, there was only the vast expanse of water and sky. Atiya Sidaba, the sky father, looked down upon the swirling darkness and breathed the first word of creation — Kangleipak."}]}]}'
+  '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"In the beginning, there was only the vast expanse of water and sky. Atiya Sidaba, the sky father, looked down upon the swirling darkness and breathed the first word of creation — Kangleipak."}]}]}',
+  'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Scene 1.1
@@ -94,7 +96,7 @@ VALUES (
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Chapter 2: second chapter (normally paywalled, but story is seed-only for tests)
-INSERT INTO chapters (id, story_id, title, "order", tiptap_content)
+INSERT INTO chapters (id, story_id, title, "order", tiptap_content, illustration_url)
 VALUES (
   '00000000-0000-0000-0000-000000000102',
   '00000000-0000-0000-0000-000000000099',

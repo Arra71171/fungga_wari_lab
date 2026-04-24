@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with the provided creator credentials and submit the login form.
+        # -> Fill the email field with the provided username and the password field with the provided password, then submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,61 +44,55 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal so the main dashboard UI is accessible (click 'Skip onboarding tour').
+        # -> Close the onboarding modal by using the 'Skip onboarding tour' button so I can access the dashboard links (Manuscripts/Stories) and continue to the story editor.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Navigate to the Manuscripts page by clicking the 'Manuscripts' link in the left sidebar so I can create a new story.
+        # -> Open the Manuscripts page so I can create a new story (click the 'Manuscripts' link).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' link in the left sidebar to open the manuscripts/stories list.
+        # -> Open the Manuscripts page by clicking the 'Manuscripts' link in the left navigation so I can create a new story.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' link in the left sidebar to open the manuscripts/stories list so I can create a new manuscript.
+        # -> Open the Manuscripts page from the left navigation so I can create a new manuscript.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' link in the left sidebar to open the manuscripts/stories list so I can create a new manuscript.
+        # -> Open the Manuscripts page (left navigation) so I can create a new manuscript.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the Manuscripts (stories) list so I can start creating a new manuscript.
+        # -> Click the 'Manuscripts' link in the left navigation to open the Manuscripts (Creator Studio) page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the Manuscripts (stories) list by clicking the 'Manuscripts' link so I can create a new manuscript.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'New Manuscript' button to open the create manuscript form so I can start the story creation flow.
+        # -> Open the New Manuscript modal by clicking the '+ New Manuscript' button so I can create a new story.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the chapter editor by clicking the 'Add Chapter' button so I can create the first chapter (then wait for the editor to appear).
+        # -> Open the first chapter editor by clicking 'Start the first chapter' so the chapter editor UI appears.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the chapter title field (index=9910) with 'Chapter 1' as the immediate next action.
+        # -> Fill the chapter title, enter rich text into the chapter editor, then open the Chapter Illustration 'add' control so the file input appears (stop and wait for the file input to render).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div/input').nth(0)
@@ -107,17 +101,22 @@ async def run_test():
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div[4]/div[2]/div[2]/div').nth(0)
-        await asyncio.sleep(3); await elem.fill('This is the first chapter of Test Story TC004. It includes an opening paragraph and demonstrates bold and italic emphasis in the reader experience.')
+        await asyncio.sleep(3); await elem.fill('This is the first chapter content for testing TC006-TC011. It contains a short paragraph to verify saving and rendering of rich text in the editor.')
         
-        # -> Click 'Save' to persist the chapter, refresh the page, then check that the chapter appears in the draft outline and that the rich-text paragraph is still present. If the illustration is still missing because no image file is available, report TEST BLOCKED.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Upload a portrait-format illustration using the chapter illustration file input (index 11291), then save the draft (Save button index 10880), refresh the draft page, and verify the chapter title, rich text paragraph, and illustration are present.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[1]/div/button[1]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'This is the first chapter of Test Story TC004. It includes an opening paragraph and demonstrates bold and italic emphasis in the reader experience.')]").nth(0).is_visible(), "The chapter content should still be visible in the editor and draft outline after saving and refreshing."]}
+        assert await frame.locator("xpath=//*[contains(., 'This is the first chapter content for testing TC006-TC011. It contains a short paragraph to verify saving and rendering of rich text in the editor.')]").nth(0).is_visible(), "The chapter content should be visible in the editor after saving and refresh."]}
         await asyncio.sleep(5)
 
     finally:

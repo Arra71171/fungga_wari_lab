@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field with provided username, fill the password field with provided password, then submit the form (Enter).
+        # -> Fill the email and password fields and submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,16 +44,37 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Navigate to the stories page (/dashboard/stories) and inspect the page for the 'create new story' control so we can start the create-story flow.
-        await page.goto("http://localhost:3000/dashboard/stories")
+        # -> Close/skip the onboarding tour overlay, then open the Manuscripts/Stories section so I can start creating a new story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Open the create manuscript flow by clicking 'New Manuscript' so we can attempt to submit without a title and observe inline validation.
+        # -> Open the Manuscripts section so I can start creating a new story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Manuscripts page so I can start creating a new story (click the 'Manuscripts' link).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' navigation link again to ensure the Manuscripts page is active, then wait for the page to finish rendering so the '+ New Manuscript' button can be clicked.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the '+ New Manuscript' button to open the create-story form so we can attempt to submit without a title and observe inline validation.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Clear the title field and click Publish to verify an inline title validation error appears and that the story is not created.
+        # -> Clear the title field (story-title-input) then click the Publish button to attempt submission without a title and observe any inline validation error.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div/input').nth(0)

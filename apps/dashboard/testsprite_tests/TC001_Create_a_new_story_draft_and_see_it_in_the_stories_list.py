@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Enter the provided credentials into the email and password fields and submit the login form.
+        # -> Enter the provided credentials into the email and password fields, then submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,43 +44,49 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Close the onboarding tour modal so the dashboard navigation is accessible, then open the Manuscripts/Stories area to create a new story titled 'Test Story TC001'.
+        # -> Dismiss the onboarding modal so I can access the navigation and open the Stories/Manuscripts page.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the Manuscripts area to create a new story by clicking the 'Manuscripts' link.
+        # -> Open the Manuscripts page by clicking the 'Manuscripts' navigation item so I can create a new story.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the Manuscripts navigation link to open the manuscripts/stories list.
+        # -> Click the 'Manuscripts' navigation item to open the Manuscripts/Stories page so a new story can be created.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' navigation link to open the manuscripts/stories list so we can create a new story.
+        # -> Click the 'Manuscripts' navigation item to open the Manuscripts list so I can create a new manuscript.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' navigation link to open the manuscripts/stories list so we can create a new manuscript.
+        # -> Click the 'Manuscripts' navigation item to open the Manuscripts/Stories list so I can create a new story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' navigation item to open the Manuscripts list so I can create a new manuscript.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Manuscript' button to open the new story creation form (then fill the title).
+        # -> Click the 'New Manuscript' button to open the create manuscript form (index 8575). After the form appears, observe visible fields before filling the title.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the title field with 'Test Story TC001', save the manuscript, go to the Manuscripts list, and verify the new story appears.
+        # -> Fill the story title field with 'Test Story TC001' and save the manuscript, then open the Manuscripts list and verify the new title appears.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div/input').nth(0)
@@ -91,7 +97,7 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Refresh/open the Manuscripts/stories list and verify that 'Test Story TC001' appears in the list.
+        # -> Open the Manuscripts list and extract the visible manuscript titles to verify 'Test Story TC001' appears.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)

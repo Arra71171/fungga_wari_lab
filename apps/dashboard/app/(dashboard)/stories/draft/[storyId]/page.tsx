@@ -27,6 +27,16 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@workspace/ui/components/alert-dialog";
+import {
   createChapter,
   createScene,
   updateChapter,
@@ -111,6 +121,7 @@ export default function DraftEditorPage({
   const [pendingChapterDeletions, setPendingChapterDeletions] = React.useState<string[]>([]);
   const [pendingChoiceDeletions, setPendingChoiceDeletions] = React.useState<string[]>([]);
   const [titleError, setTitleError] = React.useState("");
+  const [chapterToDelete, setChapterToDelete] = React.useState<string | null>(null);
 
   // -- Fetch story on mount --
   React.useEffect(() => {
@@ -173,7 +184,7 @@ export default function DraftEditorPage({
 
   const handleAddChapter = () => {
     const newOrder = chapters.length + 1;
-    const tempId = `temp-${Date.now()}`;
+    const tempId = `temp-${crypto.randomUUID()}`;
     const newChapter: ChapterLocal = {
       id: tempId,
       order: newOrder,
@@ -198,14 +209,19 @@ export default function DraftEditorPage({
     );
   };
 
-  const handleDeleteChapter = async (id: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to remove this chapter? This action cannot be undone."
-    );
-    if (!confirmed) return;
+  const handleDeleteChapterClick = (id: string) => {
+    setChapterToDelete(id);
+  };
+
+  const handleConfirmDeleteChapter = async () => {
+    if (!chapterToDelete) return;
+    const id = chapterToDelete;
 
     const chapter = chapters.find((ch) => ch.id === id);
-    if (!chapter) return;
+    if (!chapter) {
+      setChapterToDelete(null);
+      return;
+    }
 
     setChapters((prev) => {
       const filtered = prev.filter((ch) => ch.id !== id);
@@ -215,6 +231,8 @@ export default function DraftEditorPage({
     if (!chapter.isNew && !id.startsWith("temp-")) {
       setPendingChapterDeletions((prev) => [...prev, id]);
     }
+    
+    setChapterToDelete(null);
   };
 
   const handleAddChoice = (chapterId: string) => {
@@ -226,7 +244,7 @@ export default function DraftEditorPage({
               choices: [
                 ...ch.choices,
                 {
-                  id: `temp-choice-${Date.now()}`,
+                  id: `temp-choice-${crypto.randomUUID()}`,
                   label: "",
                   nextChapterId: "",
                   isNew: true,
@@ -684,7 +702,7 @@ export default function DraftEditorPage({
                   isExpanded={expandedChapterIds.has(ch.id)}
                   onUpdate={handleUpdateChapter}
                   onUpdateTiptap={handleUpdateChapterTiptap}
-                  onDelete={handleDeleteChapter}
+                  onDelete={handleDeleteChapterClick}
                   onToggleExpand={handleToggleExpand}
                   onAddChoice={() => handleAddChoice(ch.id)}
                   onUpdateChoice={(cId: string, f: string, v: string) =>
@@ -762,6 +780,29 @@ export default function DraftEditorPage({
           </BrutalistCard>
         </div>
       </div>
+
+      {/* Delete Confirmation AlertDialog */}
+      <AlertDialog open={!!chapterToDelete} onOpenChange={(open) => !open && setChapterToDelete(null)}>
+        <AlertDialogContent className="border-2 border-border-strong bg-bg-surface rounded-none shadow-brutal">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-heading uppercase tracking-tight text-foreground">Remove Chapter?</AlertDialogTitle>
+            <AlertDialogDescription className="font-mono text-sm text-muted-foreground">
+              Are you sure you want to remove this chapter? This will also remove any scenes and choices inside it. This action cannot be undone once saved.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-none border-2 border-border-strong font-mono uppercase tracking-wider hover:bg-bg-panel hover:text-foreground">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDeleteChapter}
+              className="rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 font-mono uppercase tracking-wider border-2 border-transparent"
+            >
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

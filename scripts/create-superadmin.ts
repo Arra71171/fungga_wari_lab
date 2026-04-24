@@ -25,7 +25,7 @@ async function createSuperadmin() {
     if (authError.message.includes("already exists") || authError.message.includes("already registered")) {
       console.log("User already exists in auth.users. Updating password just in case...");
       const { data: existingUser } = await supabase.auth.admin.listUsers();
-      const user = existingUser?.users.find((u) => u.email === "superadmin@funggawari.com");
+      const user = existingUser?.users.find((u: any) => u.email === "superadmin@funggawari.com");
       if (user) {
         await supabase.auth.admin.updateUserById(user.id, { password: "FungaW@ri2026!" });
         console.log("Password updated for existing auth user.");
