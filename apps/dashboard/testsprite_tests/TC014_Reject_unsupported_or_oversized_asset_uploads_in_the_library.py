@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields and submit the login form (send Enter).
+        # -> Fill the email and password fields with provided credentials and submit the login form (send Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,12 +44,33 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Navigate to /dashboard/library, wait for the page to load, then locate the library upload controls to attempt an unsupported/oversized file upload and observe inline validation error.
-        await page.goto("http://localhost:3000/dashboard/library")
+        # -> Close the onboarding tour modal, navigate to the Assets (library) page, then attempt an unsupported or oversized file upload to verify inline validation error and that the asset is not added to the grid.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Assets (library) page by clicking the 'Assets' navigation link, then on the Assets page attempt an unsupported or oversized file upload to confirm inline validation error and that no new asset is added to the grid.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Assets (library) page by clicking the 'Assets' navigation link and wait for the Assets page to load so we can attempt the unsupported/oversized file upload.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[3]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Assets (library) page so I can inspect the upload result and check for an inline validation error and that no new asset was added.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Unsupported file type')]").nth(0).is_visible(), "An inline upload validation error should be visible after attempting to upload an unsupported or oversized file"
+        assert await frame.locator("xpath=//*[contains(., 'This file type is not supported')]").nth(0).is_visible(), "An inline validation error should be visible stating the file type is not supported after attempting to upload an unsupported or oversized file."
         await asyncio.sleep(5)
 
     finally:

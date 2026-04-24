@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields and submit the login form.
+        # -> Fill the email field (index 7) with superadmin@funggawari.com, then fill the password (index 8) and submit the form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,21 +44,47 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal, then navigate to the Settings page so I can inspect the alias and bio fields.
+        # -> Dismiss the onboarding modal (Skip onboarding tour), wait for the UI to settle, then open the Settings page from the sidebar.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        await page.goto("http://localhost:3000/dashboard/settings")
-        
-        # -> Click the alias display element to try to open an inline alias editor so I can edit alias (unsaved). If clicking reveals a new input, stop and re-observe before filling (dependent-field rule).
+        # -> Open the Settings page from the left sidebar by clicking 'Settings' (index 1659).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div[2]/div[3]/div/div/div/div/span').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Enter unsaved alias and bio values, navigate to Stories, return to Settings, and extract the current alias and bio values to verify unsaved edits did not persist.
+        # -> Navigate away to the public Stories page (View Stories) so we can then return to Settings and check that unsaved edits did not persist.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[6]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the alias input with 'UnsavedAliasChange' and the bio textarea with 'This should not persist without save.' (without saving), then navigate away by clicking Overview so we can later return to Settings and verify the unsaved changes did not persist.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('UnsavedAliasChange')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div[2]/textarea').nth(0)
+        await asyncio.sleep(3); await elem.fill('This should not persist without save.')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the Settings link in the left sidebar to open the Settings page, then wait for the UI to finish loading so we can locate the alias and bio inputs.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the alias and bio fields with unsaved values, navigate to View Stories, return to Settings, and extract the alias and bio values to verify unsaved edits did not persist.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
@@ -74,16 +100,20 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[6]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Return to the Settings page (click the Settings nav link), wait for the page to render, then extract the current values of the alias input (id=alias-input) and the bio textarea to verify whether the unsaved edits persisted.
+        # -> Navigate away by clicking 'View Stories' (index 1661), then return to Settings (index 1659) and extract the alias and bio values to verify unsaved edits did not persist.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[6]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # --> Test passed — verified by AI agent
+        # --> Assertions to verify final state
         frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
+        assert await frame.locator("xpath=//*[contains(., 'superadmin')]").nth(0).is_visible(), "The Settings page should show the saved alias superadmin after navigating away and returning to Settings, confirming unsaved edits did not persist."
         await asyncio.sleep(5)
 
     finally:

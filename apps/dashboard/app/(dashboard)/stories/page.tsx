@@ -56,6 +56,9 @@ export default function StoriesOverviewPage() {
     } catch (e) {
       console.error(e);
       toast.error("Creation Failed", { description: "Failed to initialize new manuscript." });
+    } finally {
+      // Always reset — the component stays mounted after client-side navigation
+      // so without `finally` the button would stay permanently disabled
       setIsCreating(false);
     }
   };

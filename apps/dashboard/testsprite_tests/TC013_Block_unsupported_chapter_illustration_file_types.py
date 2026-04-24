@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields and submit the login form (press Enter).
+        # -> Fill the email field with the provided superadmin email, fill the password field with the provided password, then submit the login form (send Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,36 +44,18 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Wait for the app to finish loading, then navigate to /dashboard/stories to begin creating the test story and attempt the unsupported-file upload.
+        # -> Navigate to /dashboard/stories to create a new story (Test Story TC006).
         await page.goto("http://localhost:3000/dashboard/stories")
         
-        # -> Open the Manuscripts section to look for a control to create a new story (start story creation).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Open the 'New Manuscript' form so I can create a test story (start story creation).
+        # -> Start creating a new story by opening the New Manuscript dialog (click the 'New Manuscript' button).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the first chapter editor by clicking 'Start the first chapter', then add a chapter illustration and attempt to upload an unsupported file type.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        # -> Click the 'Chapter Illustration' ▾ add control to reveal the illustration uploader (stop after the control is revealed so dependent fields can render).
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div[2]/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Unsupported file type')]").nth(0).is_visible(), "The illustration uploader should show a file validation error after attempting to upload an unsupported file type."
+        assert await frame.locator("xpath=//*[contains(., 'Unsupported file type')]").nth(0).is_visible(), "The illustration uploader should show an unsupported file type validation error when a non-image file is uploaded."
         await asyncio.sleep(5)
 
     finally:

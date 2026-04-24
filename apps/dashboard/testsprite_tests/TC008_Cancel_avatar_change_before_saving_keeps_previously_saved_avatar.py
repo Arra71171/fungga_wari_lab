@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields and submit the login form (send Enter).
+        # -> Fill the email and password fields with the provided superadmin credentials, then submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,28 +44,22 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Close the onboarding modal, then open Settings from the left nav (open profile & preferences).
+        # -> Dismiss the onboarding modal so the Settings entry in the nav can be accessed.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Settings' link in the left navigation to open Profile & Preferences, then wait for the settings page to load so I can locate the avatar upload and dossier preview.
+        # -> Click the 'Settings' nav item to open the Settings page and locate the Avatar / dossier preview controls.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Upload an image to the avatar file input (index 3490), navigate away to cancel the change (click Overview), return to Settings, then verify the dossier preview avatar is unchanged and that there is no saved/synced indication.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[1]').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'superadmin@funggawari.com')]").nth(0).is_visible(), "The dossier preview should still show superadmin@funggawari.com after cancelling the avatar upload.",
-        assert await frame.locator("xpath=//*[contains(., 'Sync Identity')]").nth(0).is_visible(), "The dossier should still display the Sync Identity button because the avatar change was cancelled and not saved.",
+        assert await frame.locator("xpath=//*[contains(., 'Dossier preview')]").nth(0).is_visible(), "The dossier preview should still show the previously saved avatar after cancelling the upload.",
+        assert await frame.locator("xpath=//*[contains(., 'Save changes')]").nth(0).is_visible(), "The Save changes button should still be visible after cancelling so there is no indication that changes were saved."
         await asyncio.sleep(5)
 
     finally:

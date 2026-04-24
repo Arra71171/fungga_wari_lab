@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import type { Json } from "@workspace/ui/types/supabase";
@@ -303,11 +304,18 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
 
 export default function SettingsPage() {
   const { user, userProfile } = useSupabaseAuth();
+  const router = useRouter();
   const [members, setMembers] = useState<Member[] | undefined>(undefined);
 
   const myRole = userProfile?.role ?? "editor";
   const isCallerAdmin = myRole === "superadmin" || myRole === "admin";
   const isCallerSuperAdmin = myRole === "superadmin";
+
+  // TC010 FIX: Bust the Next.js Router Cache on every mount so the OperativeDossier
+  // always gets a fresh server fetch rather than reusing stale cached component state.
+  useEffect(() => {
+    router.refresh();
+  }, [router]);
 
   useEffect(() => {
     getAllUsers()

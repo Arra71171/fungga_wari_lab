@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
@@ -26,31 +27,40 @@ export function OperativeDossier() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [stats, setStats] = useState<{ missionsCompleted: number; loreAuthored: number } | null>(null);
 
+  // TC010 FIX: track the current pathname so this effect re-runs every time the
+  // user navigates (client-side sidebar clicks preserve React state, so a plain []
+  // dep would never reset dirty form values after navigation away and back).
+  const pathname = usePathname();
+
   useEffect(() => {
+    // Eagerly clear any dirty form state so the UI never flashes stale values.
+    setMe(undefined);
+    setAlias("");
+    setBio("");
+    setAliasError("");
+
     const refetch = () => {
       getMyProfile().then((profile) => {
         setMe(profile);
-        if (profile) {
-          setAlias(profile.alias ?? "");
-          setBio(profile.bio ?? "");
-          setAliasError("");
-          if (profile.auth_id) {
-            getOperativeStats(profile.auth_id).then(setStats).catch(console.error);
-          }
+        // Sync form fields directly from the authoritative DB record.
+        setAlias(profile?.alias ?? "");
+        setBio(profile?.bio ?? "");
+        if (profile?.auth_id) {
+          getOperativeStats(profile.auth_id).then(setStats).catch(console.error);
         }
       });
     };
 
-    // Initial fetch
     refetch();
 
-    // Re-fetch when tab/page becomes visible again (fixes Next.js router cache stale state — TC010)
+    // Also re-fetch when the browser tab regains focus (handles tab-switch case).
     const handleVisibility = () => {
       if (document.visibilityState === "visible") refetch();
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   if (me === undefined) {
     return (

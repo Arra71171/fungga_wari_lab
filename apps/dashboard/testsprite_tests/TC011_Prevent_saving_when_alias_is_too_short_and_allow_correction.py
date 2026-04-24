@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields with the provided credentials and submit the login form (send Enter).
+        # -> Fill the email and password fields with the provided superadmin credentials and submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,33 +44,49 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Dismiss the onboarding modal, then open Settings page so the alias input (id='alias-input') can be located and tested.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
+        # -> Open the settings page so the alias field can be edited and tested for validation.
         await page.goto("http://localhost:3000/dashboard/settings")
         
-        # -> Type 'ab' into the alias input (index 2714), trigger blur (Tab) to run validation, wait for UI feedback, then extract any visible inline validation/error text to confirm the validation error appears.
+        # -> Fill the alias field with a too-short value ('ab') to trigger inline validation, then correct it to a valid alias ('ValidAliasQA') and observe the result.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('ab')
         
-        # -> Click the 'Sync Identity' button (index 2726) to trigger alias validation and extract any inline validation message. If validation error appears, replace alias with 'ValidAliasQA' (index 2714) and click 'Sync Identity' again, then extract success confirmation.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div[2]/div[3]/div/div/div/div/span').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click 'Sync Identity' to attempt saving the short alias and observe inline validation. If validation blocks save, correct alias to 'ValidAliasQA' and save again to confirm success.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Replace the alias with 'ValidAliasQA', click the 'Sync Identity' button, then capture any success confirmation text to verify saving succeeds.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('ValidAliasQA')
         
-        # -> Click the 'Sync Identity' button (index 2726) to save the corrected alias, wait for the UI to update, then capture any inline success confirmation or error message.
+        # -> Set alias to 'ab', click Sync Identity, observe for inline validation error; then set alias to 'ValidAliasQA', click Sync Identity, and observe for a success confirmation. Then stop.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('ab')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Set the alias to 'ValidAliasQA' in the alias input, then click 'Sync Identity' to save and verify a success confirmation.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('ValidAliasQA')
+        
+        # -> Click 'Sync Identity' to save the corrected alias and then wait for and verify a success confirmation message (toast or inline success). If success is visible, stop and mark task done.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div[2]/button').nth(0)
