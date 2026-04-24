@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field with superadmin@funggawari.com, then fill the password and submit the form.
+        # -> Fill the email and password fields with the provided credentials and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,22 +44,39 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Focus the password input then submit the login form by sending Enter (change approach to focus then Enter).
+        # -> Dismiss the onboarding modal so the page controls (Settings link) are accessible. Then open Settings from the sidebar.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Show password' button to reveal the password and observe if the login control becomes interactive or reveals additional UI feedback.
+        # -> Click the 'Settings' link in the left sidebar so we can open the profile settings page (interactive element index 1279).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the alias field with 'Agent Alias QA' (index 3405), fill the bio with 'QA bio update for automated test.' (index 3411), then capture the page content to verify the changes are reflected in the dossier preview.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Agent Alias QA')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div[2]/textarea').nth(0)
+        await asyncio.sleep(3); await elem.fill('QA bio update for automated test.')
+        
+        # -> Click the 'Sync Identity' button to save the alias and bio, wait for the UI to update, then extract the visible alias, bio, and any avatar marker to verify the dossier preview reflects the saved values.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Profile updated')]").nth(0).is_visible(), "The settings page should show a success confirmation after saving the profile"
-        assert await frame.locator("xpath=//*[contains(., 'Agent Alias QA') and contains(., 'QA bio update for automated test.')]").nth(0).is_visible(), "The dossier preview should display the updated alias and bio and reflect the updated avatar after saving"
+        assert await frame.locator("xpath=//*[contains(., 'Identity synced')]").nth(0).is_visible(), "The success confirmation should be visible after saving identity changes.",
+        assert await frame.locator("xpath=//*[contains(., 'Agent Alias QA') and contains(., 'QA bio update for automated test.')]").nth(0).is_visible(), "The dossier preview should display the updated alias, bio, and avatar after saving changes."]}
         await asyncio.sleep(5)
 
     finally:

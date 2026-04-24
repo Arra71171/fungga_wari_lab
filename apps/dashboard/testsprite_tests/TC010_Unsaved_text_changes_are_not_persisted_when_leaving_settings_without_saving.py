@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email and password fields, submit the login form (press Enter), then wait for the app to navigate to the dashboard.
+        # -> Log in using the provided superadmin credentials (fill email and password, submit) to reach the dashboard where Settings can be accessed.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,47 +44,71 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Focus the password field and press Enter to attempt submitting the login form again, then wait for the app to navigate.
+        # -> Dismiss the onboarding modal (Skip) and then open Settings so the settings form fields become visible for the unsaved-edit test.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the show-password button (index 9) to reveal the password, then press Enter to attempt submitting the login form and wait for navigation.
+        # -> Open Settings from the sidebar so the alias and bio fields become visible for the unsaved-edit verification.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Try an alternative navigation path by clicking the 'Return to landing page' link to see if a different route or UI is available (click element index 93).
+        # -> Open the Settings page from the sidebar so alias and bio fields become visible (click element index 1477), then wait for the page to render.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/header/a').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Navigate to http://localhost:3000/dashboard/login to reach the dashboard login page (use explicit navigation since current page has no interactive elements).
-        await page.goto("http://localhost:3000/dashboard/login")
+        # -> Click the Settings link in the sidebar (element index 1478) to open the Settings page so alias and bio fields become visible, then wait for the page to render.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the email and password fields again (to ensure correct focus/state) and send Enter to submit the login form.
+        # -> Fill alias with 'UnsavedAliasChange' and bio with 'This should not persist without save.' without saving; navigate to View Stories and then back to Settings; extract the alias and bio values to verify they did not persist.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('superadmin@funggawari.com')
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('UnsavedAliasChange')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[3]/div[2]/div/div[2]/textarea').nth(0)
+        await asyncio.sleep(3); await elem.fill('This should not persist without save.')
         
-        # -> Try to reach Settings directly (navigate to /dashboard/settings) to see whether it is accessible or whether the app redirects back to login — if settings are inaccessible without login we'll mark the test accordingly.
-        await page.goto("http://localhost:3000/dashboard/settings")
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[6]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Navigate to /dashboard/settings and observe whether the page is accessible or redirects to the login page. If redirected, report that login is required and continue per test rules.
-        await page.goto("http://localhost:3000/dashboard/settings")
+        # -> Click 'View Stories' to navigate away, then click 'Settings' to return, then extract the alias and bio field values to verify the unsaved edits did not persist.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[6]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click 'View Stories' to navigate away, then return to Settings, then extract the alias and bio values to verify whether the unsaved edits persisted.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[6]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Alias')]").nth(0).is_visible(), "The Settings page should show the Alias label after returning because unsaved changes should not persist."
+        assert ('UnsavedAliasChange' not in (await frame.locator("xpath=/html/body").nth(0).text_content() or "")) and ('This should not persist without save.' not in (await frame.locator("xpath=/html/body").nth(0).text_content() or "")), "The Settings fields should not show the unsaved alias and bio values after navigating away and returning to Settings"
         await asyncio.sleep(5)
 
     finally:

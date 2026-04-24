@@ -283,6 +283,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
                   </span>
                 )}
                 <Button
+                  id="global-content-deploy-btn"
                   onClick={handleSave}
                   disabled={isSaving || !editorContent}
                   className="font-mono text-xs font-bold uppercase tracking-label rounded-none w-full sm:w-auto min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none"

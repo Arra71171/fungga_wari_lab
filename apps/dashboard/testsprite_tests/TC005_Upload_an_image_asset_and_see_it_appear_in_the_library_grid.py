@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Fill the email field (index 7) with superadmin@funggawari.com, fill the password field (index 8) with FungaW@ri2026!, then submit the form by sending Enter.
+        # -> Fill the email field, fill the password field, and submit the login form (press Enter).
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,15 +44,39 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Click the login submit button to attempt login (submit button is element index 10).
+        # -> Dismiss the onboarding modal (Skip onboarding tour) and open the Assets (library) page so we can select image asset type and upload an image.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Assets' link in the sidebar to open the library so we can select image asset type and upload an image.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Assets (library) page by clicking the Assets link in the sidebar so we can select the image asset type.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[3]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Assets (library) page by clicking the 'Assets' link in the sidebar so the image upload controls appear.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Assets' link in the sidebar to open the Assets/library page so the image upload controls are visible.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[4]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'image.png')]").nth(0).is_visible(), "The uploaded image image.png should appear in the asset grid after upload."]}}{
+        assert await frame.locator("xpath=//*[contains(., 'image.png')]").nth(0).is_visible(), "The uploaded image 'image.png' should appear in the asset grid after upload."
         await asyncio.sleep(5)
 
     finally:

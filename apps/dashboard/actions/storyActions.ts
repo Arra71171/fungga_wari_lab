@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@workspace/ui/types/supabase"
 import { requireUser } from "./authHelpers"
+import { revalidatePath } from "next/cache"
 
 type StoryCategory = Database["public"]["Enums"]["story_category"]
 
@@ -240,6 +241,11 @@ export async function updateStory(
     .eq("author_id", user.id)
 
   if (error) throw new Error(`Failed to update story: ${error.message}`)
+
+  revalidatePath("/")
+  revalidatePath("/stories")
+  revalidatePath(`/stories/draft/${id}`)
+  
   return id
 }
 

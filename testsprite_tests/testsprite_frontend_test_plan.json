@@ -1,0 +1,415 @@
+[
+  {
+    "id": "TC001",
+    "title": "Log in and reach the dashboard overview",
+    "description": "Verifies an existing creator can log in with valid credentials and land on the dashboard overview.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard overview"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Protect the dashboard from anonymous deep-link access and redirect back after login",
+    "description": "Verifies an anonymous user deep-linking to the dashboard is redirected to login and after successful login is redirected back to the dashboard overview.",
+    "category": "Creator Studio Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/overview"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the dashboard overview"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Create a new creator account",
+    "description": "Verifies a new user can register with a valid email and password and sees a confirmation that the account was created.",
+    "category": "User Registration",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with creator+new1@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a confirmation of account creation is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "View dashboard overview statistics and open the story editor",
+    "description": "Verifies an authenticated creator can view overview statistics and navigate from the dashboard into the story editor flow.",
+    "category": "Creator Studio Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the dashboard overview to finish loading"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify overview statistics are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the dashboard control that opens the story editor"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the story editor is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Edit story metadata, save, and see updates reflected on the overview",
+    "description": "Verifies a creator can open a story from the dashboard, update metadata, save, and return to the overview where the updated metadata is reflected.",
+    "category": "Creator Studio Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the dashboard control that opens the story editor"
+      },
+      {
+        "type": "action",
+        "description": "Fill a new value into the story title field"
+      },
+      {
+        "type": "action",
+        "description": "Save the story changes"
+      },
+      {
+        "type": "action",
+        "description": "Navigate back to the dashboard overview using in-app navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated story metadata is shown on the overview"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Read a featured published story from the landing page",
+    "description": "Verifies an anonymous visitor can open a featured story from the landing page and read the story content in the reader view.",
+    "category": "Public Landing and Reader",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the featured stories section"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured story to open it"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the story reader view is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify story content is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC007",
+    "title": "Return to landing page from the story reader",
+    "description": "Verifies an anonymous visitor can navigate back to the landing page after opening a story in the reader.",
+    "category": "Public Landing and Reader",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the featured stories section"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured story to open it"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation control to return to the landing page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the landing page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured stories are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC008",
+    "title": "Landing page shows featured stories list",
+    "description": "Verifies the landing page renders a list of featured stories for anonymous visitors.",
+    "category": "Public Landing and Reader",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll through the landing page content"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured stories are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC009",
+    "title": "Reader supports moving through story content",
+    "description": "Verifies an anonymous visitor can progress through a story in the reader using standard reader navigation controls.",
+    "category": "Public Landing and Reader",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the featured stories section"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured story to open it"
+      },
+      {
+        "type": "action",
+        "description": "Click the reader control to go to the next part of the story"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the reader remains open and displays story content"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC010",
+    "title": "Open a published story from site search",
+    "description": "Verifies an anonymous visitor can use site search (when available) to open a published story and reach the reader.",
+    "category": "Public Landing and Reader",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click into the site search input if it is present"
+      },
+      {
+        "type": "action",
+        "description": "Fill \"folk\" into the site search field"
+      },
+      {
+        "type": "action",
+        "description": "Press Enter"
+      },
+      {
+        "type": "action",
+        "description": "Click a story result to open it"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the story reader view is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify story content is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC011",
+    "title": "Reject login with non-existent account credentials",
+    "description": "Verifies login shows an invalid credentials message when a non-existent account attempts to sign in.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with creator+doesnotexist@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with any-password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an invalid credentials message is visible"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC012",
+    "title": "Block registration with invalid email format",
+    "description": "Verifies registration shows an inline email validation error when the email format is invalid.",
+    "category": "User Registration",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with invalid-email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an email validation error is visible"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC013",
+    "title": "Show email validation error on login for invalid email format",
+    "description": "Verifies the login form shows an email validation error when an invalid email is submitted.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with not-an-email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with any-password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an email validation error is visible"
+      }
+    ],
+    "priority": "Low"
+  }
+]

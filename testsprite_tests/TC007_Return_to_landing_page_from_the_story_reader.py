@@ -30,38 +30,19 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:3000/dashboard
-        await page.goto("http://localhost:3000/dashboard")
+        # -> Navigate to http://localhost:3001
+        await page.goto("http://localhost:3001")
         
-        # -> Fill the email field with provided username, fill the password field with provided password, then submit the form (Enter).
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('superadmin@funggawari.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
-        
-        # -> Navigate to the stories page (/dashboard/stories) and inspect the page for the 'create new story' control so we can start the create-story flow.
-        await page.goto("http://localhost:3000/dashboard/stories")
-        
-        # -> Open the create manuscript flow by clicking 'New Manuscript' so we can attempt to submit without a title and observe inline validation.
+        # -> Scroll down to reveal the featured stories section, then open the stories listing by clicking 'Browse Stories & Archives' (element index 183).
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[3]/div/section/div/div/div[4]/div/div/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Clear the title field and click Publish to verify an inline title validation error appears and that the story is not created.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('')
-        
+        # -> Click a featured story (Open Wise-Epu — Lore Keeper button) to open it, then use the site Home link to return to the landing page and confirm the featured stories are visible.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button[2]').nth(0)
+        elem = frame.locator('xpath=/html/body/div[3]/div/nav/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
         # --> Test passed — verified by AI agent

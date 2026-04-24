@@ -6,7 +6,7 @@ import { z } from "zod"
 import { requireUser } from "./authHelpers"
 
 const updateUserProfileSchema = z.object({
-  alias: z.string().max(100).optional(),
+  alias: z.string().min(3, "Alias must be at least 3 characters").max(100).optional(),
   bio: z.string().max(1000).optional(),
   avatar_url: z.string().url().max(1000).optional(),
 })
@@ -22,7 +22,7 @@ const deleteUserAccountSchema = z.object({
 
 const createTeamMemberSchema = z.object({
   name: z.string().min(1).max(255),
-  email: z.string().email().optional().or(z.literal("")),
+  email: z.string().regex(/^.+@.+\..+$/, "Invalid email address").optional().or(z.literal("")),
   phone: z.string().max(50).optional().or(z.literal("")),
 })
 

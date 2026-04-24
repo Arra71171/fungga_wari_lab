@@ -30,39 +30,40 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:3000/dashboard
-        await page.goto("http://localhost:3000/dashboard")
+        # -> Navigate to http://localhost:3001
+        await page.goto("http://localhost:3001")
         
-        # -> Fill the email field with superadmin@funggawari.com and proceed to enter the password and submit the login form.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('superadmin@funggawari.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
-        
-        # -> Dismiss the onboarding modal (click 'Skip onboarding tour') so the Settings link in the sidebar can be clicked.
+        # -> Click the 'Sign Up' link to open the registration page and then observe the form fields.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
+        elem = frame.locator('xpath=/html/body/div[3]/div/nav/div[2]/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the Settings page by clicking the 'Settings' link in the sidebar so we can access the profile/avatar controls.
+        # -> Fill the registration form (name, email, password) and submit by clicking the 'Join the Archive' button. Then verify a confirmation that the account was created is visible.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Creator New1')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/div[2]/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('creator+new1@example.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/div[3]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Password123!')
+        
+        # -> Click the 'Join the Archive' submit button to submit the registration form, then verify a confirmation that the account was created is visible.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[5]').nth(0)
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/button').nth(0)
         await asyncio.sleep(3); await elem.click()
-        
-        # -> Open the Settings page so I can access the profile/avatar controls (navigate to /dashboard/settings).
-        await page.goto("http://localhost:3000/dashboard/settings")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Dossier preview')]").nth(0).is_visible(), "The dossier preview should still show the previously saved avatar after cancelling the upload"
-        assert not await frame.locator("xpath=//*[contains(., 'Changes saved')]").nth(0).is_visible(), "There should be no indication that changes were saved after cancelling the avatar upload"
+        assert await frame.locator("xpath=//*[contains(., 'Account created')]").nth(0).is_visible(), "The account creation confirmation should be visible after submitting the registration form"
         await asyncio.sleep(5)
 
     finally:

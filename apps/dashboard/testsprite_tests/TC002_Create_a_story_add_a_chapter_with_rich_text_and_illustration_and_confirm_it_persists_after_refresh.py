@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:3000/dashboard
         await page.goto("http://localhost:3000/dashboard")
         
-        # -> Enter the provided email into the email field, enter the password, then submit the login form (send Enter).
+        # -> Fill the email and password fields with the provided creator credentials and submit the login form.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
@@ -44,23 +44,80 @@ async def run_test():
         elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Navigate to /dashboard/stories to continue the test (or discover if login actually succeeded).
-        await page.goto("http://localhost:3000/dashboard/stories")
+        # -> Dismiss the onboarding modal so the main dashboard UI is accessible (click 'Skip onboarding tour').
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
-        # -> Enter the login credentials again (email + password) and submit the login form by sending Enter, then wait for the app to navigate to the stories/dashboard area.
+        # -> Navigate to the Manuscripts page by clicking the 'Manuscripts' link in the left sidebar so I can create a new story.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' link in the left sidebar to open the manuscripts/stories list.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' link in the left sidebar to open the manuscripts/stories list so I can create a new manuscript.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'Manuscripts' link in the left sidebar to open the manuscripts/stories list so I can create a new manuscript.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Manuscripts (stories) list so I can start creating a new manuscript.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Manuscripts (stories) list by clicking the 'Manuscripts' link so I can create a new manuscript.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Click the 'New Manuscript' button to open the create manuscript form so I can start the story creation flow.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the chapter editor by clicking the 'Add Chapter' button so I can create the first chapter (then wait for the editor to appear).
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the chapter title field (index=9910) with 'Chapter 1' as the immediate next action.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('superadmin@funggawari.com')
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div/input').nth(0)
+        await asyncio.sleep(3); await elem.fill('Chapter 1')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div[2]/div[2]/div/div[2]/div[4]/div[2]/div[2]/div').nth(0)
+        await asyncio.sleep(3); await elem.fill('This is the first chapter of Test Story TC004. It includes an opening paragraph and demonstrates bold and italic emphasis in the reader experience.')
+        
+        # -> Click 'Save' to persist the chapter, refresh the page, then check that the chapter appears in the draft outline and that the rich-text paragraph is still present. If the illustration is still missing because no image file is available, report TEST BLOCKED.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'Chapter 1')]").nth(0).is_visible(), "The draft outline should show Chapter 1 after saving and refreshing."]}
+        assert await frame.locator("xpath=//*[contains(., 'This is the first chapter of Test Story TC004. It includes an opening paragraph and demonstrates bold and italic emphasis in the reader experience.')]").nth(0).is_visible(), "The chapter content should still be visible in the editor and draft outline after saving and refreshing."]}
         await asyncio.sleep(5)
 
     finally:

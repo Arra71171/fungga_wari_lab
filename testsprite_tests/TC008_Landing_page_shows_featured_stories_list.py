@@ -30,31 +30,12 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:3000/dashboard
-        await page.goto("http://localhost:3000/dashboard")
-        
-        # -> Fill the email field with the provided username and the password field, then submit the login form (send Enter). Then wait for the app to respond.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('superadmin@funggawari.com')
-        
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
-        
-        # -> Dismiss the onboarding modal (click 'Skip onboarding tour'), then navigate to the Library page.
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
-        await asyncio.sleep(3); await elem.click()
-        
-        await page.goto("http://localhost:3000/dashboard/library")
+        # -> Navigate to http://localhost:3001
+        await page.goto("http://localhost:3001")
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        assert await frame.locator("xpath=//*[contains(., 'This file type is not supported')]").nth(0).is_visible(), "The upload validation error should be visible after attempting to upload an unsupported or oversized file"
+        assert await frame.locator("xpath=//*[contains(., 'Featured stories')]").nth(0).is_visible(), "The landing page should display the featured stories list for anonymous visitors."
         await asyncio.sleep(5)
 
     finally:

@@ -110,6 +110,7 @@ export default function DraftEditorPage({
   const [expandedChapterIds, setExpandedChapterIds] = React.useState<Set<string>>(new Set());
   const [pendingChapterDeletions, setPendingChapterDeletions] = React.useState<string[]>([]);
   const [pendingChoiceDeletions, setPendingChoiceDeletions] = React.useState<string[]>([]);
+  const [titleError, setTitleError] = React.useState("");
 
   // -- Fetch story on mount --
   React.useEffect(() => {
@@ -419,7 +420,7 @@ export default function DraftEditorPage({
       toast.success("Manuscript Saved", {
         description: "The draft has been securely updated.",
       });
-      router.push("/stories");
+      // Stay on the draft page — do NOT navigate away on save
     } catch (err) {
       console.error("Failed to save:", err);
       toast.error("Save Failed", { description: "Could not update the manuscript." });
@@ -430,6 +431,16 @@ export default function DraftEditorPage({
 
   const handlePublish = async () => {
     if (!isReady) return;
+    // TC012: Require a non-default title before publishing
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle || trimmedTitle === "Untitled Manuscript") {
+      setTitleError("A real title is required before publishing.");
+      toast.error("Title Required", {
+        description: "Please give your story a proper title before publishing.",
+      });
+      return;
+    }
+    setTitleError("");
     setIsPublishing(true);
     try {
       await persistDraft();
@@ -556,11 +567,20 @@ export default function DraftEditorPage({
             </div>
 
             <Input
+              id="story-title-input"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (titleError) setTitleError("");
+              }}
               placeholder="The Tale of the Bamboo Cutter"
               className="font-heading text-4xl font-bold h-16 border-2 border-border-strong bg-bg-surface px-4 shadow-brutal-sm focus-visible:ring-2 focus-visible:ring-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
             />
+            {titleError && (
+              <p className="font-mono text-fine text-destructive uppercase tracking-wider pl-4 border-l-2 border-destructive">
+                {titleError}
+              </p>
+            )}
 
             <BrutalistCard variant="panel" padding="md" className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6 bg-bg-panel border-border-strong">
               <div className="space-y-2">

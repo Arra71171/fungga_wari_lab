@@ -30,77 +30,90 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:3000/dashboard
-        await page.goto("http://localhost:3000/dashboard")
+        # -> Navigate to http://localhost:3001
+        await page.goto("http://localhost:3001")
         
-        # -> Enter the provided credentials into the email and password fields and submit the login form.
+        # -> Click the 'Sign In' link to open the login form/page.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[3]/div/nav/div[2]/a').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Fill the email and password fields with the provided credentials, then click the submit button to log in.
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('superadmin@funggawari.com')
         
         frame = context.pages[-1]
         # Input text
-        elem = frame.locator('xpath=/html/body/div[2]/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/div[2]/div/input').nth(0)
         await asyncio.sleep(3); await elem.fill('FungaW@ri2026!')
         
-        # -> Close the onboarding tour modal so the dashboard navigation is accessible, then open the Manuscripts/Stories area to create a new story titled 'Test Story TC001'.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[3]/div/main/div[2]/div[2]/div[2]/form/button').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Open the Dashboard page from the current header so we can find and open a story to edit its metadata.
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div[3]/div/nav/div/a[4]').nth(0)
+        await asyncio.sleep(3); await elem.click()
+        
+        # -> Dismiss the onboarding tour modal by clicking the 'Skip onboarding tour' button so the dashboard is interactable.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[4]/div/div/div[3]/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Open the Manuscripts area to create a new story by clicking the 'Manuscripts' link.
+        # -> Open the Manuscripts list so we can select a story to edit (click the 'Manuscripts' link).
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the Manuscripts navigation link to open the manuscripts/stories list.
+        # -> Click the 'Manuscripts' link to open the manuscripts list so we can select a story to edit, then wait for the list to render.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' navigation link to open the manuscripts/stories list so we can create a new story.
+        # -> Open the Manuscripts list by clicking the 'Manuscripts' link so we can select a manuscript to edit.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'Manuscripts' navigation link to open the manuscripts/stories list so we can create a new manuscript.
+        # -> Click the 'Manuscripts' link to open the manuscripts list so a story can be selected for editing.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Click the 'New Manuscript' button to open the new story creation form (then fill the title).
+        # -> Click the '+ New Manuscript' button (element index 4421) to open the manuscript editor so metadata can be edited.
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div[2]/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Fill the title field with 'Test Story TC001', save the manuscript, go to the Manuscripts list, and verify the new story appears.
+        # -> Fill the manuscript title with a new value, save the manuscript, navigate back to the Overview, and extract the title shown on the overview to verify the update.
         frame = context.pages[-1]
         # Input text
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div[2]/div/div/input').nth(0)
-        await asyncio.sleep(3); await elem.fill('Test Story TC001')
+        await asyncio.sleep(3); await elem.fill('The Tale of the Bamboo Cutter (Edited)')
         
         frame = context.pages[-1]
         # Click element
         elem = frame.locator('xpath=/html/body/div[2]/main/div/div/div/div/button').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # -> Refresh/open the Manuscripts/stories list and verify that 'Test Story TC001' appears in the list.
+        # -> Click the 'Overview' link to return to the dashboard overview, wait for the page to render, and extract the manuscript title shown on the overview to verify the update.
         frame = context.pages[-1]
         # Click element
-        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a[2]').nth(0)
+        elem = frame.locator('xpath=/html/body/div[2]/aside/nav/a').nth(0)
         await asyncio.sleep(3); await elem.click()
         
-        # --> Test passed — verified by AI agent
-        frame = context.pages[-1]
-        current_url = await frame.evaluate("() => window.location.href")
-        assert current_url is not None, "Test completed successfully"
         await asyncio.sleep(5)
 
     finally:

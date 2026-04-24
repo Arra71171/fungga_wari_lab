@@ -20,22 +20,36 @@ export function OperativeDossier() {
 
   const [alias, setAlias] = useState("");
   const [bio, setBio] = useState("");
+  const [aliasError, setAliasError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [stats, setStats] = useState<{ missionsCompleted: number; loreAuthored: number } | null>(null);
 
   useEffect(() => {
-    getMyProfile().then((profile) => {
-      setMe(profile);
-      if (profile) {
-        setAlias(profile.alias ?? "");
-        setBio(profile.bio ?? "");
-        if (profile.auth_id) {
-          getOperativeStats(profile.auth_id).then(setStats).catch(console.error);
+    const refetch = () => {
+      getMyProfile().then((profile) => {
+        setMe(profile);
+        if (profile) {
+          setAlias(profile.alias ?? "");
+          setBio(profile.bio ?? "");
+          setAliasError("");
+          if (profile.auth_id) {
+            getOperativeStats(profile.auth_id).then(setStats).catch(console.error);
+          }
         }
-      }
-    });
+      });
+    };
+
+    // Initial fetch
+    refetch();
+
+    // Re-fetch when tab/page becomes visible again (fixes Next.js router cache stale state — TC010)
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") refetch();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
   if (me === undefined) {
@@ -50,6 +64,12 @@ export function OperativeDossier() {
   const role = me?.role ?? "viewer";
 
   const handleSave = async () => {
+    // Client-side alias validation (TC011)
+    if (alias.length > 0 && alias.length < 3) {
+      setAliasError("Alias must be at least 3 characters.");
+      return;
+    }
+    setAliasError("");
     setIsSaving(true);
     try {
       await updateUserProfile({ alias, bio });
@@ -219,14 +239,25 @@ export function OperativeDossier() {
                 Codename / Alias
               </label>
               <Input
+                id="alias-input"
                 value={alias}
-                onChange={(e) => setAlias(e.target.value)}
+                onChange={(e) => {
+                  setAlias(e.target.value);
+                  if (aliasError) setAliasError("");
+                }}
                 placeholder="ENTER OPERATIVE ALIAS..."
                 className="h-12 border-2 border-border bg-cinematic-bg font-mono text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none"
               />
+              {aliasError && (
+                <p className="font-mono text-fine text-destructive uppercase tracking-wider pl-4 border-l-2 border-destructive">
+                  {aliasError}
+                </p>
+              )}
+              {!aliasError && (
               <p className="font-mono text-fine text-muted-foreground uppercase tracking-wider pl-4 border-l-2 border-border-strong">
                 Overrides display name globally.
               </p>
+              )}
             </div>
 
             {/* Bio */}
@@ -256,8 +287,9 @@ export function OperativeDossier() {
               </span>
             )}
             <Button
+              id="dossier-sync-btn"
               onClick={handleSave}
-              disabled={isSaving || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
+              disabled={isSaving || !!aliasError || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
               className="h-12 px-6 font-mono text-xs font-bold uppercase tracking-label rounded-none border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none w-full sm:w-auto min-w-[200px]"
             >
               {isSaving ? <Loader2 className="animate-spin size-4 mr-2" /> : <Activity className="size-4 mr-2" />}
