@@ -102,7 +102,7 @@ export function AuthGatewayLayout({
           </div>
         </Link>
 
-        {/* Version stamp — no theme toggle (page is always dark by design) */}
+        {/* Version stamp — no theme toggle here; auth pages inherit the user's system theme */}
         <span
           aria-hidden="true"
           className="font-mono text-fine font-bold uppercase tracking-caps text-muted-foreground/45 select-none"
@@ -180,7 +180,7 @@ export function AuthGatewayLayout({
               </p>
             </div>
 
-            {/* Clerk form */}
+            {/* Auth form */}
             <div className="flex-1 min-w-0">
               {children}
             </div>

@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { cn } from "@workspace/ui/lib/utils";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 interface KpiCardProps {
   title: string;
@@ -18,22 +19,21 @@ interface KpiCardProps {
 export function KpiCard({ title, value, icon, trend, className, isLoading }: KpiCardProps) {
   if (isLoading) {
     return (
-      <div className={cn("p-4 md:p-6 border border-border-subtle bg-bg-surface flex flex-col justify-between min-h-[140px] h-auto animate-pulse", className)}>
+      <BrutalistCard variant="default" className={cn("flex flex-col justify-between min-h-[140px] h-auto animate-pulse", className)}>
         <div className="flex justify-between items-start">
           <div className="h-4 w-24 bg-border/20" />
           <div className="h-5 w-5 bg-border/20" />
         </div>
         <div className="h-10 w-16 bg-border/20 mt-4" />
-      </div>
+      </BrutalistCard>
     );
   }
 
   return (
-    <div className={cn(
-      "group relative p-4 md:p-6 border border-border-subtle bg-bg-surface flex flex-col justify-between min-h-[140px] h-auto transition-all duration-300",
-      "hover:border-border hover:-translate-y-1 hover:shadow-brutal-sm cursor-default",
-      className
-    )}>
+    <BrutalistCard 
+      variant="interactive" 
+      className={cn("group relative flex flex-col justify-between min-h-[140px] h-auto cursor-default", className)}
+    >
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/0 group-hover:via-brand-ember/30 to-transparent transition-colors duration-500" />
       
       <div className="flex justify-between items-start">
@@ -58,6 +58,6 @@ export function KpiCard({ title, value, icon, trend, className, isLoading }: Kpi
           </span>
         )}
       </div>
-    </div>
+    </BrutalistCard>
   );
 }

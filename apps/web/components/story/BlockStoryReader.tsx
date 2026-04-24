@@ -3,7 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ChevronDown, Flame } from "lucide-react";
+import { ArrowLeft, ChevronDown, Flame, Music } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
@@ -131,7 +131,7 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
       return (
         <pre
           key={index}
-          className="bg-cinematic-panel/80 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
+          className="bg-cinematic-bg/60 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
         >
           <code className="font-mono text-sm text-brand-glow">
             {extractText(node)}
@@ -353,8 +353,10 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
       >
         {activeChapter?.illustration_url ? (
           <>
-            {/* Blurred background to fill the pane */}
-            <div className="absolute inset-0 opacity-20 blur-[60px] scale-110 pointer-events-none" aria-hidden>
+            {/* Blurred background halo — warm ambient glow from the illustration.
+               Light mode: very low opacity (10%) so dark illustrations don't create
+               a cold murky wash over the parchment surface. */}
+            <div className="absolute inset-0 opacity-10 dark:opacity-20 blur-[60px] scale-110 pointer-events-none" aria-hidden>
               <Image
                 src={activeChapter.illustration_url}
                 alt=""
@@ -362,6 +364,9 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 className="object-cover"
               />
             </div>
+            {/* Warm tint overlay — ensures the halo blends with the parchment palette
+               even when the source illustration is very dark (e.g. night scenes) */}
+            <div className="absolute inset-0 bg-cinematic-bg/60 dark:bg-transparent pointer-events-none" aria-hidden />
 
             {/* Uncropped Illustration Container */}
             <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
@@ -378,14 +383,14 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 
                 {/* Cinematic gradient overlay & Text */}
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-cinematic-bg via-cinematic-bg/30 to-transparent pointer-events-none"
+                  className="absolute inset-0 illustration-gradient-overlay pointer-events-none"
                   aria-hidden
                 />
                 <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-8 px-6 pointer-events-none text-center">
                   <span className="font-mono text-nano md:text-fine uppercase tracking-caps text-brand-ember/90 mb-2 drop-shadow-md">
                     Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
                   </span>
-                  <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-cinematic-text leading-tight drop-shadow-lg">
+                  <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-illustration-title leading-tight drop-shadow-lg">
                     {activeChapter.title}
                   </h2>
                 </div>
@@ -461,6 +466,23 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
 
         {/* Content Body */}
         <div className="flex-1 max-w-2xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-16 sm:pt-20 md:pt-28 lg:pt-36 pb-20 lg:pb-24">
+          
+          {/* Chapter Audio Player */}
+          {activeChapter?.audio_url && (
+            <div className="mb-10 lg:mb-14 border border-cinematic-border/40 bg-cinematic-panel/40 p-4 lg:p-5 rounded-none backdrop-blur-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <Music className="size-3.5 text-brand-ember" />
+                <span className="font-mono text-nano uppercase tracking-widest text-brand-ember/90">Chapter Audio</span>
+              </div>
+              <audio 
+                controls 
+                className="w-full h-10 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ember/50" 
+                src={activeChapter.audio_url} 
+                preload="metadata"
+                aria-label={`Chapter audio for ${activeChapter.title || 'this chapter'}`}
+              />
+            </div>
+          )}
           {hasContent ? (
             <>
               {/* TipTap rich content */}

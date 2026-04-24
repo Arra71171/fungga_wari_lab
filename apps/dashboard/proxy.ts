@@ -1,8 +1,10 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
-// Only the login page is public on the dashboard
-const publicRoutes = ["/login"]
+// Only the login page is public on the dashboard.
+// Next.js 15 includes the basePath in req.nextUrl.pathname, so we must
+// match both the bare path (edge cases) and the basePath-prefixed path.
+const publicRoutes = ["/login", "/dashboard/login"]
 
 function isPublicRoute(pathname: string) {
   return publicRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"))
@@ -39,7 +41,7 @@ export default async function middleware(req: NextRequest) {
 
   // Redirect unauthenticated users to login
   if (!user && !isPublicRoute(req.nextUrl.pathname)) {
-    const redirectResponse = NextResponse.redirect(new URL("/login", req.url))
+    const redirectResponse = NextResponse.redirect(new URL("/dashboard/login", req.url))
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
     })
@@ -53,7 +55,7 @@ export default async function middleware(req: NextRequest) {
       return supabaseResponse
     }
 
-    const redirectResponse = NextResponse.redirect(new URL("/overview", req.url))
+    const redirectResponse = NextResponse.redirect(new URL("/dashboard/overview", req.url))
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
     })
@@ -69,7 +71,7 @@ export default async function middleware(req: NextRequest) {
       .single()
 
     if (!profile || !["admin", "superadmin", "editor"].includes(profile.role)) {
-      const redirectResponse = NextResponse.redirect(new URL("/login?error=unauthorized", req.url))
+      const redirectResponse = NextResponse.redirect(new URL("/dashboard/login?error=unauthorized", req.url))
       supabaseResponse.cookies.getAll().forEach((cookie) => {
         redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
       })

@@ -66,7 +66,7 @@ export function MobileReaderBar({ onOpenChapters, onOpenSettings }: MobileReader
       className="fixed bottom-0 inset-x-0 z-50 lg:hidden"
     >
       {/* Progress bar — thin gradient line at top of the bar */}
-      <div className="w-full h-0.5 bg-cinematic-border/20">
+      <div className="w-full h-0.5 bg-cinematic-border/30 dark:bg-cinematic-border/20">
         <div
           className="h-full bg-gradient-to-r from-brand-ember to-brand-glow transition-all duration-500"
           style={{ width: `${progressPercent}%` }}
@@ -134,7 +134,7 @@ export function MobileReaderBar({ onOpenChapters, onOpenSettings }: MobileReader
           </button>
           <AnimatedThemeToggler
             aria-label="Toggle reader theme"
-            className="size-9 border-cinematic-border/30 bg-transparent hover:bg-cinematic-border"
+            className="size-9 border-cinematic-border/30 bg-transparent hover:bg-accent"
           />
         </div>
       </div>

@@ -90,7 +90,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
       <SceneSearchDialog />
 
       {/* Ambient cinematic glow — top center (desktop only for perf) */}
-      <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-brand-ember/5 blur-[120px] pointer-events-none z-0" />
+      <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-brand-ember/10 dark:bg-brand-ember/5 blur-[120px] pointer-events-none z-0" />
 
       {/* ─── Desktop: Left sidebar (hidden on mobile) ──────────────────── */}
       <div className="hidden lg:flex">

@@ -121,14 +121,10 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
         </div>
 
         {/* Spectrum visualiser */}
-        <div className="relative border border-cinematic-border/40 bg-cinematic-panel/80 overflow-hidden mb-1">
+        <div className="relative border border-cinematic-border/40 bg-cinematic-bg/60 overflow-hidden mb-1">
           {/* Scanline overlay */}
           <div
-            className="absolute inset-0 pointer-events-none z-10 opacity-10"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(0deg, transparent, transparent 2px, oklch(0 0 0 / 80%) 2px, oklch(0 0 0 / 80%) 3px)",
-            }}
+            className="absolute inset-0 pointer-events-none z-10 opacity-10 scanline-overlay"
           />
 
           {/* Spectrum bars */}
@@ -175,7 +171,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
         </div>
 
         {/* Controls row */}
-        <div className="border border-cinematic-border/40 bg-cinematic-panel/80 flex items-center gap-3 px-4 py-3">
+        <div className="border border-cinematic-border/40 bg-cinematic-bg/60 flex items-center gap-3 px-4 py-3">
           {/* Play / Pause / Resume button */}
           <button
             onClick={isPlaying ? pause : isPaused ? resume : play}
@@ -262,7 +258,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
         </div>
       </section>
 
-      <div className="h-px bg-cinematic-border/30 mb-8" />
+      <div className="h-px bg-cinematic-border/60 mb-8" />
 
       {/* ── Story Metadata ─────────────────────────────────── */}
       <section aria-label="Story metadata" className="space-y-4">

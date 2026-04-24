@@ -13,10 +13,20 @@ import {
   SplitSquareHorizontal,
   Plus,
   ImageIcon,
+  Music,
 } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { CoverImageUpload } from "@/components/cover-image-upload";
+import { ChapterAudioUpload } from "@/components/chapter-audio-upload";
+
 import dynamic from "next/dynamic";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 
 const RichTextEditor = dynamic(
   () =>
@@ -33,6 +43,7 @@ const RichTextEditor = dynamic(
   }
 );
 import { createAsset } from "@/actions/assetActions";
+import { getCloudinarySignature } from "@/actions/cloudinaryActions";
 import type { ChoiceLocal, ChapterLocal } from "../page";
 
 interface ChapterBuilderCardProps {
@@ -41,6 +52,7 @@ interface ChapterBuilderCardProps {
   title: string;
   content: string;
   illustrationUrl?: string;
+  audioUrl?: string;
   tiptapContent?: Record<string, unknown>;
   choices?: ChoiceLocal[];
   allChapters?: ChapterLocal[];
@@ -61,6 +73,7 @@ export function ChapterBuilderCard({
   content,
   tiptapContent,
   illustrationUrl,
+  audioUrl,
   choices = [],
   allChapters = [],
   isExpanded = true,
@@ -75,6 +88,9 @@ export function ChapterBuilderCard({
   const [showIllustration, setShowIllustration] = React.useState(
     !!illustrationUrl
   );
+  const [showAudio, setShowAudio] = React.useState(
+    !!audioUrl
+  );
   const [showChoices, setShowChoices] = React.useState(choices.length > 0);
 
   const handleImageUpload = async (
@@ -83,16 +99,19 @@ export function ChapterBuilderCard({
     try {
       const CLOUDINARY_CLOUD_NAME =
         process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-      const CLOUDINARY_UPLOAD_PRESET =
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-      if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+      if (!CLOUDINARY_CLOUD_NAME) {
         throw new Error("Missing Cloudinary configuration");
       }
 
+      const { timestamp, signature, apiKey, folder } = await getCloudinarySignature();
+
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
 
       const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
@@ -132,13 +151,13 @@ export function ChapterBuilderCard({
   return (
     <div
       data-slot="chapter-builder-card"
-      className="border border-border bg-bg-panel transition-colors hover:border-brand-ember/20"
+      className="border-2 border-border-strong bg-bg-surface shadow-brutal-sm transition-colors hover:border-brand-ember/50"
     >
       {/* ── Chapter Header (always visible) ─────────────────── */}
       <div
         className={cn(
           "flex items-center gap-3 px-5 py-4 cursor-pointer select-none",
-          isExpanded ? "border-b border-border/50 bg-bg-surface" : ""
+          isExpanded ? "border-b-2 border-border-strong bg-bg-panel" : ""
         )}
         onClick={() => onToggleExpand(id)}
       >
@@ -189,7 +208,7 @@ export function ChapterBuilderCard({
               value={title}
               onChange={(e) => onUpdate(id, "title", e.target.value)}
               placeholder="e.g. The Discovery of the Bamboo Grove"
-              className="font-heading text-xl h-12 bg-transparent border-x-0 border-t-0 border-b-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-brand-ember/50 placeholder:text-muted-foreground/30"
+              className="font-heading text-xl h-12 bg-transparent border-x-0 border-t-0 border-b-2 border-border-strong rounded-none px-0 focus-visible:ring-0 focus-visible:border-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
             />
           </div>
 
@@ -210,15 +229,43 @@ export function ChapterBuilderCard({
             {showIllustration && (
               <div className="flex justify-center">
                 <div className="w-48 space-y-2">
-                  <CoverImageUpload
-                    value={illustrationUrl}
-                    onChange={(url) => onUpdate(id, "illustrationUrl", url)}
-                    className="w-full aspect-[3/4]"
-                  />
+                  <div className="border-2 border-border-strong bg-bg-panel h-full min-h-[200px]">
+                    <CoverImageUpload
+                      value={illustrationUrl}
+                      onChange={(url) => onUpdate(id, "illustrationUrl", url)}
+                      className="w-full h-full aspect-[3/4]"
+                    />
+                  </div>
                   <p className="text-fine text-muted-foreground font-mono text-center leading-relaxed">
                     Portrait format · 3∶4 ratio required
                   </p>
                 </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Optional Audio — collapsed by default unless one exists */}
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={() => setShowAudio((v) => !v)}
+              className="flex items-center gap-2 text-fine font-mono uppercase tracking-label text-muted-foreground hover:text-brand-ember transition-colors"
+            >
+              <Music className="size-3" />
+              <span>Chapter Audio / Narration</span>
+              <span className="text-muted-foreground/40">
+                {showAudio ? "▴ hide" : "▾ add"}
+              </span>
+            </button>
+
+            {showAudio && (
+              <div className="space-y-2 max-w-xl">
+                <Label className="text-fine text-muted-foreground font-mono">Audio URL</Label>
+                <ChapterAudioUpload
+                  value={audioUrl}
+                  onChange={(url) => onUpdate(id, "audioUrl", url)}
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -241,7 +288,7 @@ export function ChapterBuilderCard({
                 )
               }
               onImageUpload={handleImageUpload}
-              className="w-full bg-bg-surface border-border rounded-none min-h-[480px]"
+              className="w-full bg-bg-panel border-2 border-border-strong rounded-none min-h-[480px]"
             />
 
             {/* Plain-text fallback — collapsed dev tool */}
@@ -253,13 +300,13 @@ export function ChapterBuilderCard({
                 value={content}
                 onChange={(e) => onUpdate(id, "content", e.target.value)}
                 placeholder="Raw text representation…"
-                className="mt-2 min-h-[80px] resize-y bg-bg-panel font-mono text-xs p-3 text-muted-foreground"
+                className="mt-2 min-h-[80px] resize-y bg-bg-panel border-2 border-border-strong rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 font-mono text-xs p-3 text-muted-foreground"
               />
             </details>
           </div>
 
           {/* Branching Choices — collapsed by default */}
-          <div className="border-t border-border pt-6 space-y-4">
+          <div className="border-t-2 border-border-strong pt-6 space-y-4">
             <button
               type="button"
               onClick={() => setShowChoices((v) => !v)}
@@ -289,7 +336,7 @@ export function ChapterBuilderCard({
                     {choices.map((choice) => (
                       <div
                         key={choice.id}
-                        className="flex items-start gap-3 bg-bg-surface p-3 border border-border border-l-2 border-l-brand-ember/50"
+                        className="flex items-start gap-3 bg-bg-surface p-3 border-2 border-border-strong border-l-4 border-l-brand-ember/50"
                       >
                         <div className="space-y-2 flex-1">
                           <Label className="text-nano font-mono uppercase text-muted-foreground">
@@ -302,36 +349,38 @@ export function ChapterBuilderCard({
                               onUpdateChoice(choice.id, "label", e.target.value)
                             }
                             placeholder="e.g. Enter the dark forest"
-                            className="h-8 text-xs bg-bg-panel border-border"
+                            className="h-8 text-xs bg-bg-panel border-2 border-border-strong rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                           />
                         </div>
                         <div className="space-y-2 flex-1">
                           <Label className="text-nano font-mono uppercase text-muted-foreground">
                             Next Chapter
                           </Label>
-                          <select
+                          <Select
                             value={choice.nextChapterId}
-                            onChange={(e) =>
+                            onValueChange={(value) =>
                               onUpdateChoice &&
                               onUpdateChoice(
                                 choice.id,
                                 "nextChapterId",
-                                e.target.value
+                                value
                               )
                             }
-                            className="flex h-8 w-full border border-border bg-bg-panel px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground"
-                            aria-label="Target chapter"
                           >
-                            <option value="">Select chapter…</option>
-                            {allChapters
-                              .filter((c) => c.id !== id)
-                              .map((target) => (
-                                <option key={target.id} value={target.id}>
-                                  Ch {target.order}:{" "}
-                                  {target.title || "Untitled"}
-                                </option>
-                              ))}
-                          </select>
+                            <SelectTrigger className="flex h-8 w-full border-2 border-border-strong bg-bg-panel px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                              <SelectValue placeholder="Select chapter…" />
+                            </SelectTrigger>
+                            <SelectContent className="border-2 border-border-strong rounded-none shadow-brutal-sm bg-bg-surface">
+                              {allChapters
+                                .filter((c) => c.id !== id)
+                                .map((target) => (
+                                  <SelectItem key={target.id} value={target.id} className="font-mono text-xs focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                                    Ch {target.order}:{" "}
+                                    {target.title || "Untitled"}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                         <Button
                           variant="ghost"
@@ -353,7 +402,7 @@ export function ChapterBuilderCard({
                   variant="outline"
                   size="sm"
                   onClick={onAddChoice}
-                  className="rounded-none border-border h-7 text-fine uppercase font-mono tracking-wider hover:border-brand-ember"
+                  className="rounded-none border-2 border-border-strong bg-bg-surface h-8 text-fine uppercase font-mono tracking-wider hover:border-brand-ember hover:bg-brand-ember/10"
                 >
                   <Plus className="size-3 mr-1" /> Add Choice
                 </Button>

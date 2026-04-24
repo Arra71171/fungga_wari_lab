@@ -79,7 +79,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
       chapter_count, view_count, read_count, published_at,
       created_at, updated_at,
       chapters (
-        id, title, "order", illustration_url, tiptap_content,
+        id, title, "order", illustration_url, audio_url, tiptap_content,
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
           is_draft, version, reading_time, excerpt

@@ -1,6 +1,7 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 import { 
   ChartConfig, 
   ChartContainer, 
@@ -32,21 +33,21 @@ type TopStory = {
 export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: TopStory[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <div className="w-full h-[350px] bg-bg-surface border border-border-subtle animate-pulse flex items-center justify-center">
+      <BrutalistCard variant="panel" className="w-full h-[350px] animate-pulse flex items-center justify-center">
         <div className="text-muted-foreground/30 font-mono text-sm uppercase tracking-widest">
           Loading Performance...
         </div>
-      </div>
+      </BrutalistCard>
     );
   }
 
   if (!stories || stories.length === 0) {
     return (
-      <div className="w-full h-[350px] bg-bg-surface border border-border-subtle flex items-center justify-center">
+      <BrutalistCard variant="panel" className="w-full h-[350px] flex items-center justify-center">
         <div className="text-muted-foreground/50 font-mono text-sm uppercase tracking-widest">
           No stories available
         </div>
-      </div>
+      </BrutalistCard>
     );
   }
 
@@ -57,7 +58,7 @@ export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: Top
   }));
 
   return (
-    <div className="w-full border-2 border-border bg-background p-4 md:p-6 relative group overflow-hidden">
+    <BrutalistCard variant="panel" className="w-full h-full relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ochre/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
       <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
@@ -90,6 +91,6 @@ export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: Top
           <Bar dataKey="reads" fill="var(--color-reads)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ChartContainer>
-    </div>
+    </BrutalistCard>
   );
 }

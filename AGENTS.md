@@ -130,11 +130,11 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 | `--brand-ember` | `oklch(0.60 0.18 45)` | `oklch(0.65 0.20 45)` | `text-brand-ember` | Fire accent ≡ primary |
 | `--brand-ochre` | `oklch(0.65 0.16 65)` | `oklch(0.70 0.18 65)` | `text-brand-ochre` | Warm ochre highlight |
 | `--brand-glow` | `oklch(0.85 0.15 55)` | `oklch(0.85 0.15 55)` | `text-brand-glow` | Ember glow halos |
-| `--cinematic-bg` | — | `oklch(0.10 0.02 50)` | `bg-cinematic-bg` | Immersive reader bg |
-| `--cinematic-panel` | — | `oklch(0.14 0.03 50)` | `bg-cinematic-panel` | Panel surfaces in reader |
-| `--cinematic-text` | — | `oklch(0.90 0.02 60)` | `text-cinematic-text` | Reader body text |
-| `--cinematic-accent` | — | `oklch(0.65 0.20 50)` | `text-cinematic-accent` | Accent in cinematic mode |
-| `--cinematic-border` | — | `oklch(1 0 0 / 8%)` | `border-cinematic-border` | Subtle reader borders |
+| `--cinematic-bg` | `oklch(0.97 0.015 75)` | `oklch(0.10 0.02 50)` | `bg-cinematic-bg` | Immersive reader reading surface |
+| `--cinematic-panel` | `oklch(0.93 0.018 75)` | `oklch(0.14 0.03 50)` | `bg-cinematic-panel` | Reader panel surfaces (sidebars) |
+| `--cinematic-text` | `oklch(0.10 0.03 45)` | `oklch(0.90 0.02 60)` | `text-cinematic-text` | Reader body text |
+| `--cinematic-accent` | `oklch(0.58 0.21 43)` | `oklch(0.65 0.20 45)` | `text-cinematic-accent` | Accent in cinematic mode |
+| `--cinematic-border` | `oklch(0.75 0.025 65)` | `oklch(1 0 0 / 8%)` | `border-cinematic-border` | Reader borders (warm brown in light) |
 | `--bg-base` | `oklch(0.97 0.01 60)` | `oklch(0.10 0.02 50)` | `bg-bg-base` | Deepest background |
 | `--bg-panel` | `oklch(0.95 0.01 60)` | `oklch(0.14 0.03 50)` | `bg-bg-panel` | Panel layer |
 | `--bg-surface` | `oklch(0.98 0.01 60)` | `oklch(0.18 0.04 50)` | `bg-bg-surface` | Card/content layer |
@@ -179,6 +179,43 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 - ❌ **NEVER** use `aspect-square` for story covers
 - ✅ **ALWAYS** use `aspect-[3/4]` for all story cards, covers, and illustrations
 - ❌ **NEVER** add a new component without adding `data-slot="component-name"` on the root element
+
+### Cinematic Reader Token Rules (Iron Law)
+
+The cinematic reader has its own token subsystem (`--cinematic-*`) that maps to `bg-cinematic-bg`, `bg-cinematic-panel`, etc. These tokens MUST follow these invariants:
+
+1. **Hue Unity Rule:** All `--cinematic-*` surface tokens (bg, panel) MUST share the same hue angle (±2). Different hues = different colour families = visual discord.
+
+2. **Chroma Ladder Rule:** Surface chroma MUST increase progressively: `bg < panel < border`. The reading surface has the lowest chroma (cleanest), the border has the most (most visible).
+
+3. **Lightness Ladder Rule:** Surface lightness MUST decrease progressively: `bg > panel > border` in light mode, `bg < panel < border` in dark mode.
+
+4. **No Cold Blacks:** `--cinematic-border` in light mode MUST NOT use `oklch(0 0 0 / N%)`. Use a warm-toned oklch value matching the panel hue family.
+
+5. **Token Separation Law:** Border tokens define LINE colors. Background tokens define FILL colors.
+   - ❌ **NEVER** use a border token as a hover background (`hover:bg-cinematic-border` is FORBIDDEN)
+   - ✅ Use `hover:bg-accent`, `hover:bg-secondary`, or `hover:bg-cinematic-panel/60` instead
+
+6. **Depth Stacking Rule:** Nested elements inside a panel (`bg-cinematic-panel`) MUST use the reading surface token (`bg-cinematic-bg/N`) — NOT the panel token. This creates a recessed "paper inset" effect. Panel-on-panel = zero contrast = broken depth.
+
+7. **Illustration Overlay Independence:** The `illustration-gradient-overlay` utility and `--illustration-*` tokens are ALWAYS dark regardless of theme.
+   - ❌ **NEVER** use `from-cinematic-bg` on illustration overlays
+   - ✅ Use the `illustration-gradient-overlay` utility class
+
+8. **Opacity Discipline:** When using `cinematic-panel/N` or `cinematic-bg/N`, the opacity MUST be chosen so the element is VISUALLY DISTINCT from its parent in BOTH light and dark modes. Test both themes before committing.
+
+9. **Illustration Halo Rule:** The blurred background halo behind chapter illustrations MUST use very low opacity in light mode (`opacity-10` max) paired with a `bg-cinematic-bg/60` warm tint overlay. Dark illustrations (night scenes, shadows) will otherwise create a cold murky wash over the parchment surface. The dark mode halo can be higher opacity (`opacity-20`) since both the background and illustration are dark.
+   - ❌ **NEVER** use `opacity-30` or higher for the illustration halo in light mode
+   - ✅ Use `opacity-10 dark:opacity-20` + a `bg-cinematic-bg/60 dark:bg-transparent` tint overlay
+
+### Custom Utilities Reference
+| Utility | File | Purpose |
+|---|---|---|
+| `illustration-gradient-overlay` | `globals.css` | Always-dark gradient for chapter illustration fades |
+| `scanline-overlay` | `globals.css` | CRT-style horizontal lines for AI narration visualiser |
+| `aspect-portrait` | `globals.css` | `aspect-ratio: 3/4` shorthand |
+| `bg-radial-primary-glow` | `globals.css` | Radial primary colour glow for ambient effects |
+| `bg-fade-to-card` | `globals.css` | Bottom-to-card gradient fade |
 
 ---
 
@@ -367,6 +404,9 @@ pnpm --filter dashboard run dev
 | `generateUploadUrl()` | Cloudinary direct upload with signed preset |
 | `select('*')` in Supabase queries | `select('id, title, slug, ...')` — explicit columns |
 | Bypassing RLS with service role in client code | Never expose service role key to browser |
+| `hover:bg-cinematic-border` | `hover:bg-accent` or `hover:bg-secondary` |
+| `bg-cinematic-panel/N` inside a `bg-cinematic-panel` parent | `bg-cinematic-bg/N` (recessed inset) |
+| Raw `oklch(...)` in component inline `style={}` | `@utility` in `globals.css` or a CSS custom property |
 
 ---
 

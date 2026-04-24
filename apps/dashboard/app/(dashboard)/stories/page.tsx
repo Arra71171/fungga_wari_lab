@@ -17,6 +17,7 @@ import { Plus, Search, BookOpen, Sparkles, Globe, EyeOff, Loader2, Trash2, Trian
 import Link from "next/link";
 import { Input } from "@workspace/ui/components/input";
 import { StoryCard } from "@workspace/ui/components/StoryCard";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 import { useRouter } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
@@ -55,6 +56,9 @@ export default function StoriesOverviewPage() {
     } catch (e) {
       console.error(e);
       toast.error("Creation Failed", { description: "Failed to initialize new manuscript." });
+    } finally {
+      // Always reset — the component stays mounted after client-side navigation
+      // so without `finally` the button would stay permanently disabled
       setIsCreating(false);
     }
   };
@@ -203,7 +207,7 @@ export default function StoriesOverviewPage() {
         </div>
 
         {stories.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border border-dashed border-border bg-secondary/20 relative z-10">
+          <BrutalistCard variant="panel" className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border-dashed relative z-10">
             <BookOpen className="size-12 text-muted-foreground/30 mb-6" />
             <h3 className="font-heading text-xl font-semibold mb-2 text-foreground/80">The Archive is Empty</h3>
             <p className="text-muted-foreground mb-8 max-w-md text-center font-mono text-sm leading-relaxed">
@@ -216,10 +220,10 @@ export default function StoriesOverviewPage() {
             >
               {isCreating ? "Initializing..." : "Establish First Manuscript"}
             </Button>
-          </div>
+          </BrutalistCard>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10 pb-20">
-            {stories.map((story) => (
+            {stories.map((story, index) => (
               <div key={story.id} className="relative group/card">
                 <Link href={`/stories/draft/${story.id}`}>
                   <StoryCard
@@ -230,6 +234,7 @@ export default function StoriesOverviewPage() {
                     coverUrl={story.cover_image_url ?? undefined}
                     chapterCount={story.chapter_count ?? 0}
                     language={story.language}
+                    priority={index < 4}
                     className="h-full hover:-translate-y-1 transition-transform duration-300 rounded-none border-border"
                   />
                 </Link>

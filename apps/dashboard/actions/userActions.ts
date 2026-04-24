@@ -6,7 +6,7 @@ import { z } from "zod"
 import { requireUser } from "./authHelpers"
 
 const updateUserProfileSchema = z.object({
-  alias: z.string().max(100).optional(),
+  alias: z.string().min(3, "Alias must be at least 3 characters").max(100).optional(),
   bio: z.string().max(1000).optional(),
   avatar_url: z.string().url().max(1000).optional(),
 })
@@ -22,7 +22,7 @@ const deleteUserAccountSchema = z.object({
 
 const createTeamMemberSchema = z.object({
   name: z.string().min(1).max(255),
-  email: z.string().email().optional().or(z.literal("")),
+  email: z.string().regex(/^.+@.+\..+$/, "Invalid email address").optional().or(z.literal("")),
   phone: z.string().max(50).optional().or(z.literal("")),
 })
 
@@ -45,7 +45,7 @@ export async function getSupabaseUser() {
 
   const { data, error } = await supabase
     .from("users")
-    .select("id, auth_id, clerk_id, name, email, avatar_url, role, alias, bio")
+    .select("id, auth_id, name, email, avatar_url, role, alias, bio")
     .eq("auth_id", user.id)
     .single()
 
@@ -107,7 +107,7 @@ export async function getAllUsers() {
 
   const { data, error } = await supabase
     .from("users")
-    .select("id, auth_id, clerk_id, name, email, avatar_url, role, alias")
+    .select("id, auth_id, name, email, avatar_url, role, alias")
     .order("created_at", { ascending: false })
     .limit(100)
 
@@ -296,29 +296,27 @@ export async function getOperativeStats(authId: string) {
   const validAuthId = parsed.data.authId
 
   const supabase = await createClient()
-  
-  // Resolve internal users.id and legacy clerk_id for identity migration bridging
-  // stories.author_id and tasks.assignee_id may hold either format during transition
+
+  // Resolve internal users.id for identity lookup
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("id, clerk_id")
+    .select("id")
     .eq("auth_id", validAuthId)
     .single()
 
   if (profileError) throw new Error(`Failed to load operative identity: ${profileError.message}`)
 
-  // Use both the internal numeric id and the legacy clerk_id to catch migrated rows
-  const identityIds = [String(profile.id), profile.clerk_id].filter((id): id is string => Boolean(id))
+  const profileId = String(profile.id)
 
   const [storiesResult, tasksResult] = await Promise.all([
     supabase
       .from("stories")
       .select("id, chapter_count")
-      .in("author_id", identityIds),
+      .eq("author_id", validAuthId),
     supabase
       .from("tasks")
       .select("id, status")
-      .in("assignee_id", identityIds),
+      .eq("assignee_id", profileId),
   ])
 
   if (storiesResult.error) throw new Error(`Failed to load stories: ${storiesResult.error.message}`)

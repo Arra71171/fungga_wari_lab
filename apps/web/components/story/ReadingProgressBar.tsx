@@ -33,7 +33,15 @@ export function ReadingProgressBar() {
   }, [story, currentSceneId]);
 
   return (
-    <div className="w-full h-1 bg-cinematic-panel fixed top-0 left-0 right-0 z-50">
+    <div
+      role="progressbar"
+      aria-label="Story reading progress"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(progress)}
+      data-slot="reading-progress"
+      className="w-full h-1 bg-cinematic-panel fixed top-0 left-0 right-0 z-50"
+    >
       <div 
         className="h-full bg-brand-ember transition-all duration-300 ease-out"
         style={{ width: `${progress}%` }}

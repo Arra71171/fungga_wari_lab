@@ -39,7 +39,7 @@ type SceneRecord = {
 };
 
 type UserRecord = {
-  clerk_id: string;
+  auth_id: string;
   has_lifetime_access: boolean;
   id: string;
 };
@@ -120,13 +120,13 @@ async function ensureE2EOrganization(clerkId: string, organizationId?: string | 
 async function ensureAdminUserRow(user: E2EUser) {
   const { error } = await supabase.from("users").upsert(
     {
-      clerk_id: user.clerkId,
+      auth_id: user.clerkId,
       email: user.email,
       has_lifetime_access: false,
       name: qaAuditName,
       role: "admin",
     },
-    { onConflict: "clerk_id" },
+    { onConflict: "auth_id" },
   );
 
   if (error) {
@@ -218,8 +218,8 @@ export async function loginToDashboard(page: Page, existingUser?: E2EUser): Prom
 export async function findUserRow(clerkId: string): Promise<UserRecord | null> {
   const { data, error } = await supabase
     .from("users")
-    .select("id, clerk_id, has_lifetime_access")
-    .eq("clerk_id", clerkId)
+    .select("id, auth_id, has_lifetime_access")
+    .eq("auth_id", clerkId)
     .maybeSingle();
 
   if (error) {
@@ -233,7 +233,7 @@ export async function updateLifetimeAccess(clerkId: string, hasLifetimeAccess: b
   const { error } = await supabase
     .from("users")
     .update({ has_lifetime_access: hasLifetimeAccess })
-    .eq("clerk_id", clerkId);
+    .eq("auth_id", clerkId);
 
   if (error) {
     throw new Error(`Failed to update lifetime access: ${error.message}`);
@@ -386,7 +386,7 @@ export async function simulateSuccessfulCheckoutWebhook(
       object: {
         id: `cs_test_${Date.now()}`,
         metadata: {
-          clerk_id: clerkId,
+          auth_id: clerkId,
         },
         object: "checkout.session",
         payment_status: "paid",

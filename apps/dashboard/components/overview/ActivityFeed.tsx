@@ -1,6 +1,7 @@
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { Eye, BookCheck, CheckCircle2, ArrowDownToDot } from "lucide-react";
+import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 type Activity = {
   _id: string;
@@ -15,7 +16,7 @@ type Activity = {
 export function ActivityFeed({ activities, isLoading }: { activities?: Activity[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <div className="w-full h-full min-h-[300px] border border-border bg-background p-4 md:p-6 animate-pulse" />
+      <BrutalistCard variant="panel" className="w-full h-full min-h-[300px] animate-pulse" />
     );
   }
 
@@ -40,7 +41,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
   };
 
   return (
-    <div className="w-full h-[400px] border border-border-subtle bg-bg-surface p-4 md:p-6 flex flex-col relative group overflow-hidden">
+    <BrutalistCard variant="panel" className="w-full h-[400px] flex flex-col relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground">Recent Activity</h3>
@@ -77,6 +78,6 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
           ))}
         </div>
       </ScrollArea>
-    </div>
+    </BrutalistCard>
   );
 }

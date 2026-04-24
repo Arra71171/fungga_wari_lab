@@ -79,22 +79,30 @@
     --brand-glow: oklch(0.80 0.15 55);
 
     /* ── Cinematic Reader — Parchment Mode (light) ─────────────────────── */
-    /* Reading surface: warm ivory — lightest layer */
-    --cinematic-bg: oklch(0.97 0.022 80);
-    /* Left/right panels: aged parchment — CLEARLY darker than reading bg */
-    --cinematic-panel: oklch(0.86 0.038 70);
-    /* Body text: rich manuscript ink */
+    /* All cinematic surfaces share hue 75 (warm amber-parchment).         */
+    /* Chroma ladder: bg(0.015) < panel(0.018) < border(0.025)             */
+    /* Lightness ladder: bg(97%) > panel(93%) > border(75%)                */
+    --cinematic-bg: oklch(0.97 0.015 75);
+    --cinematic-panel: oklch(0.93 0.018 75);
     --cinematic-text: oklch(0.10 0.03 45);
-    /* Accent: amber fire */
     --cinematic-accent: oklch(0.58 0.21 43);
-    /* Borders: dark enough to actually see panel edges */
-    --cinematic-border: oklch(0 0 0 / 22%);
+    /* Warm brown line — NOT cold black opacity */
+    --cinematic-border: oklch(0.75 0.025 65);
 
     /* ── Depth Layer Tokens (light) ─────────────────────────────────────── */
     --bg-base: oklch(0.92 0.03 72);
     --bg-panel: oklch(0.89 0.03 70);
     --bg-surface: oklch(0.96 0.022 75);
     --bg-overlay: oklch(0.99 0.010 72);
+
+    /* ── Illustration Overlay System (theme-independent — always dark) ─── */
+    /* Intentionally IDENTICAL in :root and .dark. The cinematic gradient   */
+    /* over chapter illustrations must always be dark so the image and      */
+    /* title text remain legible regardless of the active colour scheme.    */
+    --illustration-overlay-from: oklch(0.06 0.02 45 / 0.78);
+    --illustration-overlay-via:  oklch(0.06 0.02 45 / 0.24);
+    /* Text on the dark illustration overlay — always near-white */
+    --illustration-title: oklch(0.96 0.01 75);
 }
 
 
@@ -148,7 +156,7 @@
     --cinematic-bg: oklch(0.10 0.02 50);
     --cinematic-panel: oklch(0.14 0.03 50);
     --cinematic-text: oklch(0.90 0.02 60);
-    --cinematic-accent: oklch(0.65 0.20 50);
+    --cinematic-accent: oklch(0.65 0.20 45);
     --cinematic-border: oklch(1 0 0 / 8%);
 
     /* Depth Layer Tokens (dark) */
@@ -156,6 +164,11 @@
     --bg-panel: oklch(0.14 0.03 50);
     --bg-surface: oklch(0.18 0.04 50);
     --bg-overlay: oklch(0.22 0.05 50);
+
+    /* Illustration Overlay System — same values as :root (always dark) */
+    --illustration-overlay-from: oklch(0.06 0.02 45 / 0.78);
+    --illustration-overlay-via:  oklch(0.06 0.02 45 / 0.24);
+    --illustration-title: oklch(0.96 0.01 75);
 }
 
 @theme inline {
@@ -222,6 +235,9 @@
     --color-bg-panel: var(--bg-panel);
     --color-bg-surface: var(--bg-surface);
     --color-bg-overlay: var(--bg-overlay);
+
+    /* Illustration Overlay System */
+    --color-illustration-title: var(--illustration-title);
 
     /* Cinematic alias tokens — map dim/hover/heavy variants to existing tokens */
     --color-cinematic-text-dim: var(--muted-foreground);
@@ -315,6 +331,37 @@
 
 @utility aspect-portrait {
   aspect-ratio: 3 / 4;
+}
+
+/**
+ * illustration-gradient-overlay
+ * Always-dark cinematic gradient for chapter illustration bottom fades.
+ * Uses theme-independent tokens — identical in light and dark mode.
+ * Replace `from-cinematic-bg via-cinematic-bg/30 to-transparent` with this.
+ */
+@utility illustration-gradient-overlay {
+  background: linear-gradient(
+    to top,
+    var(--illustration-overlay-from),
+    var(--illustration-overlay-via),
+    transparent
+  );
+}
+
+/**
+ * scanline-overlay
+ * CRT-style repeating horizontal lines for the AI narration visualiser.
+ * Uses the cinematic-border token so it adapts to both themes.
+ * Replaces the inline oklch() value that was hardcoded in StoryRightPanel.
+ */
+@utility scanline-overlay {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--cinematic-border) 2px,
+    var(--cinematic-border) 3px
+  );
 }
 
 @utility max-w-content {

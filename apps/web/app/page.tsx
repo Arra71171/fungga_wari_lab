@@ -72,9 +72,21 @@ const clipReveal: Variants = {
 function ScrollProgressBar() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const [progress, setProgress] = React.useState(0);
+
+  // Keep aria-valuenow in sync for screen readers and test agents
+  React.useEffect(() => {
+    return scrollYProgress.on("change", (v) => setProgress(Math.round(v * 100)));
+  }, [scrollYProgress]);
 
   return (
     <motion.div
+      role="progressbar"
+      aria-label="Page scroll progress"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={progress}
+      data-slot="scroll-progress"
       className="fixed top-0 left-0 right-0 z-[100] h-[2px] bg-primary origin-left"
       style={{ scaleX }}
     />
@@ -817,7 +829,7 @@ export default function Home() {
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <span className="font-meetei text-2xl font-black tracking-wide flex items-center gap-2">
               <div className="size-4 bg-primary" />
-              ꯐꯨꯉ꯭ꯒꯥ ꯋꯥꯔꯤ꯫ <span className="font-mono text-lg font-bold">.Lab</span>
+              ꯐꯨꯡꯒꯥ ꯋꯥꯔꯤ <span className="font-mono text-lg font-bold">.Lab</span>
             </span>
             <span className="text-3xs font-mono text-muted-foreground uppercase tracking-widest mt-2 border border-border px-2 py-1">
               Oral History Systems v2.0

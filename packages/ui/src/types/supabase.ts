@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       assets: {
@@ -33,7 +58,7 @@ export type Database = {
           story_id?: string | null
           tags?: string[] | null
           title: string
-          type?: Database["public"]["Enums"]["asset_type"]
+          type: Database["public"]["Enums"]["asset_type"]
           uploaded_by: string
           url: string
         }
@@ -78,7 +103,7 @@ export type Database = {
           props?: Json | null
           scene_id?: string | null
           story_id: string
-          type?: Database["public"]["Enums"]["block_type"]
+          type: Database["public"]["Enums"]["block_type"]
           updated_at?: string | null
         }
         Update: {
@@ -147,6 +172,7 @@ export type Database = {
       }
       chapters: {
         Row: {
+          audio_url: string | null
           content: string | null
           created_at: string | null
           id: string
@@ -158,6 +184,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          audio_url?: string | null
           content?: string | null
           created_at?: string | null
           id?: string
@@ -169,6 +196,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          audio_url?: string | null
           content?: string | null
           created_at?: string | null
           id?: string
@@ -367,6 +395,65 @@ export type Database = {
             referencedRelation: "tasks"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      reading_progress: {
+        Row: {
+          id: string
+          user_id: string
+          story_id: string
+          chapter_id: string | null
+          scene_id: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          story_id: string
+          chapter_id?: string | null
+          scene_id?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          story_id?: string
+          chapter_id?: string | null
+          scene_id?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "scenes"
+            referencedColumns: ["id"]
+          }
         ]
       }
       scenes: {
@@ -624,6 +711,7 @@ export type Database = {
         Args: { story_id: string }
         Returns: undefined
       }
+      get_my_clerk_id: { Args: never; Returns: string }
       get_my_user_id: { Args: never; Returns: string }
       increment_chapter_count: {
         Args: { story_id: string }
@@ -632,6 +720,7 @@ export type Database = {
       increment_view_count: { Args: { story_id: string }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
       is_story_owner: { Args: { p_story_id: string }; Returns: boolean }
+      matches_current_identity: { Args: { identity: string }; Returns: boolean }
     }
     Enums: {
       asset_type:
@@ -795,6 +884,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       asset_type: [

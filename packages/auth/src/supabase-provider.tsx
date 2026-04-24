@@ -36,11 +36,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoaded, setIsLoaded] = React.useState(false)
 
   const fetchProfile = React.useCallback(async (authUser: User) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("users")
       .select("id, email, name, alias, avatar_url, role")
       .eq("auth_id", authUser.id)
       .maybeSingle()
+    if (error) {
+      // Non-fatal: user row may not exist yet (first sign-in before sync trigger runs)
+      console.warn("[Auth] fetchProfile error:", error.message)
+    }
     setUserProfile(data as UserProfile | null)
   }, [supabase])
 
@@ -77,6 +81,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             console.warn("[Auth] getUser lock contention — session managed by auth listener")
             return
           }
+          if (error.name === "AuthSessionMissingError" || error.message?.includes("Auth session missing!")) {
+            // Normal state for unauthenticated users
+            return
+          }
+          // Network errors surfaced as AuthApiError — treat as transient
+          if (error.message?.includes("Failed to fetch") || error.message?.includes("NetworkError")) {
+            console.warn("[Auth] getUser network error — session managed by auth state listener")
+            return
+          }
           console.error("[Auth] getUser error:", error.message)
           return
         }
@@ -89,9 +102,19 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           setUserProfile(null)
         }
       } catch (err) {
-        // Catch AbortError thrown as an exception (browser-level)
-        if (err instanceof Error && err.name === "AbortError") {
+        if (!(err instanceof Error)) {
+          console.error("[Auth] Unexpected non-Error thrown:", err)
+          return
+        }
+        // AbortError = IndexedDB lock contention — non-fatal
+        if (err.name === "AbortError") {
           console.warn("[Auth] getUser aborted — session managed by auth state listener")
+          return
+        }
+        // TypeError: Failed to fetch = transient browser network failure.
+        // Session state is already correct via INITIAL_SESSION + server proxy.
+        if ((err instanceof TypeError && err.message?.includes("Failed to fetch")) || err.message?.includes("NetworkError")) {
+          console.warn("[Auth] getUser network error — session managed by auth state listener")
           return
         }
         console.error("[Auth] Unexpected error during session validation:", err)
