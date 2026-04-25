@@ -85,9 +85,14 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
 
             return (
               <div key={chapter.id} className="overflow-hidden">
-                {/* Chapter header */}
                 <button
-                  onClick={() => setExpandedChapterId(isExpanded ? null : chapter.id)}
+                  onClick={() => {
+                    setExpandedChapterId(isExpanded ? null : chapter.id);
+                    if (!isExpanded && scenes.length > 0) {
+                      setCurrentSceneId(scenes[0]?.id ?? null);
+                      onSceneSelect?.();
+                    }
+                  }}
                   className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-accent rounded-none transition-colors"
                   aria-expanded={isExpanded}
                   aria-label={`Chapter ${chIdx + 1}: ${chapter.title}`}

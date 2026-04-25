@@ -416,7 +416,7 @@ The entirety of this repository's operational mechanics revolves around a single
 
 | Skill | Location | Trigger |
 |---|---|---|
-| `antigravity-master-workflow` | `.agents/skills/antigravity-master-workflow/SKILL.md` | **ACTIVE ON EVERY TASK.** Incorporates TDD, Debugging, Verification, GSD context-engineering and Supabase domain rules. |
+| `antigravity-master-workflow` | `.agent/skills/antigravity-master-workflow/SKILL.md` | **ACTIVE ON EVERY TASK.** Incorporates TDD, Debugging, Verification, GSD context-engineering and Supabase domain rules. |
 
 You **MUST** read this single `SKILL.md` entirely before acting. It encompasses the **6-phase execution model**:
 1. **Phase 0:** Brainstorming & Context Capture (`$gsd-discuss`) — Spec before code. Always.

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 
 /**
  * getAuthUser — returns the authenticated Supabase user or throws.
- * Replaces the old `const { userId } = await auth()` pattern from Clerk.
+ * Replaces the old `const { userId } = await auth()` pattern.
  */
 export async function getAuthUser() {
   const supabase = await createClient()

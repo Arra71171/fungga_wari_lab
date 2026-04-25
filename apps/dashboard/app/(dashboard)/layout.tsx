@@ -40,7 +40,7 @@ const navItems = [
 import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding";
 
 // ─── Custom User Profile Block ────────────────────────────────────────────────
-// Uses Clerk's useUser() only — no Supabase query needed for the sidebar widget.
+// Uses Supabase auth session only — no Supabase query needed for the sidebar widget.
 // Full profile data (alias, custom avatar) can be fetched in the /settings page.
 
 function UserProfileBlock() {

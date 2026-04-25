@@ -86,11 +86,20 @@ async function compressImage(file: File): Promise<File> {
 export function CoverImageUpload({ value, onChange, className }: CoverImageUploadProps) {
   const [isUploading, setIsUploading] = React.useState(false);
   const [uploadStatus, setUploadStatus] = React.useState<string>("");
+  const [error, setError] = React.useState<string>("");
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    setError("");
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please upload a valid image file (PNG, JPEG, WEBP).");
+      if (inputRef.current) inputRef.current.value = "";
+      return;
+    }
 
     try {
       setIsUploading(true);
@@ -147,6 +156,7 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
       onChange(uploadResponse.secure_url);
     } catch (err) {
       console.error("Upload failed:", err);
+      setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setIsUploading(false);
       setUploadStatus("");
@@ -155,72 +165,78 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
   };
 
   const clearImage = () => {
+    setError("");
     onChange("");
   };
 
   return (
-    <div
-      className={cn(
-        "relative group border border-border border-dashed bg-bg-surface flex flex-col items-center justify-center overflow-hidden transition-colors hover:bg-bg-overlay aspect-[3/4] h-48",
-        className,
-      )}
-    >
-      <input
-        type="file"
-        ref={inputRef}
-        onChange={handleFileChange}
-        accept="image/png, image/jpeg, image/webp"
-        className="hidden"
-      />
+    <div className="space-y-2 w-full h-full">
+      <div
+        className={cn(
+          "relative group border border-border border-dashed bg-bg-surface flex flex-col items-center justify-center overflow-hidden transition-colors hover:bg-bg-overlay aspect-[3/4] h-48",
+          className,
+        )}
+      >
+        <input
+          type="file"
+          ref={inputRef}
+          onChange={handleFileChange}
+          accept="image/png, image/jpeg, image/webp"
+          className="hidden"
+        />
 
-      {isUploading ? (
-        <div className="flex flex-col items-center text-muted-foreground/50">
-          <Loader2 className="size-6 animate-spin mb-2 text-brand-ember/50" />
-          <span className="font-mono text-xs uppercase tracking-widest text-brand-ember/70">
-            {uploadStatus || "Uploading..."}
-          </span>
-        </div>
-      ) : value ? (
-        <>
-          <Image
-            src={value}
-            alt="Cover Preview"
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
-          />
-          {/* Overlay actions */}
-          <div className="absolute inset-0 bg-cinematic-bg/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              className="text-cinematic-text hover:text-cinematic-text hover:bg-accent"
-              onClick={() => inputRef.current?.click()}
-            >
-              <Upload className="size-4 mr-2" /> Change
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              className="text-destructive hover:text-destructive hover:bg-destructive/20"
-              onClick={clearImage}
-            >
-              <X className="size-4" />
-            </Button>
+        {isUploading ? (
+          <div className="flex flex-col items-center text-muted-foreground/50">
+            <Loader2 className="size-6 animate-spin mb-2 text-brand-ember/50" />
+            <span className="font-mono text-xs uppercase tracking-widest text-brand-ember/70">
+              {uploadStatus || "Uploading..."}
+            </span>
           </div>
-        </>
-      ) : (
-        <div
-          className="flex flex-col items-center justify-center text-muted-foreground/50 cursor-pointer w-full h-full"
-          onClick={() => inputRef.current?.click()}
-        >
-          <ImageIcon className="size-6 mb-2 group-hover:text-brand-ember/50 transition-colors" />
-          <span className="font-mono text-xs uppercase tracking-widest text-center px-4">
-            Upload Cover (Portrait)
-          </span>
-        </div>
+        ) : value ? (
+          <>
+            <Image
+              src={value}
+              alt="Cover Preview"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+            />
+            {/* Overlay actions */}
+            <div className="absolute inset-0 bg-cinematic-bg/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="text-cinematic-text hover:text-cinematic-text hover:bg-accent"
+                onClick={() => inputRef.current?.click()}
+              >
+                <Upload className="size-4 mr-2" /> Change
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="text-destructive hover:text-destructive hover:bg-destructive/20"
+                onClick={clearImage}
+              >
+                <X className="size-4" />
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div
+            className="flex flex-col items-center justify-center text-muted-foreground/50 cursor-pointer w-full h-full"
+            onClick={() => inputRef.current?.click()}
+          >
+            <ImageIcon className="size-6 mb-2 group-hover:text-brand-ember/50 transition-colors" />
+            <span className="font-mono text-xs uppercase tracking-widest text-center px-4">
+              Upload Cover (Portrait)
+            </span>
+          </div>
+        )}
+      </div>
+      {error && (
+        <p className="text-sm font-medium text-destructive mt-1 text-center">{error}</p>
       )}
     </div>
   );

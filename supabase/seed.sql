@@ -102,7 +102,8 @@ VALUES (
   '00000000-0000-0000-0000-000000000099',
   'Nongpok Ningthou Awakens',
   2,
-  '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The King of the East opened his eyes for the first time and saw the light of Sanamahi''s torch burning in the western sky. His heart, ancient and patient, began to beat."}]}]}'
+  '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The King of the East opened his eyes for the first time and saw the light of Sanamahi''s torch burning in the western sky. His heart, ancient and patient, began to beat."}]}]}',
+  'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Scene 2.1

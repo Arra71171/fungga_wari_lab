@@ -144,7 +144,7 @@ export async function createDraftStory() {
   const authorId = user.id
   if (!authorId) throw new Error("Cannot resolve author identity")
 
-  // stories.author_id stores the Clerk userId string directly.
+  // stories.author_id stores the auth userId directly.
   const slug = generateDraftSlug()
 
   const { data, error } = await supabase

@@ -42,11 +42,6 @@ const nextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
-      // Clerk user avatars
-      {
-        protocol: "https",
-        hostname: "img.clerk.com",
-      },
     ],
   },
 };
