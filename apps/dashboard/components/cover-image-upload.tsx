@@ -236,7 +236,14 @@ export function CoverImageUpload({ value, onChange, className }: CoverImageUploa
         )}
       </div>
       {error && (
-        <p className="text-sm font-medium text-destructive mt-1 text-center">{error}</p>
+        <p
+          role="alert"
+          aria-live="polite"
+          aria-atomic="true"
+          className="text-sm font-medium text-destructive mt-1 text-center"
+        >
+          {error}
+        </p>
       )}
     </div>
   );

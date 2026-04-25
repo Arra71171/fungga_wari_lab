@@ -19,115 +19,115 @@ All 29 test cases have been validated to run successfully against the Creator St
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Validated successful navigation and stable page load.
 
-2. **TC001 Create a new story draft and see it in the stories list**
+2. **TC002 Create a new story draft and see it in the stories list**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Draft creation workflow initializes properly without blocked locators.
 
-3. **TC002 Create a story, add a chapter with rich text and illustration and confirm it persists after refresh**
+3. **TC003 Create a story, add a chapter with rich text and illustration and confirm it persists after refresh**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Multi-step creation workflow proceeds correctly.
 
-4. **TC002 Upload an image asset and see it in the asset grid**
+4. **TC004 Upload an image asset and see it in the asset grid**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Upload workflow is unblocked and completes successfully.
 
-5. **TC003 Create and save a chapter with rich text and illustration and see it persist in outline**
+5. **TC005 Create and save a chapter with rich text and illustration and see it persist in outline**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Save operations execute without validation failure.
 
-6. **TC003 Edit story metadata from story details and see updates reflected in the list**
+6. **TC006 Edit story metadata from story details and see updates reflected in the list**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Metadata form inputs accept values and submit cleanly.
 
-7. **TC004 Update dossier alias bio and avatar and see changes reflected in preview**
+7. **TC007 Update dossier alias bio and avatar and see changes reflected in preview**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Profile update workflow operates effectively.
 
-8. **TC004 Update dossier alias bio and avatar and see preview reflect saved changes**
+8. **TC008 Update dossier alias bio and avatar and see preview reflect saved changes**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Saved state maintains consistency.
 
-9. **TC005 Edit story metadata and see updates reflected in stories list**
+9. **TC009 Edit story metadata and see updates reflected in stories list**
    - **Status:** ✅ Passed
    - **Analysis / Findings:** Updates are saved and reflected without errors.
 
-10. **TC005 Upload an image asset and see it appear in the library grid**
+10. **TC010 Upload an image asset and see it appear in the library grid**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Asset library updates automatically upon upload.
 
-11. **TC006 Delete a chapter and confirm it is removed from the draft outline**
+11. **TC011 Delete a chapter and confirm it is removed from the draft outline**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Deletion operations complete gracefully.
 
-12. **TC006 Saved dossier changes persist after page reload**
+12. **TC012 Saved dossier changes persist after page reload**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Persistent state verified across reloads.
 
-13. **TC007 Cancel avatar change before saving keeps previous avatar**
+13. **TC013 Cancel avatar change before saving keeps previous avatar**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Cancel actions revert to the appropriate prior state.
 
-14. **TC007 Delete a chapter and confirm it is removed from the draft outline**
+14. **TC014 Delete a chapter and confirm it is removed from the draft outline (redundant stability check)**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Redundant check confirms stability of deletion handling.
 
-15. **TC008 Cancel avatar change before saving keeps previously saved avatar**
+15. **TC015 Cancel avatar change before saving keeps previously saved avatar**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Form cancellation behaves correctly.
 
-16. **TC008 Persist saved dossier changes after leaving and returning to settings**
+16. **TC016 Persist saved dossier changes after leaving and returning to settings**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Component unmounting and remounting does not lose state.
 
-17. **TC009 Assign tags or metadata to an uploaded asset and confirm it persists after refresh**
+17. **TC017 Assign tags or metadata to an uploaded asset and confirm it persists after refresh**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Asset tagging workflow is functional.
 
-18. **TC009 Save only bio changes without modifying avatar**
+18. **TC018 Save only bio changes without modifying avatar**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Partial form updates submit successfully.
 
-19. **TC010 Assign tags or metadata to an uploaded asset and see it displayed in the grid**
+19. **TC019 Assign tags or metadata to an uploaded asset and see it displayed in the grid**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Tags render properly within the grid UI.
 
-20. **TC010 Unsaved text changes are not persisted when leaving settings without saving**
+20. **TC020 Unsaved text changes are not persisted when leaving settings without saving**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Form dirty state prevents accidental saves.
 
-21. **TC011 Delete a story and confirm it is removed from the stories list**
+21. **TC021 Delete a story and confirm it is removed from the stories list**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Story deletion removes items from the main catalog list.
 
-22. **TC011 Prevent saving when alias is too short and allow correction**
+22. **TC022 Prevent saving when alias is too short and allow correction**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Validation errors correctly block submission.
 
-23. **TC012 Cancel text edits discards changes to alias and bio**
+23. **TC023 Cancel text edits discards changes to alias and bio**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Discard workflow returns state to original values.
 
-24. **TC012 Require a title when creating a new story**
+24. **TC024 Require a title when creating a new story**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Required field validation operates correctly.
 
-25. **TC013 Block unsupported chapter illustration file types**
+25. **TC025 Block unsupported chapter illustration file types**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** File type validation prevents incorrect uploads.
 
-26. **TC013 Show validation when uploading an unsupported or oversized file in the library**
+26. **TC026 Show validation when uploading an unsupported or oversized file in the library**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Library upload limits apply effectively.
 
-27. **TC014 Prevent saving when alias is too short and show validation error**
+27. **TC027 Prevent saving when alias is too short and show validation error**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** UX error states render correctly.
 
-28. **TC014 Reject unsupported or oversized asset uploads in the library**
+28. **TC028 Reject unsupported or oversized asset uploads in the library**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** File limitations restrict bad uploads.
 
-29. **TC015 Show validation when uploading an unsupported illustration type in chapter builder**
+29. **TC029 Show validation when uploading an unsupported illustration type in chapter builder**
     - **Status:** ✅ Passed
     - **Analysis / Findings:** Chapter illustration validations match the required behavior.
 

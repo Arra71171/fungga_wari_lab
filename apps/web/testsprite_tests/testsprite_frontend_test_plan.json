@@ -775,6 +775,10 @@
         "description": "Wait for the results to update"
       },
       {
+        "type": "assertion",
+        "description": "Verify a clear no-results or empty-state message is displayed (e.g. a '0 stories' indicator or an empty-state prompt with a reset action)"
+      },
+      {
         "type": "action",
         "description": "Clear filters or change filters back toward a broader selection"
       },

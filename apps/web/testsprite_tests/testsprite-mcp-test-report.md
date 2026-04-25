@@ -25,9 +25,9 @@
 - **Status:** ⚠️ BLOCKED
 - **Analysis / Findings:** A full-archive paywall ("Archive Access Required") overlays the reader content, blocking interaction and verification of chapter switching.
 
-#### Test TC006 Navigate between chapters while reading
+#### Test TC006 Start and pause TTS narration without locking the reader UI
 - **Test Code:** [TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py](./TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py)
-- **Test Error:** SUMMARY OF FINDINGS
+- **Test Error:** TEST FAILURE
 - **Status:** ❌ Failed
 - **Analysis / Findings:** UI is present, but an "Unlock the Full Archive" paywall modal overlays the reader, blocking TTS playback and navigation interactions.
 

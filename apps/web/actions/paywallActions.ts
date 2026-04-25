@@ -168,11 +168,29 @@ export async function verifyAndGrantAccess(
 }
 
 /**
- * checkUserAccess — returns whether the current user has lifetime access.
- * Used by server components to gate content.
+ * checkUserAccess — returns whether the current user (or story itself) grants access.
+ *
+ * Accepts an optional `slug` to check the story's `is_free` column first.
+ * This replaces the previous hardcoded `slug === "nongpok-ningthou-test"` bypass
+ * in the route handler — access is now entirely data-driven.
+ *
+ * @param slug - Optional story slug. When provided, free stories bypass the paywall.
  */
-export async function checkUserAccess(): Promise<boolean> {
+export async function checkUserAccess(slug?: string): Promise<boolean> {
   const supabase = await createClient();
+
+  // Check if the story itself is free — no auth required
+  if (slug) {
+    const { data: story } = await supabase
+      .from("stories")
+      .select("is_free")
+      .eq("slug", slug)
+      .single();
+
+    if (story?.is_free) return true;
+  }
+
+  // Fall back to checking the authenticated user's lifetime access
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return false;

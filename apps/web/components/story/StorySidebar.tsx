@@ -89,8 +89,13 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                   onClick={() => {
                     setExpandedChapterId(isExpanded ? null : chapter.id);
                     if (!isExpanded && scenes.length > 0) {
-                      setCurrentSceneId(scenes[0]?.id ?? null);
-                      onSceneSelect?.();
+                      // Only reset to first scene when switching INTO a different chapter.
+                      // Preserves reading position when the user re-expands their current chapter.
+                      const currentSceneInChapter = scenes.some((s) => s.id === currentSceneId);
+                      if (!currentSceneInChapter) {
+                        setCurrentSceneId(scenes[0]?.id ?? null);
+                        onSceneSelect?.();
+                      }
                     }
                   }}
                   className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-accent rounded-none transition-colors"
