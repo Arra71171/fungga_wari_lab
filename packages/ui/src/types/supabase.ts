@@ -522,6 +522,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           id: string
+          is_free: boolean
           language: string
           moral: string | null
           published_at: string | null
@@ -545,6 +546,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          is_free?: boolean
           language?: string
           moral?: string | null
           published_at?: string | null
@@ -568,6 +570,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          is_free?: boolean
           language?: string
           moral?: string | null
           published_at?: string | null
