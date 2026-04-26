@@ -1,11 +1,18 @@
 "use server"
 
-import { Resend } from "resend"
+import nodemailer from "nodemailer"
+import { render } from "@react-email/render"
 import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
 import { TaskBriefEmailTemplate } from "@/components/emails/TaskBriefEmailTemplate"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+})
 
 const sendTaskEmailSchema = z.object({
   taskId: z.string().uuid(),
@@ -17,7 +24,7 @@ const sendTaskEmailSchema = z.object({
 })
 
 /**
- * sendTaskEmail — dispatch a task brief via Resend to a team member.
+ * sendTaskEmail — dispatch a task brief via Gmail SMTP to a team member.
  * Requires authentication. Sender identity is derived from their Supabase profile.
  */
 export async function sendTaskEmail(args: {
@@ -52,24 +59,31 @@ export async function sendTaskEmail(args: {
 
   const taskUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL ?? "http://localhost:3000"}/dashboard/tasks`
 
-  const { data, error } = await resend.emails.send({
-    from: "Fungga Wari Lab <onboarding@resend.dev>",
-    to: [toEmail],
-    subject: `[Studio Brief] ${taskTitle} — ${priority.toUpperCase()} priority`,
-    react: TaskBriefEmailTemplate({
-      taskTitle,
-      senderName,
-      senderEmail,
-      priority,
-      message,
-      taskUrl,
-    }),
-    headers: {
-      "X-Entity-Ref-ID": taskId,
-      "Idempotency-Key": `task-brief/${taskId}/${Date.now()}`,
-    },
-  })
+  try {
+    const emailHtml = await render(
+      TaskBriefEmailTemplate({
+        taskTitle,
+        senderName,
+        senderEmail,
+        priority,
+        message,
+        taskUrl,
+      })
+    )
 
-  if (error) throw new Error(`Email send failed: ${error.message}`)
-  return { messageId: data?.id }
+    const info = await transporter.sendMail({
+      from: `"Fungga Wari Lab" <${process.env.GMAIL_USER}>`,
+      to: toEmail,
+      subject: `[Studio Brief] ${taskTitle} — ${priority.toUpperCase()} priority`,
+      html: emailHtml,
+      headers: {
+        "X-Entity-Ref-ID": taskId,
+        "Idempotency-Key": `task-brief/${taskId}/${Date.now()}`,
+      },
+    })
+
+    return { messageId: info.messageId }
+  } catch (error: any) {
+    throw new Error(`Email send failed: ${error.message || "Unknown SMTP error"}`)
+  }
 }
