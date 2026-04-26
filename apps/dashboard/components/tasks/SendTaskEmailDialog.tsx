@@ -62,7 +62,7 @@ export function SendTaskEmailDialog({
 
     setSending(true)
     try {
-      await sendTaskEmail({
+      const emailRes = await sendTaskEmail({
         taskId,
         taskTitle,
         toEmail: recipient.email,
@@ -70,11 +70,18 @@ export function SendTaskEmailDialog({
         priority,
         message,
       })
-      toast.success("Brief dispatched", {
-        description: `Sent to ${recipient.name ?? recipient.email}`,
-      })
-      setOpen(false)
-      setSelectedUserId("")
+      
+      if (!emailRes.success) {
+        toast.error("Dispatch failed", {
+          description: emailRes.error || "Unknown SMTP error",
+        })
+      } else {
+        toast.success("Brief dispatched", {
+          description: `Sent to ${recipient.name ?? recipient.email}`,
+        })
+        setOpen(false)
+        setSelectedUserId("")
+      }
     } catch (err) {
       toast.error("Dispatch failed", {
         description: err instanceof Error ? err.message : "Unknown error",

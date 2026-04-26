@@ -88,7 +88,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
   
       if (toEmail) {
         try {
-          await sendTaskEmail({
+          const emailRes = await sendTaskEmail({
             taskId,
             taskTitle: title,
             toEmail,
@@ -96,9 +96,16 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             priority,
             message: descText.trim().slice(0, 2000) || "A new task has been assigned to you. Please log in to view the details.",
           });
-          toast.success("Task created and brief dispatched", {
-            description: `Sent to ${toEmail}`,
-          });
+          
+          if (!emailRes.success) {
+            toast.warning("Task created, but email dispatch failed", {
+              description: emailRes.error || "SMTP error",
+            });
+          } else {
+            toast.success("Task created and brief dispatched", {
+              description: `Sent to ${toEmail}`,
+            });
+          }
         } catch (emailErr) {
           toast.warning("Task created, but email dispatch failed", {
             description: emailErr instanceof Error ? emailErr.message : "SMTP error",

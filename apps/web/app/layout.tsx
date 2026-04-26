@@ -16,6 +16,7 @@ const cardo = Cardo({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  preload: false,
 })
 
 // ── Folk-story heading: mythological, cinematic vibe (Cinzel Decorative feel)
@@ -23,6 +24,7 @@ const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  preload: false,
 })
 
 // ── Display type: high-contrast condensed serif for hero section titles
@@ -32,6 +34,7 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  preload: false,
 })
 
 // ── Mono: JetBrains Mono for IDs, tags, metadata labels
@@ -39,6 +42,7 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
+  preload: false,
 })
 
 const meeteiMayek = Noto_Sans_Meetei_Mayek({
@@ -46,6 +50,7 @@ const meeteiMayek = Noto_Sans_Meetei_Mayek({
   subsets: ["meetei-mayek"],
   variable: "--font-meetei",
   display: "swap",
+  preload: false,
 })
 
 export const metadata: Metadata = {

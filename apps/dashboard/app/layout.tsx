@@ -11,6 +11,7 @@ const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  preload: false,
 });
 
 // ── Display type: High-contrast, condensed serif for section hero titles
@@ -20,6 +21,7 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  preload: false,
 });
 
 // ── Dashboard body: Geometric, modern UI contrast
@@ -29,10 +31,16 @@ const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  preload: false,
 });
 
 // ── Mono: Keep JetBrains Mono for IDs, tags, metadata
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+const jetbrainsMono = JetBrains_Mono({ 
+  subsets: ["latin"], 
+  variable: "--font-mono", 
+  display: "swap",
+  preload: false, 
+});
 
 export const metadata: Metadata = {
   title: {

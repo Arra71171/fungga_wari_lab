@@ -7,6 +7,10 @@ import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
 import { TaskBriefEmailTemplate } from "@/components/emails/TaskBriefEmailTemplate"
 
+if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+  console.warn("Missing GMAIL_USER or GMAIL_APP_PASSWORD environment variables. Email dispatch will fail.");
+}
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -34,7 +38,7 @@ const sendTaskEmailSchema = z.object({
 export async function sendTaskEmail(args: z.infer<typeof sendTaskEmailSchema>) {
   const parsed = sendTaskEmailSchema.safeParse(args)
   if (!parsed.success) {
-    throw new Error(`Validation error: ${parsed.error.message}`)
+    return { success: false, error: `Validation error: ${parsed.error.message}` }
   }
   const { taskId, taskTitle, toEmail, toName, priority, message } = parsed.data
 
@@ -42,7 +46,7 @@ export async function sendTaskEmail(args: z.infer<typeof sendTaskEmailSchema>) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  if (!user) return { success: false, error: "Unauthenticated" }
 
   // Fetch sender profile — log errors but don't block sending
   const { data: senderProfile, error: profileError } = await supabase
@@ -61,6 +65,11 @@ export async function sendTaskEmail(args: z.infer<typeof sendTaskEmailSchema>) {
   // Build a canonical task URL — omit the CTA entirely if env var is not set
   const baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL
   const taskUrl = baseUrl ? `${baseUrl}/dashboard/tasks/${taskId}` : undefined
+
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    console.error("[sendTaskEmail] GMAIL_USER or GMAIL_APP_PASSWORD is not set.");
+    return { success: false, error: "SMTP credentials not configured on server" };
+  }
 
   try {
     const emailHtml = await render(
@@ -86,9 +95,10 @@ export async function sendTaskEmail(args: z.infer<typeof sendTaskEmailSchema>) {
       },
     })
 
-    return { messageId: info.messageId }
+    return { success: true, messageId: info.messageId }
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Unknown SMTP error"
-    throw new Error(`Email send failed: ${message}`, { cause: error })
+    const msg = error instanceof Error ? error.message : "Unknown SMTP error"
+    console.error("[sendTaskEmail] SMTP Error:", error)
+    return { success: false, error: `Email send failed: ${msg}` }
   }
 }
