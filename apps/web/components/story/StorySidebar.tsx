@@ -85,9 +85,19 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
 
             return (
               <div key={chapter.id} className="overflow-hidden">
-                {/* Chapter header */}
                 <button
-                  onClick={() => setExpandedChapterId(isExpanded ? null : chapter.id)}
+                  onClick={() => {
+                    setExpandedChapterId(isExpanded ? null : chapter.id);
+                    if (!isExpanded && scenes.length > 0) {
+                      // Only reset to first scene when switching INTO a different chapter.
+                      // Preserves reading position when the user re-expands their current chapter.
+                      const currentSceneInChapter = scenes.some((s) => s.id === currentSceneId);
+                      if (!currentSceneInChapter) {
+                        setCurrentSceneId(scenes[0]?.id ?? null);
+                        onSceneSelect?.();
+                      }
+                    }
+                  }}
                   className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-accent rounded-none transition-colors"
                   aria-expanded={isExpanded}
                   aria-label={`Chapter ${chIdx + 1}: ${chapter.title}`}

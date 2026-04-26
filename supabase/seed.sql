@@ -58,7 +58,7 @@ VALUES (
 -- chapter navigation, TTS, and illustration switching WITHOUT hitting the paywall.
 -- DO NOT remove — it is required for TC006, TC010, TC014 to pass.
 
-INSERT INTO stories (id, author_id, title, slug, language, status, description, category, chapter_count)
+INSERT INTO stories (id, author_id, title, slug, language, status, description, category, chapter_count, is_free)
 VALUES (
   '00000000-0000-0000-0000-000000000099',
   '00000000-0000-0000-0000-000000000002',
@@ -68,7 +68,8 @@ VALUES (
   'published',
   'A test story with free access to all chapters for automated E2E testing. Part of the Meitei creation myth cycle.',
   'creation_myth',
-  2
+  2,
+  true
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Chapter 1: freely accessible
@@ -102,7 +103,8 @@ VALUES (
   '00000000-0000-0000-0000-000000000099',
   'Nongpok Ningthou Awakens',
   2,
-  '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The King of the East opened his eyes for the first time and saw the light of Sanamahi''s torch burning in the western sky. His heart, ancient and patient, began to beat."}]}]}'
+  '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"The King of the East opened his eyes for the first time and saw the light of Sanamahi''s torch burning in the western sky. His heart, ancient and patient, began to beat."}]}]}',
+  'https://res.cloudinary.com/demo/image/upload/v1312461204/sample2.jpg'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Scene 2.1

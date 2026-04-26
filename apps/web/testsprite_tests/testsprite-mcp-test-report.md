@@ -1,156 +1,142 @@
-# TestSprite AI Testing Report (MCP)
+# TestSprite AI Testing Report(MCP)
 
 ---
 
 ## 1️⃣ Document Metadata
-
-| Field | Details |
-|---|---|
-| **Project Name** | fungga-wari-lab (web — Public Reader & Landing Page) |
-| **Date** | 2026-04-24 |
-| **Prepared by** | TestSprite AI + Antigravity Agent |
-| **App URL** | http://localhost:3001 |
-| **Server Mode** | Development (tests capped at 15 high-priority cases) |
-| **Test Suite** | Frontend E2E (Playwright) — Full Codebase Scope |
-| **Total Test Cases** | 15 |
-| **Pass Rate** | **73.33%** (11 ✅ Passed · 1 ❌ Failed · 3 🚫 Blocked) |
-| **TestSprite Dashboard** | https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c |
+- **Project Name:** web
+- **Date:** 2026-04-24
+- **Prepared by:** TestSprite AI Team
 
 ---
 
 ## 2️⃣ Requirement Validation Summary
 
-### REQ-1: Landing Page Core Rendering & Navigation
+### Requirement: Reader Content & Navigation
 
-| Test ID | Test Name | Status | Notes |
-|---|---|---|---|
-| TC003 | Primary hero CTA routes to the story catalogue | ✅ Passed | CTA "Browse Stories & Archives" correctly routes to `/stories` |
-| TC005 | Hero section loads and scroll progress responds | ❌ Failed | Hero renders correctly, but scroll progress bar element not detectable via accessibility tree |
-| TC007 | CTA takes user to the story catalogue | ✅ Passed | Secondary CTA also correctly routes to catalogue |
+#### Test TC001 Cinematic reading session with chapter switching updates content and illustration
+- **Test Code:** [TC001_Cinematic_reading_session_with_chapter_switching_updates_content_and_illustration.py](./TC001_Cinematic_reading_session_with_chapter_switching_updates_content_and_illustration.py)
+- **Test Error:** TEST FAILURE
+- **Status:** ❌ Failed
+- **Analysis / Findings:** Switching chapters updates the sidebar UI but the main reader text fails to update from Chapter 1 content. Illustrations are missing entirely.
 
-**Analysis:** The hero renders correctly and both CTAs navigate properly. TC005 failed because the `<motion.div>` scroll progress bar uses `scaleX` CSS transform and has no accessible role/label — it is invisible to the test agent's element inspector. This is a **testability gap**, not a functional bug. The feature works visually.
+#### Test TC002 Switch chapters from the sidebar and see content update
+- **Test Code:** [TC002_Switch_chapters_from_the_sidebar_and_see_content_update.py](./TC002_Switch_chapters_from_the_sidebar_and_see_content_update.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** A full-archive paywall ("Archive Access Required") overlays the reader content, blocking interaction and verification of chapter switching.
 
-**Fix Recommendation:** Add `aria-label="Reading progress"` and `role="progressbar"` to the `ScrollProgressBar` component for testability.
 
----
+### Requirement: Chapter Illustrations
 
-### REQ-2: Navbar & Site Navigation
+#### Test TC003 Chapter illustration updates when switching chapters
+- **Test Code:** [TC003_Chapter_illustration_updates_when_switching_chapters.py](./TC003_Chapter_illustration_updates_when_switching_chapters.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** Reader content and illustrations are blurred and blocked by the "Unlock Lifetime Access" paywall overlay.
 
-| Test ID | Test Name | Status | Notes |
-|---|---|---|---|
-| TC004 | Navigate through primary site pages from the global navbar | ✅ Passed | All navbar links (Stories, Archive, Protocol) navigated successfully |
-| TC009 | Theme toggle applies across routes and persists on refresh | ✅ Passed | Dark/light toggle applies `.dark` class and persists via localStorage |
+#### Test TC010 Illustration is present for the initially loaded chapter
+- **Test Code:** [TC010_Illustration_is_present_for_the_initially_loaded_chapter.py](./TC010_Illustration_is_present_for_the_initially_loaded_chapter.py)
+- **Test Error:** TEST FAILURE
+- **Status:** ❌ Failed
+- **Analysis / Findings:** The page contains no `<img>` element for the chapter illustration. An 'Archive Access Required' overlay is also present.
 
-**Analysis:** Navigation and theming work perfectly. The Navbar correctly exposes all primary routes and the theme system persists state reliably.
+#### Test TC015 Illustration continues to update across multiple chapter switches
+- **Test Code:** [TC015_Illustration_continues_to_update_across_multiple_chapter_switches.py](./TC015_Illustration_continues_to_update_across_multiple_chapter_switches.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** Verification is blocked by the purchase paywall overlaying the reader after clicking 'Continue Reading'.
 
----
 
-### REQ-3: Story Catalogue & Discovery
+### Requirement: AI Narration (TTS)
 
-| Test ID | Test Name | Status | Notes |
-|---|---|---|---|
-| TC001 | Browse the story catalogue and open a story in the reader | ✅ Passed | Full flow from catalogue to individual story reader works |
-| TC002 | Complete landing-to-reader discovery journey | ✅ Passed | End-to-end journey from homepage → catalogue → reader confirmed |
-| TC012 | Marquee renders published story titles | ✅ Passed | Story ticker correctly fetches and displays published story titles from Supabase |
-| TC013 | Catalogue filtering/browsing controls change visible stories | ✅ Passed | Browse controls respond and update visible story listings |
-| TC015 | Browse archive listings | ✅ Passed | Archive page loads and lists content correctly |
+#### Test TC004 Switch chapters while TTS is active
+- **Test Code:** [TC004_Switch_chapters_while_TTS_is_active.py](./TC004_Switch_chapters_while_TTS_is_active.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** TTS control is marked "Unavailable". A paywall blocks access to the narration feature.
 
-**Analysis:** The story discovery flow is fully functional. Supabase data fetching, routing, and catalogue rendering all perform correctly.
+#### Test TC005 Start and pause TTS narration with visualiser state changes
+- **Test Code:** [TC005_Start_and_pause_TTS_narration_with_visualiser_state_changes.py](./TC005_Start_and_pause_TTS_narration_with_visualiser_state_changes.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** TTS requires paid archive access. Narration controls display 'Unavailable'.
 
----
+#### Test TC007 Changing chapters during active TTS does not lock the UI
+- **Test Code:** [TC007_Changing_chapters_during_active_TTS_does_not_lock_the_UI.py](./TC007_Changing_chapters_during_active_TTS_does_not_lock_the_UI.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** Narration could not be started due to the purchase overlay and "Unavailable" TTS control.
 
-### REQ-4: Cinematic Story Reader (Paywall-Gated Features)
+#### Test TC009 Resume TTS narration after pausing
+- **Test Code:** [TC009_Resume_TTS_narration_after_pausing.py](./TC009_Resume_TTS_narration_after_pausing.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** TTS controls are blocked by the archive access paywall.
 
-| Test ID | Test Name | Status | Notes |
-|---|---|---|---|
-| TC006 | Navigate between chapters while reading | 🚫 Blocked | Chapter 2+ gated by "Archive Access Required" paywall overlay |
-| TC010 | TTS narration can play and pause in the reader | 🚫 Blocked | AI Narration Play shows "Unavailable" behind paywall preview |
-| TC014 | Chapter illustrations update when switching chapters | 🚫 Blocked | Illustration area obscured by paywall overlay for chapters beyond preview |
 
-**Analysis:** These 3 tests are **blocked by the paywall system**, not by bugs. The reader correctly enforces the `Archive Access Required` gate for chapters beyond the free preview. This is **expected product behaviour**. Tests need test account credentials with a purchased/unlocked story to proceed past the paywall.
+### Requirement: Cinematic Story Reader
 
-**Fix Recommendation:** Provide TestSprite a test account with lifetime access for future test runs. Set up a seeded test story with `is_free: true` or `access_level: 'public'` to allow E2E reader tests without paywall friction.
+#### Test TC006 Start and pause TTS narration without locking the reader UI
+- **Test Code:** [TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py](./TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py)
+- **Test Error:** TEST FAILURE
+- **Status:** ❌ Failed
+- **Analysis / Findings:** UI is present, but an "Unlock the Full Archive" paywall modal overlays the reader, blocking TTS playback and navigation interactions.
 
----
 
-### REQ-5: WiseEpu AI Chatbot
+### Requirement: Story Discovery & Browsing
 
-| Test ID | Test Name | Status | Notes |
-|---|---|---|---|
-| TC008 | Send a message and receive a streaming WiseEpu response | ✅ Passed | Chatbot opens, accepts input, streams AI response correctly |
-| TC011 | Open and close the WiseEpu chat panel from the floating trigger | ✅ Passed | Floating trigger toggles panel open/close with correct aria state |
+#### Test TC008 Browse and open a story from the catalogue
+- **Test Code:** [TC008_Browse_and_open_a_story_from_the_catalogue.py](./TC008_Browse_and_open_a_story_from_the_catalogue.py)
+- **Test Error:** TEST BLOCKED
+- **Status:** ⚠️ BLOCKED
+- **Analysis / Findings:** The immersive reader is gated behind an 'Unlock the Full Archive' purchase panel overlay, preventing content access.
 
-**Analysis:** WiseEpu chatbot integration is fully functional. The streaming response via OpenRouter/Gemma works correctly, and the floating trigger is properly accessible.
+#### Test TC011 Open a story from archive into the immersive reader
+- **Test Code:** [TC011_Open_a_story_from_archive_into_the_immersive_reader.py](./TC011_Open_a_story_from_archive_into_the_immersive_reader.py)
+- **Status:** ✅ Passed
+- **Analysis / Findings:** User can successfully open a story from the archive and reach the immersive reader interface.
+
+#### Test TC012 Enter the story catalogue from the landing hero
+- **Test Code:** [TC012_Enter_the_story_catalogue_from_the_landing_hero.py](./TC012_Enter_the_story_catalogue_from_the_landing_hero.py)
+- **Status:** ✅ Passed
+- **Analysis / Findings:** The landing hero CTA successfully navigates to the story catalogue.
+
+
+### Requirement: Global Features (Theme & Chatbot)
+
+#### Test TC013 Theme toggle persists across refresh and routes
+- **Test Code:** [TC013_Theme_toggle_persists_across_refresh_and_routes.py](./TC013_Theme_toggle_persists_across_refresh_and_routes.py)
+- **Status:** ✅ Passed
+- **Analysis / Findings:** Dark/light theme successfully persists via localStorage and is preserved during navigation.
+
+#### Test TC014 Send a chatbot message and receive a response
+- **Test Code:** [TC014_Send_a_chatbot_message_and_receive_a_response.py](./TC014_Send_a_chatbot_message_and_receive_a_response.py)
+- **Status:** ✅ Passed
+- **Analysis / Findings:** The WiseEpu chatbot triggers, accepts input, and responds to user messages properly.
 
 ---
 
 ## 3️⃣ Coverage & Matching Metrics
 
-| Requirement | Total Tests | ✅ Passed | ❌ Failed | 🚫 Blocked |
-|---|---|---|---|---|
-| REQ-1: Landing Page Core Rendering | 3 | 2 | 1 | 0 |
-| REQ-2: Navbar & Site Navigation | 2 | 2 | 0 | 0 |
-| REQ-3: Story Catalogue & Discovery | 5 | 5 | 0 | 0 |
-| REQ-4: Cinematic Reader (Paywall) | 3 | 0 | 0 | 3 |
-| REQ-5: WiseEpu AI Chatbot | 2 | 2 | 0 | 0 |
-| **Total** | **15** | **11** | **1** | **3** |
+- **Total Tests Run:** 15
+- **Passed:** 4 (26.67%)
+- **Failed:** 3 (20%)
+- **Blocked:** 8 (53.33%)
 
-**Overall Pass Rate: 73.33%** (91.67% if blocked tests are excluded — they are infrastructure/credential gaps, not bugs)
+| Requirement                      | Total Tests | ✅ Passed | ❌ Failed | ⚠️ Blocked |
+|----------------------------------|-------------|-----------|-----------|------------|
+| Reader Content & Navigation      | 2           | 0         | 1         | 1          |
+| Chapter Illustrations            | 3           | 0         | 1         | 2          |
+| AI Narration (TTS)               | 4           | 0         | 0         | 4          |
+| Cinematic Story Reader           | 1           | 0         | 1         | 0          |
+| Story Discovery & Browsing       | 3           | 2         | 0         | 1          |
+| Global Features (Theme/Chatbot)  | 2           | 2         | 0         | 0          |
 
 ---
 
 ## 4️⃣ Key Gaps / Risks
 
-### 🔴 High Priority — Fix Required
-
-**GAP-1: Scroll Progress Bar Not Accessible (TC005 — FAILED)**
-- **Risk:** The `ScrollProgressBar` component has no `role`, `aria-label`, or accessible name. Screen readers and automated testing tools cannot detect it.
-- **Impact:** WCAG AA violation. Test agents cannot verify scroll progress feature.
-- **Fix:** Add `role="progressbar"` + `aria-label="Reading progress"` + `aria-valuemin={0}` + `aria-valuemax={100}` + `aria-valuenow` to the animated div.
-
-### 🟡 Medium Priority — Test Infrastructure Gaps
-
-**GAP-2: Paywall Blocks Reader E2E Tests (TC006, TC010, TC014 — BLOCKED)**
-- **Risk:** 3 critical reader features (chapter navigation, TTS narration, chapter illustrations) cannot be E2E tested without an unlocked test account.
-- **Impact:** 20% of the test suite is permanently blocked in CI without proper test credentials.
-- **Fix Options:**
-  1. Create a seeded story in Supabase with `is_free: true` or `paywall_chapter_index: 999` for test environments.
-  2. Provide TestSprite configuration portal with a test account that has lifetime access.
-  3. Add a `?testsprite_bypass=true` query param (dev-only) that bypasses paywall for test runs.
-
-**GAP-3: No Dashboard Tests (Separate App on Port 3000)**
-- **Risk:** The dashboard/Creator Studio (`apps/dashboard` at port 3000) was not included in this test run.
-- **Impact:** All CMS authoring flows (story creation, chapter management, media upload) are untested.
-- **Fix:** Run a separate TestSprite session targeting port 3000 with dashboard-specific test credentials.
-
-### 🟢 Low Priority — Observations
-
-**GAP-4: Animation-Dependent Tests May Be Flaky in Dev Mode**
-- **Risk:** GSAP ScrollTrigger and Framer Motion animations are CPU-intensive. Dev mode single-thread under concurrent test load may cause timing flakiness.
-- **Impact:** Tests TC002, TC005 may produce inconsistent results on slower machines.
-- **Fix:** Run tests in production mode (`pnpm --filter web build && pnpm --filter web start`) for stable CI results.
-
----
-
-## 📎 Test Recordings & Visualizations
-
-All test recordings (screenshots + interaction videos) are available at:
-**https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c**
-
-| Test | Result | Recording |
-|---|---|---|
-| TC001 Browse catalogue → open reader | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/3f76630d-c744-4338-8148-27bba4aa435a) |
-| TC002 Landing → reader discovery journey | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/202e1ba5-c61b-422d-8d07-e426e9c397e8) |
-| TC003 Hero CTA → catalogue | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/3584e984-c9f4-490f-a465-3b8df362c4b7) |
-| TC004 Navbar site navigation | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/f320f97e-e293-4f0e-bd4a-f2b84901420f) |
-| TC005 Hero scroll progress | ❌ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/6096a05e-f7d1-47c1-b0f9-575ee2f8ffce) |
-| TC006 Chapter navigation | 🚫 | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/7e27d1b8-0e46-4eb4-8dd0-1576ab0deff4) |
-| TC007 CTA → catalogue | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/303c516f-e315-4004-92ab-56df549627d0) |
-| TC008 WiseEpu streaming chat | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/eab98d90-e778-4a75-b045-8f299aa5c346) |
-| TC009 Theme toggle persists | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/dccd798f-3b94-468e-bf57-691128663557) |
-| TC010 TTS narration play/pause | 🚫 | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/99ffd638-77f0-4059-ada8-6367f61e94b2) |
-| TC011 WiseEpu open/close | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/c611a4e4-2fd7-4465-a66d-62ebfa95883a) |
-| TC012 Marquee story titles | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/64eea131-8c98-49e9-9688-ebed2e6ec840) |
-| TC013 Catalogue browse/filter | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/526e78f8-0d97-468a-bfb6-0e8c02be2038) |
-| TC014 Chapter illustration update | 🚫 | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/05eae4ae-895c-4d4b-8d2e-7105c1341385) |
-| TC015 Archive listings | ✅ | [View](https://www.testsprite.com/dashboard/mcp/tests/d3312de9-3356-4b2d-bed9-ee824fa8f00c/1a1cdd26-4833-4524-98b0-bea78dbd20a8) |
+1. **Paywall Configuration for E2E Environments:** 8 out of 15 tests are BLOCKED due to the "Archive Access Required / Unlock the Full Archive" overlay. The supposedly free test story "Nongpok Ningthou" is still triggering the paywall logic, preventing verification of TTS, illustration rendering, and chapter navigation.
+2. **Reader Content State Management:** In the unblocked attempt (TC001), switching chapters correctly updated the sidebar UI but the main reader text failed to update, indicating a state synchronization bug between the chapter selection and reader content display.
+3. **Missing Illustrations:** Chapter illustrations are missing from the DOM entirely (TC010), leading to test failures even before the paywall blocks further interaction.
+4. **TTS "Unavailable" State:** The TTS control shows as "Unavailable", possibly because of missing environment variables or API keys in the testing environment, compounding the issues caused by the paywall block.

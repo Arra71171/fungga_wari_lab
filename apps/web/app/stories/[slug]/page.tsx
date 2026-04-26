@@ -68,7 +68,10 @@ export async function generateMetadata({ params }: StoryPageProps): Promise<Meta
 
 export default async function StoryPage({ params }: StoryPageProps) {
   const { slug } = await params;
-  const hasAccess = await checkUserAccess();
+  // Data-driven access check: free stories (is_free = true in DB) bypass the paywall
+  // for all visitors; paid users are checked via their lifetime access flag.
+  // The slug is passed so checkUserAccess can load the story's is_free column.
+  const hasAccess = await checkUserAccess(slug);
 
   const supabase = await createClient();
   const { data: storyData, error } = await supabase

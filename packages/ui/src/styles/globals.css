@@ -372,18 +372,7 @@
   min-height: var(--min-h-screen-content);
 }
 
-/* Hide Clerk Watermark globally */
-.clerk-watermark {
-  display: none !important;
-}
-
-/* Override Clerk's JS-injected inline max-width on card containers */
-.cl-rootBox,
-.cl-cardBox,
-.cl-card {
-  width: 100% !important;
-  max-width: 100% !important;
-}
+/* No Clerk overrides needed */
 
 /* Tiptap Editor Typography Override for Brutalist Aesthetic */
 .ProseMirror {
