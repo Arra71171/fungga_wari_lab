@@ -32,7 +32,7 @@ export async function sendTaskEmail(args: {
   if (!parsed.success) {
     throw new Error(`Validation error: ${parsed.error.message}`)
   }
-  const { taskTitle, toEmail, priority, message } = parsed.data
+  const { taskId, taskTitle, toEmail, priority, message } = parsed.data
 
   const supabase = await createClient()
   const {
@@ -64,6 +64,10 @@ export async function sendTaskEmail(args: {
       message,
       taskUrl,
     }),
+    headers: {
+      "X-Entity-Ref-ID": taskId,
+      "Idempotency-Key": `task-brief/${taskId}/${Date.now()}`,
+    },
   })
 
   if (error) throw new Error(`Email send failed: ${error.message}`)
