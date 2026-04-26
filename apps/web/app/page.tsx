@@ -38,6 +38,7 @@ import { BorderBeam } from "@workspace/ui/components/border-beam";
 import { Marquee } from "@workspace/ui/components/marquee";
 import { EmberParticles } from "@workspace/ui/components/EmberParticles";
 import { SectionDivider } from "@workspace/ui/components/SectionDivider";
+import { ScrollReveal } from "@workspace/ui/components/ScrollReveal";
 import { WiseEpu } from "@workspace/ui/components/WiseEpu";
 
 import gsap from "gsap";

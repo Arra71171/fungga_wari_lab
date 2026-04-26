@@ -106,6 +106,7 @@ export function TaskBoard() {
                   <TaskCard
                     key={task.id}
                     task={task as never}
+                    users={users}
                     onDeleted={(id) =>
                       setTasks((prev) => prev?.filter((t) => t.id !== id) ?? null)
                     }

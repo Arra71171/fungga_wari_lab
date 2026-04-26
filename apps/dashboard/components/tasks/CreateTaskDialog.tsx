@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
 import { Button } from "@workspace/ui/components/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Loader2 } from "lucide-react";
 import { Label } from "@workspace/ui/components/label";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
@@ -22,6 +22,8 @@ import {
 } from "@workspace/ui/components/select";
 import { FormEvent, useState } from "react";
 import { createTask } from "@/actions/taskActions";
+import { sendTaskEmail } from "@/actions/emailActions";
+import { toast } from "sonner";
 import type { Database } from "@workspace/ui/types/supabase";
 
 type User = {
@@ -38,33 +40,86 @@ type CreateTaskDialogProps = {
 
 export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialogProps) {
   const [open, setOpen] = useState(false);
+  const [assigneeId, setAssigneeId] = useState("none");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const title = formData.get("title") as string;
-    const priority = formData.get("priority") as Database["public"]["Enums"]["task_priority"];
-    const assigneeId = formData.get("assigneeId") as string;
-
-    const descText = formData.get("description") as string;
-    const description = descText
-      ? {
-          type: "doc",
-          content: [{ type: "paragraph", content: [{ type: "text", text: descText }] }],
+    setIsSubmitting(true);
+    
+    try {
+      const formData = new FormData(e.currentTarget);
+      const title = formData.get("title") as string;
+      const priority = (formData.get("priority") as Database["public"]["Enums"]["task_priority"]) || "medium";
+  
+      const descText = formData.get("description") as string;
+      const description = descText
+        ? {
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: descText }] }],
+          }
+        : undefined;
+  
+      const finalAssigneeId = assigneeId === "none" || assigneeId === "custom" ? undefined : assigneeId;
+  
+      // 1. Create the task in DB
+      const taskId = await createTask({
+        title,
+        description,
+        status: "lore_gathering",
+        priority,
+        assigneeId: finalAssigneeId,
+        storyId: storyId || undefined,
+      });
+  
+      // 2. Dispatch Email if applicable
+      let toEmail = "";
+      let toName = "";
+      if (assigneeId === "custom") {
+        toEmail = formData.get("customEmail") as string;
+        toName = "External Operative";
+      } else if (assigneeId !== "none") {
+        const u = users.find((u) => u.id === assigneeId);
+        if (u?.email) {
+          toEmail = u.email;
+          toName = u.name || u.email;
         }
-      : undefined;
-
-    await createTask({
-      title,
-      description,
-      status: "lore_gathering",
-      priority,
-      assigneeId: assigneeId === "none" ? undefined : assigneeId,
-      storyId,
-    });
-
-    setOpen(false);
-    onCreated?.();
+      }
+  
+      if (toEmail) {
+        try {
+          await sendTaskEmail({
+            taskId,
+            taskTitle: title,
+            toEmail,
+            toName,
+            priority,
+            message: descText.trim().slice(0, 2000) || "A new task has been assigned to you. Please log in to view the details.",
+          });
+          toast.success("Task created and brief dispatched", {
+            description: `Sent to ${toEmail}`,
+          });
+        } catch (emailErr) {
+          toast.warning("Task created, but email dispatch failed", {
+            description: emailErr instanceof Error ? emailErr.message : "SMTP error",
+          });
+        }
+      } else {
+        toast.success("Task initialized", {
+          description: "No dispatch email sent.",
+        });
+      }
+  
+      setOpen(false);
+      setAssigneeId("none");
+      onCreated?.();
+    } catch (err) {
+      toast.error("Operation failed", {
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -121,7 +176,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
               <Label htmlFor="assigneeId" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
                 Assign To
               </Label>
-              <Select name="assigneeId" defaultValue="none">
+              <Select name="assigneeId" value={assigneeId} onValueChange={setAssigneeId}>
                 <SelectTrigger id="assigneeId" className="rounded-none bg-bg-surface border-border font-mono text-sm">
                   <SelectValue placeholder="Unassigned" />
                 </SelectTrigger>
@@ -132,10 +187,27 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                       {u.name ?? u.email ?? "Unknown User"}
                     </SelectItem>
                   ))}
+                  <SelectItem value="custom" className="font-mono text-sm text-brand-ochre">Custom Email...</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
+
+          {assigneeId === "custom" && (
+            <div className="space-y-2">
+              <Label htmlFor="customEmail" className="font-mono text-fine uppercase tracking-widest text-brand-ochre">
+                External Dispatch Email
+              </Label>
+              <Input
+                id="customEmail"
+                name="customEmail"
+                type="email"
+                required
+                className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ochre/20 focus-visible:border-brand-ochre/50 font-mono text-sm"
+                placeholder="operative@external.com"
+              />
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="description" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
@@ -144,6 +216,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             <Textarea
               id="description"
               name="description"
+              maxLength={2000}
               className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-mono text-sm"
               placeholder="Provide operation details..."
             />
@@ -152,8 +225,10 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
           <div className="flex justify-end pt-4 border-t border-border-subtle">
             <Button
               type="submit"
-              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-mono uppercase tracking-widest text-xs rounded-none"
+              disabled={isSubmitting}
+              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-mono uppercase tracking-widest text-xs rounded-none gap-2"
             >
+              {isSubmitting && <Loader2 className="size-3 animate-spin" />}
               Dispatch Task
             </Button>
           </div>

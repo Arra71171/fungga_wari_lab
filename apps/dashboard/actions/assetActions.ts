@@ -65,6 +65,7 @@ export async function getAssetStats() {
     reference_photo: 0,
     audio_lore: 0,
     cover: 0,
+    text_story: 0,
   }
 
   for (const asset of data) {

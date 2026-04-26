@@ -3,19 +3,18 @@
 import * as React from "react";
 import { MediaUploader } from "@/components/assets/MediaUploader";
 import { AssetGrid } from "@/components/assets/AssetGrid";
-import { StoryAssetForm } from "@/components/assets/StoryAssetForm";
 import { cn } from "@workspace/ui/lib/utils";
-import { Image, BookOpen, FileAudio, Pencil, FolderOpen } from "lucide-react";
+import { Image, FileAudio, Pencil, FolderOpen, FileText } from "lucide-react";
 
 const FOLDER_TABS = [
   { value: "all", label: "All Assets", icon: FolderOpen },
   { value: "illustration", label: "Illustrations", icon: Image },
   { value: "sketch", label: "Sketches", icon: Pencil },
   { value: "audio_lore", label: "Audio", icon: FileAudio },
+  { value: "text_story", label: "Stories (Docs)", icon: FileText },
 ] as const;
 
 export default function AssetsPage() {
-  const [activeTab, setActiveTab] = React.useState<"library" | "story">("library");
   const [activeFolder, setActiveFolder] = React.useState<string>("all");
 
   return (
@@ -27,39 +26,12 @@ export default function AssetsPage() {
             Asset Vault
           </h1>
           <p className="font-mono text-fine text-muted-foreground uppercase tracking-label mt-2">
-            Global Media Library & Story Bundles
+            Global Media Library & Story Assets
           </p>
-        </div>
-
-        {/* Primary Tab Switcher */}
-        <div className="flex border border-border p-1 shrink-0">
-          <button
-            onClick={() => setActiveTab("library")}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase tracking-widest transition-all",
-              activeTab === "library"
-                ? "bg-primary/10 text-primary border border-border"
-                : "text-muted-foreground hover:text-foreground border border-transparent"
-            )}
-          >
-            <Image className="size-3.5" /> Media Library
-          </button>
-          <button
-            onClick={() => setActiveTab("story")}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase tracking-widest transition-all",
-              activeTab === "story"
-                ? "bg-primary/10 text-primary border border-border"
-                : "text-muted-foreground hover:text-foreground border border-transparent"
-            )}
-          >
-            <BookOpen className="size-3.5" /> Story Bundle
-          </button>
         </div>
       </div>
 
-      {activeTab === "library" ? (
-        <div className="space-y-6 flex-1">
+      <div className="space-y-6 flex-1">
           {/* Folder Tabs */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {FOLDER_TABS.map((tab) => {
@@ -94,11 +66,6 @@ export default function AssetsPage() {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="w-full pb-10">
-          <StoryAssetForm />
-        </div>
-      )}
     </div>
   );
 }

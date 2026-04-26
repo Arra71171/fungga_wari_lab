@@ -36,6 +36,13 @@ const ALLOWED_MIME_TYPES = new Set([
   "audio/mp3",
   "audio/wav",
   "audio/ogg",
+  "text/plain",
+  "text/markdown",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/rtf",
+  "text/rtf"
 ]);
 
 const MAX_FILE_SIZE_MB = 50;
@@ -62,8 +69,9 @@ export function MediaUploader() {
     }
 
     // ── MIME type validation ─────────────────────────────────────────────────
-    if (!ALLOWED_MIME_TYPES.has(file.type)) {
-      const msg = `Unsupported file type "${file.type || "unknown"}". Please upload an image (JPEG, PNG, GIF, WebP) or audio file (MP3, WAV).`;
+    const isDoc = file.name.match(/\.(md|docx?|txt)$/i);
+    if (!ALLOWED_MIME_TYPES.has(file.type) && !isDoc) {
+      const msg = `Unsupported file type "${file.type || "unknown"}". Please upload an image, audio, or document (TXT, PDF, DOCX).`;
       setValidationError(msg);
       toast.error("Unsupported File Type", { description: msg });
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -94,8 +102,9 @@ export function MediaUploader() {
       formData.append("signature", signature);
       formData.append("folder", folder);
 
+      const resourceType = assetType === "text_story" ? "raw" : "auto";
       const cloudinaryRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`,
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
         { method: "POST", body: formData }
       );
 
@@ -119,7 +128,8 @@ export function MediaUploader() {
             | "illustration"
             | "sketch"
             | "reference_photo"
-            | "audio_lore",
+            | "audio_lore"
+            | "text_story",
         }).catch((err) => {
           console.error("Failed to save asset into supabase:", err);
         });
@@ -165,6 +175,9 @@ export function MediaUploader() {
               <SelectItem value="audio_lore" className="font-mono text-sm">
                 Audio (Lore)
               </SelectItem>
+              <SelectItem value="text_story" className="font-mono text-sm">
+                Story (Doc/Text)
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -175,7 +188,7 @@ export function MediaUploader() {
         ref={fileInputRef}
         type="file"
         className="hidden"
-        accept="image/*,audio/mpeg,audio/wav,audio/ogg"
+        accept="image/*,audio/mpeg,audio/wav,audio/ogg,text/plain,text/markdown,application/pdf,.doc,.docx"
         onChange={handleUpload}
         disabled={isUploading}
         aria-label="Upload asset file"
@@ -200,8 +213,8 @@ export function MediaUploader() {
             <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider group-hover:text-foreground">
               Drop or Browse Media
             </span>
-            <span className="font-mono text-fine text-muted-foreground/60">
-              Images (JPEG, PNG, WebP) or Audio (MP3, WAV) · Max {MAX_FILE_SIZE_MB}MB
+            <span className="font-mono text-fine text-muted-foreground/60 whitespace-normal text-center px-2">
+              Images, Audio, or Docs (TXT, PDF, Word) · Max {MAX_FILE_SIZE_MB}MB
             </span>
           </>
         )}
