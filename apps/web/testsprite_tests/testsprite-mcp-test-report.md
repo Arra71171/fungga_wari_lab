@@ -25,12 +25,6 @@
 - **Status:** ⚠️ BLOCKED
 - **Analysis / Findings:** A full-archive paywall ("Archive Access Required") overlays the reader content, blocking interaction and verification of chapter switching.
 
-#### Test TC006 Start and pause TTS narration without locking the reader UI
-- **Test Code:** [TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py](./TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py)
-- **Test Error:** TEST FAILURE
-- **Status:** ❌ Failed
-- **Analysis / Findings:** UI is present, but an "Unlock the Full Archive" paywall modal overlays the reader, blocking TTS playback and navigation interactions.
-
 
 ### Requirement: Chapter Illustrations
 
@@ -80,6 +74,15 @@
 - **Analysis / Findings:** TTS controls are blocked by the archive access paywall.
 
 
+### Requirement: Cinematic Story Reader
+
+#### Test TC006 Start and pause TTS narration without locking the reader UI
+- **Test Code:** [TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py](./TC006_Start_and_pause_TTS_narration_without_locking_the_reader_UI.py)
+- **Test Error:** TEST FAILURE
+- **Status:** ❌ Failed
+- **Analysis / Findings:** UI is present, but an "Unlock the Full Archive" paywall modal overlays the reader, blocking TTS playback and navigation interactions.
+
+
 ### Requirement: Story Discovery & Browsing
 
 #### Test TC008 Browse and open a story from the catalogue
@@ -122,9 +125,10 @@
 
 | Requirement                      | Total Tests | ✅ Passed | ❌ Failed | ⚠️ Blocked |
 |----------------------------------|-------------|-----------|-----------|------------|
-| Reader Content & Navigation      | 3           | 0         | 2         | 1          |
+| Reader Content & Navigation      | 2           | 0         | 1         | 1          |
 | Chapter Illustrations            | 3           | 0         | 1         | 2          |
 | AI Narration (TTS)               | 4           | 0         | 0         | 4          |
+| Cinematic Story Reader           | 1           | 0         | 1         | 0          |
 | Story Discovery & Browsing       | 3           | 2         | 0         | 1          |
 | Global Features (Theme/Chatbot)  | 2           | 2         | 0         | 0          |
 
