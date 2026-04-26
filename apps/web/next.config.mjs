@@ -8,14 +8,15 @@ const withBundleAnalyzer = bundleAnalyzer({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
+    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000";
     return [
       {
         source: "/dashboard",
-        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/dashboard`,
+        destination: `${dashboardUrl}/dashboard`,
       },
       {
         source: "/dashboard/:path*",
-        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/dashboard/:path*`,
+        destination: `${dashboardUrl}/dashboard/:path*`,
       },
     ];
   },
