@@ -732,6 +732,7 @@ export type Database = {
         | "reference_photo"
         | "audio_lore"
         | "cover"
+        | "text_story"
       block_type:
         | "text"
         | "heading"
@@ -898,6 +899,7 @@ export const Constants = {
         "reference_photo",
         "audio_lore",
         "cover",
+        "text_story",
       ],
       block_type: [
         "text",
