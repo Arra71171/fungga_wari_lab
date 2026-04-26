@@ -50,7 +50,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
     try {
       const formData = new FormData(e.currentTarget);
       const title = formData.get("title") as string;
-      const priority = formData.get("priority") as Database["public"]["Enums"]["task_priority"];
+      const priority = (formData.get("priority") as Database["public"]["Enums"]["task_priority"]) || "medium";
   
       const descText = formData.get("description") as string;
       const description = descText
@@ -69,7 +69,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
         status: "lore_gathering",
         priority,
         assigneeId: finalAssigneeId,
-        storyId,
+        storyId: storyId || undefined,
       });
   
       // 2. Dispatch Email if applicable
