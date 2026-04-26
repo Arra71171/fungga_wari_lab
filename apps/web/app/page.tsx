@@ -36,10 +36,8 @@ import { SplitText } from "@workspace/ui/components/SplitText";
 import { TextMatrixRain } from "@workspace/ui/components/TextMatrixRain";
 import { BorderBeam } from "@workspace/ui/components/border-beam";
 import { Marquee } from "@workspace/ui/components/marquee";
-import { RichTextRenderer } from "@workspace/ui/components/editor/rich-text-renderer";
 import { EmberParticles } from "@workspace/ui/components/EmberParticles";
 import { SectionDivider } from "@workspace/ui/components/SectionDivider";
-import { ScrollReveal } from "@workspace/ui/components/ScrollReveal";
 import { WiseEpu } from "@workspace/ui/components/WiseEpu";
 
 import gsap from "gsap";
@@ -321,33 +319,6 @@ export default function Home() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for future parallax hero
   const _y = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-
-  // Fetch Manifesto from CMS
-  const [manifestoContent, setManifestoContent] = React.useState<{ tiptapContent: Record<string, unknown> } | null | undefined>(undefined);
-
-  React.useEffect(() => {
-    async function fetchManifesto() {
-      try {
-        const { createClient } = await import("@/lib/supabase/client");
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from("global_content")
-          .select("tiptap_content")
-          .eq("slug", "manifesto")
-          .maybeSingle();
-        
-        if (error) {
-          console.warn("[manifesto] Failed to fetch:", error.message);
-          setManifestoContent(null);
-          return;
-        }
-        setManifestoContent(data ? { tiptapContent: data.tiptap_content as Record<string, unknown> } : null);
-      } catch {
-        setManifestoContent(null);
-      }
-    }
-    fetchManifesto();
-  }, []);
 
   const heroRef = React.useRef(null);
   const bentoGridRef = React.useRef(null);
