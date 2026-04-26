@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Trash2, Flame, FileAudio, Copy } from "lucide-react";
+import { Trash2, Flame, FileAudio, FileText, Copy } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { getAllAssets, deleteAsset, updateAsset } from "@/actions/assetActions";
@@ -98,7 +98,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
     );
   }
 
-  const isImageType = (type: string) => !type.includes("audio");
+  const isImageType = (type: string) => !type.includes("audio") && type !== "text_story";
 
   return (
     <div className="flex gap-6 h-full items-start">
@@ -138,6 +138,24 @@ function AssetGrid({ filterType }: AssetGridProps) {
                 controls
                 className="w-full h-8 opacity-70 hover:opacity-100 transition-opacity"
               />
+            </div>
+          ) : asset.type === "text_story" ? (
+            <div className="flex-1 flex flex-col items-center justify-center bg-brand-ochre/5 aspect-[3/4] p-2 hover:bg-brand-ochre/10 transition-colors group relative">
+              <FileText className="size-12 text-brand-ochre/40 mb-2 group-hover:text-brand-ember/60 transition-colors" />
+              {/* eslint-disable-next-line no-restricted-syntax -- external URL: MS Office viewer or Cloudinary proxy, next/link not applicable */}
+              <a 
+                href={
+                  asset.url.toLowerCase().endsWith(".doc") || asset.url.toLowerCase().endsWith(".docx")
+                    ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(asset.url)}`
+                    : `/dashboard/api/view-asset?url=${encodeURIComponent(asset.url)}`
+                }
+                target="_blank" 
+                rel="noreferrer" 
+                className="text-xs font-mono text-brand-ochre/60 hover:text-brand-ember underline mt-2 relative z-10"
+                onClick={(e) => e.stopPropagation()}
+              >
+                View Document
+              </a>
             </div>
           ) : (
             <div

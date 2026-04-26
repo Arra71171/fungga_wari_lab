@@ -4,11 +4,18 @@ import { Trash2, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { deleteTask } from "@/actions/taskActions";
 import type { Database } from "@workspace/ui/types/supabase";
+import { SendTaskEmailDialog } from "./SendTaskEmailDialog";
 
 import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
 
 type TaskStatus = Database["public"]["Enums"]["task_status"];
 type TaskPriority = Database["public"]["Enums"]["task_priority"];
+
+type User = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+};
 
 type TaskCardProps = {
   task: {
@@ -18,10 +25,11 @@ type TaskCardProps = {
     status: TaskStatus;
     assignee_id?: string | null;
   };
+  users?: User[];
   onDeleted?: (id: string) => void;
 };
 
-export function TaskCard({ task, onDeleted }: TaskCardProps) {
+export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
   const handleDelete = async () => {
     await deleteTask(task.id);
     onDeleted?.(task.id);
@@ -63,7 +71,7 @@ export function TaskCard({ task, onDeleted }: TaskCardProps) {
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-border-subtle text-xs font-mono">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 text-muted-foreground/80">
             {task.priority === "high" && <AlertCircle className="size-3.5 text-brand-ember" />}
             {task.priority === "medium" && <Clock className="size-3.5 text-brand-ochre" />}
@@ -72,6 +80,12 @@ export function TaskCard({ task, onDeleted }: TaskCardProps) {
             )}
             <span className="uppercase tracking-widest text-nano font-bold">{task.priority}</span>
           </div>
+          <SendTaskEmailDialog
+            taskId={task.id}
+            taskTitle={task.title}
+            priority={task.priority}
+            users={users}
+          />
         </div>
 
         <div
