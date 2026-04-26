@@ -32,7 +32,7 @@ type User = {
 type SendTaskEmailDialogProps = {
   taskId: string
   taskTitle: string
-  priority: string
+  priority: "high" | "medium" | "low"
   users: User[]
 }
 
@@ -85,7 +85,14 @@ export function SendTaskEmailDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        // Reset recipient selection whenever the dialog closes
+        if (!nextOpen) setSelectedUserId("")
+        setOpen(nextOpen)
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="ghost"
@@ -185,7 +192,7 @@ export function SendTaskEmailDialog({
 
           <div className="flex justify-between items-center pt-3 border-t border-border-subtle">
             <p className="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
-              via Resend
+              via Gmail SMTP
             </p>
             <Button
               type="submit"

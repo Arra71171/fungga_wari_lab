@@ -94,7 +94,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             toEmail,
             toName,
             priority,
-            message: descText || "A new task has been assigned to you. Please log in to view the details.",
+            message: descText.trim().slice(0, 2000) || "A new task has been assigned to you. Please log in to view the details.",
           });
           toast.success("Task created and brief dispatched", {
             description: `Sent to ${toEmail}`,
@@ -216,6 +216,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             <Textarea
               id="description"
               name="description"
+              maxLength={2000}
               className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-mono text-sm"
               placeholder="Provide operation details..."
             />
