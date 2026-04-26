@@ -87,17 +87,23 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
       }
   
       if (toEmail) {
-        await sendTaskEmail({
-          taskId,
-          taskTitle: title,
-          toEmail,
-          toName,
-          priority,
-          message: descText || "A new task has been assigned to you. Please log in to view the details.",
-        });
-        toast.success("Task created and brief dispatched", {
-          description: `Sent to ${toEmail}`,
-        });
+        try {
+          await sendTaskEmail({
+            taskId,
+            taskTitle: title,
+            toEmail,
+            toName,
+            priority,
+            message: descText || "A new task has been assigned to you. Please log in to view the details.",
+          });
+          toast.success("Task created and brief dispatched", {
+            description: `Sent to ${toEmail}`,
+          });
+        } catch (emailErr) {
+          toast.warning("Task created, but email dispatch failed", {
+            description: emailErr instanceof Error ? emailErr.message : "SMTP error",
+          });
+        }
       } else {
         toast.success("Task initialized", {
           description: "No dispatch email sent.",

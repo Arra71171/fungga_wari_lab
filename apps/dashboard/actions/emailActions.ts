@@ -39,7 +39,7 @@ export async function sendTaskEmail(args: {
   if (!parsed.success) {
     throw new Error(`Validation error: ${parsed.error.message}`)
   }
-  const { taskId, taskTitle, toEmail, priority, message } = parsed.data
+  const { taskId, taskTitle, toEmail, toName, priority, message } = parsed.data
 
   const supabase = await createClient()
   const {
@@ -73,7 +73,7 @@ export async function sendTaskEmail(args: {
 
     const info = await transporter.sendMail({
       from: `"Fungga Wari Lab" <${process.env.GMAIL_USER}>`,
-      to: toEmail,
+      to: `"${toName}" <${toEmail}>`,
       subject: `[Studio Brief] ${taskTitle} — ${priority.toUpperCase()} priority`,
       html: emailHtml,
       headers: {
