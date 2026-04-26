@@ -135,7 +135,7 @@ function StoryTicker() {
   }, []);
 
   return (
-    <section className="py-24 md:py-32 bg-background relative overflow-hidden border-b border-border">
+    <section className="pt-24 md:pt-32 pb-0 bg-background relative overflow-hidden border-b border-border">
       {/* Abstract ink dividers */}
       <SectionDivider variant="ink-wash" position="top" className="opacity-40 text-brand-ember/20" />
       <SectionDivider variant="smoke" position="bottom" className="opacity-80 text-background" />
@@ -565,47 +565,6 @@ export default function Home() {
 
       <StoryTicker />
 
-      {/* ─── MISSION STATEMENT ────────────────────────────────────────────── */}
-      <section className="relative py-24 md:py-32 bg-secondary/5 border-b border-border flex items-center justify-center overflow-hidden">
-        {/* Decorative Flanking Lines */}
-        <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[1px] bg-gradient-to-b from-border/0 via-border/50 to-border/0 hidden lg:block" />
-        <div className="absolute right-6 md:right-12 top-0 bottom-0 w-[1px] bg-gradient-to-b from-border/0 via-border/50 to-border/0 hidden lg:block" />
-        
-        <div className="max-w-4xl mx-auto px-6 text-center z-10">
-          <ScrollReveal direction="up" distance={20} duration={1} delay={0.1}>
-            {manifestoContent === undefined ? (
-              <div className="animate-pulse space-y-6 flex flex-col items-center">
-                <div className="w-1/2 h-10 bg-secondary/50" />
-                <div className="w-12 h-1 bg-brand-ember mb-8" />
-                <div className="w-3/4 h-6 bg-secondary/50" />
-              </div>
-            ) : manifestoContent && manifestoContent.tiptapContent ? (
-              <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-h2:text-4xl md:prose-h2:text-5xl prose-p:font-mono prose-p:text-sm md:prose-p:text-base prose-p:uppercase prose-p:tracking-label prose-p:text-muted-foreground prose-p:leading-relaxed mx-auto text-center">
-                 <RichTextRenderer content={manifestoContent.tiptapContent} />
-              </div>
-            ) : (
-              <>
-                <SplitText
-                  text="What is past is prologue."
-                  as="h2"
-                  className="text-4xl md:text-5xl lg:text-6xl font-heading font-black uppercase tracking-tighter mb-8 text-foreground max-w-3xl mx-auto leading-tight"
-                  stagger={0.06}
-                  delay={0.2}
-                />
-                <div className="w-16 h-1 bg-brand-ember mx-auto mb-10 flex shadow-[0_0_10px_var(--brand-glow)]" />
-                <ScrollReveal direction="up" distance={30} duration={1} delay={0.4}>
-                  <p className="text-muted-foreground font-mono text-sm md:text-base uppercase tracking-label leading-relaxed max-w-2xl mx-auto relative">
-                    <span className="absolute -left-4 top-0 text-brand-ember/40 text-lg">&ldquo;</span>
-                    We stand at the threshold of silence, recording the whispers of the hearth before they vanish into the ash of time.
-                    <span className="absolute -right-4 bottom-0 text-brand-ember/40 text-lg">&rdquo;</span>
-                  </p>
-                </ScrollReveal>
-              </>
-            )}
-          </ScrollReveal>
-        </div>
-      </section>
-
       {/* ─── FEATURE BENTO ────────────────────────────────────────────────── */}
       <section
         id="stories"
@@ -755,25 +714,27 @@ export default function Home() {
       </section>
 
       {/* ─── CTA ──────────────────────────────────────────────────────────── */}
-      <section className="relative py-32 px-6 md:px-12 flex items-center justify-center text-center overflow-hidden bg-cinematic-bg">
+      <section className="relative py-20 md:py-28 px-6 md:px-12 flex items-center justify-center text-center overflow-hidden bg-cinematic-bg">
 
         {/* ── Full-bleed illustration ── */}
         <Image
-          src="https://res.cloudinary.com/dlytqegcw/image/upload/v1776439982/fungga-wari-lab/illustrations/fungga-wari-lab/illustrations/cta-section-bg.jpg"
-          alt=""
+          src="/begin-the-journey.png"
+          alt="Begin the journey illustration"
           fill
           sizes="100vw"
-          className="object-cover object-center z-0"
+          className="object-cover object-center z-0 opacity-40 dark:opacity-60"
           priority={false}
-          quality={90}
+          quality={100}
         />
 
-        {/* ── Dark cinematic overlay: edges crushed to black, center breathes ── */}
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent_0%,oklch(0.10_0.02_50/0.55)_50%,oklch(0.05_0.01_50/0.92)_100%)]" />
-        {/* ── Bottom-to-top gradient to bleed into footer ── */}
+        {/* ── Theme-aware gradients to blend image smoothly without a harsh dark wash in light mode ── */}
+        <div className="absolute inset-x-0 top-0 h-40 z-10 bg-gradient-to-b from-cinematic-bg to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-40 z-10 bg-gradient-to-t from-background to-transparent" />
-        {/* ── Top-to-bottom gradient to bleed from previous section ── */}
-        <div className="absolute inset-x-0 top-0 h-24 z-10 bg-gradient-to-b from-background to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-32 md:w-64 z-10 bg-gradient-to-r from-cinematic-bg to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-32 md:w-64 z-10 bg-gradient-to-l from-cinematic-bg to-transparent" />
+        
+        {/* ── Soft overall wash to ensure text readability ── */}
+        <div className="absolute inset-0 z-10 bg-cinematic-bg/30 pointer-events-none" />
 
         {/* ── Ember particles — now blend naturally against the dark fire scene ── */}
         <EmberParticles density={50} speed={0.35} className="z-20 mix-blend-screen opacity-60" />
@@ -784,7 +745,7 @@ export default function Home() {
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.1 }}
-          className="relative z-30 max-w-3xl bg-cinematic-bg/80 border border-cinematic-border text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-brutal"
+          className="relative z-30 max-w-3xl bg-cinematic-bg/90 dark:bg-cinematic-panel/85 border border-cinematic-border text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-brutal"
         >
           <motion.div
             className="mx-auto size-16 border border-primary/40 bg-primary/10 mb-8 flex items-center justify-center text-primary"
