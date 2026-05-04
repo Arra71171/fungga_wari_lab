@@ -7,6 +7,6 @@
     "access": "public"
   },
   "dependencies": {
-    "eslint": "^9.39.4"
+    "eslint": "^10.3.0"
   }
 }
