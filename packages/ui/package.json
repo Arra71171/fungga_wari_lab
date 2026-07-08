@@ -53,6 +53,15 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.2.1",
+    "@storybook/addon-a11y": "^10.4.6",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-links": "^10.4.6",
+    "@storybook/addon-onboarding": "^10.4.6",
+    "@storybook/nextjs": "^10.4.6",
+    "@storybook/react": "^10.4.6",
+    "@storybook/test": "^8.6.15",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "@turbo/gen": "^2.8.1",
@@ -61,7 +70,9 @@
     "@types/react-dom": "^19.2.3",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "chromatic": "^18.0.1",
     "eslint": "^9.39.4",
+    "storybook": "^10.4.6",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3"
   },
