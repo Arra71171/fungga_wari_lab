@@ -1,0 +1,20 @@
+name: Qodo AI Review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  qodo-trigger:
+    name: Trigger Qodo Review
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Trigger Qodo
+        if: github.event.pull_request.draft == false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr comment "$PR_URL" --body "/review"

@@ -1,0 +1,273 @@
+"use client";
+import * as React from "react";
+import { useState } from "react";
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { cn } from "@workspace/ui/lib/utils";
+
+export type SideMenuDirection = "left" | "right";
+export type ButtonOpeningVariants = "push" | "merge" | "stay";
+
+interface SideMenuProps {
+  // Appearance
+  width?: number;
+  direction?: SideMenuDirection;
+
+  // Content
+  children: React.ReactNode;
+
+  // Behavior
+  isOpen?: boolean;
+  onToggle?: (isOpen: boolean) => void;
+  showToggleButton?: boolean;
+  toggleButtonText?: {
+    open: string;
+    close: string;
+  };
+
+  // Styling
+  btnClassName?: string;
+  className?: string;
+  contentClassName?: string;
+  clsBtnClassName?: string;
+  overlayClassName?: string;
+  backgroundClassName?: string;
+
+  // Animation
+  animationConfig?: {
+    type?: "spring" | "tween";
+    damping?: number;
+    stiffness?: number;
+    duration?: number;
+  };
+
+  // Drag behavior
+  enableDrag?: boolean;
+  dragThreshold?: number;
+
+  // New prop
+  buttonOpeningVariants?: ButtonOpeningVariants;
+}
+
+const getOpenButtonVariants = (
+  direction: SideMenuDirection,
+  width: number,
+  type: ButtonOpeningVariants
+) => {
+  switch (type) {
+    case "merge":
+      return direction === "left"
+        ? {
+            closed: { x: 0, opacity: 1, scale: 1, borderRadius: "0.5rem" },
+            open: {
+              x: width - 68,
+              opacity: 0,
+              scale: 1,
+              borderRadius: "0rem",
+            },
+          }
+        : {
+            closed: { x: 0, opacity: 1, scale: 1, borderRadius: "0.5rem" },
+            open: {
+              x: 68 - width,
+              opacity: 0,
+              scale: 1,
+              borderRadius: "0rem",
+            },
+          };
+
+    case "push":
+      return direction === "left"
+        ? { closed: { x: 0, opacity: 1 }, open: { x: width + 20, opacity: 0 } }
+        : {
+            closed: { x: 0, opacity: 1 },
+            open: { x: -(width + 20), opacity: 0 },
+          };
+
+    case "stay":
+    default:
+      return {
+        closed: { x: 0, opacity: 1 },
+        open: { x: 0, opacity: 0 },
+      };
+  }
+};
+
+function MotionDrawer({
+  // Appearance
+  width = 250,
+  direction = "left",
+
+  // Content
+  children,
+
+  // Behavior
+  isOpen: controlledIsOpen,
+  onToggle,
+  showToggleButton = true,
+
+  // Styling
+  btnClassName = "",
+  clsBtnClassName = "",
+  className = "",
+  contentClassName = "",
+  overlayClassName = "bg-black/30",
+  backgroundClassName = "bg-background",
+
+  // Animation
+  animationConfig = {
+    type: "spring",
+    damping: 25,
+    stiffness: 120,
+  },
+
+  // Drag behavior
+  enableDrag = true,
+  dragThreshold = 0.3,
+
+  buttonOpeningVariants = "merge",
+}: SideMenuProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState<boolean>(false);
+
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+  const setIsOpen = (value: boolean) => {
+    if (controlledIsOpen === undefined) {
+      setInternalIsOpen(value);
+    }
+    onToggle?.(value);
+  };
+
+  const getDrawerVariants = () => {
+    if (direction === "left") {
+      return {
+        closed: { x: -width },
+        open: { x: 0 },
+      };
+    } else {
+      return {
+        closed: { x: width },
+        open: { x: 0 },
+      };
+    }
+  };
+
+  const buttonVariants = getOpenButtonVariants(direction, width, buttonOpeningVariants);
+
+  const getDragConstraints = () => {
+    if (direction === "left") {
+      return { left: -width, right: 0 };
+    } else {
+      return { left: 0, right: width };
+    }
+  };
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!enableDrag) return;
+
+    const threshold = width * dragThreshold;
+    const dragDistance = Math.abs(info.offset.x);
+
+    if (direction === "left") {
+      const isDraggingLeft = info.offset.x < 0;
+      if (isDraggingLeft && dragDistance > threshold && isOpen) {
+        setIsOpen(false);
+      } else if (!isDraggingLeft && dragDistance > threshold && !isOpen) {
+        setIsOpen(true);
+      }
+    } else {
+      const isDraggingRight = info.offset.x > 0;
+      if (isDraggingRight && dragDistance > threshold && isOpen) {
+        setIsOpen(false);
+      } else if (!isDraggingRight && dragDistance > threshold && !isOpen) {
+        setIsOpen(true);
+      }
+    }
+  };
+
+  const drawerPositionClasses = direction === "left" ? "left-0" : "right-0";
+  const openButtonPositionClasses = direction === "left" ? "top-4 left-4" : "top-4 right-4";
+
+  return (
+    <>
+      {showToggleButton && (
+        <motion.button
+          data-slot="motion-drawer-trigger"
+          className={cn(
+            `fixed z-99 text-primary cursor-pointer ${openButtonPositionClasses}`,
+            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+            btnClassName
+          )}
+          onClick={() => setIsOpen(true)}
+          aria-label="Open menu"
+          variants={buttonVariants}
+          animate={isOpen ? "open" : "closed"}
+          transition={animationConfig}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Menu />
+        </motion.button>
+      )}
+
+      <AnimatePresence>
+        {isOpen && (
+          <div data-slot="motion-drawer-container" className={cn("fixed w-full h-full top-0 left-0 z-9999", className)}>
+            {/* Overlay */}
+            <motion.div
+              className={cn("absolute w-full h-full top-0 left-0", overlayClassName)}
+              onClick={() => setIsOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              className={cn("absolute h-full shadow-lg", drawerPositionClasses, backgroundClassName, contentClassName)}
+              style={{
+                width: `${width}px`,
+                padding: "60px 30px 30px 30px",
+                boxSizing: "border-box",
+              }}
+              drag={enableDrag ? "x" : false}
+              dragElastic={0.1}
+              dragConstraints={getDragConstraints()}
+              dragMomentum={false}
+              onDragEnd={handleDragEnd}
+              variants={getDrawerVariants()}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              transition={animationConfig}
+            >
+              {/* Close Button */}
+              {showToggleButton && (
+                <motion.button
+                  className={cn(
+                    "absolute top-2 right-8 p-2 text-foreground cursor-pointer",
+                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                    clsBtnClassName
+                  )}
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close menu"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X size={20} />
+                </motion.button>
+              )}
+
+              {/* Content */}
+              <div className="h-full overflow-y-auto">{children}</div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+export { MotionDrawer };
+export type { SideMenuProps };
