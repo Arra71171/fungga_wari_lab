@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
 import { toast } from "sonner";
+import type { User } from "@supabase/supabase-js";
 
-export function AuthObserver({ appName = "app" }: { appName?: string }) {
-  const { user, isLoaded } = useSupabaseAuth();
+export interface AuthObserverProps {
+  appName?: string;
+  user: User | null;
+  isLoaded: boolean;
+}
+
+export function AuthObserver({ appName = "app", user, isLoaded }: AuthObserverProps) {
 
   useEffect(() => {
     if (!isLoaded) return;

@@ -6,8 +6,24 @@ export async function GET(request: NextRequest) {
     return new NextResponse("Missing url parameter", { status: 400 });
   }
 
+  // Validate URL against allowlist to prevent SSRF
+  let parsedUrl: URL;
   try {
-    const res = await fetch(url);
+    parsedUrl = new URL(url);
+  } catch {
+    return new NextResponse("Invalid URL", { status: 400 });
+  }
+
+  const ALLOWED_HOSTS = ["res.cloudinary.com", "media.cloudinary.com"];
+  if (!ALLOWED_HOSTS.includes(parsedUrl.hostname) || parsedUrl.protocol !== "https:") {
+    return new NextResponse("URL host not allowed", { status: 403 });
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10_000);
+    const res = await fetch(parsedUrl, { signal: controller.signal });
+    clearTimeout(timeout);
     if (!res.ok) {
       return new NextResponse("Failed to fetch asset", { status: res.status });
     }
@@ -21,7 +37,8 @@ export async function GET(request: NextRequest) {
     if (ext === "pdf") contentType = "application/pdf";
     else if (ext === "md") contentType = "text/markdown";
     else if (ext === "txt") contentType = "text/plain";
-    else if (ext === "doc" || ext === "docx") contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    else if (ext === "doc") contentType = "application/msword";
+    else if (ext === "docx") contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
     const headers = new Headers();
     headers.set("Content-Type", contentType);

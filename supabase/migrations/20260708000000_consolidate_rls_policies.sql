@@ -47,17 +47,7 @@ AS $$
   );
 $$;
 
-CREATE OR REPLACE FUNCTION public.matches_current_identity(identity text)
-RETURNS boolean
-LANGUAGE sql
-STABLE
-AS $$
-  SELECT identity IS NOT NULL
-    AND (
-      identity = (auth.uid())::text
-      OR identity = COALESCE((SELECT public.get_my_user_id())::text, '')
-    );
-$$;
+
 
 -- ─── 2. Drop Helper functions that are obsolete ────────────────────────────────
 
@@ -210,10 +200,10 @@ CREATE POLICY "users_update" ON public.users FOR UPDATE USING (auth_id = auth.ui
 CREATE POLICY "users_delete" ON public.users FOR DELETE USING (is_admin());
 
 -- STORIES
-CREATE POLICY "stories_select" ON public.stories FOR SELECT USING (status = 'published' OR author_id = (auth.uid())::text OR is_admin());
-CREATE POLICY "stories_insert" ON public.stories FOR INSERT WITH CHECK (author_id = (auth.uid())::text OR is_admin());
-CREATE POLICY "stories_update" ON public.stories FOR UPDATE USING (author_id = (auth.uid())::text OR is_admin());
-CREATE POLICY "stories_delete" ON public.stories FOR DELETE USING (author_id = (auth.uid())::text OR is_admin());
+CREATE POLICY "stories_select" ON public.stories FOR SELECT USING (status = 'published' OR author_id = (select auth.uid())::text OR is_admin());
+CREATE POLICY "stories_insert" ON public.stories FOR INSERT WITH CHECK (author_id = (select auth.uid())::text OR is_admin());
+CREATE POLICY "stories_update" ON public.stories FOR UPDATE USING (author_id = (select auth.uid())::text OR is_admin());
+CREATE POLICY "stories_delete" ON public.stories FOR DELETE USING (author_id = (select auth.uid())::text OR is_admin());
 
 -- CHAPTERS
 CREATE POLICY "chapters_select" ON public.chapters FOR SELECT USING (
@@ -280,7 +270,7 @@ CREATE POLICY "interactions_select" ON public.interactions FOR SELECT USING (
   OR is_story_owner(story_id)
   OR is_admin()
 );
-CREATE POLICY "interactions_insert" ON public.interactions FOR INSERT WITH CHECK (true);
+CREATE POLICY "interactions_insert" ON public.interactions FOR INSERT WITH CHECK (user_id = (auth.uid())::text);
 
 -- TASKS
 CREATE POLICY "tasks_select" ON public.tasks FOR SELECT USING (

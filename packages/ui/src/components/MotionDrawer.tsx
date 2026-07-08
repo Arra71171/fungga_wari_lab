@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -10,10 +10,8 @@ export type ButtonOpeningVariants = "push" | "merge" | "stay";
 
 interface SideMenuProps {
   // Appearance
-  overlayColor?: string;
   width?: number;
   direction?: SideMenuDirection;
-  backgroundColor?: string;
 
   // Content
   children: React.ReactNode;
@@ -33,6 +31,7 @@ interface SideMenuProps {
   contentClassName?: string;
   clsBtnClassName?: string;
   overlayClassName?: string;
+  backgroundClassName?: string;
 
   // Animation
   animationConfig?: {
@@ -96,10 +95,8 @@ const getOpenButtonVariants = (
 
 function MotionDrawer({
   // Appearance
-  overlayColor = "rgba(0, 0, 0, 0.3)",
   width = 250,
   direction = "left",
-  backgroundColor = "#ffffff",
 
   // Content
   children,
@@ -114,7 +111,8 @@ function MotionDrawer({
   clsBtnClassName = "",
   className = "",
   contentClassName = "",
-  overlayClassName = "",
+  overlayClassName = "bg-black/30",
+  backgroundClassName = "bg-background",
 
   // Animation
   animationConfig = {
@@ -163,8 +161,7 @@ function MotionDrawer({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleDragEnd = (_event: any, info: any) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (!enableDrag) return;
 
     const threshold = width * dragThreshold;
@@ -197,9 +194,11 @@ function MotionDrawer({
           data-slot="motion-drawer-trigger"
           className={cn(
             `fixed z-99 text-primary cursor-pointer ${openButtonPositionClasses}`,
+            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
             btnClassName
           )}
           onClick={() => setIsOpen(true)}
+          aria-label="Open menu"
           variants={buttonVariants}
           animate={isOpen ? "open" : "closed"}
           transition={animationConfig}
@@ -216,7 +215,6 @@ function MotionDrawer({
             {/* Overlay */}
             <motion.div
               className={cn("absolute w-full h-full top-0 left-0", overlayClassName)}
-              style={{ backgroundColor: overlayColor }}
               onClick={() => setIsOpen(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -226,9 +224,8 @@ function MotionDrawer({
 
             {/* Drawer */}
             <motion.div
-              className={cn("absolute h-full shadow-[8px_1px_21px_0px_rgba(17,17,26,0.1)]", drawerPositionClasses, contentClassName)}
+              className={cn("absolute h-full shadow-lg", drawerPositionClasses, backgroundClassName, contentClassName)}
               style={{
-                backgroundColor,
                 width: `${width}px`,
                 padding: "60px 30px 30px 30px",
                 boxSizing: "border-box",
@@ -248,10 +245,12 @@ function MotionDrawer({
               {showToggleButton && (
                 <motion.button
                   className={cn(
-                    "absolute top-2 right-8 p-2 text-black cursor-pointer",
+                    "absolute top-2 right-8 p-2 text-foreground cursor-pointer",
+                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                     clsBtnClassName
                   )}
                   onClick={() => setIsOpen(false)}
+                  aria-label="Close menu"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ duration: 0.2 }}
