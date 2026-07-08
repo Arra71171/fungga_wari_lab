@@ -73,7 +73,7 @@ function BlockInserter({ onSelect, onClose, className }: BlockInserterProps) {
       ref={containerRef}
       data-slot="block-inserter"
       className={cn(
-        "w-64 bg-background border-2 border-border rounded-none shadow-brutal p-2 z-50",
+        "w-64 bg-background border border-border/50 rounded-xl shadow-sm p-2 z-50",
         className
       )}
     >
@@ -84,7 +84,7 @@ function BlockInserter({ onSelect, onClose, className }: BlockInserterProps) {
         placeholder="Filter blocksâ€¦"
         aria-label="Filter block types"
         autoFocus
-        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border rounded-none outline-none mb-2 placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-ring"
+        className="w-full px-3 py-2 text-sm bg-secondary/50 border border-border rounded-xl outline-none mb-2 placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-ring"
       />
       <div className="space-y-0.5 max-h-64 overflow-y-auto">
         {filtered.map((opt) => (
@@ -95,7 +95,7 @@ function BlockInserter({ onSelect, onClose, className }: BlockInserterProps) {
               onClose()
             }}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-none",
+              "w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-xl",
               "text-sm text-foreground",
               "hover:bg-accent/50 transition-colors duration-100",
               "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"

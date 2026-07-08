@@ -21,11 +21,11 @@
     --popover-foreground: oklch(0.10 0.03 45);
 
     /* Primary: saturated amber fire — slightly richer than before */
-    --primary: oklch(0.58 0.21 43);
+    --primary: oklch(0.65 0.12 45);
     --primary-foreground: oklch(0.99 0.005 72);
 
     /* Secondary/Muted: warm sand — clearly distinct from background */
-    --secondary: oklch(0.89 0.04 70);
+    --secondary: oklch(0.92 0.02 70);
     --secondary-foreground: oklch(0.15 0.04 48);
     --muted: oklch(0.89 0.04 70);
     /* Muted foreground: dark enough to read comfortably */
@@ -53,13 +53,13 @@
     --chart-4: oklch(0.555 0.163 48.998);
     --chart-5: oklch(0.473 0.137 46.201);
 
-    --radius: 0rem;
+    --radius: 1rem;
     --status-active: oklch(0.58 0.21 43);
 
     /* Shadows — darker to punch through the warm bg */
-    --shadow-brutal: 0px 8px 30px -4px oklch(0.12 0.03 45 / 0.15);
+    --shadow-brutal: 0px 12px 40px -8px oklch(0.12 0.03 45 / 0.08);
     --shadow-brutal-primary: 0px 8px 30px -4px var(--primary);
-    --shadow-brutal-sm: 0px 4px 15px -2px oklch(0.12 0.03 45 / 0.1);
+    --shadow-brutal-sm: 0px 4px 15px -2px oklch(0.12 0.03 45 / 0.05);
 
     /* Sidebar: noticeably darker warm sand than background */
     --sidebar: oklch(0.91 0.03 70);
@@ -71,7 +71,7 @@
     --sidebar-border: oklch(0.72 0.04 65);
     --sidebar-ring: oklch(0.58 0.18 43);
 
-    --tracking-normal: 0.02em;
+    --tracking-normal: 0em;
 
     /* ── Brand Tokens ───────────────────────────────────────────────────── */
     --brand-ember: oklch(0.58 0.21 43);
@@ -113,9 +113,9 @@
     --card-foreground: oklch(0.96 0.02 60);
     --popover: oklch(0.15 0.04 50);
     --popover-foreground: oklch(0.96 0.02 60);
-    --primary: oklch(0.65 0.20 45);
+    --primary: oklch(0.70 0.12 45);
     --primary-foreground: oklch(0.12 0.03 50);
-    --secondary: oklch(0.20 0.06 50);
+    --secondary: oklch(0.20 0.02 50);
     --secondary-foreground: oklch(0.96 0.02 60);
     --muted: oklch(0.20 0.06 50);
     --muted-foreground: oklch(0.70 0.06 50);
@@ -146,7 +146,7 @@
     --sidebar-ring: oklch(0.65 0.20 45);
 
     /* Shadow tokens — use primary (amber) in dark mode, not near-white foreground */
-    --shadow-brutal: 0px 8px 30px -4px oklch(0 0 0 / 0.4);
+    --shadow-brutal: 0px 12px 40px -8px oklch(0 0 0 / 0.2);
     --shadow-brutal-sm: 0px 4px 15px -2px oklch(0 0 0 / 0.3);
 
     /* Brand & Cinematic Tokens (dark equivalents where necessary, Cinematic is dark by default) */
@@ -375,27 +375,27 @@
 
 /* No Clerk overrides needed */
 
-/* Tiptap Editor Typography Override for Brutalist Aesthetic */
+/* Tiptap Editor Typography Override for Nordic Minimalist Aesthetic */
 .ProseMirror {
   @apply text-foreground outline-none;
 }
 .ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6 {
-  @apply tracking-tight text-foreground font-bold mt-6 mb-4;
+  @apply tracking-tight text-foreground font-semibold mt-8 mb-4;
 }
-.ProseMirror h1 { @apply font-display text-3xl italic; }
-.ProseMirror h2 { @apply font-display text-2xl italic; }
+.ProseMirror h1 { @apply font-heading text-3xl; }
+.ProseMirror h2 { @apply font-heading text-2xl; }
 .ProseMirror h3 { @apply font-heading text-xl; }
 .ProseMirror p {
-  @apply mb-4 leading-relaxed;
+  @apply mb-4 leading-relaxed font-sans font-light;
 }
 .ProseMirror blockquote {
   @apply border-l-4 border-primary pl-4 italic bg-secondary/20 py-2 pr-4 my-4;
 }
 .ProseMirror code {
-  @apply font-mono bg-secondary/50 border border-border/50 px-1.5 py-0.5 rounded-none text-[0.85em];
+  @apply font-mono bg-secondary/50 border border-border/50 px-1.5 py-0.5 rounded-md text-[0.85em];
 }
 .ProseMirror pre {
-  @apply font-mono bg-secondary/30 border border-border/50 p-4 rounded-none my-4 overflow-x-auto;
+  @apply font-mono bg-secondary/30 border border-border/50 p-4 rounded-lg my-4 overflow-x-auto;
 }
 .ProseMirror pre code {
   @apply bg-transparent border-none p-0;

@@ -153,7 +153,7 @@ function ImageBlock({ src, url, caption, style = "inline", editable = false }: I
       return (
         <div
           data-slot="block-image-placeholder"
-          className="w-full h-48 rounded-none border-2 border-dashed border-border flex items-center justify-center text-muted-foreground text-sm"
+          className="w-full h-48 rounded-xl border-2 border-dashed border-border flex items-center justify-center text-muted-foreground text-sm"
         >
           No image set
         </div>
@@ -179,9 +179,9 @@ function ImageBlock({ src, url, caption, style = "inline", editable = false }: I
         sizes="(max-width: 768px) 100vw, 75vw"
         className={cn(
           "w-full object-cover",
-          style === "inline" && "rounded-none max-h-96",
-          style === "full" && "rounded-none max-h-[60vh]",
-          style === "cinematic" && "rounded-none max-h-[80vh]"
+          style === "inline" && "rounded-xl max-h-96",
+          style === "full" && "rounded-xl max-h-[60vh]",
+          style === "cinematic" && "rounded-xl max-h-[80vh]"
         )}
         unoptimized
       />
@@ -223,11 +223,11 @@ function StoryDialogueBlock({
           width={48}
           height={48}
           sizes="48px"
-          className="size-12 rounded-none border-2 border-brand-ember/20 object-cover flex-shrink-0"
+          className="size-12 rounded-xl border-2 border-brand-ember/20 object-cover flex-shrink-0"
           unoptimized
         />
       ) : (
-        <div className="size-12 rounded-none bg-secondary flex items-center justify-center flex-shrink-0 border-2 border-brand-ember/20">
+        <div className="size-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 border-2 border-brand-ember/20">
           <span className="text-xs font-mono text-brand-ochre uppercase">
             {character?.charAt(0) ?? "?"}
           </span>
@@ -235,7 +235,7 @@ function StoryDialogueBlock({
       )}
       <div className="flex-1 min-w-0">
         {character && (
-          <span className="block mb-1 text-xs font-semibold uppercase tracking-wider text-brand-ochre">
+          <span className="block mb-1 text-xs font-semibold tracking-wide text-brand-ochre">
             {character}
           </span>
         )}
@@ -245,10 +245,10 @@ function StoryDialogueBlock({
             onChange={(e) => onChange?.({ text: e.target.value })}
             placeholder="Character dialogueâ€¦"
             aria-label={`Dialogue for ${character ?? "character"}`}
-            className="w-full min-h-16 resize-none bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground outline-none rounded-none"
+            className="w-full min-h-16 resize-none bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground outline-none rounded-xl"
           />
         ) : (
-          <div className="bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground rounded-none">
+          <div className="bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground rounded-xl">
             {text}
           </div>
         )}
@@ -294,7 +294,7 @@ function ChoiceBlock({ options, text, targetSceneId, onChoose }: ChoiceBlockProp
             }
           }}
           className={cn(
-            "w-full text-left px-5 py-3 rounded-none border-2 border-border",
+            "w-full text-left px-5 py-3 rounded-xl border border-border/50",
             "text-sm font-sans text-foreground",
             "transition-all duration-200",
             "hover:border-primary hover:bg-primary/5",
@@ -348,7 +348,7 @@ function QuoteBlock({ content, text, attribution, author }: QuoteBlockProps) {
   return (
     <blockquote
       data-slot="block-quote"
-      className="border-l-4 border-primary pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground"
+      className="border-l-2 border-primary/60 pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground"
     >
       <p className="text-lg leading-relaxed">{displayContent}</p>
       {displayAttribution && (
@@ -366,7 +366,7 @@ function SceneBreakBlock() {
   return (
     <div data-slot="block-scene-break" className="my-16 flex flex-col items-center gap-2">
       <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-      <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+      <span className="text-xs font-sans font-medium tracking-wide text-muted-foreground">
         Scene
       </span>
       <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />

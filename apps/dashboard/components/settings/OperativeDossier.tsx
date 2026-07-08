@@ -68,7 +68,7 @@ export function OperativeDossier() {
 
   if (me === undefined) {
     return (
-      <div className="animate-pulse h-[300px] bg-bg-surface/20 border-2 border-border-strong rounded-none shadow-brutal-sm" />
+      <div className="animate-pulse h-[300px] bg-bg-surface/20 border border-border/50 rounded-3xl rounded-xl shadow-xs" />
     );
   }
 
@@ -143,7 +143,7 @@ export function OperativeDossier() {
   const currentAvatar = me?.avatar_url;
 
   return (
-    <div className="border-2 border-border-strong bg-cinematic-panel relative overflow-hidden shadow-brutal transition-all">
+    <div className="border border-border/50 rounded-3xl bg-cinematic-panel/40 relative overflow-hidden shadow-sm transition-all">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       {/* Header */}
@@ -166,11 +166,11 @@ export function OperativeDossier() {
 
           {/* Avatar Upload Zone */}
           <div
-            className="relative group cursor-pointer w-40 h-40 flex items-center justify-center p-1 bg-cinematic-bg border-2 border-border hover:border-primary transition-all duration-300"
+            className="relative group cursor-pointer w-40 h-40 flex items-center justify-center p-1 bg-cinematic-bg border border-border/50 hover:border-primary transition-all duration-300"
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="w-full h-full relative overflow-hidden">
-              <AvatarBadge src={currentAvatar ?? undefined} alt={displayName} className="w-full h-full rounded-none" />
+              <AvatarBadge src={currentAvatar ?? undefined} alt={displayName} className="w-full h-full rounded-xl" />
 
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-md">
                 {isUploading ? (
@@ -178,7 +178,7 @@ export function OperativeDossier() {
                 ) : (
                   <>
                     <ScanFace className="size-8 text-primary" />
-                    <span className="font-mono text-fine font-bold uppercase tracking-caps text-primary">
+                    <span className="font-sans text-xs font-semibold tracking-wide text-primary">
                       Rescan
                     </span>
                   </>
@@ -203,12 +203,12 @@ export function OperativeDossier() {
           {/* Identity Summary */}
           <div className="w-full text-center space-y-1">
             <p className="font-display italic text-2xl text-foreground break-words">{displayName}</p>
-            <p className="font-mono text-fine text-muted-foreground tracking-widest truncate">
+            <p className="font-sans text-xs text-muted-foreground tracking-widest truncate">
               {me?.email ?? userProfile?.email}
             </p>
             <div
               className={cn(
-                "mt-3 inline-flex items-center gap-2 px-3 py-1.5 border-2 text-fine font-mono tracking-widest uppercase shadow-brutal-sm",
+                "mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 border text-xs font-sans font-medium tracking-wide rounded-full",
                 role === "superadmin" && "border-brand-ember text-brand-ember bg-brand-ember/5",
                 role === "editor" && "border-brand-ochre text-brand-ochre bg-brand-ochre/5",
                 role !== "superadmin" && role !== "editor" && "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
@@ -220,22 +220,22 @@ export function OperativeDossier() {
           </div>
 
           {/* Performance Metrics */}
-          <div className="w-full border-2 border-border-strong bg-cinematic-bg p-4 space-y-3">
-            <h3 className="font-mono text-fine font-bold uppercase tracking-label text-muted-foreground border-b-2 border-border-strong pb-2">
+          <div className="w-full border border-border/50 rounded-3xl bg-cinematic-bg p-4 space-y-3">
+            <h3 className="font-sans text-xs font-semibold tracking-wide text-muted-foreground border-b border-border/50 pb-2">
               Metrics
             </h3>
             <div className="space-y-3 pt-1">
               <div className="flex justify-between items-center text-xs font-mono">
                 <div className="flex items-center gap-2 text-foreground">
                   <CheckCircle2 className="size-3 text-brand-ember" />
-                  <span className="uppercase tracking-widest text-fine">Missions</span>
+                  <span className="tracking-wide text-fine">Missions</span>
                 </div>
                 <span className="text-brand-ember font-bold">{stats?.missionsCompleted ?? 0}</span>
               </div>
               <div className="flex justify-between items-center text-xs font-mono">
                 <div className="flex items-center gap-2 text-foreground">
                   <BookOpen className="size-3 text-brand-ochre" />
-                  <span className="uppercase tracking-widest text-fine">Fragments</span>
+                  <span className="tracking-wide text-fine">Fragments</span>
                 </div>
                 <span className="text-brand-ochre font-bold">{stats?.loreAuthored ?? 0}</span>
               </div>
@@ -248,7 +248,7 @@ export function OperativeDossier() {
           <div className="space-y-6">
             {/* Alias */}
             <div className="space-y-2">
-              <label className="font-mono text-xs font-bold text-foreground uppercase tracking-widest flex items-center gap-2">
+              <label className="font-sans text-xs font-bold text-foreground tracking-wide flex items-center gap-2">
                 <span className="size-1.5 bg-primary shrink-0" />
                 Codename / Alias
               </label>
@@ -260,15 +260,15 @@ export function OperativeDossier() {
                   if (aliasError) setAliasError("");
                 }}
                 placeholder="ENTER OPERATIVE ALIAS..."
-                className="h-12 border-2 border-border bg-cinematic-bg font-mono text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none"
+                className="h-12 border border-border/50 bg-cinematic-bg font-sans text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-xl transition-colors shadow-none"
               />
               {aliasError && (
-                <p className="font-mono text-fine text-destructive uppercase tracking-wider pl-4 border-l-2 border-destructive">
+                <p className="font-sans text-xs text-destructive tracking-wide pl-4 border-l-2 border-destructive">
                   {aliasError}
                 </p>
               )}
               {!aliasError && (
-              <p className="font-mono text-fine text-muted-foreground uppercase tracking-wider pl-4 border-l-2 border-border-strong">
+              <p className="font-sans text-xs text-muted-foreground tracking-wide pl-4 border-l border-border/50">
                 Overrides display name globally.
               </p>
               )}
@@ -276,7 +276,7 @@ export function OperativeDossier() {
 
             {/* Bio */}
             <div className="space-y-2">
-              <label className="font-mono text-xs font-bold text-foreground uppercase tracking-widest flex items-center gap-2">
+              <label className="font-sans text-xs font-bold text-foreground tracking-wide flex items-center gap-2">
                 <span className="size-1.5 bg-primary shrink-0" />
                 Field Bio
               </label>
@@ -284,19 +284,19 @@ export function OperativeDossier() {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="ENTER FIELD BIO OR RECORD..."
-                className="min-h-[160px] resize-none border-2 border-border bg-cinematic-bg font-mono leading-relaxed tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none p-4"
+                className="min-h-[160px] resize-none border border-border/50 bg-cinematic-bg font-mono leading-relaxed tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-xl transition-colors shadow-none p-4"
               />
             </div>
           </div>
 
           {/* Save Controls */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t-2 border-border-strong text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-border/50 text-center sm:text-left">
             {saveSuccess ? (
-              <span className="font-mono text-fine font-bold text-primary uppercase tracking-label flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto">
+              <span className="font-sans text-xs font-semibold text-primary tracking-wide flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto">
                 <CheckCircle2 className="size-4" /> Sync Established.
               </span>
             ) : (
-              <span className="font-mono text-nano text-muted-foreground uppercase tracking-widest w-full sm:w-auto">
+              <span className="font-mono text-nano text-muted-foreground tracking-wide w-full sm:w-auto">
                 Data persists immediately upon sync
               </span>
             )}
@@ -304,7 +304,7 @@ export function OperativeDossier() {
               id="dossier-sync-btn"
               onClick={handleSave}
               disabled={isSaving || !!aliasError || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
-              className="h-12 px-6 font-mono text-xs font-bold uppercase tracking-label rounded-none border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none w-full sm:w-auto min-w-[200px]"
+              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-xl border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform w-full sm:w-auto min-w-[200px]"
             >
               {isSaving ? <Loader2 className="animate-spin size-4 mr-2" /> : <Activity className="size-4 mr-2" />}
               {isSaving ? "Syncing..." : "Sync Identity"}

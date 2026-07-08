@@ -93,10 +93,10 @@ export function AuthGatewayLayout({
           </motion.div>
 
           <div className="hidden sm:flex flex-col leading-none">
-            <span className="font-mono text-nano font-bold uppercase tracking-caps text-primary/60">
+            <span className="font-mono text-nano font-bold tracking-wide text-primary/60">
               fw_lab
             </span>
-            <span className="font-heading text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors duration-200">
+            <span className="font-heading text-xs font-black tracking-wide text-foreground group-hover:text-primary transition-colors duration-200">
               Return
             </span>
           </div>
@@ -105,7 +105,7 @@ export function AuthGatewayLayout({
         {/* Version stamp — no theme toggle here; auth pages inherit the user's system theme */}
         <span
           aria-hidden="true"
-          className="font-mono text-fine font-bold uppercase tracking-caps text-muted-foreground/45 select-none"
+          className="font-sans text-xs font-semibold tracking-wide text-muted-foreground/45 select-none"
         >
           {versionText}
         </span>
@@ -141,7 +141,7 @@ export function AuthGatewayLayout({
           variants={cardVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-content border-2 border-border bg-card overflow-hidden flex flex-col lg:grid lg:grid-cols-auth"
+          className="w-full max-w-content border border-border/50 bg-card overflow-hidden flex flex-col lg:grid lg:grid-cols-auth"
         >
           {/* LEFT: Folk key visual */}
           <div className="relative min-h-64 lg:min-h-96 border-b-2 lg:border-b-0 lg:border-r-2 border-border overflow-hidden bg-secondary">
@@ -158,7 +158,7 @@ export function AuthGatewayLayout({
               <span className="font-mono text-nano font-bold uppercase tracking-ultra text-primary/22">
                 {portalLabel}
               </span>
-              <span className="font-mono text-nano font-bold uppercase tracking-eyebrow text-foreground/12">
+              <span className="font-mono text-nano font-bold tracking-wide text-foreground/12">
                 sys.key
               </span>
             </div>
@@ -175,7 +175,7 @@ export function AuthGatewayLayout({
 
             {/* Sub-header */}
             <div className="pb-4 mb-5 border-b border-border">
-              <p className="font-mono text-fine font-bold uppercase tracking-loose text-muted-foreground">
+              <p className="font-sans text-xs font-semibold uppercase tracking-loose text-muted-foreground">
                 {portalDescription}
               </p>
             </div>
@@ -203,7 +203,7 @@ export function AuthGatewayLayout({
             {/* Instance stamp */}
             <p
               aria-hidden="true"
-              className="mt-5 font-mono text-nano uppercase tracking-label text-muted-foreground/25 select-none"
+              className="mt-5 font-mono text-nano tracking-wide text-muted-foreground/25 select-none"
             >
               {portalLabel} · sys.auth v2
             </p>

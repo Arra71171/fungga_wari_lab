@@ -35,7 +35,7 @@ export default function DataTermsPage() {
 
           {/* Effective date */}
           <div className="inline-flex items-center gap-2 border border-border bg-secondary/30 px-4 py-2 mb-12">
-            <span className="font-mono text-nano uppercase tracking-caps text-foreground font-bold">
+            <span className="font-mono text-nano tracking-wide text-foreground font-bold">
               Effective: January 2026
             </span>
           </div>
@@ -43,7 +43,7 @@ export default function DataTermsPage() {
           {/* Terms sections */}
           <div className="space-y-10">
             <section>
-              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-4 border-primary pl-4">
+              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-2 border-primary/60 pl-4">
                 1. Data Collection
               </h2>
               <div className="pl-4 space-y-3 text-sm font-mono text-muted-foreground leading-relaxed">
@@ -58,7 +58,7 @@ export default function DataTermsPage() {
             </section>
 
             <section>
-              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-4 border-primary pl-4">
+              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-2 border-primary/60 pl-4">
                 2. Cultural Content Ownership
               </h2>
               <div className="pl-4 space-y-3 text-sm font-mono text-muted-foreground leading-relaxed">
@@ -68,7 +68,7 @@ export default function DataTermsPage() {
             </section>
 
             <section>
-              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-4 border-primary pl-4">
+              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-2 border-primary/60 pl-4">
                 3. Data Security
               </h2>
               <div className="pl-4 space-y-3 text-sm font-mono text-muted-foreground leading-relaxed">
@@ -78,7 +78,7 @@ export default function DataTermsPage() {
             </section>
 
             <section>
-              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-4 border-primary pl-4">
+              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-2 border-primary/60 pl-4">
                 4. Media Storage
               </h2>
               <div className="pl-4 space-y-3 text-sm font-mono text-muted-foreground leading-relaxed">
@@ -88,7 +88,7 @@ export default function DataTermsPage() {
             </section>
 
             <section>
-              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-4 border-primary pl-4">
+              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-2 border-primary/60 pl-4">
                 5. Your Rights
               </h2>
               <div className="pl-4 space-y-3 text-sm font-mono text-muted-foreground leading-relaxed">
@@ -98,7 +98,7 @@ export default function DataTermsPage() {
             </section>
 
             <section>
-              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-4 border-primary pl-4">
+              <h2 className="font-heading text-xl font-bold uppercase tracking-tight mb-4 border-l-2 border-primary/60 pl-4">
                 6. Contact
               </h2>
               <div className="pl-4 space-y-3 text-sm font-mono text-muted-foreground leading-relaxed">
@@ -109,7 +109,7 @@ export default function DataTermsPage() {
 
           {/* CTA */}
           <div className="mt-12 pt-8 border-t border-border">
-            <Button variant="outline" size="lg" className="font-mono uppercase tracking-widest text-xs" asChild>
+            <Button variant="outline" size="lg" className="font-sans font-medium tracking-wide text-xs" asChild>
               <Link href="/">
                 <ArrowLeft className="size-4 mr-2" />
                 Return Home
@@ -122,10 +122,10 @@ export default function DataTermsPage() {
       {/* Footer */}
       <footer className="border-t border-border px-6 md:px-12 py-6">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
+          <span className="font-mono text-nano tracking-wide text-muted-foreground">
             Fungga Wari Lab © {new Date().getFullYear()}
           </span>
-          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
+          <span className="font-mono text-nano tracking-wide text-muted-foreground">
             Data Governance
           </span>
         </div>

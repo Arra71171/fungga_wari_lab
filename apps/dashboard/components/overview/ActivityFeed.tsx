@@ -53,7 +53,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
       <ScrollArea className="flex-1 -mx-4 px-4 md:-mx-6 md:px-6">
         <div className="space-y-6 pr-4">
           {!activities || activities.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground font-mono text-xs uppercase tracking-widest">
+            <div className="text-center py-6 text-muted-foreground font-sans text-xs tracking-wide">
               No recent activity.
             </div>
           ) : activities.map((activity) => (
@@ -70,7 +70,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
                     {activity.storyTitle}
                   </span>
                 </p>
-                <time className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <time className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                 </time>
               </div>

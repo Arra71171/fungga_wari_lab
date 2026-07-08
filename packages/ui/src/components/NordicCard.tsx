@@ -4,7 +4,7 @@ import { Slot } from "radix-ui"
 import { cn } from "@workspace/ui/lib/utils"
 
 const nordicCardVariants = cva(
-  "border rounded-none transition-all duration-300",
+  "border rounded-xl transition-all duration-300",
   {
     variants: {
       variant: {

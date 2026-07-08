@@ -36,7 +36,7 @@ const RichTextEditor = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full bg-bg-surface border border-border p-4 text-muted-foreground font-mono text-xs flex items-center justify-center min-h-[400px]">
+      <div className="w-full bg-bg-surface border border-border p-4 text-muted-foreground font-sans text-xs flex items-center justify-center min-h-[400px]">
         Loading Editor…
       </div>
     ),
@@ -151,13 +151,13 @@ export function ChapterBuilderCard({
   return (
     <div
       data-slot="chapter-builder-card"
-      className="border-2 border-border-strong bg-bg-surface shadow-brutal-sm transition-colors hover:border-brand-ember/50"
+      className="border border-border/50 bg-bg-surface shadow-xs transition-colors hover:border-brand-ember/50"
     >
       {/* ── Chapter Header (always visible) ─────────────────── */}
       <div
         className={cn(
           "flex items-center gap-3 px-5 py-4 cursor-pointer select-none",
-          isExpanded ? "border-b-2 border-border-strong bg-bg-panel" : ""
+          isExpanded ? "border-b border-border/50 bg-bg-panel" : ""
         )}
         onClick={() => onToggleExpand(id)}
       >
@@ -165,7 +165,7 @@ export function ChapterBuilderCard({
           <GripVertical className="size-4" />
         </div>
 
-        <span className="font-mono text-fine uppercase tracking-eyebrow text-brand-ember font-bold shrink-0">
+        <span className="font-sans text-xs tracking-wide text-brand-ember font-bold shrink-0">
           Ch {String(order).padStart(2, "0")}
         </span>
 
@@ -201,14 +201,14 @@ export function ChapterBuilderCard({
         <div className="px-6 py-8 space-y-8">
           {/* Chapter Title */}
           <div className="space-y-2">
-            <Label className="text-fine font-mono uppercase tracking-label text-muted-foreground">
+            <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
               Chapter Title
             </Label>
             <Input
               value={title}
               onChange={(e) => onUpdate(id, "title", e.target.value)}
               placeholder="e.g. The Discovery of the Bamboo Grove"
-              className="font-heading text-xl h-12 bg-transparent border-x-0 border-t-0 border-b-2 border-border-strong rounded-none px-0 focus-visible:ring-0 focus-visible:border-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
+              className="font-heading text-xl h-12 bg-transparent border-x-0 border-t-0 border-b border-border/50 rounded-xl px-0 focus-visible:ring-0 focus-visible:border-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
             />
           </div>
 
@@ -217,7 +217,7 @@ export function ChapterBuilderCard({
             <button
               type="button"
               onClick={() => setShowIllustration((v) => !v)}
-              className="flex items-center gap-2 text-fine font-mono uppercase tracking-label text-muted-foreground hover:text-brand-ember transition-colors"
+              className="flex items-center gap-2 text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember transition-colors"
             >
               <ImageIcon className="size-3" />
               <span>Chapter Illustration</span>
@@ -229,7 +229,7 @@ export function ChapterBuilderCard({
             {showIllustration && (
               <div className="flex justify-center">
                 <div className="w-48 space-y-2">
-                  <div className="border-2 border-border-strong bg-bg-panel h-full min-h-[200px]">
+                  <div className="border border-border/50 bg-bg-panel h-full min-h-[200px]">
                     <CoverImageUpload
                       value={illustrationUrl}
                       onChange={(url) => onUpdate(id, "illustrationUrl", url)}
@@ -249,7 +249,7 @@ export function ChapterBuilderCard({
             <button
               type="button"
               onClick={() => setShowAudio((v) => !v)}
-              className="flex items-center gap-2 text-fine font-mono uppercase tracking-label text-muted-foreground hover:text-brand-ember transition-colors"
+              className="flex items-center gap-2 text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember transition-colors"
             >
               <Music className="size-3" />
               <span>Chapter Audio / Narration</span>
@@ -272,7 +272,7 @@ export function ChapterBuilderCard({
 
           {/* Story Content — the main blog-post editor */}
           <div className="space-y-3">
-            <Label className="text-fine font-mono uppercase tracking-label text-brand-ember font-bold">
+            <Label className="text-fine font-sans font-medium tracking-wide text-brand-ember font-bold">
               Story Content
             </Label>
             <div className="text-tight-label text-muted-foreground font-mono bg-bg-surface px-4 py-2 border-l-2 border-brand-ember/40 leading-relaxed">
@@ -288,29 +288,29 @@ export function ChapterBuilderCard({
                 )
               }
               onImageUpload={handleImageUpload}
-              className="w-full bg-bg-panel border-2 border-border-strong rounded-none min-h-[480px]"
+              className="w-full bg-bg-panel border border-border/50 rounded-xl min-h-[480px]"
             />
 
             {/* Plain-text fallback — collapsed dev tool */}
             <details>
-              <summary className="text-fine uppercase tracking-widest font-mono text-muted-foreground/40 cursor-pointer hover:text-muted-foreground mt-4">
+              <summary className="text-fine tracking-wide font-mono text-muted-foreground/40 cursor-pointer hover:text-muted-foreground mt-4">
                 Plain-text fallback (dev)
               </summary>
               <Textarea
                 value={content}
                 onChange={(e) => onUpdate(id, "content", e.target.value)}
                 placeholder="Raw text representation…"
-                className="mt-2 min-h-[80px] resize-y bg-bg-panel border-2 border-border-strong rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 font-mono text-xs p-3 text-muted-foreground"
+                className="mt-2 min-h-[80px] resize-y bg-bg-panel border border-border/50 rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50 font-sans text-xs p-3 text-muted-foreground"
               />
             </details>
           </div>
 
           {/* Branching Choices — collapsed by default */}
-          <div className="border-t-2 border-border-strong pt-6 space-y-4">
+          <div className="border-t border-border/50 pt-6 space-y-4">
             <button
               type="button"
               onClick={() => setShowChoices((v) => !v)}
-              className="flex items-center gap-2 text-fine font-mono uppercase tracking-label text-muted-foreground hover:text-foreground transition-colors w-full"
+              className="flex items-center gap-2 text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors w-full"
             >
               <SplitSquareHorizontal className="size-3 text-brand-ember" />
               <span>Branching Choices</span>
@@ -336,7 +336,7 @@ export function ChapterBuilderCard({
                     {choices.map((choice) => (
                       <div
                         key={choice.id}
-                        className="flex items-start gap-3 bg-bg-surface p-3 border-2 border-border-strong border-l-4 border-l-brand-ember/50"
+                        className="flex items-start gap-3 bg-bg-surface p-3 border border-border/50 border-l-4 border-l-brand-ember/50"
                       >
                         <div className="space-y-2 flex-1">
                           <Label className="text-nano font-mono uppercase text-muted-foreground">
@@ -349,7 +349,7 @@ export function ChapterBuilderCard({
                               onUpdateChoice(choice.id, "label", e.target.value)
                             }
                             placeholder="e.g. Enter the dark forest"
-                            className="h-8 text-xs bg-bg-panel border-2 border-border-strong rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                            className="h-8 text-xs bg-bg-panel border border-border/50 rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                           />
                         </div>
                         <div className="space-y-2 flex-1">
@@ -367,14 +367,14 @@ export function ChapterBuilderCard({
                               )
                             }
                           >
-                            <SelectTrigger className="flex h-8 w-full border-2 border-border-strong bg-bg-panel px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                            <SelectTrigger className="flex h-8 w-full border border-border/50 bg-bg-panel px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-xl">
                               <SelectValue placeholder="Select chapter…" />
                             </SelectTrigger>
-                            <SelectContent className="border-2 border-border-strong rounded-none shadow-brutal-sm bg-bg-surface">
+                            <SelectContent className="border border-border/50 rounded-xl shadow-xs bg-bg-surface">
                               {allChapters
                                 .filter((c) => c.id !== id)
                                 .map((target) => (
-                                  <SelectItem key={target.id} value={target.id} className="font-mono text-xs focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                                  <SelectItem key={target.id} value={target.id} className="font-sans text-xs focus:bg-primary focus:text-primary-foreground rounded-xl cursor-pointer">
                                     Ch {target.order}:{" "}
                                     {target.title || "Untitled"}
                                   </SelectItem>
@@ -402,7 +402,7 @@ export function ChapterBuilderCard({
                   variant="outline"
                   size="sm"
                   onClick={onAddChoice}
-                  className="rounded-none border-2 border-border-strong bg-bg-surface h-8 text-fine uppercase font-mono tracking-wider hover:border-brand-ember hover:bg-brand-ember/10"
+                  className="rounded-xl border border-border/50 bg-bg-surface h-8 text-fine uppercase font-mono tracking-wider hover:border-brand-ember hover:bg-brand-ember/10"
                 >
                   <Plus className="size-3 mr-1" /> Add Choice
                 </Button>

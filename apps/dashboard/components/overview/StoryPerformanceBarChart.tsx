@@ -34,7 +34,7 @@ export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: Top
   if (isLoading) {
     return (
       <BrutalistCard variant="panel" className="w-full h-[350px] animate-pulse flex items-center justify-center">
-        <div className="text-muted-foreground/30 font-mono text-sm uppercase tracking-widest">
+        <div className="text-muted-foreground/30 font-sans text-sm tracking-wide">
           Loading Performance...
         </div>
       </BrutalistCard>
@@ -44,7 +44,7 @@ export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: Top
   if (!stories || stories.length === 0) {
     return (
       <BrutalistCard variant="panel" className="w-full h-[350px] flex items-center justify-center">
-        <div className="text-muted-foreground/50 font-mono text-sm uppercase tracking-widest">
+        <div className="text-muted-foreground/50 font-sans text-sm tracking-wide">
           No stories available
         </div>
       </BrutalistCard>

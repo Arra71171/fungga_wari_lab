@@ -61,7 +61,7 @@ function UserProfileBlock() {
 
   return (
     <div id="tour-profile" className="flex items-center gap-3">
-      <div className="relative size-8 shrink-0 bg-secondary border border-border overflow-hidden flex items-center justify-center">
+      <div className="relative size-8 shrink-0 bg-secondary border border-border/50 overflow-hidden flex items-center justify-center rounded-full">
         {avatarUrl ? (
           <Image
             src={avatarUrl}
@@ -77,10 +77,10 @@ function UserProfileBlock() {
         )}
       </div>
       <div className="flex flex-col min-w-0">
-        <span className="text-xs font-mono text-foreground truncate h-4 leading-none">
+        <span className="text-xs font-sans font-medium text-foreground truncate h-4 leading-none">
           {displayName}
         </span>
-        <span className="text-nano font-mono tracking-widest text-brand-ember uppercase h-3 leading-none mt-1">
+        <span className="text-[10px] font-sans font-semibold tracking-wide text-brand-ember/80 h-3 leading-none mt-1">
           {userRoleStr}
         </span>
       </div>
@@ -98,7 +98,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
       </div>
 
       <nav className="flex-1 px-3 py-6 space-y-0.5 overflow-y-auto">
-        <div className="text-nano font-mono tracking-label text-muted-foreground/60 uppercase mb-5 pl-3">
+        <div className="text-[10px] font-sans font-semibold tracking-wide text-muted-foreground/60 mb-3 pl-3">
           Creator Studio
         </div>
 
@@ -109,10 +109,10 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
               <div
                 id={`tour-${item.name.toLowerCase()}`}
                 className={cn(
-                  "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-none",
+                  "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-md",
                   isActive
-                    ? "border-l-[3px] border-brand-ember bg-brand-ember/15 text-brand-ember"
-                    : "border-l-[3px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/50"
+                    ? "border-l-[2px] border-brand-ember bg-brand-ember/8 text-brand-ember rounded-md"
+                    : "border-l-[2px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/30 rounded-md"
                 )}
               >
                 <item.icon className={cn("mr-3 size-4", isActive ? "text-brand-ember" : "")} />
@@ -124,7 +124,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           );
         })}
 
-        <div className="text-nano font-mono tracking-label text-muted-foreground/60 uppercase mt-8 mb-3 pl-3">
+        <div className="text-[10px] font-sans font-semibold tracking-wide text-muted-foreground/60 mb-2 pl-3">
           Public Site
         </div>
         {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
@@ -135,7 +135,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           rel="noopener noreferrer"
           className="block group outline-none"
         >
-          <div className="flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-none border-l-[3px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/50">
+          <div className="flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-md border-l-[2px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/30 rounded-md">
             <Globe className="mr-3 size-4" />
             <span className="text-sm tracking-wide font-normal">View Stories</span>
             <ExternalLink className="ml-auto size-3 opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -150,14 +150,14 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
         <div className="flex items-center gap-2">
           <Button
               variant="outline"
-              className="flex-1 flex items-center justify-center rounded-none bg-bg-surface border-border-subtle text-muted-foreground hover:text-foreground hover:border-border hover:bg-bg-surface/80"
+              className="flex-1 flex items-center justify-center rounded-full bg-bg-surface border border-border-subtle text-muted-foreground hover:text-foreground hover:border-border hover:bg-bg-surface/80"
               onClick={onSignOut}
             >
               <LogOut className="size-4 mr-2" />
-              <span className="font-mono text-fine uppercase tracking-widest">Sign Out</span>
+              <span className="font-sans text-xs font-medium tracking-wide">Sign Out</span>
             </Button>
 
-          <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors">
+          <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors rounded-full">
             <AnimatedThemeToggler />
           </div>
         </div>

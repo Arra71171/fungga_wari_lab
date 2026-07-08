@@ -34,7 +34,7 @@ export function HeadingNode({ level, children }: { level: number; children: Reac
 
 export function FolkQuoteNode({ children }: { children: React.ReactNode }) {
   return (
-    <blockquote className="border-l-4 border-primary pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground shadow-brutal-sm">
+    <blockquote className="border-l-2 border-primary/60 pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground shadow-xs">
       {children}
     </blockquote>
   );
@@ -67,7 +67,7 @@ const renderMarks = (node: JSONContent, children: React.ReactNode) => {
       case "strike":
         return <s className="line-through">{acc}</s>;
       case "highlight": // the Tiptap Highlight extension
-        return <mark className="bg-primary/20 text-foreground px-1 py-0.5 rounded-none">{acc}</mark>;
+        return <mark className="bg-primary/20 text-foreground px-1 py-0.5 rounded-xl">{acc}</mark>;
       default:
         return acc;
     }

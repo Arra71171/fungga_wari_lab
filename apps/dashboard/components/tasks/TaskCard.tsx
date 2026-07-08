@@ -76,9 +76,9 @@ export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
             {task.priority === "high" && <AlertCircle className="size-3.5 text-brand-ember" />}
             {task.priority === "medium" && <Clock className="size-3.5 text-brand-ochre" />}
             {task.priority === "low" && (
-              <span className="size-1.5 rounded-none bg-muted-foreground/50" />
+              <span className="size-1.5 rounded-xl bg-muted-foreground/50" />
             )}
-            <span className="uppercase tracking-widest text-nano font-bold">{task.priority}</span>
+            <span className="tracking-wide text-nano font-bold">{task.priority}</span>
           </div>
           <SendTaskEmailDialog
             taskId={task.id}
@@ -90,7 +90,7 @@ export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
 
         <div
           className={cn(
-            "flex items-center gap-1.5 px-2 py-1 border text-nano uppercase tracking-label font-bold",
+            "flex items-center gap-1.5 px-2 py-1 border text-nano tracking-wide font-bold",
             task.status === "done"
               ? "border-brand-ember/30 text-brand-ember bg-brand-ember/10"
               : task.status === "lore_gathering"

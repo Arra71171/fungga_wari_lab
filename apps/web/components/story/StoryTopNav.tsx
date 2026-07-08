@@ -21,7 +21,7 @@ export function StoryTopNav() {
       <div className="flex items-center gap-4 flex-1">
         <Link href="/stories" className="text-cinematic-text-dim hover:text-brand-ember transition-colors flex items-center gap-1 group">
           <ChevronLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-mono uppercase tracking-widest hidden sm:inline-block">Archive</span>
+          <span className="text-xs font-sans font-medium tracking-wide hidden sm:inline-block">Archive</span>
         </Link>
       </div>
 
@@ -34,7 +34,7 @@ export function StoryTopNav() {
         )}
         <Link href="/stories" className="flex items-center gap-1 group mt-0.5">
           <FungaMark size={12} className="text-brand-ember/60 group-hover:text-brand-ember transition-colors" />
-          <span className="text-nano font-mono uppercase tracking-label text-cinematic-text-dim group-hover:text-brand-ember transition-colors">
+          <span className="text-nano font-sans font-medium tracking-wide text-cinematic-text-dim group-hover:text-brand-ember transition-colors">
             Fungga Wari
           </span>
         </Link>
@@ -45,7 +45,7 @@ export function StoryTopNav() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="text-cinematic-text-dim hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-none"
+          className="text-cinematic-text-dim hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-xl"
           title="Search in Story"
         >
           <Search className="size-4" />
@@ -55,7 +55,7 @@ export function StoryTopNav() {
           size="icon" 
           onClick={toggleFocus}
           className={cn(
-            "hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-none",
+            "hover:text-cinematic-text hover:bg-cinematic-panel-hover rounded-xl",
             mode === "focus" ? "text-brand-ember" : "text-cinematic-text-dim"
           )}
           title={mode === 'focus' ? "Standard Mode" : "Focus Mode"}

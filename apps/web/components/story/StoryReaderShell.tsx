@@ -54,7 +54,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
         {/* Center skeleton */}
         <div className="flex-1 flex flex-col items-center justify-center gap-4 min-w-0">
           <Loader2 className="size-8 text-brand-ember animate-spin" />
-          <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+          <span className="text-xs font-sans font-medium tracking-wide text-muted-foreground">
             Loading Story…
           </span>
         </div>
@@ -68,7 +68,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
   if (!story) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center bg-cinematic-bg gap-4">
-        <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+        <span className="text-xs font-sans font-medium tracking-wide text-muted-foreground">
           Story not found
         </span>
       </div>

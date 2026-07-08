@@ -39,7 +39,7 @@ function RightPanelSection({
       {...props}
     >
       <div className="flex items-center justify-between mb-1">
-        <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        <h4 className="text-sm font-semibold tracking-wide text-muted-foreground">
           {title}
         </h4>
         {action && <div>{action}</div>}

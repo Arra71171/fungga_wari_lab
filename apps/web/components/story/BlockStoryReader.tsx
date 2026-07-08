@@ -60,7 +60,7 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
         3: "font-heading text-xl font-semibold tracking-tight mb-4 mt-8",
         4: "font-heading text-lg font-medium mb-3 mt-6",
         5: "font-heading text-base font-medium mb-2 mt-4",
-        6: "font-mono text-sm uppercase tracking-widest mb-2 mt-4 text-muted-foreground",
+        6: "font-sans text-sm tracking-wide mb-2 mt-4 text-muted-foreground",
       };
       return (
         <Tag key={index} className={cn("text-cinematic-text", sizeMap[level] ?? sizeMap[2])}>
@@ -82,9 +82,9 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
     case "horizontalRule":
       return (
         <div key={index} className="flex items-center justify-center gap-4 my-12" aria-hidden>
-          <div className="size-1 bg-brand-ember/40 rounded-none" />
-          <div className="size-1 bg-brand-ember/60 rounded-none" />
-          <div className="size-1 bg-brand-ember rounded-none shadow-[0_0_4px_var(--brand-ember)]" />
+          <div className="size-1 bg-brand-ember/40 rounded-2xl" />
+          <div className="size-1 bg-brand-ember/60 rounded-2xl" />
+          <div className="size-1 bg-brand-ember rounded-2xl shadow-[0_0_4px_var(--brand-ember)]" />
         </div>
       );
 
@@ -131,9 +131,9 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
       return (
         <pre
           key={index}
-          className="bg-cinematic-bg/60 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
+          className="bg-cinematic-bg/60 border border-cinematic-border/20 rounded-2xl p-4 my-6 overflow-x-auto"
         >
-          <code className="font-mono text-sm text-brand-glow">
+          <code className="font-sans text-sm text-brand-glow">
             {extractText(node)}
           </code>
         </pre>
@@ -179,7 +179,7 @@ function renderInlineContent(nodes: TipTapNode[]): React.ReactNode {
             element = (
               <code
                 key={i}
-                className="font-mono text-sm bg-cinematic-panel px-1 py-0.5 rounded-none text-brand-glow"
+                className="font-sans text-sm bg-cinematic-panel px-1 py-0.5 rounded-2xl text-brand-glow"
               >
                 {element}
               </code>
@@ -227,7 +227,7 @@ function ChoiceButtons({
   if (!choices.length) return null;
   return (
     <div className="flex flex-col items-center gap-3 py-16 px-4" aria-label="Story choices">
-      <p className="font-mono text-fine uppercase tracking-widest text-muted-foreground mb-2">
+      <p className="font-sans text-xs font-medium tracking-wide text-muted-foreground mb-2">
         Choose your path
       </p>
       {choices.map((choice) => (
@@ -236,7 +236,7 @@ function ChoiceButtons({
           onClick={() => {
             onChoose(choice.next_scene_id);
           }}
-          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {choice.label}
         </button>
@@ -371,7 +371,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             {/* Uncropped Illustration Container */}
             <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
               {/* Ensures the image maintains a strict 3:4 aspect ratio and fits within its container */}
-              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-none overflow-hidden shadow-brutal ring-1 ring-border/20 mx-auto">
+              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-2xl overflow-hidden shadow-sm ring-1 ring-border/20 mx-auto">
                 <Image
                   src={activeChapter.illustration_url}
                   alt={activeChapter.title ?? "Chapter illustration"}
@@ -387,7 +387,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                   aria-hidden
                 />
                 <div className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-8 px-6 pointer-events-none text-center">
-                  <span className="font-mono text-nano md:text-fine uppercase tracking-caps text-brand-ember/90 mb-2 drop-shadow-md">
+                  <span className="font-mono text-nano md:text-fine tracking-wide text-brand-ember/90 mb-2 drop-shadow-md">
                     Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
                   </span>
                   <h2 className="font-heading text-2xl lg:text-3xl font-black uppercase tracking-tight text-illustration-title leading-tight drop-shadow-lg">
@@ -399,7 +399,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           </>
         ) : activeChapter ? (
           <div className="text-center px-6 relative z-10">
-            <span className="font-mono text-fine uppercase tracking-caps text-brand-ember/60 mb-3 block">
+            <span className="font-sans text-xs tracking-wide text-brand-ember/60 mb-3 block">
               Chapter {String(activeChapterIndex + 1).padStart(2, "0")}
             </span>
             <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-cinematic-text leading-tight">
@@ -427,7 +427,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             aria-label="Back to manuscripts archive"
           >
             <ArrowLeft className="size-3.5 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-nano font-mono uppercase tracking-widest">
+            <span className="text-nano font-sans font-medium tracking-wide">
               Archive
             </span>
           </Link>
@@ -435,7 +435,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           {/* Chapter indicator (mobile only, since desktop has it on the left) */}
           <div className="lg:hidden">
             {activeChapter && (
-              <span className="text-nano font-mono uppercase tracking-widest text-muted-foreground/40">
+              <span className="text-nano font-sans font-medium tracking-wide text-muted-foreground/40">
                 {String(activeChapterIndex + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
               </span>
             )}
@@ -453,7 +453,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                     scrollContentToTop();
                   }
                 }}
-                className="text-nano font-mono uppercase tracking-widest text-muted-foreground/40 hover:text-brand-ember transition-colors"
+                className="text-nano font-sans font-medium tracking-wide text-muted-foreground/40 hover:text-brand-ember transition-colors"
                 aria-label="Restart story"
               >
                 Restart
@@ -469,14 +469,14 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           
           {/* Chapter Audio Player */}
           {activeChapter?.audio_url && (
-            <div className="mb-10 lg:mb-14 border border-cinematic-border/40 bg-cinematic-panel/40 p-4 lg:p-5 rounded-none backdrop-blur-sm">
+            <div className="mb-10 lg:mb-14 border border-cinematic-border/40 bg-cinematic-panel/40 p-4 lg:p-5 rounded-2xl backdrop-blur-sm">
               <div className="flex items-center gap-2 mb-3">
                 <Music className="size-3.5 text-brand-ember" />
-                <span className="font-mono text-nano uppercase tracking-widest text-brand-ember/90">Chapter Audio</span>
+                <span className="font-mono text-nano tracking-wide text-brand-ember/90">Chapter Audio</span>
               </div>
               <audio 
                 controls 
-                className="w-full h-10 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ember/50" 
+                className="w-full h-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ember/50" 
                 src={activeChapter.audio_url} 
                 preload="metadata"
                 aria-label={`Chapter audio for ${activeChapter.title || 'this chapter'}`}
@@ -514,7 +514,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 <p className="font-heading text-xl text-muted-foreground">
                   No content yet
                 </p>
-                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground/60">
+                <p className="text-xs font-sans font-medium tracking-wide text-muted-foreground/60">
                   This story is being crafted
                 </p>
               </div>
@@ -535,7 +535,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
 
                   {nextChapter && !hasNextScene && (
                     <div className="space-y-2">
-                      <p className="font-mono text-nano uppercase tracking-eyebrow text-muted-foreground/50">
+                      <p className="font-mono text-nano tracking-wide text-muted-foreground/50">
                         Next — Chapter {String(activeChapterIndex + 2).padStart(2, "0")}
                       </p>
                       <p className="font-heading text-lg md:text-xl font-bold uppercase tracking-tight text-cinematic-text/80 max-w-sm mx-auto">
@@ -546,7 +546,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
 
                   <button
                     onClick={goToNext}
-                    className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 sm:py-3 mt-2 border border-brand-ember/30 hover:border-brand-ember text-sm font-mono uppercase tracking-widest text-brand-ember/70 hover:text-brand-ember hover:bg-brand-ember/5 transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 sm:py-3 mt-2 border border-brand-ember/30 hover:border-brand-ember text-sm font-sans font-medium tracking-wide text-brand-ember/70 hover:text-brand-ember hover:bg-brand-ember/5 transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                     aria-label={hasNextScene ? "Continue reading" : `Continue to chapter ${activeChapterIndex + 2}`}
                   >
                     Continue Reading
@@ -557,16 +557,16 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 /* LAST chapter, LAST scene → The End */
                 <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-8 relative z-10 border-t border-cinematic-border/10">
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-none" />
+                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-2xl" />
                   </div>
 
                   <div className="relative">
-                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-none scale-150" />
+                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-2xl scale-150" />
                     <Flame className="relative size-8 text-brand-ember" aria-hidden="true" />
                   </div>
 
                   <div className="space-y-3 relative">
-                    <p className="font-display text-3xl font-black uppercase tracking-widest text-cinematic-text">
+                    <p className="font-display text-3xl font-black tracking-wide text-cinematic-text">
                       The End
                     </p>
                     {story.moral && (
@@ -582,13 +582,13 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                         if (firstSceneId) setCurrentSceneId(firstSceneId);
                         scrollContentToTop();
                       }}
-                      className="text-fine font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors"
+                      className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors"
                     >
                       Read Again
                     </button>
                     <Link
                       href="/stories"
-                      className="text-fine font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"
+                      className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"
                     >
                       Archive
                     </Link>

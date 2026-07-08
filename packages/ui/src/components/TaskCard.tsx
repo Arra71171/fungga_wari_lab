@@ -5,7 +5,7 @@ import { Calendar } from "lucide-react"
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge"
 
 const taskCardVariants = cva(
-  "flex flex-col gap-3 rounded-none border border-border bg-card p-5 text-card-foreground transition-colors duration-200 hover:border-primary cursor-pointer",
+  "flex flex-col gap-3 rounded-xl border border-border bg-card p-5 text-card-foreground transition-colors duration-200 hover:border-primary cursor-pointer",
   {
     variants: {
       priority: {
@@ -67,7 +67,7 @@ function TaskCard({
         <h3 className="font-heading font-medium leading-tight">{title}</h3>
         <span
           className={cn(
-            "inline-flex shrink-0 rounded-none px-2 py-0.5 text-xs font-semibold uppercase tracking-wide",
+            "inline-flex shrink-0 rounded-xl px-2 py-0.5 text-xs font-semibold uppercase tracking-wide",
             statusColors[status]
           )}
         >

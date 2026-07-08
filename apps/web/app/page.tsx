@@ -132,7 +132,7 @@ function StoryTicker() {
   }, []);
 
   return (
-    <section className="pt-24 md:pt-32 pb-0 bg-background relative overflow-hidden border-b border-border">
+    <section className="pt-32 md:pt-48 pb-0 bg-background relative overflow-hidden border-b border-border">
       {/* Abstract ink dividers */}
       <SectionDivider variant="ink-wash" position="top" className="opacity-40 text-brand-ember/20" />
       <SectionDivider variant="smoke" position="bottom" className="opacity-80 text-background" />
@@ -145,7 +145,7 @@ function StoryTicker() {
           <div className="flex flex-col items-start gap-2">
             <div className="flex items-center gap-3">
               <div className="h-[1px] w-8 bg-brand-ember" />
-              <span className="text-fine font-mono uppercase tracking-caps text-brand-ember font-bold">Catalogue Index</span>
+              <span className="text-fine font-sans text-sm font-medium tracking-wide text-primary">Catalogue Index</span>
             </div>
             <h3 className="text-xl md:text-2xl font-heading font-black uppercase tracking-tighter text-foreground ml-3">
               Oral Tradition Archives
@@ -176,14 +176,14 @@ function SectionHeading({
   const isInView = useInView(ref, { once: true, margin: "0px 0px -80px 0px" });
 
   return (
-    <div ref={ref} className="mb-12 md:mb-16 border-l-4 border-primary pl-6 py-2">
+    <div ref={ref} className="mb-20 md:mb-24 flex flex-col items-center text-center max-w-3xl mx-auto">
       <AnimatePresence>
         {badge && (
           <motion.span
             variants={clipReveal}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="inline-block px-3 py-1 mb-4 text-xs font-mono uppercase tracking-widest text-primary border border-primary bg-primary/5"
+            className="inline-block px-3 py-1 mb-4 text-xs font-sans text-xs font-medium tracking-wide text-primary/80 bg-primary/5 rounded-full"
           >
             {badge}
           </motion.span>
@@ -193,7 +193,7 @@ function SectionHeading({
       <SplitText
         text={title}
         as="h2"
-        className="text-4xl md:text-5xl lg:text-6xl font-heading font-black tracking-tighter uppercase leading-none mb-4"
+        className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold tracking-tight leading-none mb-4"
         stagger={0.055}
         delay={0.05}
       />
@@ -248,16 +248,16 @@ function CapabilityCell({
   return (
     <div
       ref={containerRef}
-      className="group p-8 border-b sm:border-y-0 sm:border-r border-border bg-background last:border-r-0 last:border-b-0 hover:bg-secondary/40 transition-colors duration-300 cursor-default"
+      className="group p-8 border-r border-border/50 bg-background/50 hover:bg-secondary/20 transition-colors duration-300 cursor-default"
     >
       <div
         ref={iconRef}
-        className="size-12 mb-8 border border-border flex items-center justify-center bg-muted/20 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm"
+        className="size-12 mb-8 rounded-full border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm"
       >
         <Icon className="size-5" />
       </div>
-      <h3 className="text-lg font-bold uppercase tracking-tight mb-3">{title}</h3>
-      <p className="text-muted-foreground font-mono text-xs leading-relaxed mb-6 h-12">{desc}</p>
+      <h3 className="text-lg font-medium tracking-wide text-foreground mb-3">{title}</h3>
+      <p className="text-muted-foreground font-sans text-xs leading-relaxed mb-6 h-12">{desc}</p>
       <div
         ref={lineRef}
         className="h-[1px] bg-brand-ember w-[24px]"
@@ -311,7 +311,7 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 pt-28 lg:pt-36 pb-12 min-h-[85vh] flex items-center overflow-hidden"
+        className="relative px-6 md:px-12 pt-40 lg:pt-56 pb-12 min-h-[85vh] flex items-center overflow-hidden"
       >
 
         <motion.div
@@ -389,7 +389,7 @@ export default function Home() {
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
               <div 
-                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-3xl p-1 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
+                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-[2rem] p-1 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
               >
                 {/* Glow */}
                 <motion.div
@@ -400,8 +400,8 @@ export default function Home() {
 
                 <div className="flex justify-between items-center z-10 w-full mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="size-2 bg-brand-ember rounded-none" />
-                    <div className="text-xs font-mono text-foreground/80 font-bold uppercase tracking-widest">
+                    <div className="size-2 bg-brand-ember rounded-full" />
+                    <div className="text-xs font-sans text-foreground/70 font-medium tracking-wide">
                       SYS.ID: 9X-ALPHA
                     </div>
                   </div>
@@ -427,7 +427,7 @@ export default function Home() {
                 
                 {/* Watermark Overlay Element */}
                 <div className="absolute bottom-0 right-0 px-4 py-2 bg-background border-t border-l border-border z-20 pointer-events-auto">
-                  <span className="text-fine font-mono uppercase tracking-label text-foreground font-bold">Loktak Lake</span>
+                  <span className="text-fine font-sans font-medium tracking-wide text-foreground font-bold">Loktak Lake</span>
                 </div>
               </div>
 
@@ -464,7 +464,7 @@ export default function Home() {
       {/* ─── FEATURE BENTO ────────────────────────────────────────────────── */}
       <section
         id="stories"
-        className="relative py-24 md:py-32 px-6 md:px-12 bg-secondary/10 border-y border-border"
+        className="relative py-32 md:py-48 px-6 md:px-12 bg-secondary/10 border-y border-border"
       >
         <div className="max-w-7xl mx-auto" ref={bentoGridRef}>
           <SectionHeading
@@ -495,19 +495,19 @@ export default function Home() {
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: -3 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                      className="size-12 border border-border bg-secondary flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                      className="size-12 rounded-full border border-border/50 bg-secondary/50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                     >
                       <Archive className="size-5" />
                     </motion.div>
-                    <span className="font-mono text-xs text-muted-foreground/30 font-bold group-hover:text-primary-foreground/50 transition-colors">
+                    <span className="font-sans text-xs text-muted-foreground/50 font-medium group-hover:text-primary-foreground/50 transition-colors">
                       REF_01
                     </span>
                   </div>
                   <div className="mt-8 max-w-sm">
-                    <CardTitle className="text-2xl lg:text-3xl uppercase tracking-tighter mb-4 drop-shadow-md text-foreground">
+                    <CardTitle className="text-2xl lg:text-3xl tracking-tight mb-4 text-foreground">
                       Folklore Repository
                     </CardTitle>
-                    <CardDescription className="font-mono text-sm max-w-xs font-semibold text-muted-foreground drop-shadow-sm">
+                    <CardDescription className="font-sans text-sm max-w-xs font-semibold text-muted-foreground drop-shadow-sm">
                       Deep-earth oral traditions and cultural lore, structured for digital permanence.
                     </CardDescription>
                   </div>
@@ -522,13 +522,13 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: 3 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="size-10 border border-primary/20 bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                    className="size-10 rounded-full border border-primary/10 bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                   >
                     <BookOpen className="size-5" />
                   </motion.div>
                 </div>
                 <div>
-                  <CardTitle className="text-xl uppercase tracking-tighter mb-2">Polyvocal Streams</CardTitle>
+                  <CardTitle className="text-xl tracking-tight mb-2">Polyvocal Streams</CardTitle>
                   <CardDescription className="text-xs font-mono">
                     Meticulously captured records of the many voices that carry our heritage.
                   </CardDescription>
@@ -543,14 +543,14 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: -3 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="size-10 border border-primary-foreground/20 bg-primary-foreground/10 flex items-center justify-center text-primary-foreground group-hover:bg-primary-foreground group-hover:text-primary transition-colors"
+                    className="size-10 rounded-full border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground group-hover:bg-primary-foreground group-hover:text-primary transition-colors"
                   >
                     <Users className="size-5" />
                   </motion.div>
-                  <span className="font-mono text-xs text-primary-foreground/50">REF_03</span>
+                  <span className="font-sans text-xs text-primary-foreground/50">REF_03</span>
                 </div>
                 <div>
-                  <CardTitle className="text-xl uppercase tracking-tighter mb-2">The Hearth (CMS)</CardTitle>
+                  <CardTitle className="text-xl tracking-tight mb-2">The Hearth (CMS)</CardTitle>
                   <CardDescription className="text-xs font-mono opacity-80 text-primary-foreground">
                     Where creators co-author history and validate the living breath of local lore.
                   </CardDescription>
@@ -565,19 +565,19 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: 6 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="size-10 border border-border bg-secondary flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors"
+                    className="size-10 rounded-full border border-border/50 bg-secondary/50 flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors"
                   >
                     <Layers className="size-5" />
                   </motion.div>
                 </div>
                 <div className="flex items-end justify-between">
                   <div className="max-w-xs">
-                    <CardTitle className="text-xl uppercase tracking-tighter mb-2">Neo-Archival Protocol</CardTitle>
+                    <CardTitle className="text-xl tracking-tight mb-2">Neo-Archival Protocol</CardTitle>
                     <CardDescription className="text-xs font-mono">
                       End-to-end systems for archiving endangered cultural data with modern stability.
                     </CardDescription>
                   </div>
-                  <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-mono text-fine uppercase text-muted-foreground">
+                  <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-sans text-xs uppercase text-muted-foreground">
                     Integrity: Verified
                   </div>
                 </div>
@@ -588,7 +588,7 @@ export default function Home() {
       </section>
 
       {/* ─── CAPABILITIES ─────────────────────────────────────────────────── */}
-      <section className="relative py-24 md:py-32 px-6 md:px-12 bg-background border-b border-border">
+      <section className="relative py-32 md:py-48 px-6 md:px-12 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto">
           <SectionHeading
             title="Systems of Memory"
@@ -652,7 +652,7 @@ export default function Home() {
           <SplitText
             text="What is past is prologue."
             as="h2"
-            className="text-4xl md:text-6xl lg:text-7xl font-heading font-black tracking-tighter uppercase leading-[0.85] mb-8 text-cinematic-text"
+            className="text-4xl md:text-6xl lg:text-7xl font-heading font-semibold tracking-tight leading-[0.85] mb-8 text-cinematic-text"
             stagger={0.055}
           />
 
@@ -667,7 +667,7 @@ export default function Home() {
             <MagneticButton strength={0.25}>
               <Button
                 size="lg"
-                className="h-14 px-10 text-sm font-bold tracking-widest uppercase transition-shadow"
+                className="h-14 px-10 text-sm font-medium tracking-wide rounded-full transition-shadow"
                 asChild
               >
                 <Link href="/login">Begin the Journey</Link>
@@ -686,15 +686,15 @@ export default function Home() {
               <div className="size-4 bg-primary" />
               ꯐꯨꯡꯒꯥ ꯋꯥꯔꯤ <span className="font-mono text-lg font-bold">.Lab</span>
             </span>
-            <span className="text-3xs font-mono text-muted-foreground uppercase tracking-widest mt-2 border border-border px-2 py-1">
+            <span className="text-3xs font-mono text-muted-foreground tracking-wide mt-2 border border-border px-2 py-1">
               Oral History Systems v2.0
             </span>
-            <span className="text-3xs font-mono text-muted-foreground/70 uppercase tracking-widest mt-4">
+            <span className="text-3xs font-mono text-muted-foreground/70 tracking-wide mt-4">
               Code. Coffee. Oliver Oinam (Fungga_Wari Team)
             </span>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 text-2xs font-mono text-muted-foreground uppercase tracking-widest font-bold">
+          <div className="flex flex-wrap justify-center gap-6 text-2xs font-mono text-muted-foreground tracking-wide font-bold">
             {[
               { label: "Archive", href: "/archive" },
               { label: "Sys_Status", href: "/sys-status" },

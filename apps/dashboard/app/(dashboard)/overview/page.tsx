@@ -145,11 +145,11 @@ export default async function OverviewPage() {
       <div className="flex flex-col gap-6 md:gap-8 p-4 md:p-8 max-w-7xl mx-auto">
 
         {/* Page Header */}
-        <div className="flex flex-col gap-2 border-l-[3px] border-brand-ember pl-5 py-1">
+        <div className="flex flex-col gap-2 pl-0 py-1 mb-2">
           <h1 className="text-4xl font-heading tracking-tight text-foreground">
             {`Welcome back, ${displayName}`}
           </h1>
-          <p className="text-fine font-mono tracking-label uppercase text-muted-foreground/70">
+          <p className="text-xs font-sans text-muted-foreground/60">
             Fungga Wari Creator Studio — Analytics
           </p>
         </div>
@@ -189,27 +189,27 @@ export default async function OverviewPage() {
           <div className="absolute top-[35%] md:top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
 
           <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
-            <div className="size-10 md:size-12 rounded-none border border-border bg-bg-base flex items-center justify-center">
+            <div className="size-10 md:size-12 rounded-2xl border border-border/50 bg-bg-base flex items-center justify-center">
               <FileText className="size-4 md:size-5 text-muted-foreground" />
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.draftStories}</div>
-              <div className="text-[9px] sm:text-[10px] md:text-fine font-mono uppercase tracking-wider md:tracking-label text-muted-foreground mt-0.5 md:mt-1">Drafts</div>
+              <div className="text-[10px] font-sans font-medium tracking-wide text-muted-foreground mt-1">Drafts</div>
             </div>
           </div>
 
           <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
-            <div className="size-10 md:size-12 rounded-none border border-brand-ochre/40 bg-brand-ochre/5 flex items-center justify-center">
+            <div className="size-10 md:size-12 rounded-2xl border border-brand-ochre/30 bg-brand-ochre/5 flex items-center justify-center">
               <Send className="size-4 md:size-5 text-brand-ochre" />
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-heading font-bold text-foreground">{stats.inReviewStories}</div>
-              <div className="text-[9px] sm:text-[10px] md:text-fine font-mono uppercase tracking-wider md:tracking-label text-brand-ochre mt-0.5 md:mt-1">In Review</div>
+              <div className="text-[10px] font-sans font-medium tracking-wide text-brand-ochre mt-1">In Review</div>
             </div>
           </div>
 
           <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
-            <div className="size-10 md:size-12 rounded-none border border-primary/40 bg-primary/5 flex items-center justify-center">
+            <div className="size-10 md:size-12 rounded-2xl border border-primary/30 bg-primary/5 flex items-center justify-center">
               <Globe2 className="size-4 md:size-5 text-primary" />
             </div>
             <div className="text-center">

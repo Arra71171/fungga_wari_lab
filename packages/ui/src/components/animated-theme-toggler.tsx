@@ -92,7 +92,7 @@ export function AnimatedThemeToggler({
       variant="outline"
       size="icon"
       className={cn(
-        "relative size-10 rounded-none border-border bg-background shadow-brutal-sm hover:bg-secondary focus-visible:ring-1 focus-visible:ring-primary transition-all active:scale-95",
+        "relative size-10 rounded-xl border-border bg-background shadow-xs hover:bg-secondary focus-visible:ring-1 focus-visible:ring-primary transition-all active:scale-95",
         className
       )}
       aria-label="Toggle theme"

@@ -512,7 +512,7 @@ export default function DraftEditorPage({
       <div className="h-14 border-b border-border flex items-center justify-between px-6 shrink-0 bg-bg-surface sticky top-0 z-10">
         <Link
           href="/stories"
-          className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-xs font-sans font-medium tracking-wide text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3" />
           Archive
@@ -520,7 +520,7 @@ export default function DraftEditorPage({
         <div className="flex items-center gap-3">
           <span
             className={cn(
-              "text-fine font-mono uppercase tracking-widest px-2 py-0.5 border",
+              "text-fine font-sans font-medium tracking-wide px-2 py-0.5 border",
               isPublished
                 ? "text-status-active border-status-active/30 bg-status-active/10"
                 : "text-muted-foreground border-border"
@@ -533,7 +533,7 @@ export default function DraftEditorPage({
             size="sm"
             onClick={handleSave}
             disabled={isSaving || isPublishing}
-            className="rounded-none border-border hover:border-brand-ember px-5"
+            className="rounded-xl border-border hover:border-brand-ember px-5"
           >
             {isSaving ? (
               <Loader2 className="size-4 animate-spin mr-2" />
@@ -548,7 +548,7 @@ export default function DraftEditorPage({
               size="sm"
               onClick={handleUnpublish}
               disabled={isSaving || isPublishing}
-              className="rounded-none border-border hover:border-destructive hover:text-destructive px-5"
+              className="rounded-xl border-border hover:border-destructive hover:text-destructive px-5"
             >
               {isPublishing ? (
                 <Loader2 className="size-4 animate-spin mr-2" />
@@ -563,7 +563,7 @@ export default function DraftEditorPage({
               size="sm"
               onClick={handlePublish}
               disabled={isSaving || isPublishing}
-              className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-none px-5"
+              className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-xl px-5"
             >
               {isPublishing ? (
                 <Loader2 className="size-4 animate-spin mr-2" />
@@ -583,7 +583,7 @@ export default function DraftEditorPage({
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-2">
               <PenTool className="size-4 text-brand-ember" />
-              <span className="text-fine font-mono uppercase tracking-caps text-brand-ember font-bold">
+              <span className="text-fine font-sans font-medium tracking-wide text-brand-ember font-bold">
                 Manuscript Core
               </span>
             </div>
@@ -596,20 +596,20 @@ export default function DraftEditorPage({
                 if (titleError) setTitleError("");
               }}
               placeholder="The Tale of the Bamboo Cutter"
-              className="font-heading text-4xl font-bold h-16 border-2 border-border-strong bg-bg-surface px-4 shadow-brutal-sm focus-visible:ring-2 focus-visible:ring-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
+              className="font-heading text-4xl font-bold h-16 border border-border/50 bg-bg-surface px-4 shadow-xs focus-visible:ring-2 focus-visible:ring-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
             />
             {titleError && (
-              <p className="font-mono text-fine text-destructive uppercase tracking-wider pl-4 border-l-2 border-destructive">
+              <p className="font-sans text-xs text-destructive tracking-wide pl-4 border-l-2 border-destructive">
                 {titleError}
               </p>
             )}
 
             <BrutalistCard variant="panel" padding="md" className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6 bg-bg-panel border-border-strong">
               <div className="space-y-2">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Cover Art
                 </Label>
-                <div className="border-2 border-border-strong bg-bg-surface h-full min-h-[250px]">
+                <div className="border border-border/50 bg-bg-surface h-full min-h-[250px]">
                   <CoverImageUpload
                     value={coverImageUrl}
                     onChange={setCoverImageUrl}
@@ -619,29 +619,29 @@ export default function DraftEditorPage({
               </div>
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                     Short Description
                   </Label>
                   <Textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="A brief summary of the story..."
-                    className="min-h-[100px] resize-none border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                    className="min-h-[100px] resize-none border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                    <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                       Category
                     </Label>
                     <Select value={category} onValueChange={setCategory}>
-                      <SelectTrigger className="flex h-10 w-full border-2 border-border-strong bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                      <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-xl">
                         <SelectValue placeholder="Select Category" />
                       </SelectTrigger>
-                      <SelectContent className="border-2 border-border-strong rounded-none shadow-brutal-sm bg-bg-surface">
+                      <SelectContent className="border border-border/50 rounded-xl shadow-xs bg-bg-surface">
                         {STORY_CATEGORIES.map((cat) => (
-                          <SelectItem key={cat.value} value={cat.value} className="font-mono text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                          <SelectItem key={cat.value} value={cat.value} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-xl cursor-pointer">
                             {cat.label}
                           </SelectItem>
                         ))}
@@ -649,16 +649,16 @@ export default function DraftEditorPage({
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                    <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                       Language
                     </Label>
                     <Select value={language} onValueChange={setLanguage}>
-                      <SelectTrigger className="flex h-10 w-full border-2 border-border-strong bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                      <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-xl">
                         <SelectValue placeholder="Select Language" />
                       </SelectTrigger>
-                      <SelectContent className="border-2 border-border-strong rounded-none shadow-brutal-sm bg-bg-surface">
+                      <SelectContent className="border border-border/50 rounded-xl shadow-xs bg-bg-surface">
                         {STORY_LANGUAGES.map((lang) => (
-                          <SelectItem key={lang.value} value={lang.value} className="font-mono text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                          <SelectItem key={lang.value} value={lang.value} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-xl cursor-pointer">
                             {lang.label}
                           </SelectItem>
                         ))}
@@ -670,11 +670,11 @@ export default function DraftEditorPage({
             </BrutalistCard>
           </div>
 
-          <hr className="border-2 border-border-strong" />
+          <hr className="border border-border/50" />
 
           {/* Chapters Builder */}
           <BrutalistCard variant="panel" padding="md" className="space-y-6 bg-bg-panel border-border-strong">
-            <div className="flex items-center justify-between border-b-2 border-border-strong pb-4 mb-4">
+            <div className="flex items-center justify-between border-b border-border/50 pb-4 mb-4">
               <div>
                 <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground">Chapters</h2>
                 <p className="text-xs font-mono text-muted-foreground tracking-wide mt-1">
@@ -685,7 +685,7 @@ export default function DraftEditorPage({
                 variant="outline"
                 size="sm"
                 onClick={handleAddChapter}
-                className="rounded-none border-2 border-border-strong hover:border-brand-ember hover:bg-brand-ember/10 font-mono tracking-widest uppercase text-xs shadow-brutal-sm active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+                className="rounded-xl border border-border/50 hover:border-brand-ember hover:bg-brand-ember/10 font-sans font-medium tracking-wide text-xs shadow-xs active:scale-[0.98] transition-all"
               >
                 <Plus className="size-4 mr-2" /> Add Chapter
               </Button>
@@ -718,14 +718,14 @@ export default function DraftEditorPage({
               ))}
 
               {chapters.length === 0 && (
-                <div className="border-2 border-dashed border-border-strong p-12 text-center bg-bg-surface group hover:border-brand-ember/50 transition-colors">
-                  <p className="text-sm font-mono text-muted-foreground mb-4 uppercase tracking-widest">
+                <div className="border border-dashed border-border/50 rounded-3xl p-12 text-center bg-bg-surface group hover:border-brand-ember/50 transition-colors">
+                  <p className="text-sm font-mono text-muted-foreground mb-4 tracking-wide">
                     No chapters yet.
                   </p>
                   <Button
                     variant="default"
                     onClick={handleAddChapter}
-                    className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-none shadow-brutal active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+                    className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-xl shadow-sm active:scale-[0.98] transition-all"
                   >
                     <Plus className="size-4 mr-2" /> Start the first chapter
                   </Button>
@@ -734,35 +734,35 @@ export default function DraftEditorPage({
             </div>
           </BrutalistCard>
 
-          <hr className="border-2 border-border-strong" />
+          <hr className="border border-border/50" />
 
           {/* Post-Story Metadata */}
           <BrutalistCard variant="panel" padding="md" className="space-y-8 bg-bg-panel border-border-strong">
-            <h2 className="font-heading text-xl font-black uppercase tracking-tighter text-foreground border-b-2 border-border-strong pb-4">Closing Details</h2>
+            <h2 className="font-heading text-xl font-black uppercase tracking-tighter text-foreground border-b border-border/50 pb-4">Closing Details</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Moral of the Story
                 </Label>
                 <Textarea
                   value={moral}
                   onChange={(e) => setMoral(e.target.value)}
                   placeholder="What is the key takeaway?"
-                  className="min-h-[100px] border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                  className="min-h-[100px] border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                 />
               </div>
 
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                     Original Attribution
                   </Label>
                   <Input
                     value={attributedAuthor}
                     onChange={(e) => setAttributedAuthor(e.target.value)}
                     placeholder="e.g. As told by Ene Ibetombi"
-                    className="h-11 border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                    className="h-11 border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                   <p className="text-fine text-muted-foreground font-mono">
                     Who is the real-world source of this folk tale?
@@ -770,14 +770,14 @@ export default function DraftEditorPage({
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                     Tags
                   </Label>
                   <Input
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                     placeholder="folklore, bamboo, ritual"
-                    className="h-11 border-2 border-border-strong bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                    className="h-11 border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                 </div>
               </div>
@@ -788,24 +788,24 @@ export default function DraftEditorPage({
 
       {/* Delete Confirmation AlertDialog */}
       <AlertDialog open={!!chapterToDelete} onOpenChange={(open) => !open && setChapterToDelete(null)}>
-        <AlertDialogContent className="border-2 border-border-strong bg-bg-surface rounded-none shadow-brutal">
+        <AlertDialogContent className="border border-border/50 bg-bg-surface rounded-xl shadow-sm">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-heading uppercase tracking-tight text-foreground">Remove Chapter?</AlertDialogTitle>
-            <AlertDialogDescription className="font-mono text-sm text-muted-foreground">
+            <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
               Are you sure you want to remove this chapter? This will also remove any scenes and choices inside it. This action cannot be undone once saved.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
               id="chapter-delete-cancel-btn"
-              className="rounded-none border-2 border-border-strong font-mono uppercase tracking-wider hover:bg-bg-panel hover:text-foreground"
+              className="rounded-xl border border-border/50 font-sans font-medium tracking-wide hover:bg-bg-panel hover:text-foreground"
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               id="chapter-delete-confirm-btn"
               onClick={handleConfirmDeleteChapter}
-              className="rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 font-mono uppercase tracking-wider border-2 border-transparent"
+              className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90 font-sans font-medium tracking-wide border-2 border-transparent"
             >
               Confirm
             </AlertDialogAction>

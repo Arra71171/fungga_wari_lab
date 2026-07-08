@@ -112,7 +112,7 @@ export function ChapterAudioUpload({ value, onChange, className }: ChapterAudioU
       {isUploading ? (
         <div className="flex flex-col items-center text-muted-foreground/50">
           <Loader2 className="size-6 animate-spin mb-2 text-brand-ember/50" />
-          <span className="font-mono text-xs uppercase tracking-widest text-brand-ember/70">
+          <span className="font-sans text-xs tracking-wide text-brand-ember/70">
             {uploadStatus || "Uploading..."}
           </span>
         </div>
@@ -147,7 +147,7 @@ export function ChapterAudioUpload({ value, onChange, className }: ChapterAudioU
           onClick={() => inputRef.current?.click()}
         >
           <Music className="size-6 mb-2 group-hover:text-brand-ember/50 transition-colors" />
-          <span className="font-mono text-xs uppercase tracking-widest text-center px-4">
+          <span className="font-sans text-xs tracking-wide text-center px-4">
             Upload Audio Narration
           </span>
         </div>

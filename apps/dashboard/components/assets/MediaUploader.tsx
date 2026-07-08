@@ -155,27 +155,27 @@ export function MediaUploader() {
     >
       <div className="flex gap-4 w-full max-w-sm mb-4">
         <div className="flex-1 space-y-1">
-          <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+          <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
             Asset Type
           </Label>
           <Select value={assetType} onValueChange={setAssetType} disabled={isUploading}>
-            <SelectTrigger className="bg-bg-overlay border-border font-mono text-sm rounded-none">
+            <SelectTrigger className="bg-bg-overlay border-border font-sans text-sm rounded-xl">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-bg-panel border-border rounded-none">
-              <SelectItem value="illustration" className="font-mono text-sm">
+            <SelectContent className="bg-bg-panel border-border rounded-xl">
+              <SelectItem value="illustration" className="font-sans text-sm">
                 Illustration
               </SelectItem>
-              <SelectItem value="sketch" className="font-mono text-sm">
+              <SelectItem value="sketch" className="font-sans text-sm">
                 Design Sketch
               </SelectItem>
-              <SelectItem value="reference_photo" className="font-mono text-sm">
+              <SelectItem value="reference_photo" className="font-sans text-sm">
                 Reference Photo
               </SelectItem>
-              <SelectItem value="audio_lore" className="font-mono text-sm">
+              <SelectItem value="audio_lore" className="font-sans text-sm">
                 Audio (Lore)
               </SelectItem>
-              <SelectItem value="text_story" className="font-mono text-sm">
+              <SelectItem value="text_story" className="font-sans text-sm">
                 Story (Doc/Text)
               </SelectItem>
             </SelectContent>
@@ -201,7 +201,7 @@ export function MediaUploader() {
           fileInputRef.current?.click();
         }}
         disabled={isUploading}
-        className="h-40 w-full max-w-sm border border-dashed border-border-strong bg-bg-overlay hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors flex flex-col gap-2 rounded-none group"
+        className="h-40 w-full max-w-sm border border-dashed border-border-strong bg-bg-overlay hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors flex flex-col gap-2 rounded-xl group"
         variant="ghost"
         aria-label="Upload media asset"
       >
@@ -210,10 +210,10 @@ export function MediaUploader() {
         ) : (
           <>
             <UploadCloud className="size-8 text-muted-foreground group-hover:text-brand-ember transition-colors" />
-            <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider group-hover:text-foreground">
+            <span className="font-sans text-xs text-muted-foreground tracking-wide group-hover:text-foreground">
               Drop or Browse Media
             </span>
-            <span className="font-mono text-fine text-muted-foreground/60 whitespace-normal text-center px-2">
+            <span className="font-sans text-xs text-muted-foreground/60 whitespace-normal text-center px-2">
               Images, Audio, or Docs (TXT, PDF, Word) · Max {MAX_FILE_SIZE_MB}MB
             </span>
           </>
@@ -228,7 +228,7 @@ export function MediaUploader() {
           id="asset-upload-error"
           role="alert"
           aria-live="assertive"
-          className="flex items-start gap-2 w-full max-w-sm font-mono text-fine text-destructive border-l-2 border-destructive pl-3 py-1 bg-destructive/5"
+          className="flex items-start gap-2 w-full max-w-sm font-sans text-xs text-destructive border-l-2 border-destructive pl-3 py-1 bg-destructive/5"
         >
           <AlertCircle className="size-3 mt-0.5 shrink-0" aria-hidden />
           {validationError}

@@ -65,7 +65,7 @@ function PortraitFrame({
       </div>
 
       {/* Main portrait card */}
-      <div className="relative z-10 w-auto h-full aspect-[3/4] rounded-none overflow-hidden shadow-2xl ring-1 ring-border/50">
+      <div className="relative z-10 w-auto h-full aspect-[3/4] rounded-xl overflow-hidden shadow-2xl ring-1 ring-border/50">
         {imageElement}
       </div>
 

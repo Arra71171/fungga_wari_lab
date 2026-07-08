@@ -124,10 +124,10 @@ export default function StoriesOverviewPage() {
   if (stories === undefined) {
     return (
       <div className="flex flex-col h-full space-y-6 md:space-y-8 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto animate-pulse">
-        <div className="h-20 bg-muted/30 rounded-none w-1/3" />
+        <div className="h-20 bg-muted/30 rounded-xl w-1/3" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-64 bg-muted/20 border border-border-subtle rounded-none" />
+            <div key={i} className="h-64 bg-muted/20 border border-border-subtle rounded-xl" />
           ))}
         </div>
       </div>
@@ -155,13 +155,13 @@ export default function StoriesOverviewPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="rounded-none font-mono text-xs uppercase tracking-widest"
+              className="rounded-full font-sans text-xs font-semibold tracking-wide"
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
-              className="rounded-none font-mono text-xs uppercase tracking-widest"
+              className="rounded-full font-sans text-xs font-semibold tracking-wide"
               onClick={handleDeleteConfirm}
             >
               Delete Forever
@@ -174,14 +174,14 @@ export default function StoriesOverviewPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6 shrink-0 relative z-10">
           <div className="space-y-2">
-            <div className="flex items-center gap-3 text-brand-ember/80 font-mono text-xs uppercase tracking-label mb-2">
+            <div className="flex items-center gap-3 text-brand-ember/80 font-sans text-xs tracking-wide mb-2">
               <Sparkles className="size-3" />
               <span>Fungga Wari Archive</span>
             </div>
             <h1 className="font-display text-3xl md:text-5xl lg:text-6xl italic tracking-tight text-foreground drop-shadow-lg">
               Manuscripts
             </h1>
-            <p className="text-muted-foreground font-mono text-sm max-w-lg leading-relaxed">
+            <p className="text-muted-foreground font-sans text-sm max-w-lg leading-relaxed">
               Manage your folklore archive. Transcribe the oral tradition into digital stone.
             </p>
           </div>
@@ -190,7 +190,7 @@ export default function StoriesOverviewPage() {
             <Button
               onClick={handleNewManuscript}
               disabled={isCreating}
-              className="gap-2 border border-brand-ember/30 bg-background text-brand-ember hover:bg-brand-ember/10 transition-all rounded-none px-6"
+              className="gap-2 border border-brand-ember/20 bg-background text-brand-ember hover:bg-brand-ember/5 transition-all rounded-full px-6"
             >
               <Plus className="size-4" />
               {isCreating ? "Initializing..." : "New Manuscript"}
@@ -202,7 +202,7 @@ export default function StoriesOverviewPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             placeholder="Search by title or category..."
-            className="pl-9 h-12 border-border bg-primary/5 hover:bg-primary/10 focus-visible:ring-brand-ember/50 text-foreground placeholder:text-muted-foreground/50 rounded-none transition-all font-mono text-sm"
+            className="pl-9 h-12 border-border bg-primary/5 hover:bg-primary/10 focus-visible:ring-brand-ember/50 text-foreground placeholder:text-muted-foreground/50 rounded-full transition-all font-sans text-sm"
           />
         </div>
 
@@ -210,13 +210,13 @@ export default function StoriesOverviewPage() {
           <BrutalistCard variant="panel" className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border-dashed relative z-10">
             <BookOpen className="size-12 text-muted-foreground/30 mb-6" />
             <h3 className="font-heading text-xl font-semibold mb-2 text-foreground/80">The Archive is Empty</h3>
-            <p className="text-muted-foreground mb-8 max-w-md text-center font-mono text-sm leading-relaxed">
+            <p className="text-muted-foreground mb-8 max-w-md text-center font-sans text-sm leading-relaxed">
               There are no manuscripts in the sacred vault. Begin by establishing a new record of the oral tradition.
             </p>
             <Button
               onClick={handleNewManuscript}
               disabled={isCreating}
-              className="rounded-none bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 border border-brand-ember/30 transition-all px-8"
+              className="rounded-full bg-brand-ember/5 text-brand-ember hover:bg-brand-ember/10 border border-brand-ember/20 transition-all px-8"
             >
               {isCreating ? "Initializing..." : "Establish First Manuscript"}
             </Button>
@@ -235,7 +235,7 @@ export default function StoriesOverviewPage() {
                     chapterCount={story.chapter_count ?? 0}
                     language={story.language}
                     priority={index < 4}
-                    className="h-full hover:-translate-y-1 transition-transform duration-300 rounded-none border-border"
+                    className="h-full hover:-translate-y-1 transition-transform duration-300 rounded-3xl border-border/50"
                   />
                 </Link>
                 {/* Quick actions */}
@@ -246,7 +246,7 @@ export default function StoriesOverviewPage() {
                     disabled={togglingId === story.id || deletingId === story.id}
                     onClick={(e) => handleTogglePublish(e, story.id, story.status)}
                     className={cn(
-                      "rounded-none text-fine font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm",
+                      "rounded-full text-[10px] font-sans font-medium tracking-wide gap-1.5 backdrop-blur-sm border border-border/10",
                       story.status === "published"
                         ? "border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
                         : "border-brand-ember/50 text-brand-ember hover:bg-brand-ember/10 bg-background/90",
@@ -267,7 +267,7 @@ export default function StoriesOverviewPage() {
                     size="sm"
                     disabled={deletingId === story.id || togglingId === story.id}
                     onClick={(e) => handleDeleteClick(e, story.id, story.title)}
-                    className="rounded-none text-fine font-mono uppercase tracking-widest gap-1.5 backdrop-blur-sm border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
+                    className="rounded-full text-[10px] font-sans font-medium tracking-wide gap-1.5 backdrop-blur-sm border border-destructive/30 text-destructive hover:bg-destructive/5 bg-background/90"
                     aria-label="Delete story"
                   >
                     {deletingId === story.id ? (

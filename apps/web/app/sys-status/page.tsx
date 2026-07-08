@@ -110,10 +110,10 @@ export default function SysStatusPage() {
       {/* Footer */}
       <footer className="border-t border-border px-6 md:px-12 py-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
+          <span className="font-mono text-nano tracking-wide text-muted-foreground">
             Fungga Wari Lab © {new Date().getFullYear()}
           </span>
-          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
+          <span className="font-mono text-nano tracking-wide text-muted-foreground">
             Infrastructure Monitoring
           </span>
         </div>

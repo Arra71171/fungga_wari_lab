@@ -45,7 +45,7 @@ const RichTextEditor = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full bg-bg-surface border border-border p-4 text-muted-foreground font-mono text-xs flex items-center justify-center min-h-[400px]">
+      <div className="w-full bg-bg-surface border border-border p-4 text-muted-foreground font-sans text-xs flex items-center justify-center min-h-[400px]">
         Loading Editor Component...
       </div>
     ),
@@ -345,7 +345,7 @@ export default function StoryEditorPage() {
 
   if (story === null) {
     return (
-      <div className="p-10 text-destructive font-mono uppercase tracking-widest">
+      <div className="p-10 text-destructive font-sans font-medium tracking-wide">
         Manuscript not found
       </div>
     );
@@ -374,7 +374,7 @@ export default function StoryEditorPage() {
         <div className="flex flex-col border-b border-border-subtle shrink-0">
           <Link
             href="/stories"
-            className="flex items-center gap-2 p-3 text-xs font-mono tracking-widest uppercase text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors border-b border-border-subtle"
+            className="flex items-center gap-2 p-3 text-xs font-sans font-medium tracking-wide text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors border-b border-border-subtle"
           >
             <ChevronRight className="size-3 rotate-180" />
             Back to Dashboard
@@ -410,7 +410,7 @@ export default function StoryEditorPage() {
             <button
               onClick={handleAddChapter}
               aria-label="Add chapter"
-              className="size-6 flex items-center justify-center hover:bg-secondary rounded-none text-brand-ember transition-colors"
+              className="size-6 flex items-center justify-center hover:bg-secondary rounded-xl text-brand-ember transition-colors"
             >
               <Plus className="size-3" />
             </button>
@@ -422,7 +422,7 @@ export default function StoryEditorPage() {
               <p>No chapters yet</p>
               <Button
                 onClick={handleAddChapter}
-                className="w-full gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-mono text-fine tracking-widest uppercase"
+                className="w-full gap-2 rounded-xl border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
                 size="sm"
               >
                 <Plus className="size-3" />
@@ -445,7 +445,7 @@ export default function StoryEditorPage() {
                 >
                   <AccordionTrigger
                     className={cn(
-                      "flex items-center gap-2 px-3 py-2.5 text-sm rounded-none border-l-2 transition-all duration-200 hover:no-underline hover:bg-secondary",
+                      "flex items-center gap-2 px-3 py-2.5 text-sm rounded-xl border-l-2 transition-all duration-200 hover:no-underline hover:bg-secondary",
                       activeChapterId === chapter.id
                         ? "border-brand-ember bg-brand-ember/10"
                         : "border-transparent"
@@ -484,7 +484,7 @@ export default function StoryEditorPage() {
         <div className="p-3 border-t border-border-subtle shrink-0">
           <Button
             onClick={handleAddChapter}
-            className="w-full gap-2 rounded-none bg-transparent hover:bg-secondary text-muted-foreground hover:text-foreground border border-border font-mono text-xs tracking-widest uppercase transition-all"
+            className="w-full gap-2 rounded-xl bg-transparent hover:bg-secondary text-muted-foreground hover:text-foreground border border-border font-sans text-xs tracking-widest uppercase transition-all"
           >
             <Plus className="size-3" /> New Chapter
           </Button>
@@ -511,7 +511,7 @@ export default function StoryEditorPage() {
             >
               <div
                 className={cn(
-                  "font-mono text-xs uppercase tracking-widest flex items-center gap-2",
+                  "font-sans text-xs tracking-wide flex items-center gap-2",
                   focusMode
                     ? "text-cinematic-text/60"
                     : "text-muted-foreground"
@@ -523,12 +523,12 @@ export default function StoryEditorPage() {
               </div>
               <div className="flex items-center gap-4">
                 {/* Editor mode toggle */}
-                <div className="flex items-center border border-border rounded-none overflow-hidden">
+                <div className="flex items-center border border-border rounded-xl overflow-hidden">
                   <button
                     onClick={() => setEditorMode("tiptap")}
                     aria-label="Rich text editor mode"
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 text-fine font-mono uppercase tracking-widest transition-colors",
+                      "flex items-center gap-1.5 px-3 py-1.5 text-fine font-sans font-medium tracking-wide transition-colors",
                       editorMode === "tiptap"
                         ? "bg-brand-ember/15 text-brand-ember font-bold"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -540,7 +540,7 @@ export default function StoryEditorPage() {
                     onClick={() => setEditorMode("blocks")}
                     aria-label="Block editor mode"
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 text-fine font-mono uppercase tracking-widest transition-colors",
+                      "flex items-center gap-1.5 px-3 py-1.5 text-fine font-sans font-medium tracking-wide transition-colors",
                       editorMode === "blocks"
                         ? "bg-brand-ember/15 text-brand-ember font-bold"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -553,7 +553,7 @@ export default function StoryEditorPage() {
                 <div className="flex items-center gap-2">
                   <span
                     className={cn(
-                      "font-mono text-fine uppercase tracking-widest",
+                      "font-sans text-xs font-medium tracking-wide",
                       focusMode
                         ? "text-cinematic-text/40"
                         : "text-muted-foreground/60"
@@ -576,7 +576,7 @@ export default function StoryEditorPage() {
                     focusMode ? "Exit Focus Mode" : "Enter Focus Mode"
                   }
                   className={cn(
-                    "size-6 flex items-center justify-center hover:bg-secondary rounded-none transition-colors",
+                    "size-6 flex items-center justify-center hover:bg-secondary rounded-xl transition-colors",
                     focusMode
                       ? "text-cinematic-accent hover:text-cinematic-text hover:bg-cinematic-bg"
                       : "text-muted-foreground hover:text-foreground"
@@ -660,12 +660,12 @@ export default function StoryEditorPage() {
           <div className="flex-1 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
               <FileText className="size-12 text-muted-foreground/20" />
-              <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/60">
+              <p className="font-sans text-xs tracking-widest uppercase text-muted-foreground/60">
                 Select or create a scene
               </p>
               <Button
                 onClick={handleAddScene}
-                className="gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-mono text-xs tracking-widest uppercase"
+                className="gap-2 rounded-xl border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
               >
                 <Plus className="size-3" /> Create First Scene
               </Button>
@@ -675,7 +675,7 @@ export default function StoryEditorPage() {
           <div className="flex-1 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4 max-w-xs text-center">
               <FileText className="size-12 text-muted-foreground/20" />
-              <p className="font-mono text-xs tracking-widest uppercase text-muted-foreground/60">
+              <p className="font-sans text-xs tracking-widest uppercase text-muted-foreground/60">
                 {(chapters?.length ?? 0) === 0
                   ? "Add your first chapter to begin writing"
                   : "Select a chapter to begin"}
@@ -683,7 +683,7 @@ export default function StoryEditorPage() {
               {(chapters?.length ?? 0) === 0 && (
                 <Button
                   onClick={handleAddChapter}
-                  className="gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-mono text-xs tracking-widest uppercase"
+                  className="gap-2 rounded-xl border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
                 >
                   <Plus className="size-3" /> Add First Chapter
                 </Button>
@@ -703,13 +703,13 @@ export default function StoryEditorPage() {
         )}
       >
         <div className="h-12 border-b border-border-subtle flex items-center justify-between px-5 shrink-0">
-          <span className="font-mono text-xs uppercase tracking-label text-brand-ember/80 font-bold">
+          <span className="font-sans text-xs tracking-wide text-brand-ember/80 font-bold">
             Manuscript Details
           </span>
           <button
             onClick={() => setEditingMeta(!editingMeta)}
             aria-label={editingMeta ? "Close metadata editor" : "Edit metadata"}
-            className="size-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary rounded-none transition-colors"
+            className="size-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl transition-colors"
           >
             <Pencil className="size-3" />
           </button>
@@ -718,7 +718,7 @@ export default function StoryEditorPage() {
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* Cover Image */}
           <div className="space-y-2">
-            <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+            <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
               Cover Image
             </Label>
             <CoverImageUpload
@@ -732,12 +732,12 @@ export default function StoryEditorPage() {
 
           {/* Story Status */}
           <div className="space-y-3">
-            <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+            <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
               Status
             </Label>
             <div className="p-3 border border-border-subtle bg-bg-surface space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-muted-foreground uppercase tracking-widest">
+                <span className="text-muted-foreground tracking-wide">
                   Status
                 </span>
                 <span className="text-brand-ember font-bold capitalize">
@@ -745,13 +745,13 @@ export default function StoryEditorPage() {
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-muted-foreground uppercase tracking-widest">
+                <span className="text-muted-foreground tracking-wide">
                   Chapters
                 </span>
                 <span className="text-foreground">{chapters.length}</span>
               </div>
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-muted-foreground uppercase tracking-widest">
+                <span className="text-muted-foreground tracking-wide">
                   Language
                 </span>
                 <span className="text-foreground capitalize">
@@ -768,19 +768,19 @@ export default function StoryEditorPage() {
             <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
               {/* Title */}
               <div className="space-y-1.5">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Title
                 </Label>
                 <Input
                   defaultValue={story.title}
                   onBlur={(e) => handleMetaUpdate("title", e.target.value)}
-                  className="h-9 rounded-none border-border bg-background font-mono text-sm"
+                  className="h-9 rounded-xl border-border bg-background font-sans text-sm"
                 />
               </div>
 
               {/* Description */}
               <div className="space-y-1.5">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Description
                 </Label>
                 <Textarea
@@ -789,28 +789,28 @@ export default function StoryEditorPage() {
                     handleMetaUpdate("description", e.target.value || undefined)
                   }
                   rows={3}
-                  className="rounded-none border-border bg-background font-mono text-xs leading-relaxed resize-none"
+                  className="rounded-xl border-border bg-background font-sans text-xs leading-relaxed resize-none"
                 />
               </div>
 
               {/* Category */}
               <div className="space-y-1.5">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Category
                 </Label>
                 <Select
                   defaultValue={story.category ?? "other"}
                   onValueChange={(val) => handleMetaUpdate("category", val)}
                 >
-                  <SelectTrigger className="h-9 rounded-none border-border bg-background font-mono text-xs">
+                  <SelectTrigger className="h-9 rounded-xl border-border bg-background font-sans text-xs">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-none border-border">
+                  <SelectContent className="rounded-xl border-border">
                     {CATEGORIES.map((cat) => (
                       <SelectItem
                         key={cat.value}
                         value={cat.value}
-                        className="font-mono text-xs"
+                        className="font-sans text-xs"
                       >
                         {cat.label}
                       </SelectItem>
@@ -821,22 +821,22 @@ export default function StoryEditorPage() {
 
               {/* Language */}
               <div className="space-y-1.5">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Language
                 </Label>
                 <Select
                   defaultValue={story.language}
                   onValueChange={(val) => handleMetaUpdate("language", val)}
                 >
-                  <SelectTrigger className="h-9 rounded-none border-border bg-background font-mono text-xs">
+                  <SelectTrigger className="h-9 rounded-xl border-border bg-background font-sans text-xs">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-none border-border">
+                  <SelectContent className="rounded-xl border-border">
                     {LANGUAGES.map((lang) => (
                       <SelectItem
                         key={lang.value}
                         value={lang.value}
-                        className="font-mono text-xs"
+                        className="font-sans text-xs"
                       >
                         {lang.label}
                       </SelectItem>
@@ -847,7 +847,7 @@ export default function StoryEditorPage() {
 
               {/* Moral */}
               <div className="space-y-1.5">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Moral
                 </Label>
                 <Textarea
@@ -856,13 +856,13 @@ export default function StoryEditorPage() {
                     handleMetaUpdate("moral", e.target.value || undefined)
                   }
                   rows={2}
-                  className="rounded-none border-border bg-background font-mono text-xs leading-relaxed resize-none"
+                  className="rounded-xl border-border bg-background font-sans text-xs leading-relaxed resize-none"
                 />
               </div>
 
               {/* Tags */}
               <div className="space-y-1.5">
-                <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Tags (comma-separated)
                 </Label>
                 <Input
@@ -874,7 +874,7 @@ export default function StoryEditorPage() {
                       .filter(Boolean);
                     handleMetaUpdate("tags", parsedTags);
                   }}
-                  className="h-9 rounded-none border-border bg-background font-mono text-xs"
+                  className="h-9 rounded-xl border-border bg-background font-sans text-xs"
                 />
               </div>
 
@@ -887,7 +887,7 @@ export default function StoryEditorPage() {
             <div className="space-y-3">
               {story.description && (
                 <div className="space-y-1">
-                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                     Description
                   </Label>
                   <p className="text-xs text-foreground/80 font-mono leading-relaxed">
@@ -897,7 +897,7 @@ export default function StoryEditorPage() {
               )}
               {story.moral && (
                 <div className="space-y-1">
-                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                     Moral
                   </Label>
                   <p className="text-xs text-brand-ochre/80 font-mono italic border-l-2 border-brand-ochre/30 pl-2">
@@ -907,14 +907,14 @@ export default function StoryEditorPage() {
               )}
               {story.tags && story.tags.length > 0 && (
                 <div className="space-y-1">
-                  <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                  <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                     Tags
                   </Label>
                   <div className="flex flex-wrap gap-1.5">
                     {story.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-nano font-mono uppercase tracking-widest bg-secondary border border-border px-2 py-0.5"
+                        className="text-nano font-sans font-medium tracking-wide bg-secondary border border-border px-2 py-0.5"
                       >
                         {tag}
                       </span>
@@ -930,7 +930,7 @@ export default function StoryEditorPage() {
           {/* Scene Illustration */}
           {activeSceneData && (
             <div className="space-y-2">
-              <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+              <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground flex items-center gap-1.5">
                 <ImageIcon className="size-3" />
                 Scene Illustration
               </Label>
@@ -948,7 +948,7 @@ export default function StoryEditorPage() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-cinematic-text hover:text-cinematic-text hover:bg-accent font-mono text-fine uppercase tracking-widest"
+                      className="text-cinematic-text hover:text-cinematic-text hover:bg-accent font-sans text-xs font-medium tracking-wide"
                       onClick={async () => {
                         const input = document.createElement("input");
                         input.type = "file";
@@ -998,7 +998,7 @@ export default function StoryEditorPage() {
                   aria-label="Upload scene illustration"
                 >
                   <ImageIcon className="size-6" />
-                  <span className="font-mono text-fine uppercase tracking-widest">
+                  <span className="font-sans text-xs font-medium tracking-wide">
                     Add Illustration
                   </span>
                 </button>
@@ -1009,13 +1009,13 @@ export default function StoryEditorPage() {
           {/* Team Assignments */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Label className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+              <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                 Tasks
               </Label>
               <Link href={`/stories/${storyId}/tasks`}>
                 <Button
                   variant="link"
-                  className="text-fine font-mono uppercase tracking-label text-brand-ember p-0 h-auto"
+                  className="text-fine font-sans font-medium tracking-wide text-brand-ember p-0 h-auto"
                 >
                   Manage
                 </Button>
@@ -1025,7 +1025,7 @@ export default function StoryEditorPage() {
               <p className="text-xs text-muted-foreground/60 font-mono">
                 No tasks assigned to this scene
               </p>
-              <Button className="mt-2 w-full gap-2 rounded-none bg-transparent hover:bg-secondary text-brand-ember border border-brand-ember/30 font-mono text-fine tracking-widest uppercase transition-all h-8">
+              <Button className="mt-2 w-full gap-2 rounded-xl bg-transparent hover:bg-secondary text-brand-ember border border-brand-ember/30 font-sans text-xs tracking-widest uppercase transition-all h-8">
                 <Plus className="size-3" /> Assign Task
               </Button>
             </div>
@@ -1064,7 +1064,7 @@ function ChapterScenes({
               onClick={() => onSelectScene(scene.id)}
               aria-label={`Select scene: ${scene.title ?? `Scene ${i + 1}`}`}
               className={cn(
-                "w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left rounded-none transition-all",
+                "w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left rounded-xl transition-all",
                 isActive
                   ? "bg-brand-ember/15 text-brand-ember font-medium"
                   : "text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -1084,7 +1084,7 @@ function ChapterScenes({
       <button
         onClick={onAddScene}
         aria-label="Add scene"
-        className="w-full flex items-center gap-2 px-3 py-1.5 text-fine font-mono uppercase tracking-widest text-muted-foreground/50 hover:text-brand-ember hover:bg-secondary rounded-none transition-all"
+        className="w-full flex items-center gap-2 px-3 py-1.5 text-fine font-sans font-medium tracking-wide text-muted-foreground/50 hover:text-brand-ember hover:bg-secondary rounded-xl transition-all"
       >
         <Plus className="size-3" />
         Add Scene

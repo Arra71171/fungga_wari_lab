@@ -223,7 +223,7 @@ function StoryRenderer({
           <button
             onClick={() => setInserterIndex(0)}
             className={cn(
-              "px-4 py-2 text-sm font-mono border-2 border-border rounded-none",
+              "px-4 py-2 text-sm font-mono border border-border/50 rounded-xl",
               "hover:border-primary hover:text-primary transition-colors"
             )}
           >

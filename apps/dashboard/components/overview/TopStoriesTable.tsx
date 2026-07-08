@@ -30,16 +30,16 @@ export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], 
       <Table>
         <TableHeader>
           <TableRow className="border-border hover:bg-transparent">
-            <TableHead className="font-mono text-fine uppercase tracking-widest text-muted-foreground">Title</TableHead>
-            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Views</TableHead>
-            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Reads</TableHead>
-            <TableHead className="text-right font-mono text-fine uppercase tracking-widest text-muted-foreground">Completion</TableHead>
+            <TableHead className="font-sans text-xs font-medium tracking-wide text-muted-foreground">Title</TableHead>
+            <TableHead className="text-right font-sans text-xs font-medium tracking-wide text-muted-foreground">Views</TableHead>
+            <TableHead className="text-right font-sans text-xs font-medium tracking-wide text-muted-foreground">Reads</TableHead>
+            <TableHead className="text-right font-sans text-xs font-medium tracking-wide text-muted-foreground">Completion</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {!stories || stories.length === 0 ? (
             <TableRow className="border-border hover:bg-secondary/50 transition-colors">
-              <TableCell colSpan={4} className="text-center py-6 text-muted-foreground font-mono text-xs">
+              <TableCell colSpan={4} className="text-center py-6 text-muted-foreground font-sans text-xs">
                 No manuscripts found in archive.
               </TableCell>
             </TableRow>
@@ -52,10 +52,10 @@ export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], 
                 <TableCell className="font-heading font-medium text-foreground">
                   {story.title}
                 </TableCell>
-                <TableCell className="text-right font-mono text-sm tabular-nums text-foreground">
+                <TableCell className="text-right font-sans text-sm tabular-nums text-foreground">
                   {views.toLocaleString()}
                 </TableCell>
-                <TableCell className="text-right font-mono text-sm tabular-nums text-foreground">
+                <TableCell className="text-right font-sans text-sm tabular-nums text-foreground">
                   {reads.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
@@ -66,7 +66,7 @@ export function TopStoriesTable({ stories, isLoading }: { stories?: TopStory[], 
                         style={{ width: `${completionRate}%` }}
                       />
                     </div>
-                    <span className="font-mono text-xs tabular-nums text-muted-foreground w-8">
+                    <span className="font-sans text-xs tabular-nums text-muted-foreground w-8">
                       {completionRate}%
                     </span>
                   </div>

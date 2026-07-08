@@ -26,7 +26,7 @@ export function EngagementChart({ data, isLoading }: { data?: { date: string; vi
   if (isLoading) {
     return (
       <BrutalistCard variant="panel" className="w-full h-[350px] animate-pulse flex items-center justify-center">
-        <div className="text-muted-foreground/30 font-mono text-sm uppercase tracking-widest">
+        <div className="text-muted-foreground/30 font-sans text-sm tracking-wide">
           Loading Metrics...
         </div>
       </BrutalistCard>
@@ -36,7 +36,7 @@ export function EngagementChart({ data, isLoading }: { data?: { date: string; vi
   if (!data || data.length === 0) {
     return (
       <BrutalistCard variant="panel" className="w-full h-[350px] flex items-center justify-center">
-        <div className="text-muted-foreground/50 font-mono text-sm uppercase tracking-widest">
+        <div className="text-muted-foreground/50 font-sans text-sm tracking-wide">
           No data available
         </div>
       </BrutalistCard>

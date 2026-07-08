@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@workspace/ui/lib/utils"
 
 const progressBarVariants = cva(
-  "relative w-full overflow-hidden rounded-none bg-secondary",
+  "relative w-full overflow-hidden rounded-xl bg-secondary",
   {
     variants: {
       variant: {

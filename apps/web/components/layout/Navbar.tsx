@@ -226,7 +226,7 @@ function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors border-l-2 border-transparent hover:border-primary"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-semibold tracking-wide text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors border-l-2 border-transparent hover:border-primary"
                 >
                   <item.icon className="size-4 shrink-0" />
                   {item.name}
@@ -244,7 +244,7 @@ function Navbar() {
                   <a
                     href={DASHBOARD_URL}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono font-bold uppercase tracking-widest text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/10 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-semibold tracking-wide text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/10 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
                   >
                     <LayoutDashboard className="size-4 shrink-0" />
                     Dashboard
@@ -259,7 +259,7 @@ function Navbar() {
                 <div className="flex flex-col gap-2">
                   <Button
                     variant="outline"
-                    className="w-full rounded-none font-mono font-bold uppercase tracking-widest"
+                    className="w-full rounded-xl font-sans font-semibold tracking-wide"
                     asChild
                   >
                     <Link href="/login" onClick={() => setMobileOpen(false)}>
@@ -268,7 +268,7 @@ function Navbar() {
                   </Button>
                   <Button
                     variant="default"
-                    className="w-full rounded-none font-mono font-bold uppercase tracking-widest"
+                    className="w-full rounded-xl font-sans font-semibold tracking-wide"
                     asChild
                   >
                     <Link href="/register" onClick={() => setMobileOpen(false)}>
@@ -299,17 +299,17 @@ function Navbar() {
                         {userProfile?.name || userProfile?.email || "User"}
                       </span>
                       {userProfile?.role === "superadmin" && (
-                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
+                        <span className="text-nano font-sans font-medium tracking-wide text-brand-ember">
                           Superadmin
                         </span>
                       )}
                       {userProfile?.role === "admin" && (
-                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
+                        <span className="text-nano font-sans font-medium tracking-wide text-brand-ember">
                           Admin
                         </span>
                       )}
                       {userProfile?.role === "editor" && (
-                        <span className="text-nano font-mono tracking-widest uppercase text-brand-ember">
+                        <span className="text-nano font-sans font-medium tracking-wide text-brand-ember">
                           Editor
                         </span>
                       )}

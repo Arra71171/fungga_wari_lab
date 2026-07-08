@@ -33,7 +33,7 @@ export function MagneticBackLink({
       >
         <motion.div
           className={cn(
-            "flex size-12 items-center justify-center border-2 border-border-strong",
+            "flex size-12 items-center justify-center border border-border/50",
             variant === "primary"
               ? "border-primary bg-primary/10 text-primary" // Used by web login
               : "bg-background text-foreground hover:bg-secondary/50" // Used by dashboard login
@@ -56,13 +56,13 @@ export function MagneticBackLink({
         {/* Label block */}
         <div className="flex flex-col">
           <span className={cn(
-            "font-mono text-fine uppercase tracking-eyebrow",
+            "font-sans text-xs tracking-wide",
             variant === "primary" ? "text-primary/80" : "text-muted-foreground"
           )}>
             {sublabel}
           </span>
           <span className={cn(
-            "font-heading font-black uppercase tracking-widest",
+            "font-heading font-black tracking-wide",
             variant === "primary" ? "text-sm text-foreground" : "text-xs text-foreground"
           )}>
             {label}
