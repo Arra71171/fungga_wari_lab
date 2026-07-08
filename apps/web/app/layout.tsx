@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   keywords: ["Meitei", "folk stories", "Manipuri", "oral tradition", "digital storytelling", "Fungga Wari"],
   authors: [{ name: "Fungga Wari Lab" }],
   creator: "Fungga Wari Lab",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://funggawari.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://funggawari.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
