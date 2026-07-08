@@ -138,7 +138,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-md bg-bg-panel border-border rounded-xl shadow-2xl">
+      <DialogContent className="max-w-md bg-bg-panel border-border rounded-none shadow-2xl">
         <DialogHeader>
           <DialogTitle className="font-heading uppercase tracking-tighter text-xl text-brand-ochre border-b border-border-subtle pb-4 pr-8">
             Initialize Operation
@@ -157,7 +157,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
               id="title"
               name="title"
               required
-              className="rounded-xl bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="e.g., Translate Chapter 4..."
             />
           </div>
@@ -168,10 +168,10 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                 Priority
               </Label>
               <Select name="priority" defaultValue="medium">
-                <SelectTrigger id="priority" className="rounded-xl bg-bg-surface border-border font-sans text-sm">
+                <SelectTrigger id="priority" className="rounded-none bg-bg-surface border-border font-sans text-sm">
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border-border bg-bg-panel">
+                <SelectContent className="rounded-none border-border bg-bg-panel">
                   <SelectItem value="high" className="font-sans text-sm focus:bg-brand-ember/20">High</SelectItem>
                   <SelectItem value="medium" className="font-sans text-sm">Medium</SelectItem>
                   <SelectItem value="low" className="font-sans text-sm">Low</SelectItem>
@@ -184,10 +184,10 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                 Assign To
               </Label>
               <Select name="assigneeId" value={assigneeId} onValueChange={setAssigneeId}>
-                <SelectTrigger id="assigneeId" className="rounded-xl bg-bg-surface border-border font-sans text-sm">
+                <SelectTrigger id="assigneeId" className="rounded-none bg-bg-surface border-border font-sans text-sm">
                   <SelectValue placeholder="Unassigned" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border-border bg-bg-panel">
+                <SelectContent className="rounded-none border-border bg-bg-panel">
                   <SelectItem value="none" className="font-sans text-sm italic opacity-50">Unassigned</SelectItem>
                   {users.map((u) => (
                     <SelectItem key={u.id} value={u.id} className="font-sans text-sm">
@@ -210,7 +210,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                 name="customEmail"
                 type="email"
                 required
-                className="rounded-xl bg-bg-surface border-border focus-visible:ring-brand-ochre/20 focus-visible:border-brand-ochre/50 font-sans text-sm"
+                className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ochre/20 focus-visible:border-brand-ochre/50 font-sans text-sm"
                 placeholder="operative@external.com"
               />
             </div>
@@ -224,7 +224,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
               id="description"
               name="description"
               maxLength={2000}
-              className="rounded-xl bg-bg-surface border-border min-h-[100px] resize-y font-sans text-sm"
+              className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-sans text-sm"
               placeholder="Provide operation details..."
             />
           </div>
@@ -233,7 +233,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-sans font-medium tracking-wide text-xs rounded-xl gap-2"
+              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-sans font-medium tracking-wide text-xs rounded-none gap-2"
             >
               {isSubmitting && <Loader2 className="size-3 animate-spin" />}
               Dispatch Task

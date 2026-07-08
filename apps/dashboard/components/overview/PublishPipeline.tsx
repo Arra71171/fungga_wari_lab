@@ -88,7 +88,7 @@ export function PublishPipeline({ data, totalStories, isLoading }: Props) {
       <div className="mt-4 flex flex-wrap gap-2">
         {(data ?? []).filter(d => d.count > 0).map(d => (
           <span key={d.status} className="flex items-center gap-1 font-mono text-nano tracking-wide text-muted-foreground">
-            <span className="inline-block size-2 rounded-xl" style={{ backgroundColor: d.fill }} />
+            <span className="inline-block size-2 rounded-none" style={{ backgroundColor: d.fill }} />
             {d.status} ({d.count})
           </span>
         ))}

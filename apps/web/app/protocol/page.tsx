@@ -57,8 +57,8 @@ export default function ProtocolPage() {
           </p>
 
           {/* Protocol version badge */}
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-border-subtle mb-16">
-            <div className="size-1.5 rounded-full bg-primary" />
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-none border border-border-subtle mb-16">
+            <div className="size-1.5 rounded-none bg-primary" />
             <span className="text-xs font-medium text-foreground">
               Protocol Version 2.0
             </span>
@@ -93,7 +93,7 @@ export default function ProtocolPage() {
               { step: "05", title: "Publication & Preservation", desc: "Validated stories are published to the archive with immersive illustrations and multi-format reading options." },
             ].map((item) => (
               <div key={item.step} className="relative">
-                <div className="absolute -left-[31px] top-1.5 size-2 bg-background border border-border-subtle rounded-full" />
+                <div className="absolute -left-[31px] top-1.5 size-2 bg-background border border-border-subtle rounded-none" />
                 <h4 className="text-sm font-medium tracking-tight flex items-center gap-3">
                   <span className="text-xs font-mono text-muted-foreground">{item.step}</span>
                   {item.title}
@@ -105,10 +105,10 @@ export default function ProtocolPage() {
 
           {/* CTA */}
           <div className="flex flex-wrap gap-3">
-            <Button size="default" className="text-xs px-6 rounded-full font-medium" asChild>
+            <Button size="default" className="text-xs px-6 rounded-none font-medium" asChild>
               <Link href="/stories">View Archive</Link>
             </Button>
-            <Button variant="ghost" size="default" className="text-xs px-6 rounded-full font-medium text-muted-foreground" asChild>
+            <Button variant="ghost" size="default" className="text-xs px-6 rounded-none font-medium text-muted-foreground" asChild>
               <Link href="/">
                 <ArrowLeft className="size-3 mr-2" />
                 Return

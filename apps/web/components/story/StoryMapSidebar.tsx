@@ -70,7 +70,7 @@ export function StoryMapSidebar() {
                           )}
                         >
                           <div className={cn(
-                            "size-1.5 rounded-xl shrink-0",
+                            "size-1.5 rounded-none shrink-0",
                             isActive ? "bg-brand-ember shadow-[0_0_8px_rgba(255,165,0,0.5)]" : "bg-muted-foreground/50 group-hover:bg-brand-ember/50"
                           )} />
                           <span className={cn(

@@ -7,7 +7,7 @@ import { ProgressBar } from "@workspace/ui/components/ProgressBar"
 import { Flame, BookOpen, Globe2 } from "lucide-react"
 
 const storyCardVariants = cva(
-  "group relative flex flex-col overflow-hidden border border-border/50 shadow-xs bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-sm cursor-pointer hover:-translate-y-1 rounded-xl",
+  "group relative flex flex-col overflow-hidden border border-border/50 shadow-xs bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-sm cursor-pointer hover:-translate-y-1 rounded-none",
   {
     variants: {
       variant: {
@@ -195,7 +195,7 @@ function StoryCard({
             <span>{Math.round((progress / totalScenes) * 100)}%</span>
             <span>{progress} / {totalScenes}</span>
           </div>
-          <ProgressBar value={progress} max={totalScenes} variant="default" size="sm" className="h-1 rounded-xl" />
+          <ProgressBar value={progress} max={totalScenes} variant="default" size="sm" className="h-1 rounded-none" />
         </div>
       )}
     </div>

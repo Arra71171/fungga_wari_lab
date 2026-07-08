@@ -77,7 +77,7 @@ function Navbar() {
         aria-label="Fungga Wari Lab — Home"
       >
         {/* Icon glyph — circular */}
-        <span className="inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-secondary/30 size-8 text-foreground">
+        <span className="inline-flex shrink-0 items-center justify-center rounded-none border border-border bg-secondary/30 size-8 text-foreground">
           <FungaMark size={14} />
         </span>
         {/* Mobile wordmark */}
@@ -142,7 +142,7 @@ function Navbar() {
             <Button
               variant="ghost"
               size="sm"
-              className="rounded-full font-sans transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
+              className="rounded-none font-sans transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
               asChild
             >
               <Link href="/login">Sign In</Link>
@@ -150,7 +150,7 @@ function Navbar() {
             <Button
               variant="default"
               size="sm"
-              className="rounded-full font-sans transition-all bg-slate-800 text-white hover:bg-slate-700"
+              className="rounded-none font-sans transition-all bg-slate-800 text-white hover:bg-slate-700"
               asChild
             >
               <Link href="/register">Sign Up</Link>
@@ -159,7 +159,7 @@ function Navbar() {
         )}
         {isAuthenticated && (
           <div className="flex items-center gap-2">
-            <div className="relative size-8 border border-border/50 bg-secondary overflow-hidden rounded-full flex items-center justify-center">
+            <div className="relative size-8 border border-border/50 bg-secondary overflow-hidden rounded-none flex items-center justify-center">
               {userProfile?.avatar_url ? (
                 <Image
                   src={userProfile.avatar_url}
@@ -194,7 +194,7 @@ function Navbar() {
           <SheetTrigger asChild>
             <button
               aria-label="Open navigation menu"
-              className="flex items-center justify-center size-10 rounded-full border border-border/50 bg-background text-foreground hover:bg-secondary transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex items-center justify-center size-10 rounded-none border border-border/50 bg-background text-foreground hover:bg-secondary transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Menu className="size-5" />
             </button>
@@ -259,7 +259,7 @@ function Navbar() {
                 <div className="flex flex-col gap-2">
                   <Button
                     variant="outline"
-                    className="w-full rounded-xl font-sans font-semibold tracking-wide"
+                    className="w-full rounded-none font-sans font-semibold tracking-wide"
                     asChild
                   >
                     <Link href="/login" onClick={() => setMobileOpen(false)}>
@@ -268,7 +268,7 @@ function Navbar() {
                   </Button>
                   <Button
                     variant="default"
-                    className="w-full rounded-xl font-sans font-semibold tracking-wide"
+                    className="w-full rounded-none font-sans font-semibold tracking-wide"
                     asChild
                   >
                     <Link href="/register" onClick={() => setMobileOpen(false)}>

@@ -194,7 +194,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
 
       {/* Decorative glow */}
       <div
-        className="pointer-events-none absolute right-0 top-0 size-52 translate-x-16 -translate-y-16 rounded-xl bg-brand-ember opacity-[0.05] blur-3xl"
+        className="pointer-events-none absolute right-0 top-0 size-52 translate-x-16 -translate-y-16 rounded-none bg-brand-ember opacity-[0.05] blur-3xl"
         aria-hidden
       />
 
@@ -234,7 +234,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
               <div
                 key={i}
                 className={cn(
-                  "h-[5px] rounded-xl transition-all duration-300",
+                  "h-[5px] rounded-none transition-all duration-300",
                   i === stepIndex   ? "w-7 bg-brand-ember" :
                   i < stepIndex     ? "w-[5px] bg-brand-ember/40" :
                                       "w-[5px] bg-border-strong"

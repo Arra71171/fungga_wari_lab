@@ -116,7 +116,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
           side="bottom"
           showCloseButton
           aria-describedby={undefined}
-          className="max-h-[70vh] p-0 bg-cinematic-panel border-cinematic-border rounded-t-xl"
+          className="max-h-[70vh] p-0 bg-cinematic-panel border-cinematic-border rounded-none"
         >
           <SheetTitle className="sr-only">Reader Settings</SheetTitle>
           <div className="overflow-y-auto max-h-[65vh]">

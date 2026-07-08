@@ -208,7 +208,7 @@ export function ChapterBuilderCard({
               value={title}
               onChange={(e) => onUpdate(id, "title", e.target.value)}
               placeholder="e.g. The Discovery of the Bamboo Grove"
-              className="font-heading text-xl h-12 bg-transparent border-x-0 border-t-0 border-b border-border/50 rounded-xl px-0 focus-visible:ring-0 focus-visible:border-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
+              className="font-heading text-xl h-12 bg-transparent border-x-0 border-t-0 border-b border-border/50 rounded-none px-0 focus-visible:ring-0 focus-visible:border-brand-ember/50 placeholder:text-muted-foreground/30 text-foreground"
             />
           </div>
 
@@ -288,7 +288,7 @@ export function ChapterBuilderCard({
                 )
               }
               onImageUpload={handleImageUpload}
-              className="w-full bg-bg-panel border border-border/50 rounded-xl min-h-[480px]"
+              className="w-full bg-bg-panel border border-border/50 rounded-none min-h-[480px]"
             />
 
             {/* Plain-text fallback — collapsed dev tool */}
@@ -300,7 +300,7 @@ export function ChapterBuilderCard({
                 value={content}
                 onChange={(e) => onUpdate(id, "content", e.target.value)}
                 placeholder="Raw text representation…"
-                className="mt-2 min-h-[80px] resize-y bg-bg-panel border border-border/50 rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50 font-sans text-xs p-3 text-muted-foreground"
+                className="mt-2 min-h-[80px] resize-y bg-bg-panel border border-border/50 rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 font-sans text-xs p-3 text-muted-foreground"
               />
             </details>
           </div>
@@ -349,7 +349,7 @@ export function ChapterBuilderCard({
                               onUpdateChoice(choice.id, "label", e.target.value)
                             }
                             placeholder="e.g. Enter the dark forest"
-                            className="h-8 text-xs bg-bg-panel border border-border/50 rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                            className="h-8 text-xs bg-bg-panel border border-border/50 rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                           />
                         </div>
                         <div className="space-y-2 flex-1">
@@ -367,14 +367,14 @@ export function ChapterBuilderCard({
                               )
                             }
                           >
-                            <SelectTrigger className="flex h-8 w-full border border-border/50 bg-bg-panel px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-xl">
+                            <SelectTrigger className="flex h-8 w-full border border-border/50 bg-bg-panel px-3 py-1 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
                               <SelectValue placeholder="Select chapter…" />
                             </SelectTrigger>
-                            <SelectContent className="border border-border/50 rounded-xl shadow-xs bg-bg-surface">
+                            <SelectContent className="border border-border/50 rounded-none shadow-xs bg-bg-surface">
                               {allChapters
                                 .filter((c) => c.id !== id)
                                 .map((target) => (
-                                  <SelectItem key={target.id} value={target.id} className="font-sans text-xs focus:bg-primary focus:text-primary-foreground rounded-xl cursor-pointer">
+                                  <SelectItem key={target.id} value={target.id} className="font-sans text-xs focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
                                     Ch {target.order}:{" "}
                                     {target.title || "Untitled"}
                                   </SelectItem>
@@ -402,7 +402,7 @@ export function ChapterBuilderCard({
                   variant="outline"
                   size="sm"
                   onClick={onAddChoice}
-                  className="rounded-xl border border-border/50 bg-bg-surface h-8 text-fine uppercase font-mono tracking-wider hover:border-brand-ember hover:bg-brand-ember/10"
+                  className="rounded-none border border-border/50 bg-bg-surface h-8 text-fine uppercase font-mono tracking-wider hover:border-brand-ember hover:bg-brand-ember/10"
                 >
                   <Plus className="size-3 mr-1" /> Add Choice
                 </Button>

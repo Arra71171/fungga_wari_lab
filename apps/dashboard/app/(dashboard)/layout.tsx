@@ -61,7 +61,7 @@ function UserProfileBlock() {
 
   return (
     <div id="tour-profile" className="flex items-center gap-3">
-      <div className="relative size-8 shrink-0 bg-secondary border border-border/50 overflow-hidden flex items-center justify-center rounded-full">
+      <div className="relative size-8 shrink-0 bg-secondary border border-border/50 overflow-hidden flex items-center justify-center rounded-none">
         {avatarUrl ? (
           <Image
             src={avatarUrl}
@@ -109,10 +109,10 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
               <div
                 id={`tour-${item.name.toLowerCase()}`}
                 className={cn(
-                  "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-md",
+                  "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-none",
                   isActive
-                    ? "border-l-[2px] border-brand-ember bg-brand-ember/8 text-brand-ember rounded-md"
-                    : "border-l-[2px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/30 rounded-md"
+                    ? "border-l-[2px] border-brand-ember bg-brand-ember/8 text-brand-ember rounded-none"
+                    : "border-l-[2px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/30 rounded-none"
                 )}
               >
                 <item.icon className={cn("mr-3 size-4", isActive ? "text-brand-ember" : "")} />
@@ -135,7 +135,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           rel="noopener noreferrer"
           className="block group outline-none"
         >
-          <div className="flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-md border-l-[2px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/30 rounded-md">
+          <div className="flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-none border-l-[2px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/30 rounded-none">
             <Globe className="mr-3 size-4" />
             <span className="text-sm tracking-wide font-normal">View Stories</span>
             <ExternalLink className="ml-auto size-3 opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -150,14 +150,14 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
         <div className="flex items-center gap-2">
           <Button
               variant="outline"
-              className="flex-1 flex items-center justify-center rounded-full bg-bg-surface border border-border-subtle text-muted-foreground hover:text-foreground hover:border-border hover:bg-bg-surface/80"
+              className="flex-1 flex items-center justify-center rounded-none bg-bg-surface border border-border-subtle text-muted-foreground hover:text-foreground hover:border-border hover:bg-bg-surface/80"
               onClick={onSignOut}
             >
               <LogOut className="size-4 mr-2" />
               <span className="font-sans text-xs font-medium tracking-wide">Sign Out</span>
             </Button>
 
-          <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors rounded-full">
+          <div className="shrink-0 border border-border-subtle bg-bg-surface flex items-center justify-center size-[34px] hover:border-border transition-colors rounded-none">
             <AnimatedThemeToggler />
           </div>
         </div>

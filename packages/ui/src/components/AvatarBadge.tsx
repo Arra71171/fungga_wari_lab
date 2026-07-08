@@ -4,7 +4,7 @@ import Image from "next/image"
 import { cn } from "@workspace/ui/lib/utils"
 
 const avatarBadgeVariants = cva(
-  "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-muted font-medium text-muted-foreground",
+  "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-none bg-muted font-medium text-muted-foreground",
   {
     variants: {
       size: {

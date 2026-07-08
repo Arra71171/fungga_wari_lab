@@ -98,7 +98,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                       }
                     }
                   }}
-                  className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-accent rounded-xl transition-colors"
+                  className="w-full px-4 py-3 flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-cinematic-text hover:bg-accent rounded-none transition-colors"
                   aria-expanded={isExpanded}
                   aria-label={`Chapter ${chIdx + 1}: ${chapter.title}`}
                 >
@@ -130,14 +130,14 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                           aria-label={`Scene ${scIdx + 1}: ${scene.title ?? "Scene"}`}
                           aria-current={isActive ? "true" : undefined}
                           className={cn(
-                            "w-full flex items-center gap-3 px-3 py-2 text-xs rounded-xl cursor-pointer transition-all text-left",
+                            "w-full flex items-center gap-3 px-3 py-2 text-xs rounded-none cursor-pointer transition-all text-left",
                             isActive
                               ? "bg-brand-ember/15 border-l-2 border-brand-ember text-cinematic-text font-medium"
                               : "text-muted-foreground hover:text-cinematic-text hover:bg-accent border-l-2 border-transparent"
                           )}
                         >
                           {isActive ? (
-                            <div className="size-1.5 bg-brand-ember rounded-xl shrink-0 shadow-[0_0_6px_var(--brand-ember)]" />
+                            <div className="size-1.5 bg-brand-ember rounded-none shrink-0 shadow-[0_0_6px_var(--brand-ember)]" />
                           ) : (
                             <span className="text-fine font-mono text-muted-foreground/40 w-4 shrink-0 tabular-nums">
                               {String(scIdx + 1).padStart(2, "0")}
@@ -168,7 +168,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-9 bg-cinematic-panel/40 animate-pulse rounded-xl"
+                className="h-9 bg-cinematic-panel/40 animate-pulse rounded-none"
               />
             ))}
           </div>
@@ -194,9 +194,9 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              <div className="size-1 bg-brand-ember/40 rounded-xl" />
-              <div className="size-1 bg-brand-ember/60 rounded-xl" />
-              <div className="size-1 bg-brand-ember rounded-xl" />
+              <div className="size-1 bg-brand-ember/40 rounded-none" />
+              <div className="size-1 bg-brand-ember/60 rounded-none" />
+              <div className="size-1 bg-brand-ember rounded-none" />
             </div>
             <span className="font-mono text-nano tracking-wide text-muted-foreground/40">
               Fungga Wari

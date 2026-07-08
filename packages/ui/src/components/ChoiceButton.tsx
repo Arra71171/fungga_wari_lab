@@ -4,7 +4,7 @@ import { Slot } from "radix-ui"
 import { cn } from "@workspace/ui/lib/utils"
 
 const choiceButtonVariants = cva(
-  "inline-flex w-full items-center justify-between whitespace-nowrap rounded-xl border-2 px-6 py-4 text-base font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-muted/50 hover:pl-8",
+  "inline-flex w-full items-center justify-between whitespace-nowrap rounded-none border-2 px-6 py-4 text-base font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-muted/50 hover:pl-8",
   {
     variants: {
       variant: {

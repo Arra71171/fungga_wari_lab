@@ -45,7 +45,7 @@ function BlockWrapper({
         }
       }}
       className={cn(
-        "relative group rounded-xl pl-4 transition-all duration-150",
+        "relative group rounded-none pl-4 transition-all duration-150",
         isSelected && "outline outline-2 outline-primary/40 bg-accent/5",
         !isSelected && "hover:outline hover:outline-1 hover:outline-border",
         isDragging && "opacity-50 scale-[1.02] z-50 ring-2 ring-primary bg-background",
@@ -60,7 +60,7 @@ function BlockWrapper({
         <button
           {...dragHandleProps}
           aria-label="Drag block"
-          className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl cursor-grab active:cursor-grabbing"
+          className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded-none cursor-grab active:cursor-grabbing"
         >
           <GripVertical className="size-4" />
         </button>
@@ -68,7 +68,7 @@ function BlockWrapper({
 
       {/* Action toolbar (top-right) */}
       {isSelected && (
-        <div className="absolute -top-9 right-0 flex items-center gap-1 bg-background border border-border rounded-xl px-2 py-1 z-10">
+        <div className="absolute -top-9 right-0 flex items-center gap-1 bg-background border border-border rounded-none px-2 py-1 z-10">
           <span className="text-2xs font-sans font-medium tracking-wide text-muted-foreground mr-2">
             {blockType}
           </span>
@@ -97,7 +97,7 @@ function BlockWrapper({
           }}
           aria-label="Add block after"
           className={cn(
-            "size-7 flex items-center justify-center rounded-xl",
+            "size-7 flex items-center justify-center rounded-none",
             "bg-background border-2 border-primary/30 text-primary",
             "hover:bg-primary hover:text-primary-foreground hover:border-primary",
             "transition-all duration-200"

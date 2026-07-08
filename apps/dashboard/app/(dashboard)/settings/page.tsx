@@ -16,7 +16,7 @@ const RichTextEditor = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full border border-border/50 rounded-3xl bg-cinematic-bg text-muted-foreground font-sans text-xs flex items-center justify-center min-h-[400px]">
+      <div className="w-full border border-border/50 rounded-none bg-cinematic-bg text-muted-foreground font-sans text-xs flex items-center justify-center min-h-[400px]">
         Loading Global Content Editor...
       </div>
     ),
@@ -120,14 +120,14 @@ function MemberRow({
             src={member.avatar_url ?? undefined}
             alt={member.alias || member.name || "?"}
             size="default"
-            className="rounded-xl"
+            className="rounded-none"
           />
         </div>
         <div className="min-w-0 w-full">
           <p className="font-heading text-xl text-foreground font-bold tracking-tight truncate flex flex-wrap items-center gap-2">
             <span className="truncate">{member.alias || member.name || member.email?.split("@")[0] || "Unnamed Operative"}</span>
             {isSelf && (
-              <span className="px-2.5 py-1 text-[10px] font-sans font-semibold text-brand-ember tracking-wide border border-brand-ember/20 bg-brand-ember/5 whitespace-nowrap shrink-0 rounded-full">
+              <span className="px-2.5 py-1 text-[10px] font-sans font-semibold text-brand-ember tracking-wide border border-brand-ember/20 bg-brand-ember/5 whitespace-nowrap shrink-0 rounded-none">
                 Active Uplink
               </span>
             )}
@@ -157,7 +157,7 @@ function MemberRow({
                 size="sm"
                 onClick={cycleRole}
               disabled={isPending || isDeleting}
-              className="font-sans text-xs font-semibold tracking-wide h-10 px-4 sm:px-6 border border-border/50 rounded-xl bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform flex-1 sm:flex-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="font-sans text-xs font-semibold tracking-wide h-10 px-4 sm:px-6 border border-border/50 rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform flex-1 sm:flex-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
             </Button>
@@ -168,7 +168,7 @@ function MemberRow({
                 size="icon"
                 onClick={handleDelete}
                 disabled={isPending || isDeleting}
-                className="h-10 w-10 border border-border/50 rounded-xl bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="h-10 w-10 border border-border/50 rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 title="Delete Operative"
                 aria-label="Delete Operative"
               >
@@ -239,7 +239,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               : "Insufficient clearance to alter global content. View-only mode active."}
           </p>
         </div>
-        <div className="flex flex-wrap border border-border/50 rounded-3xl p-1 gap-1 bg-cinematic-panel/40">
+        <div className="flex flex-wrap border border-border/50 rounded-none p-1 gap-1 bg-cinematic-panel/40">
           {(["manifesto", "terms"] as const).map((tab) => (
             <Button
               key={tab}
@@ -247,7 +247,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               size="sm"
               onClick={() => setActiveTab(tab)}
               className={cn(
-                "font-sans text-xs font-semibold tracking-wide rounded-xl h-10 px-6 transition-colors",
+                "font-sans text-xs font-semibold tracking-wide rounded-none h-10 px-6 transition-colors",
                 activeTab === tab
                   ? "bg-primary text-primary-foreground border-2 border-primary"
                   : "text-muted-foreground hover:bg-bg-overlay border-2 border-transparent"
@@ -261,7 +261,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
 
       <div className="p-6">
         {isLoading ? (
-          <div className="animate-pulse h-[400px] border border-border/50 rounded-3xl bg-bg-surface/20 blur-sm" />
+          <div className="animate-pulse h-[400px] border border-border/50 rounded-none bg-bg-surface/20 blur-sm" />
         ) : (
           <div className="space-y-4">
             {!isCallerAdmin && (
@@ -273,7 +273,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               key={activeTab}
               value={editorContent}
               onChange={setEditorContent}
-              className="min-h-[400px] border border-border/50 rounded-3xl bg-cinematic-bg"
+              className="min-h-[400px] border border-border/50 rounded-none bg-cinematic-bg"
               editable={isCallerAdmin}
             />
             {isCallerAdmin && (
@@ -287,7 +287,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
                   id="global-content-deploy-btn"
                   onClick={handleSave}
                   disabled={isSaving || !editorContent}
-                  className="font-sans text-xs font-semibold tracking-wide rounded-xl w-full sm:w-auto min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform"
+                  className="font-sans text-xs font-semibold tracking-wide rounded-none w-full sm:w-auto min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform"
                 >
                   {isSaving ? <Loader2 className="animate-spin size-4" /> : "Deploy Changes"}
                 </Button>

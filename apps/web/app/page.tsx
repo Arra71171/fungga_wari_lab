@@ -183,7 +183,7 @@ function SectionHeading({
             variants={clipReveal}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="inline-block px-3 py-1 mb-4 text-xs font-sans text-xs font-medium tracking-wide text-primary/80 bg-primary/5 rounded-full"
+            className="inline-block px-3 py-1 mb-4 text-xs font-sans text-xs font-medium tracking-wide text-primary/80 bg-primary/5 rounded-none"
           >
             {badge}
           </motion.span>
@@ -252,7 +252,7 @@ function CapabilityCell({
     >
       <div
         ref={iconRef}
-        className="size-12 mb-8 rounded-full border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm"
+        className="size-12 mb-8 rounded-none border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm"
       >
         <Icon className="size-5" />
       </div>
@@ -311,7 +311,7 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 lg:px-20 pt-32 lg:pt-40 pb-20 min-h-[85vh] flex items-center justify-center overflow-hidden"
+        className="relative px-6 md:px-12 lg:px-20 py-24 min-h-[85vh] flex items-center justify-center overflow-hidden"
       >
 
         <motion.div
@@ -319,7 +319,7 @@ export default function Home() {
           className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10"
         >
           {/* Hero Content */}
-          <div className="flex flex-col justify-center max-w-lg space-y-8">
+          <div className="flex flex-col justify-center max-w-lg space-y-4">
 
 
             {/* Layered headline */}
@@ -361,7 +361,7 @@ export default function Home() {
                 <MagneticButton strength={0.2}>
                   <Button
                     size="lg"
-                    className="h-12 px-8 rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm font-sans font-medium transition-all shadow-sm"
+                    className="h-12 px-8 rounded-none bg-foreground text-background hover:bg-foreground/90 text-sm font-sans font-medium transition-all shadow-sm"
                     asChild
                   >
                     <Link href="/stories">
@@ -389,18 +389,18 @@ export default function Home() {
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
               <div 
-                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-3xl p-6 flex flex-col justify-between group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
+                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-none p-6 flex flex-col justify-between group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
               >
                 {/* Softened Ambient Glow */}
                 <motion.div
-                  className="absolute inset-0 bg-primary/5 blur-[80px] rounded-3xl pointer-events-none z-[-1]"
+                  className="absolute inset-0 bg-primary/5 blur-[80px] rounded-none pointer-events-none z-[-1]"
                   animate={{ scale: [1, 1.02, 1], opacity: [0.3, 0.5, 0.3] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 />
 
                 <div className="flex justify-between items-center z-10 w-full mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="size-1.5 bg-primary rounded-full" />
+                    <div className="size-1.5 bg-primary rounded-none" />
                     <div className="text-xs font-sans text-muted-foreground font-medium tracking-wider uppercase">
                       SYS.ID: 9X-ALPHA
                     </div>
@@ -408,7 +408,7 @@ export default function Home() {
                   <Users className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
 
-              <div className="flex-1 flex items-center justify-center relative rounded-2xl border border-border/40 bg-secondary/10 overflow-hidden mb-5">
+              <div className="flex-1 flex items-center justify-center relative rounded-none border border-border/40 bg-secondary/10 overflow-hidden mb-5">
                 <video
                   ref={(el) => {
                     if (el) {
@@ -426,7 +426,7 @@ export default function Home() {
                 />
                 
                 {/* Watermark Overlay Element */}
-                <div className="absolute bottom-0 right-0 px-3 py-1.5 bg-background/90 backdrop-blur-sm rounded-tl-xl border-t border-l border-border/50 z-20 pointer-events-auto">
+                <div className="absolute bottom-0 right-0 px-3 py-1.5 bg-background/90 backdrop-blur-sm rounded-none border-t border-l border-border/50 z-20 pointer-events-auto">
                   <span className="text-[10px] font-sans font-semibold tracking-wider text-muted-foreground uppercase">Loktak Lake</span>
                 </div>
               </div>
@@ -447,7 +447,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-muted-foreground/60 uppercase font-semibold">Integrity</span>
-                    <span className="font-medium text-foreground flex items-center gap-1.5"><div className="size-1.5 bg-green-500/80 rounded-full"/> Verified</span>
+                    <span className="font-medium text-foreground flex items-center gap-1.5"><div className="size-1.5 bg-green-500/80 rounded-none"/> Verified</span>
                   </div>
                 </div>
               </div>
@@ -493,7 +493,7 @@ export default function Home() {
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: -3 }}
                       transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                      className="size-12 rounded-full border border-border/50 bg-secondary/50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                      className="size-12 border border-border/50 bg-secondary/50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                     >
                       <Archive className="size-5" />
                     </motion.div>
@@ -520,7 +520,7 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: 3 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="size-10 rounded-full border border-primary/10 bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                    className="size-10 border border-primary/10 bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                   >
                     <BookOpen className="size-5" />
                   </motion.div>
@@ -541,7 +541,7 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: -3 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="size-10 rounded-full border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground group-hover:bg-primary-foreground group-hover:text-primary transition-colors"
+                    className="size-10 border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground group-hover:bg-primary-foreground group-hover:text-primary transition-colors"
                   >
                     <Users className="size-5" />
                   </motion.div>
@@ -563,7 +563,7 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.1, rotate: 6 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="size-10 rounded-full border border-border/50 bg-secondary/50 flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors"
+                    className="size-10 border border-border/50 bg-secondary/50 flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors"
                   >
                     <Layers className="size-5" />
                   </motion.div>
@@ -665,7 +665,7 @@ export default function Home() {
             <MagneticButton strength={0.25}>
               <Button
                 size="lg"
-                className="h-14 px-10 text-sm font-medium tracking-wide rounded-full transition-shadow"
+                className="h-14 px-10 text-sm font-medium tracking-wide transition-shadow"
                 asChild
               >
                 <Link href="/login">Begin the Journey</Link>

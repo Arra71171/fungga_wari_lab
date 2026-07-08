@@ -62,7 +62,7 @@ function ToolbarButton({
       disabled={disabled}
       aria-label={label}
       className={cn(
-        "flex items-center justify-center size-7 rounded-xl transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed",
+        "flex items-center justify-center size-7 rounded-none transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed",
         isActive && "bg-primary/10 text-primary"
       )}
     >

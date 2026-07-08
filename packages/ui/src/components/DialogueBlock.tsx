@@ -51,7 +51,7 @@ function DialogueBlock({
         <span className="text-xs font-semibold tracking-wide text-brand-ochre">
           {characterName}
         </span>
-        <div className="rounded-xl bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground shadow-sm">
+        <div className="rounded-none bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground shadow-sm">
           {quote}
         </div>
       </div>

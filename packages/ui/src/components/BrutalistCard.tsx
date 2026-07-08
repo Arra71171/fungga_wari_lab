@@ -4,12 +4,12 @@ import { Slot } from "radix-ui"
 import { cn } from "@workspace/ui/lib/utils"
 
 const brutalistCardVariants = cva(
-  "border border-border/50 rounded-3xl transition-all duration-300",
+  "border border-border/50 rounded-none transition-all duration-300",
   {
     variants: {
       variant: {
-        default: "border-border/50 shadow-[var(--shadow-xs)] bg-bg-surface",
-        panel: "border-border-subtle shadow-[var(--shadow-xs)] bg-bg-panel",
+        default: "border-border/50 shadow-sm bg-bg-surface",
+        panel: "border-border-subtle shadow-sm bg-bg-panel",
         interactive: "border-border/50 shadow-sm bg-bg-surface hover:-translate-y-0.5 hover:shadow-md hover:border-primary/50",
         ghost: "border-border/50 bg-bg-surface hover:shadow-sm hover:-translate-y-[1px] hover:border-primary/50",
       },

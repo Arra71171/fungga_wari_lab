@@ -124,10 +124,10 @@ export default function StoriesOverviewPage() {
   if (stories === undefined) {
     return (
       <div className="flex flex-col h-full space-y-6 md:space-y-8 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto animate-pulse">
-        <div className="h-20 bg-muted/30 rounded-xl w-1/3" />
+        <div className="h-20 bg-muted/30 rounded-none w-1/3" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-64 bg-muted/20 border border-border-subtle rounded-xl" />
+            <div key={i} className="h-64 bg-muted/20 border border-border-subtle rounded-none" />
           ))}
         </div>
       </div>
@@ -155,13 +155,13 @@ export default function StoriesOverviewPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="rounded-full font-sans text-xs font-semibold tracking-wide"
+              className="rounded-none font-sans text-xs font-semibold tracking-wide"
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
-              className="rounded-full font-sans text-xs font-semibold tracking-wide"
+              className="rounded-none font-sans text-xs font-semibold tracking-wide"
               onClick={handleDeleteConfirm}
             >
               Delete Forever
@@ -190,7 +190,7 @@ export default function StoriesOverviewPage() {
             <Button
               onClick={handleNewManuscript}
               disabled={isCreating}
-              className="gap-2 border border-brand-ember/20 bg-background text-brand-ember hover:bg-brand-ember/5 transition-all rounded-full px-6"
+              className="gap-2 border border-brand-ember/20 bg-background text-brand-ember hover:bg-brand-ember/5 transition-all rounded-none px-6"
             >
               <Plus className="size-4" />
               {isCreating ? "Initializing..." : "New Manuscript"}
@@ -202,7 +202,7 @@ export default function StoriesOverviewPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             placeholder="Search by title or category..."
-            className="pl-9 h-12 border-border bg-primary/5 hover:bg-primary/10 focus-visible:ring-brand-ember/50 text-foreground placeholder:text-muted-foreground/50 rounded-full transition-all font-sans text-sm"
+            className="pl-9 h-12 border-border bg-primary/5 hover:bg-primary/10 focus-visible:ring-brand-ember/50 text-foreground placeholder:text-muted-foreground/50 rounded-none transition-all font-sans text-sm"
           />
         </div>
 
@@ -216,7 +216,7 @@ export default function StoriesOverviewPage() {
             <Button
               onClick={handleNewManuscript}
               disabled={isCreating}
-              className="rounded-full bg-brand-ember/5 text-brand-ember hover:bg-brand-ember/10 border border-brand-ember/20 transition-all px-8"
+              className="rounded-none bg-brand-ember/5 text-brand-ember hover:bg-brand-ember/10 border border-brand-ember/20 transition-all px-8"
             >
               {isCreating ? "Initializing..." : "Establish First Manuscript"}
             </Button>
@@ -235,7 +235,7 @@ export default function StoriesOverviewPage() {
                     chapterCount={story.chapter_count ?? 0}
                     language={story.language}
                     priority={index < 4}
-                    className="h-full hover:-translate-y-1 transition-transform duration-300 rounded-3xl border-border/50"
+                    className="h-full hover:-translate-y-1 transition-transform duration-300 rounded-none border-border/50"
                   />
                 </Link>
                 {/* Quick actions */}
@@ -246,7 +246,7 @@ export default function StoriesOverviewPage() {
                     disabled={togglingId === story.id || deletingId === story.id}
                     onClick={(e) => handleTogglePublish(e, story.id, story.status)}
                     className={cn(
-                      "rounded-full text-[10px] font-sans font-medium tracking-wide gap-1.5 backdrop-blur-sm border border-border/10",
+                      "rounded-none text-[10px] font-sans font-medium tracking-wide gap-1.5 backdrop-blur-sm border border-border/10",
                       story.status === "published"
                         ? "border-destructive/50 text-destructive hover:bg-destructive/10 bg-background/90"
                         : "border-brand-ember/50 text-brand-ember hover:bg-brand-ember/10 bg-background/90",
@@ -267,7 +267,7 @@ export default function StoriesOverviewPage() {
                     size="sm"
                     disabled={deletingId === story.id || togglingId === story.id}
                     onClick={(e) => handleDeleteClick(e, story.id, story.title)}
-                    className="rounded-full text-[10px] font-sans font-medium tracking-wide gap-1.5 backdrop-blur-sm border border-destructive/30 text-destructive hover:bg-destructive/5 bg-background/90"
+                    className="rounded-none text-[10px] font-sans font-medium tracking-wide gap-1.5 backdrop-blur-sm border border-destructive/30 text-destructive hover:bg-destructive/5 bg-background/90"
                     aria-label="Delete story"
                   >
                     {deletingId === story.id ? (

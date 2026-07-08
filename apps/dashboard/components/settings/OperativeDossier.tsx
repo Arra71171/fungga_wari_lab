@@ -68,7 +68,7 @@ export function OperativeDossier() {
 
   if (me === undefined) {
     return (
-      <div className="animate-pulse h-[300px] bg-bg-surface/20 border border-border/50 rounded-3xl rounded-xl shadow-xs" />
+      <div className="animate-pulse h-[300px] bg-bg-surface/20 border border-border/50 rounded-none rounded-none shadow-xs" />
     );
   }
 
@@ -143,7 +143,7 @@ export function OperativeDossier() {
   const currentAvatar = me?.avatar_url;
 
   return (
-    <div className="border border-border/50 rounded-3xl bg-cinematic-panel/40 relative overflow-hidden shadow-sm transition-all">
+    <div className="border border-border/50 rounded-none bg-cinematic-panel/40 relative overflow-hidden shadow-sm transition-all">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       {/* Header */}
@@ -170,7 +170,7 @@ export function OperativeDossier() {
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="w-full h-full relative overflow-hidden">
-              <AvatarBadge src={currentAvatar ?? undefined} alt={displayName} className="w-full h-full rounded-xl" />
+              <AvatarBadge src={currentAvatar ?? undefined} alt={displayName} className="w-full h-full rounded-none" />
 
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-md">
                 {isUploading ? (
@@ -208,7 +208,7 @@ export function OperativeDossier() {
             </p>
             <div
               className={cn(
-                "mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 border text-xs font-sans font-medium tracking-wide rounded-full",
+                "mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 border text-xs font-sans font-medium tracking-wide rounded-none",
                 role === "superadmin" && "border-brand-ember text-brand-ember bg-brand-ember/5",
                 role === "editor" && "border-brand-ochre text-brand-ochre bg-brand-ochre/5",
                 role !== "superadmin" && role !== "editor" && "border-border-strong text-muted-foreground/80 bg-bg-surface/50"
@@ -220,7 +220,7 @@ export function OperativeDossier() {
           </div>
 
           {/* Performance Metrics */}
-          <div className="w-full border border-border/50 rounded-3xl bg-cinematic-bg p-4 space-y-3">
+          <div className="w-full border border-border/50 rounded-none bg-cinematic-bg p-4 space-y-3">
             <h3 className="font-sans text-xs font-semibold tracking-wide text-muted-foreground border-b border-border/50 pb-2">
               Metrics
             </h3>
@@ -260,7 +260,7 @@ export function OperativeDossier() {
                   if (aliasError) setAliasError("");
                 }}
                 placeholder="ENTER OPERATIVE ALIAS..."
-                className="h-12 border border-border/50 bg-cinematic-bg font-sans text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-xl transition-colors shadow-none"
+                className="h-12 border border-border/50 bg-cinematic-bg font-sans text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none"
               />
               {aliasError && (
                 <p className="font-sans text-xs text-destructive tracking-wide pl-4 border-l-2 border-destructive">
@@ -284,7 +284,7 @@ export function OperativeDossier() {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="ENTER FIELD BIO OR RECORD..."
-                className="min-h-[160px] resize-none border border-border/50 bg-cinematic-bg font-mono leading-relaxed tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-xl transition-colors shadow-none p-4"
+                className="min-h-[160px] resize-none border border-border/50 bg-cinematic-bg font-mono leading-relaxed tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none p-4"
               />
             </div>
           </div>
@@ -304,7 +304,7 @@ export function OperativeDossier() {
               id="dossier-sync-btn"
               onClick={handleSave}
               disabled={isSaving || !!aliasError || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
-              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-xl border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform w-full sm:w-auto min-w-[200px]"
+              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-none border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform w-full sm:w-auto min-w-[200px]"
             >
               {isSaving ? <Loader2 className="animate-spin size-4 mr-2" /> : <Activity className="size-4 mr-2" />}
               {isSaving ? "Syncing..." : "Sync Identity"}

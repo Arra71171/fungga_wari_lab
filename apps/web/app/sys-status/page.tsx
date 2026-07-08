@@ -62,8 +62,8 @@ export default function SysStatusPage() {
           </p>
 
           {/* Overall status */}
-          <div className="flex items-center gap-4 px-6 py-4 rounded-xl border border-border-subtle mb-10">
-            <div className="size-2 rounded-full bg-primary animate-pulse" />
+          <div className="flex items-center gap-4 px-6 py-4 rounded-none border border-border-subtle mb-10">
+            <div className="size-2 rounded-none bg-primary animate-pulse" />
             <span className="text-sm font-medium">
               All Systems Operational
             </span>
@@ -98,7 +98,7 @@ export default function SysStatusPage() {
           </div>
 
           {/* CTA */}
-          <Button variant="ghost" size="default" className="text-xs px-6 rounded-full font-medium text-muted-foreground" asChild>
+          <Button variant="ghost" size="default" className="text-xs px-6 rounded-none font-medium text-muted-foreground" asChild>
             <Link href="/">
               <ArrowLeft className="size-3 mr-2" />
               Return

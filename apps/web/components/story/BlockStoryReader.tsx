@@ -82,9 +82,9 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
     case "horizontalRule":
       return (
         <div key={index} className="flex items-center justify-center gap-4 my-12" aria-hidden>
-          <div className="size-1 bg-brand-ember/40 rounded-2xl" />
-          <div className="size-1 bg-brand-ember/60 rounded-2xl" />
-          <div className="size-1 bg-brand-ember rounded-2xl shadow-[0_0_4px_var(--brand-ember)]" />
+          <div className="size-1 bg-brand-ember/40 rounded-none" />
+          <div className="size-1 bg-brand-ember/60 rounded-none" />
+          <div className="size-1 bg-brand-ember rounded-none shadow-[0_0_4px_var(--brand-ember)]" />
         </div>
       );
 
@@ -131,7 +131,7 @@ function renderTipTapNode(node: TipTapNode, index: number): React.ReactNode {
       return (
         <pre
           key={index}
-          className="bg-cinematic-bg/60 border border-cinematic-border/20 rounded-2xl p-4 my-6 overflow-x-auto"
+          className="bg-cinematic-bg/60 border border-cinematic-border/20 rounded-none p-4 my-6 overflow-x-auto"
         >
           <code className="font-sans text-sm text-brand-glow">
             {extractText(node)}
@@ -179,7 +179,7 @@ function renderInlineContent(nodes: TipTapNode[]): React.ReactNode {
             element = (
               <code
                 key={i}
-                className="font-sans text-sm bg-cinematic-panel px-1 py-0.5 rounded-2xl text-brand-glow"
+                className="font-sans text-sm bg-cinematic-panel px-1 py-0.5 rounded-none text-brand-glow"
               >
                 {element}
               </code>
@@ -236,7 +236,7 @@ function ChoiceButtons({
           onClick={() => {
             onChoose(choice.next_scene_id);
           }}
-          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {choice.label}
         </button>
@@ -371,7 +371,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             {/* Uncropped Illustration Container */}
             <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
               {/* Ensures the image maintains a strict 3:4 aspect ratio and fits within its container */}
-              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-2xl overflow-hidden shadow-sm ring-1 ring-border/20 mx-auto">
+              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-none overflow-hidden shadow-sm ring-1 ring-border/20 mx-auto">
                 <Image
                   src={activeChapter.illustration_url}
                   alt={activeChapter.title ?? "Chapter illustration"}
@@ -469,14 +469,14 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
           
           {/* Chapter Audio Player */}
           {activeChapter?.audio_url && (
-            <div className="mb-10 lg:mb-14 border border-cinematic-border/40 bg-cinematic-panel/40 p-4 lg:p-5 rounded-2xl backdrop-blur-sm">
+            <div className="mb-10 lg:mb-14 border border-cinematic-border/40 bg-cinematic-panel/40 p-4 lg:p-5 rounded-none backdrop-blur-sm">
               <div className="flex items-center gap-2 mb-3">
                 <Music className="size-3.5 text-brand-ember" />
                 <span className="font-mono text-nano tracking-wide text-brand-ember/90">Chapter Audio</span>
               </div>
               <audio 
                 controls 
-                className="w-full h-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ember/50" 
+                className="w-full h-10 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ember/50" 
                 src={activeChapter.audio_url} 
                 preload="metadata"
                 aria-label={`Chapter audio for ${activeChapter.title || 'this chapter'}`}
@@ -557,11 +557,11 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 /* LAST chapter, LAST scene → The End */
                 <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-8 relative z-10 border-t border-cinematic-border/10">
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-2xl" />
+                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-none" />
                   </div>
 
                   <div className="relative">
-                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-2xl scale-150" />
+                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-none scale-150" />
                     <Flame className="relative size-8 text-brand-ember" aria-hidden="true" />
                   </div>
 

@@ -207,7 +207,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
                     {[0, 1, 2].map((i) => (
                       <motion.div
                         key={i}
-                        className="size-1.5 bg-brand-ember rounded-xl"
+                        className="size-1.5 bg-brand-ember rounded-none"
                         animate={{ opacity: [0.3, 1, 0.3] }}
                         transition={{
                           duration: 1,
@@ -271,7 +271,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
                 size="sm"
                 disabled={!inputValue.trim() || isLoading}
                 aria-label="Send message to Wise-Epu"
-                className="h-full px-3 rounded-xl border-l border-border shrink-0"
+                className="h-full px-3 rounded-none border-l border-border shrink-0"
               >
                 {isLoading ? (
                   <Loader className="size-3 animate-spin" />

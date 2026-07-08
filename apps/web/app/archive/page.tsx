@@ -68,10 +68,10 @@ export default function ArchivePage() {
 
           {/* CTA */}
           <div className="flex flex-wrap gap-3">
-            <Button size="default" className="text-xs px-6 rounded-full font-medium" asChild>
+            <Button size="default" className="text-xs px-6 rounded-none font-medium" asChild>
               <Link href="/stories">Browse</Link>
             </Button>
-            <Button variant="ghost" size="default" className="text-xs px-6 rounded-full font-medium text-muted-foreground" asChild>
+            <Button variant="ghost" size="default" className="text-xs px-6 rounded-none font-medium text-muted-foreground" asChild>
               <Link href="/">
                 <ArrowLeft className="size-3 mr-2" />
                 Return

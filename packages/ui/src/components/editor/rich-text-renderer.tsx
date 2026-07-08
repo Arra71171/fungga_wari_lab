@@ -67,7 +67,7 @@ const renderMarks = (node: JSONContent, children: React.ReactNode) => {
       case "strike":
         return <s className="line-through">{acc}</s>;
       case "highlight": // the Tiptap Highlight extension
-        return <mark className="bg-primary/20 text-foreground px-1 py-0.5 rounded-xl">{acc}</mark>;
+        return <mark className="bg-primary/20 text-foreground px-1 py-0.5 rounded-none">{acc}</mark>;
       default:
         return acc;
     }

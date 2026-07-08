@@ -102,7 +102,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-10 rounded-xl border border-border bg-cinematic-bg/80 px-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
+            className="w-full h-10 rounded-none border border-border bg-cinematic-bg/80 px-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
             placeholder="your@email.com"
           />
         </div>
@@ -123,7 +123,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full h-10 rounded-xl border border-border bg-cinematic-bg/80 px-3 pr-10 font-sans text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
+              className="w-full h-10 rounded-none border border-border bg-cinematic-bg/80 px-3 pr-10 font-sans text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
               placeholder="••••••••"
             />
             <button
@@ -145,7 +145,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting || !email || !password}
-          className="w-full rounded-xl bg-primary text-primary-foreground font-mono text-tight-label font-black uppercase tracking-loose h-11 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-none bg-primary text-primary-foreground font-mono text-tight-label font-black uppercase tracking-loose h-11 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "ACCESSING..." : "ACCESS ARCHIVE"}
         </button>

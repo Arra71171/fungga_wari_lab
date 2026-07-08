@@ -83,7 +83,7 @@ export function TaskBoard() {
                 {group.user ? (
                   <AvatarBadge src={group.avatarUrl} alt={group.name} size="default" />
                 ) : (
-                  <div className="size-10 rounded-xl border border-dashed border-border-strong bg-bg-surface flex items-center justify-center shrink-0">
+                  <div className="size-10 rounded-none border border-dashed border-border-strong bg-bg-surface flex items-center justify-center shrink-0">
                     <span className="text-xs font-mono text-muted-foreground">?</span>
                   </div>
                 )}
@@ -92,7 +92,7 @@ export function TaskBoard() {
                     {group.name}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="inline-block size-1.5 bg-brand-ochre rounded-xl" />
+                    <span className="inline-block size-1.5 bg-brand-ochre rounded-none" />
                     <p className="text-fine font-mono text-muted-foreground/80 tracking-widest uppercase">
                       {group.tasks.length} Active {group.tasks.length === 1 ? "Task" : "Tasks"}
                     </p>

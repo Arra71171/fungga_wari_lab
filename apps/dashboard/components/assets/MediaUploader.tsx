@@ -159,10 +159,10 @@ export function MediaUploader() {
             Asset Type
           </Label>
           <Select value={assetType} onValueChange={setAssetType} disabled={isUploading}>
-            <SelectTrigger className="bg-bg-overlay border-border font-sans text-sm rounded-xl">
+            <SelectTrigger className="bg-bg-overlay border-border font-sans text-sm rounded-none">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-bg-panel border-border rounded-xl">
+            <SelectContent className="bg-bg-panel border-border rounded-none">
               <SelectItem value="illustration" className="font-sans text-sm">
                 Illustration
               </SelectItem>
@@ -201,7 +201,7 @@ export function MediaUploader() {
           fileInputRef.current?.click();
         }}
         disabled={isUploading}
-        className="h-40 w-full max-w-sm border border-dashed border-border-strong bg-bg-overlay hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors flex flex-col gap-2 rounded-xl group"
+        className="h-40 w-full max-w-sm border border-dashed border-border-strong bg-bg-overlay hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors flex flex-col gap-2 rounded-none group"
         variant="ghost"
         aria-label="Upload media asset"
       >

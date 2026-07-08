@@ -77,7 +77,7 @@ function ChoiceComponent(props: NodeViewProps) {
               value={nextSceneId}
               onValueChange={(value) => updateAttributes({ nextSceneId: value })}
             >
-              <SelectTrigger className="w-full bg-transparent border-x-0 border-t-0 border-b border-border pb-1 focus-visible:outline-none focus-visible:ring-0 focus-visible:border-brand-ember font-sans text-xs text-foreground rounded-xl shadow-none h-auto px-0 pt-0">
+              <SelectTrigger className="w-full bg-transparent border-x-0 border-t-0 border-b border-border pb-1 focus-visible:outline-none focus-visible:ring-0 focus-visible:border-brand-ember font-sans text-xs text-foreground rounded-none shadow-none h-auto px-0 pt-0">
                 <SelectValue placeholder="— Select a scene —" />
               </SelectTrigger>
               <SelectContent>

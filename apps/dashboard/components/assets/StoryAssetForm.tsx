@@ -239,7 +239,7 @@ export function StoryAssetForm() {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="bg-bg-base border-border rounded-xl h-12"
+            className="bg-bg-base border-border rounded-none h-12"
             placeholder="e.g. Khamba Thoibi"
           />
         </div>
@@ -252,10 +252,10 @@ export function StoryAssetForm() {
               value={category}
               onValueChange={(v) => setCategory(v as StoryCategory)}
             >
-              <SelectTrigger className="bg-bg-base border-border rounded-xl h-12">
+              <SelectTrigger className="bg-bg-base border-border rounded-none h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-bg-panel border-border rounded-xl">
+              <SelectContent className="bg-bg-panel border-border rounded-none">
                 {STORY_CATEGORIES.map((cat) => (
                   <SelectItem key={cat.value} value={cat.value}>
                     {cat.label}
@@ -269,10 +269,10 @@ export function StoryAssetForm() {
               Language
             </Label>
             <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="bg-bg-base border-border rounded-xl h-12">
+              <SelectTrigger className="bg-bg-base border-border rounded-none h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-bg-panel border-border rounded-xl">
+              <SelectContent className="bg-bg-panel border-border rounded-none">
                 {STORY_LANGUAGES.map((lang) => (
                   <SelectItem key={lang.value} value={lang.value}>
                     {lang.label}
@@ -291,7 +291,7 @@ export function StoryAssetForm() {
         <Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="bg-bg-base border-border rounded-xl resize-none h-24"
+          className="bg-bg-base border-border rounded-none resize-none h-24"
           placeholder="What is this story about?"
         />
       </div>
@@ -306,7 +306,7 @@ export function StoryAssetForm() {
             variant="outline"
             size="sm"
             onClick={addChapter}
-            className="rounded-xl border-border hover:bg-bg-overlay font-sans text-xs tracking-wide h-8"
+            className="rounded-none border-border hover:bg-bg-overlay font-sans text-xs tracking-wide h-8"
           >
             <Plus className="size-3 mr-2" /> Add Chapter
           </Button>
@@ -343,7 +343,7 @@ export function StoryAssetForm() {
                     onChange={(e) =>
                       updateLocalChapter(chapter.id, "title", e.target.value)
                     }
-                    className="bg-bg-base border-border rounded-xl h-10"
+                    className="bg-bg-base border-border rounded-none h-10"
                     placeholder={`Chapter ${index + 1}`}
                   />
                 </div>
@@ -356,7 +356,7 @@ export function StoryAssetForm() {
                     onChange={(e) =>
                       updateLocalChapter(chapter.id, "text", e.target.value)
                     }
-                    className="bg-bg-base border-border rounded-xl resize-none h-40 font-serif leading-relaxed text-sm p-4"
+                    className="bg-bg-base border-border rounded-none resize-none h-40 font-serif leading-relaxed text-sm p-4"
                     placeholder="Paste chapter text here..."
                   />
                 </div>
@@ -413,7 +413,7 @@ export function StoryAssetForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-[200px] shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
+          className="rounded-none font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-[200px] shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
         >
           {isSubmitting ? (
             <Loader2 className="size-4 animate-spin mr-2" />

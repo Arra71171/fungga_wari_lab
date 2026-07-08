@@ -76,7 +76,7 @@ export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
             {task.priority === "high" && <AlertCircle className="size-3.5 text-brand-ember" />}
             {task.priority === "medium" && <Clock className="size-3.5 text-brand-ochre" />}
             {task.priority === "low" && (
-              <span className="size-1.5 rounded-xl bg-muted-foreground/50" />
+              <span className="size-1.5 rounded-none bg-muted-foreground/50" />
             )}
             <span className="tracking-wide text-nano font-bold">{task.priority}</span>
           </div>

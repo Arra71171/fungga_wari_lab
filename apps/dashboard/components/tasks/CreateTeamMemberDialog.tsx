@@ -43,13 +43,13 @@ export function CreateTeamMemberDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full mt-2 rounded-xl bg-bg-surface border-dashed text-xs text-muted-foreground font-sans font-medium tracking-wide px-2">
+        <Button variant="outline" size="sm" className="w-full mt-2 rounded-none bg-bg-surface border-dashed text-xs text-muted-foreground font-sans font-medium tracking-wide px-2">
           <PlusCircle className="size-3 mr-2 shrink-0" />
           <span className="truncate">New Operative</span>
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="max-w-xs bg-bg-panel border-border rounded-xl shadow-2xl">
+      <DialogContent className="max-w-xs bg-bg-panel border-border rounded-none shadow-2xl">
         <DialogHeader>
           <DialogTitle className="font-heading uppercase tracking-tighter text-lg text-brand-ochre border-b border-border-subtle pb-3">
             Register Operative
@@ -68,7 +68,7 @@ export function CreateTeamMemberDialog() {
               id="name"
               name="name"
               required
-              className="rounded-xl bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="e.g., Jane Doe"
             />
           </div>
@@ -81,7 +81,7 @@ export function CreateTeamMemberDialog() {
               id="email"
               name="email"
               type="email"
-              className="rounded-xl bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="jane@example.com"
             />
           </div>
@@ -94,7 +94,7 @@ export function CreateTeamMemberDialog() {
               id="phone"
               name="phone"
               type="tel"
-              className="rounded-xl bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="+1234567890"
             />
           </div>
@@ -102,7 +102,7 @@ export function CreateTeamMemberDialog() {
           <div className="flex justify-end pt-2 border-t border-border-subtle">
             <Button
               type="submit"
-              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-sans font-medium tracking-wide text-xs rounded-xl"
+              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-sans font-medium tracking-wide text-xs rounded-none"
             >
               Add Member
             </Button>

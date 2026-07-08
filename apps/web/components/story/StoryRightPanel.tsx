@@ -134,7 +134,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
               <div
                 key={index}
                 className={cn(
-                  "flex-1 rounded-xl transition-all duration-150",
+                  "flex-1 rounded-none transition-all duration-150",
                   isPlaying
                     ? "bg-brand-ember/80"
                     : isPaused
@@ -238,7 +238,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
         <div className="mt-2 flex items-center justify-center gap-1.5">
           <div
             className={cn(
-              "size-1 rounded-xl transition-colors",
+              "size-1 rounded-none transition-colors",
               isPlaying
                 ? "bg-brand-ember shadow-[0_0_4px_var(--brand-ember)]"
                 : "bg-cinematic-border/30",
@@ -249,7 +249,7 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
           </span>
           <div
             className={cn(
-              "size-1 rounded-xl transition-colors",
+              "size-1 rounded-none transition-colors",
               isPlaying
                 ? "bg-brand-ember shadow-[0_0_4px_var(--brand-ember)]"
                 : "bg-cinematic-border/30",
@@ -300,9 +300,9 @@ export function StoryRightPanel({ variant = "desktop", onClose }: StoryRightPane
       {/* ── Footer pip ─────────────────────────────────────── */}
       <div className="mt-auto pt-8">
         <div className="flex items-center gap-1.5">
-          <div className="size-1 bg-brand-ember/30 rounded-xl" />
-          <div className="size-1 bg-brand-ember/50 rounded-xl" />
-          <div className="size-1 bg-brand-ember rounded-xl shadow-[0_0_4px_var(--brand-ember)]" />
+          <div className="size-1 bg-brand-ember/30 rounded-none" />
+          <div className="size-1 bg-brand-ember/50 rounded-none" />
+          <div className="size-1 bg-brand-ember rounded-none shadow-[0_0_4px_var(--brand-ember)]" />
         </div>
       </div>
     </aside>

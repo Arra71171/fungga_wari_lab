@@ -698,7 +698,7 @@ export default function StoriesPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search manuscripts…"
                   aria-label="Search manuscripts"
-                  className="h-10 font-mono pl-10 rounded-xl border border-border bg-background focus-visible:ring-0 focus-visible:border-primary transition-all text-sm"
+                  className="h-10 font-mono pl-10 rounded-none border border-border bg-background focus-visible:ring-0 focus-visible:border-primary transition-all text-sm"
                 />
               </div>
 
@@ -706,7 +706,7 @@ export default function StoriesPage() {
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className={cn(
-                  "h-10 rounded-xl border border-border font-mono uppercase text-fine tracking-widest gap-2 hover:border-primary transition-all shrink-0 relative",
+                  "h-10 rounded-none border border-border font-mono uppercase text-fine tracking-widest gap-2 hover:border-primary transition-all shrink-0 relative",
                   showFilters && "border-primary bg-primary/5",
                 )}
                 aria-label="Toggle filters"
@@ -841,7 +841,7 @@ export default function StoriesPage() {
                 <Link href="/">
                   <Button
                     variant="outline"
-                    className="rounded-xl font-mono uppercase font-bold tracking-widest text-xs border hover:border-primary transition-all"
+                    className="rounded-none font-mono uppercase font-bold tracking-widest text-xs border hover:border-primary transition-all"
                   >
                     Return Home
                   </Button>

@@ -53,7 +53,7 @@
     --chart-4: oklch(0.555 0.163 48.998);
     --chart-5: oklch(0.473 0.137 46.201);
 
-    --radius: 1rem;
+    --radius: 0rem;
     --status-active: oklch(0.58 0.21 43);
 
     /* Shadows — darker to punch through the warm bg */
@@ -200,13 +200,13 @@
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
-    --radius-sm: var(--radius);
-    --radius-md: var(--radius);
-    --radius-lg: var(--radius);
-    --radius-xl: var(--radius);
-    --radius-2xl: var(--radius);
-    --radius-3xl: var(--radius);
-    --radius-4xl: var(--radius);
+    --radius-sm: 0rem;
+    --radius-md: 0rem;
+    --radius-lg: 0rem;
+    --radius-xl: 0rem;
+    --radius-2xl: 0rem;
+    --radius-3xl: 0rem;
+    --radius-4xl: 0rem;
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);

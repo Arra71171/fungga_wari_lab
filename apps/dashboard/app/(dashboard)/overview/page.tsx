@@ -189,7 +189,7 @@ export default async function OverviewPage() {
           <div className="absolute top-[35%] md:top-[50%] left-[16%] right-[16%] h-[1px] bg-border-subtle -z-0 translate-y-[-50%]" />
 
           <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
-            <div className="size-10 md:size-12 rounded-2xl border border-border/50 bg-bg-base flex items-center justify-center">
+            <div className="size-10 md:size-12 rounded-none border border-border/50 bg-bg-base flex items-center justify-center">
               <FileText className="size-4 md:size-5 text-muted-foreground" />
             </div>
             <div className="text-center">
@@ -199,7 +199,7 @@ export default async function OverviewPage() {
           </div>
 
           <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
-            <div className="size-10 md:size-12 rounded-2xl border border-brand-ochre/30 bg-brand-ochre/5 flex items-center justify-center">
+            <div className="size-10 md:size-12 rounded-none border border-brand-ochre/30 bg-brand-ochre/5 flex items-center justify-center">
               <Send className="size-4 md:size-5 text-brand-ochre" />
             </div>
             <div className="text-center">
@@ -209,7 +209,7 @@ export default async function OverviewPage() {
           </div>
 
           <div className="flex-1 flex flex-col items-center gap-1 sm:gap-2 md:gap-4 relative z-10 bg-bg-panel/90 backdrop-blur-sm px-0 sm:px-1 md:px-4">
-            <div className="size-10 md:size-12 rounded-2xl border border-primary/30 bg-primary/5 flex items-center justify-center">
+            <div className="size-10 md:size-12 rounded-none border border-primary/30 bg-primary/5 flex items-center justify-center">
               <Globe2 className="size-4 md:size-5 text-primary" />
             </div>
             <div className="text-center">

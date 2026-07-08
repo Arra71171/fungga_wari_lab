@@ -533,7 +533,7 @@ export default function DraftEditorPage({
             size="sm"
             onClick={handleSave}
             disabled={isSaving || isPublishing}
-            className="rounded-xl border-border hover:border-brand-ember px-5"
+            className="rounded-none border-border hover:border-brand-ember px-5"
           >
             {isSaving ? (
               <Loader2 className="size-4 animate-spin mr-2" />
@@ -548,7 +548,7 @@ export default function DraftEditorPage({
               size="sm"
               onClick={handleUnpublish}
               disabled={isSaving || isPublishing}
-              className="rounded-xl border-border hover:border-destructive hover:text-destructive px-5"
+              className="rounded-none border-border hover:border-destructive hover:text-destructive px-5"
             >
               {isPublishing ? (
                 <Loader2 className="size-4 animate-spin mr-2" />
@@ -563,7 +563,7 @@ export default function DraftEditorPage({
               size="sm"
               onClick={handlePublish}
               disabled={isSaving || isPublishing}
-              className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-xl px-5"
+              className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-none px-5"
             >
               {isPublishing ? (
                 <Loader2 className="size-4 animate-spin mr-2" />
@@ -626,7 +626,7 @@ export default function DraftEditorPage({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="A brief summary of the story..."
-                    className="min-h-[100px] resize-none border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                    className="min-h-[100px] resize-none border border-border/50 bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                 </div>
 
@@ -636,12 +636,12 @@ export default function DraftEditorPage({
                       Category
                     </Label>
                     <Select value={category} onValueChange={setCategory}>
-                      <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-xl">
+                      <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
                         <SelectValue placeholder="Select Category" />
                       </SelectTrigger>
-                      <SelectContent className="border border-border/50 rounded-xl shadow-xs bg-bg-surface">
+                      <SelectContent className="border border-border/50 rounded-none shadow-xs bg-bg-surface">
                         {STORY_CATEGORIES.map((cat) => (
-                          <SelectItem key={cat.value} value={cat.value} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-xl cursor-pointer">
+                          <SelectItem key={cat.value} value={cat.value} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
                             {cat.label}
                           </SelectItem>
                         ))}
@@ -653,12 +653,12 @@ export default function DraftEditorPage({
                       Language
                     </Label>
                     <Select value={language} onValueChange={setLanguage}>
-                      <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-xl">
+                      <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
                         <SelectValue placeholder="Select Language" />
                       </SelectTrigger>
-                      <SelectContent className="border border-border/50 rounded-xl shadow-xs bg-bg-surface">
+                      <SelectContent className="border border-border/50 rounded-none shadow-xs bg-bg-surface">
                         {STORY_LANGUAGES.map((lang) => (
-                          <SelectItem key={lang.value} value={lang.value} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-xl cursor-pointer">
+                          <SelectItem key={lang.value} value={lang.value} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
                             {lang.label}
                           </SelectItem>
                         ))}
@@ -685,7 +685,7 @@ export default function DraftEditorPage({
                 variant="outline"
                 size="sm"
                 onClick={handleAddChapter}
-                className="rounded-xl border border-border/50 hover:border-brand-ember hover:bg-brand-ember/10 font-sans font-medium tracking-wide text-xs shadow-xs active:scale-[0.98] transition-all"
+                className="rounded-none border border-border/50 hover:border-brand-ember hover:bg-brand-ember/10 font-sans font-medium tracking-wide text-xs shadow-xs active:scale-[0.98] transition-all"
               >
                 <Plus className="size-4 mr-2" /> Add Chapter
               </Button>
@@ -718,14 +718,14 @@ export default function DraftEditorPage({
               ))}
 
               {chapters.length === 0 && (
-                <div className="border border-dashed border-border/50 rounded-3xl p-12 text-center bg-bg-surface group hover:border-brand-ember/50 transition-colors">
+                <div className="border border-dashed border-border/50 rounded-none p-12 text-center bg-bg-surface group hover:border-brand-ember/50 transition-colors">
                   <p className="text-sm font-mono text-muted-foreground mb-4 tracking-wide">
                     No chapters yet.
                   </p>
                   <Button
                     variant="default"
                     onClick={handleAddChapter}
-                    className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-xl shadow-sm active:scale-[0.98] transition-all"
+                    className="bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground rounded-none shadow-sm active:scale-[0.98] transition-all"
                   >
                     <Plus className="size-4 mr-2" /> Start the first chapter
                   </Button>
@@ -749,7 +749,7 @@ export default function DraftEditorPage({
                   value={moral}
                   onChange={(e) => setMoral(e.target.value)}
                   placeholder="What is the key takeaway?"
-                  className="min-h-[100px] border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                  className="min-h-[100px] border border-border/50 bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                 />
               </div>
 
@@ -762,7 +762,7 @@ export default function DraftEditorPage({
                     value={attributedAuthor}
                     onChange={(e) => setAttributedAuthor(e.target.value)}
                     placeholder="e.g. As told by Ene Ibetombi"
-                    className="h-11 border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                    className="h-11 border border-border/50 bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                   <p className="text-fine text-muted-foreground font-mono">
                     Who is the real-world source of this folk tale?
@@ -777,7 +777,7 @@ export default function DraftEditorPage({
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                     placeholder="folklore, bamboo, ritual"
-                    className="h-11 border border-border/50 bg-bg-surface rounded-xl focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                    className="h-11 border border-border/50 bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
                   />
                 </div>
               </div>
@@ -788,7 +788,7 @@ export default function DraftEditorPage({
 
       {/* Delete Confirmation AlertDialog */}
       <AlertDialog open={!!chapterToDelete} onOpenChange={(open) => !open && setChapterToDelete(null)}>
-        <AlertDialogContent className="border border-border/50 bg-bg-surface rounded-xl shadow-sm">
+        <AlertDialogContent className="border border-border/50 bg-bg-surface rounded-none shadow-sm">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-heading uppercase tracking-tight text-foreground">Remove Chapter?</AlertDialogTitle>
             <AlertDialogDescription className="font-sans text-sm text-muted-foreground">
@@ -798,14 +798,14 @@ export default function DraftEditorPage({
           <AlertDialogFooter>
             <AlertDialogCancel
               id="chapter-delete-cancel-btn"
-              className="rounded-xl border border-border/50 font-sans font-medium tracking-wide hover:bg-bg-panel hover:text-foreground"
+              className="rounded-none border border-border/50 font-sans font-medium tracking-wide hover:bg-bg-panel hover:text-foreground"
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               id="chapter-delete-confirm-btn"
               onClick={handleConfirmDeleteChapter}
-              className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90 font-sans font-medium tracking-wide border-2 border-transparent"
+              className="rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 font-sans font-medium tracking-wide border-2 border-transparent"
             >
               Confirm
             </AlertDialogAction>

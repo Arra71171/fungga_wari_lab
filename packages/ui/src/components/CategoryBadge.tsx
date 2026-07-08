@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@workspace/ui/lib/utils"
 
 const categoryBadgeVariants = cva(
-  "inline-flex items-center rounded-xl border px-2.5 py-0.5 text-xs font-semibold select-none transition-colors",
+  "inline-flex items-center rounded-none border px-2.5 py-0.5 text-xs font-semibold select-none transition-colors",
   {
     variants: {
       variant: {

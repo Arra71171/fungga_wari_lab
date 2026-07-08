@@ -410,7 +410,7 @@ export default function StoryEditorPage() {
             <button
               onClick={handleAddChapter}
               aria-label="Add chapter"
-              className="size-6 flex items-center justify-center hover:bg-secondary rounded-xl text-brand-ember transition-colors"
+              className="size-6 flex items-center justify-center hover:bg-secondary rounded-none text-brand-ember transition-colors"
             >
               <Plus className="size-3" />
             </button>
@@ -422,7 +422,7 @@ export default function StoryEditorPage() {
               <p>No chapters yet</p>
               <Button
                 onClick={handleAddChapter}
-                className="w-full gap-2 rounded-xl border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
+                className="w-full gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
                 size="sm"
               >
                 <Plus className="size-3" />
@@ -445,7 +445,7 @@ export default function StoryEditorPage() {
                 >
                   <AccordionTrigger
                     className={cn(
-                      "flex items-center gap-2 px-3 py-2.5 text-sm rounded-xl border-l-2 transition-all duration-200 hover:no-underline hover:bg-secondary",
+                      "flex items-center gap-2 px-3 py-2.5 text-sm rounded-none border-l-2 transition-all duration-200 hover:no-underline hover:bg-secondary",
                       activeChapterId === chapter.id
                         ? "border-brand-ember bg-brand-ember/10"
                         : "border-transparent"
@@ -484,7 +484,7 @@ export default function StoryEditorPage() {
         <div className="p-3 border-t border-border-subtle shrink-0">
           <Button
             onClick={handleAddChapter}
-            className="w-full gap-2 rounded-xl bg-transparent hover:bg-secondary text-muted-foreground hover:text-foreground border border-border font-sans text-xs tracking-widest uppercase transition-all"
+            className="w-full gap-2 rounded-none bg-transparent hover:bg-secondary text-muted-foreground hover:text-foreground border border-border font-sans text-xs tracking-widest uppercase transition-all"
           >
             <Plus className="size-3" /> New Chapter
           </Button>
@@ -523,7 +523,7 @@ export default function StoryEditorPage() {
               </div>
               <div className="flex items-center gap-4">
                 {/* Editor mode toggle */}
-                <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                <div className="flex items-center border border-border rounded-none overflow-hidden">
                   <button
                     onClick={() => setEditorMode("tiptap")}
                     aria-label="Rich text editor mode"
@@ -576,7 +576,7 @@ export default function StoryEditorPage() {
                     focusMode ? "Exit Focus Mode" : "Enter Focus Mode"
                   }
                   className={cn(
-                    "size-6 flex items-center justify-center hover:bg-secondary rounded-xl transition-colors",
+                    "size-6 flex items-center justify-center hover:bg-secondary rounded-none transition-colors",
                     focusMode
                       ? "text-cinematic-accent hover:text-cinematic-text hover:bg-cinematic-bg"
                       : "text-muted-foreground hover:text-foreground"
@@ -665,7 +665,7 @@ export default function StoryEditorPage() {
               </p>
               <Button
                 onClick={handleAddScene}
-                className="gap-2 rounded-xl border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
+                className="gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
               >
                 <Plus className="size-3" /> Create First Scene
               </Button>
@@ -683,7 +683,7 @@ export default function StoryEditorPage() {
               {(chapters?.length ?? 0) === 0 && (
                 <Button
                   onClick={handleAddChapter}
-                  className="gap-2 rounded-xl border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
+                  className="gap-2 rounded-none border border-brand-ember/30 bg-brand-ember/10 text-brand-ember hover:bg-brand-ember/20 font-sans text-xs tracking-widest uppercase"
                 >
                   <Plus className="size-3" /> Add First Chapter
                 </Button>
@@ -709,7 +709,7 @@ export default function StoryEditorPage() {
           <button
             onClick={() => setEditingMeta(!editingMeta)}
             aria-label={editingMeta ? "Close metadata editor" : "Edit metadata"}
-            className="size-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary rounded-xl transition-colors"
+            className="size-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary rounded-none transition-colors"
           >
             <Pencil className="size-3" />
           </button>
@@ -774,7 +774,7 @@ export default function StoryEditorPage() {
                 <Input
                   defaultValue={story.title}
                   onBlur={(e) => handleMetaUpdate("title", e.target.value)}
-                  className="h-9 rounded-xl border-border bg-background font-sans text-sm"
+                  className="h-9 rounded-none border-border bg-background font-sans text-sm"
                 />
               </div>
 
@@ -789,7 +789,7 @@ export default function StoryEditorPage() {
                     handleMetaUpdate("description", e.target.value || undefined)
                   }
                   rows={3}
-                  className="rounded-xl border-border bg-background font-sans text-xs leading-relaxed resize-none"
+                  className="rounded-none border-border bg-background font-sans text-xs leading-relaxed resize-none"
                 />
               </div>
 
@@ -802,10 +802,10 @@ export default function StoryEditorPage() {
                   defaultValue={story.category ?? "other"}
                   onValueChange={(val) => handleMetaUpdate("category", val)}
                 >
-                  <SelectTrigger className="h-9 rounded-xl border-border bg-background font-sans text-xs">
+                  <SelectTrigger className="h-9 rounded-none border-border bg-background font-sans text-xs">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border-border">
+                  <SelectContent className="rounded-none border-border">
                     {CATEGORIES.map((cat) => (
                       <SelectItem
                         key={cat.value}
@@ -828,10 +828,10 @@ export default function StoryEditorPage() {
                   defaultValue={story.language}
                   onValueChange={(val) => handleMetaUpdate("language", val)}
                 >
-                  <SelectTrigger className="h-9 rounded-xl border-border bg-background font-sans text-xs">
+                  <SelectTrigger className="h-9 rounded-none border-border bg-background font-sans text-xs">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border-border">
+                  <SelectContent className="rounded-none border-border">
                     {LANGUAGES.map((lang) => (
                       <SelectItem
                         key={lang.value}
@@ -856,7 +856,7 @@ export default function StoryEditorPage() {
                     handleMetaUpdate("moral", e.target.value || undefined)
                   }
                   rows={2}
-                  className="rounded-xl border-border bg-background font-sans text-xs leading-relaxed resize-none"
+                  className="rounded-none border-border bg-background font-sans text-xs leading-relaxed resize-none"
                 />
               </div>
 
@@ -874,7 +874,7 @@ export default function StoryEditorPage() {
                       .filter(Boolean);
                     handleMetaUpdate("tags", parsedTags);
                   }}
-                  className="h-9 rounded-xl border-border bg-background font-sans text-xs"
+                  className="h-9 rounded-none border-border bg-background font-sans text-xs"
                 />
               </div>
 
@@ -1025,7 +1025,7 @@ export default function StoryEditorPage() {
               <p className="text-xs text-muted-foreground/60 font-mono">
                 No tasks assigned to this scene
               </p>
-              <Button className="mt-2 w-full gap-2 rounded-xl bg-transparent hover:bg-secondary text-brand-ember border border-brand-ember/30 font-sans text-xs tracking-widest uppercase transition-all h-8">
+              <Button className="mt-2 w-full gap-2 rounded-none bg-transparent hover:bg-secondary text-brand-ember border border-brand-ember/30 font-sans text-xs tracking-widest uppercase transition-all h-8">
                 <Plus className="size-3" /> Assign Task
               </Button>
             </div>
@@ -1064,7 +1064,7 @@ function ChapterScenes({
               onClick={() => onSelectScene(scene.id)}
               aria-label={`Select scene: ${scene.title ?? `Scene ${i + 1}`}`}
               className={cn(
-                "w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left rounded-xl transition-all",
+                "w-full flex items-center gap-2 px-3 py-1.5 text-xs text-left rounded-none transition-all",
                 isActive
                   ? "bg-brand-ember/15 text-brand-ember font-medium"
                   : "text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -1084,7 +1084,7 @@ function ChapterScenes({
       <button
         onClick={onAddScene}
         aria-label="Add scene"
-        className="w-full flex items-center gap-2 px-3 py-1.5 text-fine font-sans font-medium tracking-wide text-muted-foreground/50 hover:text-brand-ember hover:bg-secondary rounded-xl transition-all"
+        className="w-full flex items-center gap-2 px-3 py-1.5 text-fine font-sans font-medium tracking-wide text-muted-foreground/50 hover:text-brand-ember hover:bg-secondary rounded-none transition-all"
       >
         <Plus className="size-3" />
         Add Scene

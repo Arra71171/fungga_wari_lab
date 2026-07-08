@@ -80,7 +80,7 @@ export function SceneSearchDialog() {
           <Search className="size-4 text-muted-foreground mr-2" />
           <Input 
             placeholder="Search scenes or chapters..." 
-            className="flex-1 border-0 focus-visible:ring-0 bg-transparent rounded-xl h-12 text-sm text-cinematic-text"
+            className="flex-1 border-0 focus-visible:ring-0 bg-transparent rounded-none h-12 text-sm text-cinematic-text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -96,7 +96,7 @@ export function SceneSearchDialog() {
                 <button
                   key={s.id}
                   className={cn(
-                    "flex flex-col items-start px-3 py-2 text-sm rounded-xl transition-colors",
+                    "flex flex-col items-start px-3 py-2 text-sm rounded-none transition-colors",
                     s.id === currentSceneId 
                       ? "bg-brand-ember/20 text-brand-ember" 
                       : "hover:bg-cinematic-bg text-cinematic-text"

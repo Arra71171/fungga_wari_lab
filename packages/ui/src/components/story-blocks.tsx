@@ -153,7 +153,7 @@ function ImageBlock({ src, url, caption, style = "inline", editable = false }: I
       return (
         <div
           data-slot="block-image-placeholder"
-          className="w-full h-48 rounded-xl border-2 border-dashed border-border flex items-center justify-center text-muted-foreground text-sm"
+          className="w-full h-48 rounded-none border-2 border-dashed border-border flex items-center justify-center text-muted-foreground text-sm"
         >
           No image set
         </div>
@@ -179,9 +179,9 @@ function ImageBlock({ src, url, caption, style = "inline", editable = false }: I
         sizes="(max-width: 768px) 100vw, 75vw"
         className={cn(
           "w-full object-cover",
-          style === "inline" && "rounded-xl max-h-96",
-          style === "full" && "rounded-xl max-h-[60vh]",
-          style === "cinematic" && "rounded-xl max-h-[80vh]"
+          style === "inline" && "rounded-none max-h-96",
+          style === "full" && "rounded-none max-h-[60vh]",
+          style === "cinematic" && "rounded-none max-h-[80vh]"
         )}
         unoptimized
       />
@@ -223,11 +223,11 @@ function StoryDialogueBlock({
           width={48}
           height={48}
           sizes="48px"
-          className="size-12 rounded-xl border-2 border-brand-ember/20 object-cover flex-shrink-0"
+          className="size-12 rounded-none border-2 border-brand-ember/20 object-cover flex-shrink-0"
           unoptimized
         />
       ) : (
-        <div className="size-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 border-2 border-brand-ember/20">
+        <div className="size-12 rounded-none bg-secondary flex items-center justify-center flex-shrink-0 border-2 border-brand-ember/20">
           <span className="text-xs font-mono text-brand-ochre uppercase">
             {character?.charAt(0) ?? "?"}
           </span>
@@ -245,10 +245,10 @@ function StoryDialogueBlock({
             onChange={(e) => onChange?.({ text: e.target.value })}
             placeholder="Character dialogueâ€¦"
             aria-label={`Dialogue for ${character ?? "character"}`}
-            className="w-full min-h-16 resize-none bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground outline-none rounded-xl"
+            className="w-full min-h-16 resize-none bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground outline-none rounded-none"
           />
         ) : (
-          <div className="bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground rounded-xl">
+          <div className="bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground rounded-none">
             {text}
           </div>
         )}
@@ -294,7 +294,7 @@ function ChoiceBlock({ options, text, targetSceneId, onChoose }: ChoiceBlockProp
             }
           }}
           className={cn(
-            "w-full text-left px-5 py-3 rounded-xl border border-border/50",
+            "w-full text-left px-5 py-3 rounded-none border border-border/50",
             "text-sm font-sans text-foreground",
             "transition-all duration-200",
             "hover:border-primary hover:bg-primary/5",

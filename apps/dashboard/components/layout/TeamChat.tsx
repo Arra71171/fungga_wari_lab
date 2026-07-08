@@ -104,7 +104,7 @@ export function TeamChat() {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 text-foreground">
       {isOpen && (
-        <div className="flex h-96 w-80 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg sm:w-96">
+        <div className="flex h-96 w-80 flex-col overflow-hidden rounded-none border border-border bg-card shadow-lg sm:w-96">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-3">
             <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export function TeamChat() {
                       <span className="text-xs text-muted-foreground mb-1">{name}</span>
                       <div
                         className={cn(
-                          "rounded-xl px-3 py-2 text-sm",
+                          "rounded-none px-3 py-2 text-sm",
                           isMe
                             ? "bg-primary text-primary-foreground"
                             : "bg-muted text-foreground"
@@ -180,7 +180,7 @@ export function TeamChat() {
         <Button
           size="icon"
           onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-xl shadow-lg transition-transform hover:scale-105 bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="h-14 w-14 rounded-none shadow-lg transition-transform hover:scale-105 bg-primary hover:bg-primary/90 text-primary-foreground"
         >
           <MessageSquare className="h-6 w-6" />
         </Button>
