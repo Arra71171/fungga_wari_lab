@@ -1,4 +1,4 @@
-import type { StorybookConfig } from "@storybook/nextjs";
+import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -10,8 +10,18 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
   ],
   framework: {
-    name: "@storybook/experimental-nextjs-vite",
+    name: "@storybook/react-vite",
     options: {},
+  },
+  async viteFinal(config) {
+    return {
+      ...config,
+      define: {
+        ...config.define,
+        "process.env": {},
+        "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
+      },
+    };
   },
 };
 export default config;
