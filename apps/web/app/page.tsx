@@ -311,15 +311,15 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 pt-28 lg:pt-36 pb-20 min-h-[90vh] flex items-center overflow-hidden"
+        className="relative px-6 md:px-12 lg:px-20 pt-32 lg:pt-40 pb-20 min-h-[85vh] flex items-center justify-center overflow-hidden"
       >
 
         <motion.div
           style={{ opacity: heroOpacity }}
-          className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10"
+          className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10"
         >
           {/* Hero Content */}
-          <div className="flex flex-col justify-center max-w-xl space-y-6">
+          <div className="flex flex-col justify-center max-w-lg space-y-8">
 
 
             {/* Layered headline */}
@@ -357,16 +357,16 @@ export default function Home() {
               transition={{ delay: 0.6 }}
               className="flex flex-col gap-4"
             >
-              <div className="flex pt-2">
-                <MagneticButton strength={0.3}>
+              <div className="flex pt-4">
+                <MagneticButton strength={0.2}>
                   <Button
-                    size="default"
-                    className="h-10 px-6 rounded-full bg-slate-800 text-white hover:bg-slate-700 text-sm font-sans font-medium transition-all"
+                    size="lg"
+                    className="h-12 px-8 rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm font-sans font-medium transition-all shadow-sm"
                     asChild
                   >
                     <Link href="/stories">
-                      Archive
-                      <ArrowRight className="ml-2 size-4" />
+                      Explore the Archive
+                      <ArrowRight className="ml-2 size-4 opacity-70" />
                     </Link>
                   </Button>
                 </MagneticButton>
@@ -374,7 +374,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="relative flex items-center justify-center lg:justify-end w-full">
+          <div className="relative flex items-center justify-center lg:justify-end w-full lg:pr-8">
             {/* Ambient scroll-linked line */}
             <ScrollReveal direction="left" distance={100} duration={1.5} scrub={true}>
               <div className="absolute left-[-50px] top-1/2 w-48 h-[1px] bg-brand-ember/40 z-0 origin-left" />
@@ -389,26 +389,26 @@ export default function Home() {
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
               <div 
-                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-[2rem] p-1 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
+                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-3xl p-6 flex flex-col justify-between group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
               >
-                {/* Glow */}
+                {/* Softened Ambient Glow */}
                 <motion.div
-                  className="absolute inset-0 bg-brand-ember/10 blur-[100px] rounded-[2rem] pointer-events-none z-[-1]"
-                  animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.7, 0.5] }}
+                  className="absolute inset-0 bg-primary/5 blur-[80px] rounded-3xl pointer-events-none z-[-1]"
+                  animate={{ scale: [1, 1.02, 1], opacity: [0.3, 0.5, 0.3] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 />
 
-                <div className="flex justify-between items-center z-10 w-full mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="size-2 bg-brand-ember rounded-full" />
-                    <div className="text-xs font-sans text-foreground/70 font-medium tracking-wide">
+                <div className="flex justify-between items-center z-10 w-full mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="size-1.5 bg-primary rounded-full" />
+                    <div className="text-xs font-sans text-muted-foreground font-medium tracking-wider uppercase">
                       SYS.ID: 9X-ALPHA
                     </div>
                   </div>
-                  <Users className="size-5 text-brand-ember group-hover:scale-110 transition-transform" />
+                  <Users className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
 
-              <div className="flex-1 flex items-center justify-center relative p-2 border border-border/50 bg-secondary/20 overflow-hidden">
+              <div className="flex-1 flex items-center justify-center relative rounded-2xl border border-border/40 bg-secondary/10 overflow-hidden mb-5">
                 <video
                   ref={(el) => {
                     if (el) {
@@ -426,30 +426,28 @@ export default function Home() {
                 />
                 
                 {/* Watermark Overlay Element */}
-                <div className="absolute bottom-0 right-0 px-4 py-2 bg-background border-t border-l border-border z-20 pointer-events-auto">
-                  <span className="text-fine font-sans font-medium tracking-wide text-foreground font-bold">Loktak Lake</span>
+                <div className="absolute bottom-0 right-0 px-3 py-1.5 bg-background/90 backdrop-blur-sm rounded-tl-xl border-t border-l border-border/50 z-20 pointer-events-auto">
+                  <span className="text-[10px] font-sans font-semibold tracking-wider text-muted-foreground uppercase">Loktak Lake</span>
                 </div>
               </div>
 
-              <div className="border-t border-border/60 pt-4 mt-4">
-                <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 text-fine font-mono tracking-tight uppercase text-foreground/80">
+              <div className="border-t border-border/30 pt-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-[10px] font-sans tracking-wide text-foreground/70">
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground font-bold">Location:</span>
-                    <span>Loktak Lake, Manipur</span>
+                    <span className="text-muted-foreground/60 uppercase font-semibold">Location</span>
+                    <span className="font-medium text-foreground">Loktak Lake, Manipur</span>
                   </div>
-                  <div className="w-[1px] bg-border block"></div>
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground font-bold">Data:</span>
-                    <span>Visual Topology & Lore</span>
+                    <span className="text-muted-foreground/60 uppercase font-semibold">Data</span>
+                    <span className="font-medium text-foreground">Visual Topology & Lore</span>
                   </div>
-                  <div className="flex flex-col gap-1 mt-3">
-                    <span className="text-muted-foreground font-bold">Protocol:</span>
-                    <span>Neo-Archival v2</span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground/60 uppercase font-semibold">Protocol</span>
+                    <span className="font-medium text-foreground">Neo-Archival v2</span>
                   </div>
-                  <div className="w-[1px] bg-border block mt-3"></div>
-                  <div className="flex flex-col gap-1 mt-3">
-                    <span className="text-muted-foreground font-bold">Integrity:</span>
-                    <span>Verified</span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground/60 uppercase font-semibold">Integrity</span>
+                    <span className="font-medium text-foreground flex items-center gap-1.5"><div className="size-1.5 bg-green-500/80 rounded-full"/> Verified</span>
                   </div>
                 </div>
               </div>
