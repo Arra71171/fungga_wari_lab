@@ -12,7 +12,7 @@ const config: StorybookConfig = {
   framework: {
     name: "@storybook/nextjs",
     options: {
-      nextConfigPath: "../../apps/web/next.config.ts",
+      nextConfigPath: "../../apps/web/next.config.mjs",
     },
   },
 };
