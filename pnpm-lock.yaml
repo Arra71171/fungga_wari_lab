@@ -22,6 +22,9 @@ importers:
       '@next/bundle-analyzer':
         specifier: 16.2.4
         version: 16.2.4
+      '@next/swc-wasm-nodejs':
+        specifier: 16.2.10
+        version: 16.2.10
       '@playwright/test':
         specifier: ^1.59.1
         version: 1.59.1
@@ -1435,6 +1438,9 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [musl]
+
+  '@next/swc-wasm-nodejs@16.2.10':
+    resolution: {integrity: sha512-64yRgjnZ/PevEimxlf9Z/k9V5OaVlDyYB995bnBDTXYeuH6uE6vFI08ucGI/dWRpLM9ef6j7hYQAj2bW2xM1ng==}
 
   '@next/swc-win32-arm64-msvc@16.2.10':
     resolution: {integrity: sha512-DwAnhLX76HQiFFQNgWlcK+JzlnD1rZ+UK/WY0ZMI/deXpvgnesjNYrqcfo1JzBuz4Kf7o3brIBL0glI1junatA==}
@@ -7388,6 +7394,8 @@ snapshots:
 
   '@next/swc-linux-x64-musl@16.2.10':
     optional: true
+
+  '@next/swc-wasm-nodejs@16.2.10': {}
 
   '@next/swc-win32-arm64-msvc@16.2.10':
     optional: true
