@@ -375,17 +375,7 @@ export default function Home() {
           </div>
 
           <div className="relative flex items-center justify-center lg:justify-end w-full lg:pr-8">
-            {/* Ambient scroll-linked line */}
-            <ScrollReveal direction="left" distance={100} duration={1.5} scrub={true}>
-              <div className="absolute left-[-50px] top-1/2 w-48 h-[1px] bg-brand-ember/40 z-0 origin-left" />
-            </ScrollReveal>
 
-            {/* Ambient right margin text */}
-            <div className="absolute -right-8 top-1/2 -translate-y-1/2 rotate-90 origin-center hidden xl:block pointer-events-none z-0">
-               <span className="text-xs font-mono uppercase tracking-ultra text-muted-foreground/30">
-                 SYS.ARCHIVE_READY // STATUS: ONLINE
-               </span>
-            </div>
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
               <div 
