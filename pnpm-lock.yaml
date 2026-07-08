@@ -161,6 +161,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@next/swc-wasm-nodejs':
+        specifier: 16.2.10
+        version: 16.2.10
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.1.18
@@ -252,6 +255,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@next/swc-wasm-nodejs':
+        specifier: 16.2.10
+        version: 16.2.10
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.1.18
