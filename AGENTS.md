@@ -151,7 +151,7 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 | `--radius-lg` | `var(--radius)` | `rounded-lg` |
 | `--radius-xl` | `calc(var(--radius) * 1.4)` | `rounded-xl` |
 | `--radius-2xl` | `calc(var(--radius) * 1.8)` | `rounded-2xl` |
-> ⚡ **Exception:** The Button component uses `rounded-none` intentionally — orthogonal Zen Brutalist design.
+> ⚡ **Exception:** The Button component uses `rounded-none` intentionally — orthogonal Nordic Minimalist design.
 
 ### Typography Tokens
 | Token | Tailwind | Usage |
@@ -174,7 +174,9 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 - ✅ **ALWAYS** use semantic Tailwind utilities that map to tokens: `bg-primary`, `text-foreground`, `border-border`, etc.
 - ✅ When you need a new color not in the token set → add it to `globals.css` first → then use its Tailwind class
 
-### ❌ Strict Design Enforcement
+### ❌ Strict Design Enforcement (Zero Tolerance)
+- ❌ **NEVER** use `rounded-sm`, `rounded-md`, `rounded-full`, etc. 
+- ✅ **ALWAYS** maintain a zero-curve policy. All structural elements must strictly adhere to the Nordic Minimalist philosophy. No curved lines.
 - ❌ **NEVER** use `aspect-video` or `aspect-[16/9]` for story imagery
 - ❌ **NEVER** use `aspect-square` for story covers
 - ✅ **ALWAYS** use `aspect-[3/4]` for all story cards, covers, and illustrations
@@ -699,7 +701,7 @@ ALL STORY ILLUSTRATIONS ARE PORTRAIT. NO EXCEPTIONS.
 - ✅ Story reader: always use `PortraitFrame` from `@workspace/ui/components/PortraitFrame`
 
 ### Visual Style
-- **Aesthetic:** Zen Brutalist folk-art: ink-brush textures, high contrast, raw edges, ochre/amber dominance (OKLCH hue ~45), ash-tone dark backgrounds
+- **Aesthetic:** Nordic Minimalist: clean lines, strict right angles, curve-free structural elements, high contrast, raw edges, ochre/amber dominance (OKLCH hue ~45), ash-tone dark backgrounds
 - Characters rendered with dignity and cultural accuracy
 - All illustrations reference the design system tokens — no hardcoded palette
 

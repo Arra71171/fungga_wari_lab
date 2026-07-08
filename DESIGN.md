@@ -30,14 +30,14 @@ typography:
   mono:
     fontFamily: var(--font-mono)
 rounded:
-  base: 10px
+  base: 0px
 spacing:
   base: 4px
 ---
 
 ## Overview
 
-Architectural Minimalism meets Journalistic Gravitas. The UI evokes a premium matte finish — a high-end broadsheet or contemporary gallery. The aesthetic is "Zen Brutalist", orthogonal, clean, and highly structured.
+Architectural Minimalism meets Journalistic Gravitas. The UI evokes a premium matte finish — a high-end broadsheet or contemporary gallery. The aesthetic is strictly Nordic Minimalist, orthogonal, clean, and highly structured with zero curves.
 
 ## Colors
 
@@ -62,7 +62,7 @@ Shadows are brutalist (`4px 4px 0px 0px`), creating a sharp, flat drop-shadow th
 
 ## Shapes
 
-Card surfaces and input fields utilize subtle rounding (`--radius: 0.625rem`), but primary interactive elements like Buttons often utilize orthogonal (`rounded-none`) brutalist shapes.
+We employ a strict zero-curve policy. All radii are 0px (`rounded-none`). The visual hierarchy relies on stark geometry, raw edges, and brutalist shadows rather than rounded softness.
 
 ## Do's and Don'ts
 

@@ -66,9 +66,10 @@ pnpm run dev
 - **Web App:** http://localhost:3001
 - **Dashboard:** http://localhost:3000
 
-## 🎨 Design System: Zen Brutalism
+## 🎨 Design System: Nordic Minimalism
 
-We employ a "Zen Brutalist" aesthetic using CSS variables defined in `packages/ui/src/styles/globals.css`. 
+We employ a strict "Nordic Minimalist" aesthetic using CSS variables defined in `packages/ui/src/styles/globals.css`. 
+- **Zero Curves:** We enforce a strict zero-curve policy (`--radius: 0rem` globally). Curved lines are strictly forbidden.
 - **Colors:** Defined strictly with `oklch()` values. **Never hardcode hex/rgb colors.**
 - **Aspect Ratios:** All story media must adhere to the **Portrait Law (`aspect-[3/4]`)**.
 - **Dark Mode:** Native support via Tailwind's `dark:` variant and custom `:is(.dark *)` selectors.
