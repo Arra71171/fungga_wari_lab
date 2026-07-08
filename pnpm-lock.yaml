@@ -503,6 +503,9 @@ importers:
       '@storybook/blocks':
         specifier: 8.6.18
         version: 8.6.18(react-dom@19.2.7)(react@19.2.7)(storybook@8.6.18)
+      '@storybook/experimental-nextjs-vite':
+        specifier: 8.6.18
+        version: 8.6.18(@babel/core@7.29.0)(@storybook/test@8.6.18)(next@16.2.10)(react-dom@19.2.7)(react@19.2.7)(storybook@8.6.18)(typescript@6.0.3)(vite@8.0.8)
       '@storybook/nextjs':
         specifier: 8.6.18
         version: 8.6.18(esbuild@0.25.12)(next@16.2.10)(react-dom@19.2.7)(react@19.2.7)(storybook@8.6.18)(type-fest@2.19.0)(typescript@6.0.3)(webpack-hot-middleware@2.26.1)(webpack@5.108.4)
@@ -2263,6 +2266,9 @@ packages:
   '@next/bundle-analyzer@16.2.4':
     resolution: {integrity: sha512-EAA9xTDv0P1IiUcZaASJJPkNDjRvL7OMTha6XN8MBzALYGfn7I52Mn7vRiyjVfNrtUPi2qiacY+eFVXe3lKCXA==}
 
+  '@next/env@15.5.20':
+    resolution: {integrity: sha512-dXh51Wvddf8daEyBXryZZEe1FdVxEWx9lgaTseLZUtC1XP/W8Wri+Z+VPOElHlByk23CyqHdc2oVByX7wsTWsw==}
+
   '@next/env@16.2.10':
     resolution: {integrity: sha512-zLPxg9M0MEHmygpj5OuxjQ+vHMiy/K7cSp74G8ecYolmgUWw0RwN02tF56npup/+qaI8JB97hQgS/r2Hb6QwVA==}
 
@@ -3376,6 +3382,21 @@ packages:
     resolution: {integrity: sha512-x1ioz/L0CwaelCkHci3P31YtvwayN3FBftvwQOPbvRh9qeb4Cpz5IdVDmyvSxxYwXN66uAORNoqgjTi7B4/y5Q==}
     peerDependencies:
       storybook: ^8.6.18
+
+  '@storybook/experimental-nextjs-vite@8.6.18':
+    resolution: {integrity: sha512-33yUNemHtXbvWTxJ/4bBx7eY7u9GO10mWBL4dC1TNgY8GGR1xbdhdLXU5ZGSDcZDcyX7goXBrNfEruiPOfmslw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@storybook/test': 8.6.18
+      next: ^14.1.0 || ^15.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+      storybook: ^8.6.18
+      typescript: '*'
+      vite: ^5.0.0 || ^6.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
@@ -6002,6 +6023,11 @@ packages:
     engines: {node: '>=16.x'}
     hasBin: true
 
+  image-size@2.0.2:
+    resolution: {integrity: sha512-IRqXKlaXwgSMAMtpNzZa1ZAe8m+Sa1770Dhk8VkSsP9LS+iHD62Zd8FQKs8fbPiagBE7BzoFX23cxFnwshpV6w==}
+    engines: {node: '>=16.x'}
+    hasBin: true
+
   immer@10.2.0:
     resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
 
@@ -6807,6 +6833,9 @@ packages:
 
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
+
+  module-alias@2.3.4:
+    resolution: {integrity: sha512-bOclZt8hkpuGgSSoG07PKmvzTizROilUTvLNyrMqvlC9snhs7y7GzjNWAVbISIOlhCP1T14rH1PDAV9iNyBq/w==}
 
   motion-dom@12.38.0:
     resolution: {integrity: sha512-pdkHLD8QYRp8VfiNLb8xIBJis1byQ9gPT3Jnh2jqfFtAsWUA3dEepDlsWe/xMpO8McV+VdpKVcp+E+TGJEtOoA==}
@@ -8598,6 +8627,14 @@ packages:
 
   victory-vendor@37.3.6:
     resolution: {integrity: sha512-SbPDPdDBYp+5MJHhBCAyI7wKM3d5ivekigc2Dk2s7pgbZ9wIgIBYGVw4zGHBml/qTFbexrofXW6Gu4noGxrOwQ==}
+
+  vite-plugin-storybook-nextjs@1.1.5:
+    resolution: {integrity: sha512-doFAXLvfEtIgMbDA+0VzyanoWoAUAwMLMfTpFnv3rxaN/tGHtWAwyhK73OA3UJzyXrp6rDPTqbjWUYJ6noxNww==}
+    peerDependencies:
+      '@storybook/test': ^8.3.0
+      next: ^14.1.0 || ^15.0.0
+      storybook: ^8.3.0
+      vite: ^5.0.0 || ^6.0.0
 
   vite@8.0.8:
     resolution: {integrity: sha512-dbU7/iLVa8KZALJyLOBOQ88nOXtNG8vxKuOT4I2mD+Ya70KPceF4IAmDsmU0h1Qsn5bPrvsY9HJstCRh3hG6Uw==}
@@ -10627,6 +10664,8 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@next/env@15.5.20': {}
+
   '@next/env@16.2.10': {}
 
   '@next/eslint-plugin-next@16.1.6':
@@ -11768,6 +11807,28 @@ snapshots:
     dependencies:
       storybook: 8.6.18(prettier@3.8.3)
       unplugin: 1.16.1
+
+  '@storybook/experimental-nextjs-vite@8.6.18(@babel/core@7.29.0)(@storybook/test@8.6.18)(next@16.2.10)(react-dom@19.2.7)(react@19.2.7)(storybook@8.6.18)(typescript@6.0.3)(vite@8.0.8)':
+    dependencies:
+      '@storybook/builder-vite': 8.6.18(storybook@8.6.18)(vite@8.0.8)
+      '@storybook/react': 8.6.18(@storybook/test@8.6.18)(react-dom@19.2.7)(react@19.2.7)(storybook@8.6.18)(typescript@6.0.3)
+      '@storybook/react-vite': 8.6.18(@storybook/test@8.6.18)(react-dom@19.2.7)(react@19.2.7)(storybook@8.6.18)(typescript@6.0.3)(vite@8.0.8)
+      '@storybook/test': 8.6.18(storybook@8.6.18)
+      next: 16.2.10(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@19.2.7)(react@19.2.7)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      storybook: 8.6.18(prettier@3.8.3)
+      styled-jsx: 5.1.6(@babel/core@7.29.0)(react@19.2.7)
+      vite: 8.0.8(@types/node@25.2.3)(esbuild@0.25.12)(jiti@2.6.1)(terser@5.49.0)(tsx@4.21.0)
+      vite-plugin-storybook-nextjs: 1.1.5(@storybook/test@8.6.18)(next@16.2.10)(storybook@8.6.18)(vite@8.0.8)
+    optionalDependencies:
+      sharp: 0.33.5
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+      - rollup
+      - supports-color
 
   '@storybook/global@5.0.0': {}
 
@@ -14886,6 +14947,8 @@ snapshots:
     dependencies:
       queue: 6.0.2
 
+  image-size@2.0.2: {}
+
   immer@10.2.0: {}
 
   immer@11.1.4: {}
@@ -15565,6 +15628,8 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 1.3.1
       ufo: 1.6.3
+
+  module-alias@2.3.4: {}
 
   motion-dom@12.38.0:
     dependencies:
@@ -17641,6 +17706,18 @@ snapshots:
       d3-shape: 3.2.0
       d3-time: 3.1.0
       d3-timer: 3.0.1
+
+  vite-plugin-storybook-nextjs@1.1.5(@storybook/test@8.6.18)(next@16.2.10)(storybook@8.6.18)(vite@8.0.8):
+    dependencies:
+      '@next/env': 15.5.20
+      '@storybook/test': 8.6.18(storybook@8.6.18)
+      image-size: 2.0.2
+      magic-string: 0.30.21
+      module-alias: 2.3.4
+      next: 16.2.10(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(react-dom@19.2.7)(react@19.2.7)
+      storybook: 8.6.18(prettier@3.8.3)
+      ts-dedent: 2.3.0
+      vite: 8.0.8(@types/node@25.2.3)(esbuild@0.25.12)(jiti@2.6.1)(terser@5.49.0)(tsx@4.21.0)
 
   vite@8.0.8(@types/node@25.2.3)(esbuild@0.25.12)(jiti@2.6.1)(terser@5.49.0)(tsx@4.21.0):
     dependencies:

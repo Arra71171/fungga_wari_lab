@@ -10,10 +10,8 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
   ],
   framework: {
-    name: "@storybook/nextjs",
-    options: {
-      nextConfigPath: "../../apps/web/next.config.mjs",
-    },
+    name: "@storybook/experimental-nextjs-vite",
+    options: {},
   },
 };
 export default config;
