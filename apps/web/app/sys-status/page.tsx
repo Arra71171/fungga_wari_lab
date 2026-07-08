@@ -62,7 +62,7 @@ export default function SysStatusPage() {
 
           {/* Overall status */}
           <div className="border border-border bg-background p-6 mb-8 flex items-center gap-4">
-            <div className="size-3 bg-primary rounded-full animate-pulse" />
+            <div className="size-3 bg-primary rounded-none animate-pulse" />
             <span className="font-mono text-sm uppercase tracking-widest text-primary font-bold">
               All Systems Operational
             </span>
@@ -83,7 +83,7 @@ export default function SysStatusPage() {
                   <p className="text-nano font-mono text-muted-foreground">{service.description}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <div className="size-2 bg-primary rounded-full" />
+                  <div className="size-2 bg-primary rounded-none" />
                   <span className="font-mono text-nano uppercase tracking-widest text-primary font-bold">
                     {service.status}
                   </span>

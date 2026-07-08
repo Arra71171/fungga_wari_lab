@@ -66,7 +66,7 @@ export default function StoryTasksPage() {
             href={storyId ? `/stories/${storyId}` : "/stories"}
             className="text-muted-foreground hover:text-foreground transition-colors group"
           >
-            <div className="size-8 rounded-full bg-cinematic-border border border-border flex items-center justify-center group-hover:bg-bg-overlay group-hover:border-brand-ember/50">
+            <div className="size-8 rounded-none bg-cinematic-border border border-border flex items-center justify-center group-hover:bg-bg-overlay group-hover:border-brand-ember/50">
               <ArrowLeft className="size-4" />
             </div>
           </Link>
@@ -138,13 +138,13 @@ export default function StoryTasksPage() {
                 return (
                   <div
                     key={task.id}
-                    className="grid grid-cols-12 gap-4 px-6 py-5 bg-bg-overlay/20 border border-border-subtle rounded-sm hover:border-brand-ember/30 hover:bg-bg-overlay/40 transition-all group items-center"
+                    className="grid grid-cols-12 gap-4 px-6 py-5 bg-bg-overlay/20 border border-border-subtle rounded-none hover:border-brand-ember/30 hover:bg-bg-overlay/40 transition-all group items-center"
                   >
                     <div className="col-span-5 flex items-center gap-4">
                       <button
                         onClick={() => toggleTaskStatus(task.id, task.status as TaskStatus)}
                         aria-label={isDone ? "Mark task incomplete" : "Mark task complete"}
-                        className="focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember rounded-sm group-hover:scale-110 transition-transform"
+                        className="focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember rounded-none group-hover:scale-110 transition-transform"
                       >
                         <CheckSquare
                           className={cn(

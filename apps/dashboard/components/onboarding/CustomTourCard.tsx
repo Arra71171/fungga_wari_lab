@@ -31,7 +31,7 @@ export function CustomTourCard({
 
       {/* Brand watermark — decorative ember glow behind content */}
       <div
-        className="pointer-events-none absolute right-0 top-0 size-48 translate-x-12 -translate-y-12 rounded-full bg-brand-ember opacity-[0.06] blur-3xl"
+        className="pointer-events-none absolute right-0 top-0 size-48 translate-x-12 -translate-y-12 rounded-none bg-brand-ember opacity-[0.06] blur-3xl"
         aria-hidden
       />
 
@@ -78,7 +78,7 @@ export function CustomTourCard({
               <div
                 key={i}
                 className={cn(
-                  "h-[5px] rounded-full transition-all duration-300",
+                  "h-[5px] rounded-none transition-all duration-300",
                   i === currentStep
                     ? "w-7 bg-brand-ember"
                     : i < currentStep

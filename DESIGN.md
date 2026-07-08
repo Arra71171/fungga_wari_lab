@@ -58,7 +58,7 @@ Mobile-first responsive design based on Tailwind v4. The content area is constra
 
 ## Elevation & Depth
 
-Shadows are brutalist (`4px 4px 0px 0px`), creating a sharp, flat drop-shadow that punches through the warm backgrounds. We do not use soft, diffuse shadows.
+Shadows are soft, diffuse, and elegant (e.g., `0 4px 20px 0 oklch(0 0 0 / 0.05)`). They create subtle depth layers without harsh borders. We do not use brutalist, solid, offset drop-shadows.
 
 ## Shapes
 

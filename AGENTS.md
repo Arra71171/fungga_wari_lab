@@ -139,18 +139,18 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 | `--bg-panel` | `oklch(0.95 0.01 60)` | `oklch(0.14 0.03 50)` | `bg-bg-panel` | Panel layer |
 | `--bg-surface` | `oklch(0.98 0.01 60)` | `oklch(0.18 0.04 50)` | `bg-bg-surface` | Card/content layer |
 | `--bg-overlay` | `oklch(0.99 0.005 60)` | `oklch(0.22 0.05 50)` | `bg-bg-overlay` | Overlay/modals |
-| `--shadow-brutal` | `4px 4px 0px 0px oklch(0.14 0.02 50)` | `4px 4px 0px 0px var(--primary)` | `shadow-brutal` | Brutalist drop shadow |
-| `--shadow-brutal-sm` | `2px 2px 0px 0px oklch(0.14 0.02 50)` | `2px 2px 0px 0px var(--primary)` | `shadow-brutal-sm` | Small brutal shadow |
+| `--shadow-brutal` | `0px 8px 30px -4px oklch(0.14 0.02 50 / 0.15)` | `0px 8px 30px -4px oklch(0 0 0 / 0.4)` | `shadow-brutal` | Soft, diffuse elevation |
+| `--shadow-brutal-sm` | `0px 4px 15px -2px oklch(0.14 0.02 50 / 0.1)` | `0px 4px 15px -2px oklch(0 0 0 / 0.3)` | `shadow-brutal-sm` | Subtle floating elevation |
 
 ### Border Radius Tokens
 | Token | Value | Tailwind |
 |---|---|---|
-| `--radius` (base) | `0.625rem` | — |
-| `--radius-sm` | `calc(var(--radius) * 0.6)` | `rounded-sm` |
-| `--radius-md` | `calc(var(--radius) * 0.8)` | `rounded-md` |
-| `--radius-lg` | `var(--radius)` | `rounded-lg` |
-| `--radius-xl` | `calc(var(--radius) * 1.4)` | `rounded-xl` |
-| `--radius-2xl` | `calc(var(--radius) * 1.8)` | `rounded-2xl` |
+| `--radius` (base) | `0rem` | `rounded-none` |
+| `--radius-sm` | `0rem` | `rounded-none` |
+| `--radius-md` | `0rem` | `rounded-none` |
+| `--radius-lg` | `0rem` | `rounded-none` |
+| `--radius-xl` | `0rem` | `rounded-none` |
+| `--radius-2xl` | `0rem` | `rounded-none` |
 > ⚡ **Exception:** The Button component uses `rounded-none` intentionally — orthogonal Nordic Minimalist design.
 
 ### Typography Tokens

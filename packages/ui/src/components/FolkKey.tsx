@@ -125,7 +125,7 @@ export function FolkKey({ className }: FolkKeyProps) {
       <div
         ref={haloRef}
         aria-hidden="true"
-        className="absolute size-64 rounded-full bg-primary/15 blur-3xl pointer-events-none"
+        className="absolute size-64 rounded-none bg-primary/15 blur-3xl pointer-events-none"
       />
 
       {/*

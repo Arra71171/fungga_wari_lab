@@ -109,7 +109,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
               <div
                 id={`tour-${item.name.toLowerCase()}`}
                 className={cn(
-                  "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-sm",
+                  "flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-none",
                   isActive
                     ? "border-l-[3px] border-brand-ember bg-brand-ember/15 text-brand-ember"
                     : "border-l-[3px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/50"
@@ -135,7 +135,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           rel="noopener noreferrer"
           className="block group outline-none"
         >
-          <div className="flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-sm border-l-[3px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/50">
+          <div className="flex items-center px-3 py-2 cursor-pointer transition-all duration-200 rounded-none border-l-[3px] border-transparent text-muted-foreground hover:text-foreground hover:bg-bg-surface/50">
             <Globe className="mr-3 size-4" />
             <span className="text-sm tracking-wide font-normal">View Stories</span>
             <ExternalLink className="ml-auto size-3 opacity-50 group-hover:opacity-100 transition-opacity" />

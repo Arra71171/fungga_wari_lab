@@ -207,7 +207,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
                     {[0, 1, 2].map((i) => (
                       <motion.div
                         key={i}
-                        className="size-1.5 bg-brand-ember rounded-full"
+                        className="size-1.5 bg-brand-ember rounded-none"
                         animate={{ opacity: [0.3, 1, 0.3] }}
                         transition={{
                           duration: 1,

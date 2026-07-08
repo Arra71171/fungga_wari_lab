@@ -53,13 +53,13 @@
     --chart-4: oklch(0.555 0.163 48.998);
     --chart-5: oklch(0.473 0.137 46.201);
 
-    --radius: 0.625rem;
+    --radius: 0rem;
     --status-active: oklch(0.58 0.21 43);
 
     /* Shadows — darker to punch through the warm bg */
-    --shadow-brutal: 4px 4px 0px 0px oklch(0.12 0.03 45);
-    --shadow-brutal-primary: 4px 4px 0px 0px var(--primary);
-    --shadow-brutal-sm: 2px 2px 0px 0px oklch(0.12 0.03 45);
+    --shadow-brutal: 0px 8px 30px -4px oklch(0.12 0.03 45 / 0.15);
+    --shadow-brutal-primary: 0px 8px 30px -4px var(--primary);
+    --shadow-brutal-sm: 0px 4px 15px -2px oklch(0.12 0.03 45 / 0.1);
 
     /* Sidebar: noticeably darker warm sand than background */
     --sidebar: oklch(0.91 0.03 70);
@@ -146,8 +146,8 @@
     --sidebar-ring: oklch(0.65 0.20 45);
 
     /* Shadow tokens — use primary (amber) in dark mode, not near-white foreground */
-    --shadow-brutal: 4px 4px 0px 0px var(--primary);
-    --shadow-brutal-sm: 2px 2px 0px 0px var(--primary);
+    --shadow-brutal: 0px 8px 30px -4px oklch(0 0 0 / 0.4);
+    --shadow-brutal-sm: 0px 4px 15px -2px oklch(0 0 0 / 0.3);
 
     /* Brand & Cinematic Tokens (dark equivalents where necessary, Cinematic is dark by default) */
     --brand-ember: oklch(0.65 0.20 45);
@@ -200,13 +200,13 @@
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
+    --radius-sm: var(--radius);
+    --radius-md: var(--radius);
     --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+    --radius-xl: var(--radius);
+    --radius-2xl: var(--radius);
+    --radius-3xl: var(--radius);
+    --radius-4xl: var(--radius);
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);
@@ -297,6 +297,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* Global Zero-Curve Override for Nordic Minimalism */
+  .rounded-full, .rounded-3xl, .rounded-2xl, .rounded-xl, .rounded-lg, .rounded-md, .rounded-sm, .rounded {
+    border-radius: 0px !important;
+  }
+  
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);

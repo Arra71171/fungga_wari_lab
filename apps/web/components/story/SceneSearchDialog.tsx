@@ -96,7 +96,7 @@ export function SceneSearchDialog() {
                 <button
                   key={s.id}
                   className={cn(
-                    "flex flex-col items-start px-3 py-2 text-sm rounded-md transition-colors",
+                    "flex flex-col items-start px-3 py-2 text-sm rounded-none transition-colors",
                     s.id === currentSceneId 
                       ? "bg-brand-ember/20 text-brand-ember" 
                       : "hover:bg-cinematic-bg text-cinematic-text"

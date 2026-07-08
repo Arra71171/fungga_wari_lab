@@ -380,7 +380,7 @@ export default function Home() {
                   animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
-                <div className="relative size-2 bg-brand-ember rounded-full" />
+                <div className="relative size-2 bg-brand-ember rounded-none" />
               </div>
               <span className="text-xs font-mono uppercase tracking-widest text-brand-ember">
                 Oral History Archives • Active
@@ -464,12 +464,12 @@ export default function Home() {
 
             <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-md">
               <div 
-                className="relative w-full aspect-[3/4] sm:max-w-md mx-auto lg:max-w-md bg-background border border-border p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-border-strong hover:shadow-brutal-primary z-10"
+                className="relative w-full aspect-[3/4] sm:max-w-md mx-auto lg:max-w-md bg-background border border-border/50 p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-primary/30 hover:shadow-sm z-10"
               >
                 <BorderBeam size={150} duration={8} delay={1} />
                 {/* Glow */}
                 <motion.div
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-brand-ember/15 blur-[120px] rounded-full pointer-events-none z-[-1]"
+                  className="absolute inset-0 bg-brand-ember/15 blur-[120px] rounded-none pointer-events-none z-[-1]"
                   animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 />
@@ -717,7 +717,7 @@ export default function Home() {
           whileInView="visible"
           viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.1 }}
-          className="relative z-30 max-w-3xl bg-cinematic-bg/90 dark:bg-cinematic-panel/85 border border-cinematic-border text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-brutal"
+          className="relative z-30 max-w-3xl bg-cinematic-bg/90 dark:bg-cinematic-panel/85 border border-cinematic-border/40 text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-sm"
         >
           <motion.div
             className="mx-auto size-16 border border-primary/40 bg-primary/10 mb-8 flex items-center justify-center text-primary"

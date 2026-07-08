@@ -60,7 +60,7 @@ function BlockWrapper({
         <button
           {...dragHandleProps}
           aria-label="Drag block"
-          className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md cursor-grab active:cursor-grabbing"
+          className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded-none cursor-grab active:cursor-grabbing"
         >
           <GripVertical className="size-4" />
         </button>
@@ -97,7 +97,7 @@ function BlockWrapper({
           }}
           aria-label="Add block after"
           className={cn(
-            "size-7 flex items-center justify-center rounded-full",
+            "size-7 flex items-center justify-center rounded-none",
             "bg-background border-2 border-primary/30 text-primary",
             "hover:bg-primary hover:text-primary-foreground hover:border-primary",
             "transition-all duration-200"

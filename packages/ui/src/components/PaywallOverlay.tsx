@@ -40,7 +40,7 @@ function SubmitButton() {
       {pending ? (
         <>
           <span
-            className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"
+            className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-none animate-spin"
             aria-hidden="true"
           />
           Redirecting to checkout…

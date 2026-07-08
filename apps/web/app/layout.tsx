@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Cinzel, Instrument_Serif, Cardo, Noto_Sans_Meetei_Mayek } from "next/font/google"
+import { JetBrains_Mono, Inter, Outfit, Noto_Sans_Meetei_Mayek } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider"
@@ -9,28 +9,25 @@ import { NoiseOverlay } from "@workspace/ui/components/NoiseOverlay"
 import { AuthObserver } from "@/components/AuthObserver"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
-// ── Folk-story serif body: warm, literary feel for the reader experience
-const cardo = Cardo({
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
+
+// ── Clean Nordic Sans for body text
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
   preload: false,
 })
 
-// ── Folk-story heading: mythological, cinematic vibe (Cinzel Decorative feel)
-const cinzel = Cinzel({
+// ── Clean Geometric Sans for headings and display
+const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
   preload: false,
 })
 
-// ── Display type: high-contrast condensed serif for hero section titles
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
+const outfitDisplay = Outfit({
+  weight: ["700", "900"],
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -94,10 +91,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased font-sans flex flex-col min-h-screen",
-        cardo.variable,
+        inter.variable,
         jetbrainsMono.variable,
-        cinzel.variable,
-        instrumentSerif.variable,
+        outfit.variable,
+        outfitDisplay.variable,
         meeteiMayek.variable
       )}
     >

@@ -137,7 +137,7 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
                           )}
                         >
                           {isActive ? (
-                            <div className="size-1.5 bg-brand-ember rounded-full shrink-0 shadow-[0_0_6px_var(--brand-ember)]" />
+                            <div className="size-1.5 bg-brand-ember rounded-none shrink-0 shadow-[0_0_6px_var(--brand-ember)]" />
                           ) : (
                             <span className="text-fine font-mono text-muted-foreground/40 w-4 shrink-0 tabular-nums">
                               {String(scIdx + 1).padStart(2, "0")}

@@ -371,7 +371,7 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
             {/* Uncropped Illustration Container */}
             <div className="relative w-full h-full p-4 lg:p-8 flex flex-col items-center justify-center z-10">
               {/* Ensures the image maintains a strict 3:4 aspect ratio and fits within its container */}
-              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-sm overflow-hidden shadow-brutal ring-1 ring-border/20 mx-auto">
+              <div className="relative w-full max-w-[540px] 2xl:max-w-[640px] h-auto aspect-[3/4] max-h-full rounded-none overflow-hidden shadow-brutal ring-1 ring-border/20 mx-auto">
                 <Image
                   src={activeChapter.illustration_url}
                   alt={activeChapter.title ?? "Chapter illustration"}
@@ -557,11 +557,11 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                 /* LAST chapter, LAST scene → The End */
                 <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-8 relative z-10 border-t border-cinematic-border/10">
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-full" />
+                    <div className="w-64 h-64 bg-brand-ember/5 blur-[80px] rounded-none" />
                   </div>
 
                   <div className="relative">
-                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-full scale-150" />
+                    <div className="absolute inset-0 blur-xl bg-brand-ember/20 rounded-none scale-150" />
                     <Flame className="relative size-8 text-brand-ember" aria-hidden="true" />
                   </div>
 
