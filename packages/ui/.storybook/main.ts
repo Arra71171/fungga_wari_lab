@@ -14,8 +14,17 @@ const config: StorybookConfig = {
     options: {},
   },
   async viteFinal(config) {
+    const path = require("path");
     return {
       ...config,
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          "next/image": path.resolve(__dirname, "./mocks/next-image.tsx"),
+          "next/link": path.resolve(__dirname, "./mocks/next-link.tsx"),
+        },
+      },
       define: {
         ...config.define,
         "process.env": {},
