@@ -35,8 +35,6 @@ import { MagneticButton } from "@workspace/ui/components/MagneticButton";
 import { SplitText } from "@workspace/ui/components/SplitText";
 import { TextMatrixRain } from "@workspace/ui/components/TextMatrixRain";
 import { BorderBeam } from "@workspace/ui/components/border-beam";
-import { Marquee } from "@workspace/ui/components/marquee";
-import { EmberParticles } from "@workspace/ui/components/EmberParticles";
 import { SectionDivider } from "@workspace/ui/components/SectionDivider";
 import { ScrollReveal } from "@workspace/ui/components/ScrollReveal";
 import { WiseEpu } from "@workspace/ui/components/WiseEpu";
@@ -156,52 +154,7 @@ function StoryTicker() {
         </ScrollReveal>
       </div>
       
-      {/* Typrographic Wall with Edge Masking */}
-      <div className="relative [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] md:relative z-10">
-        <div className="-space-y-4 md:-space-y-8 lg:-space-y-12">
-          {/* Row 1: Solid & Subtle */}
-          <ScrollReveal direction="left" distance={150} duration={1.2} scrub={1} className="w-full">
-            <Marquee pauseOnHover className="[--gap:4rem] py-2" repeat={3} duration={70}>
-              {stories.map((story, i) => (
-                <div key={i} className="group cursor-default px-8">
-                  <span className="text-6xl md:text-8xl lg:text-9xl font-heading font-black uppercase tracking-tighter text-muted-foreground/10 group-hover:text-brand-ember/40 transition-colors duration-700 select-none">
-                    {story}
-                  </span>
-                </div>
-              ))}
-            </Marquee>
-          </ScrollReveal>
-          
-          {/* Row 2: Outline & Prominent */}
-          <ScrollReveal direction="right" distance={150} duration={1.2} scrub={1} className="w-full">
-            <Marquee pauseOnHover reverse className="[--gap:4rem] py-2" repeat={3} duration={55}>
-              {stories.slice().reverse().map((story, i) => (
-                <div key={i} className="group cursor-default px-8">
-                  <span 
-                    className="text-6xl md:text-8xl lg:text-9xl font-heading font-black uppercase tracking-tighter text-transparent group-hover:text-brand-ember transition-all duration-700 select-none"
-                    style={{ WebkitTextStroke: '1px var(--brand-ember)' }}
-                  >
-                    {story}
-                  </span>
-                </div>
-              ))}
-            </Marquee>
-          </ScrollReveal>
 
-          {/* Row 3: Solid & Deep */}
-          <ScrollReveal direction="left" distance={100} duration={1.5} scrub={1} className="w-full">
-            <Marquee pauseOnHover className="[--gap:4rem] py-2" repeat={3} duration={85}>
-              {stories.map((story, i) => (
-                <div key={i} className="group cursor-default px-8">
-                  <span className="text-6xl md:text-8xl lg:text-9xl font-heading font-black uppercase tracking-tighter text-muted-foreground/5 group-hover:text-brand-ember/30 transition-colors duration-700 select-none">
-                    {story}
-                  </span>
-                </div>
-              ))}
-            </Marquee>
-          </ScrollReveal>
-        </div>
-      </div>
     </section>
   );
 }
@@ -358,46 +311,28 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 pt-32 lg:pt-48 pb-16 md:pb-12 min-h-[90vh] flex items-center overflow-hidden"
+        className="relative px-6 md:px-12 pt-28 lg:pt-36 pb-12 min-h-[85vh] flex items-center overflow-hidden"
       >
-        <EmberParticles density={60} speed={0.5} className="z-0" />
+
         <motion.div
           style={{ opacity: heroOpacity }}
           className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center relative z-10"
         >
           {/* Hero Content */}
           <div className="lg:col-span-6 flex flex-col justify-center max-w-xl space-y-6">
-            {/* Status Badge */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className="flex items-center gap-3 border border-border inline-flex p-2 pr-6 bg-secondary/50 self-start"
-            >
-              <div className="relative flex items-center justify-center size-3">
-                <motion.div
-                  className="absolute inset-0 bg-brand-ember blur-[4px]"
-                  animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <div className="relative size-2 bg-brand-ember rounded-none" />
-              </div>
-              <span className="text-xs font-mono uppercase tracking-widest text-brand-ember">
-                Oral History Archives • Active
-              </span>
-            </motion.div>
 
-            {/* Split-text headline */}
+
+            {/* Layered headline */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.2 }}
             >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-heading font-black tracking-tighter uppercase leading-[0.9] text-foreground max-w-[12ch]">
-                <TextMatrixRain duration={2.5} repeat={false} hoverRescramble>
-                  Where stories outlive silence.
-                </TextMatrixRain>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.05] text-foreground max-w-[12ch]">
+                <span className="font-heading font-medium block">Where stories</span>
+                <span className="font-display italic text-brand-amber pr-2">outlive</span>
+                <span className="font-heading font-medium text-outline">silence.</span>
               </h1>
             </motion.div>
 
@@ -407,9 +342,9 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.4 }}
-              className="py-2 pl-6 border-l-2 border-primary/50"
+              className="py-2 pr-12"
             >
-              <p className="text-lg md:text-xl text-muted-foreground font-sans leading-tight tracking-wide">
+              <p className="text-lg md:text-xl text-muted-foreground font-sans leading-relaxed">
                 A digital sanctuary for Meetei folk traditions, oral histories, and the living lore of Loktak — crafted to honour.
               </p>
             </motion.div>
@@ -422,27 +357,17 @@ export default function Home() {
               transition={{ delay: 0.6 }}
               className="flex flex-col gap-4"
             >
-              <div className="flex flex-wrap gap-3 pt-2">
+              <div className="flex pt-2">
                 <MagneticButton strength={0.3}>
                   <Button
-                    size="lg"
-                    className="h-12 px-6 text-sm font-bold tracking-widest uppercase transition-shadow"
+                    size="default"
+                    className="h-10 px-6 rounded-full bg-slate-800 text-white hover:bg-slate-700 text-sm font-sans font-medium transition-all"
                     asChild
                   >
                     <Link href="/stories">
-                      Browse Stories & Archives
-                      <ArrowRight className="ml-3 size-4" />
+                      Archive
+                      <ArrowRight className="ml-2 size-4" />
                     </Link>
-                  </Button>
-                </MagneticButton>
-
-                <MagneticButton strength={0.25}>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="h-12 px-6 text-sm font-bold tracking-widest uppercase border border-border hover:bg-secondary transition-colors"
-                  >
-                    Explore the Platform
                   </Button>
                 </MagneticButton>
               </div>
@@ -462,15 +387,14 @@ export default function Home() {
                </span>
             </div>
 
-            <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-md">
+            <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
               <div 
-                className="relative w-full aspect-[3/4] sm:max-w-md mx-auto lg:max-w-md bg-background border border-border/50 p-3 md:p-5 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:border-primary/30 hover:shadow-sm z-10"
+                className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-3xl p-1 flex flex-col justify-between overflow-hidden group transition-all duration-500 hover:shadow-xl z-10 border border-border/40"
               >
-                <BorderBeam size={150} duration={8} delay={1} />
                 {/* Glow */}
                 <motion.div
-                  className="absolute inset-0 bg-brand-ember/15 blur-[120px] rounded-none pointer-events-none z-[-1]"
-                  animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+                  className="absolute inset-0 bg-brand-ember/10 blur-[100px] rounded-[2rem] pointer-events-none z-[-1]"
+                  animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.7, 0.5] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 />
 
@@ -708,8 +632,6 @@ export default function Home() {
         {/* ── Soft overall wash to ensure text readability ── */}
         <div className="absolute inset-0 z-10 bg-cinematic-bg/30 pointer-events-none" />
 
-        {/* ── Ember particles — now blend naturally against the dark fire scene ── */}
-        <EmberParticles density={50} speed={0.35} className="z-20 mix-blend-screen opacity-60" />
 
         <motion.div
           variants={{ hidden: { opacity: 0, scale: 0.94, y: 30 }, visible: { opacity: 1, scale: 1, y: 0 } }}

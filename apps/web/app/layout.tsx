@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Inter, Outfit, Noto_Sans_Meetei_Mayek } from "next/font/google"
+import { JetBrains_Mono, Cardo, Cinzel, Instrument_Serif, Noto_Sans_Meetei_Mayek } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider"
@@ -10,24 +10,27 @@ import { AuthObserver } from "@/components/AuthObserver"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 
-// ── Clean Nordic Sans for body text
-const inter = Inter({
+// ── Clean Serif for body text and elegant UI
+const cardo = Cardo({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
   preload: false,
 })
 
-// ── Clean Geometric Sans for headings and display
-const outfit = Outfit({
+// ── Display serif for headers
+const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
   preload: false,
 })
 
-const outfitDisplay = Outfit({
-  weight: ["700", "900"],
+const instrumentSerif = Instrument_Serif({
+  weight: ["400"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -91,10 +94,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased font-sans flex flex-col min-h-screen",
-        inter.variable,
+        cardo.variable,
         jetbrainsMono.variable,
-        outfit.variable,
-        outfitDisplay.variable,
+        cinzel.variable,
+        instrumentSerif.variable,
         meeteiMayek.variable
       )}
     >

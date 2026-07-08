@@ -298,11 +298,6 @@
     @apply border-border outline-ring/50;
   }
   
-  /* Global Zero-Curve Override for Nordic Minimalism */
-  .rounded-full, .rounded-3xl, .rounded-2xl, .rounded-xl, .rounded-lg, .rounded-md, .rounded-sm, .rounded {
-    border-radius: 0px !important;
-  }
-  
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
@@ -414,3 +409,6 @@
 .ProseMirror li > p {
   @apply mb-2;
 }
+
+.text-outline { -webkit-text-stroke: 1px var(--foreground); color: transparent; }
+

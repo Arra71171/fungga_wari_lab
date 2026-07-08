@@ -65,7 +65,7 @@ function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full px-6 py-4 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full px-6 py-3 transition-all duration-300",
         "bg-background/90 backdrop-blur-md",
         scrolled ? "border-b border-border shadow-sm" : "border-b border-transparent"
       )}
@@ -73,35 +73,35 @@ function Navbar() {
       {/* Brand — compact on mobile: icon + stacked wordmark to prevent wrap */}
       <Link
         href="/"
-        className="hover:opacity-80 transition-opacity shrink-0 flex items-center gap-2.5"
+        className="hover:opacity-80 transition-opacity shrink-0 flex items-center gap-3"
         aria-label="Fungga Wari Lab — Home"
       >
-        {/* Icon glyph — always visible */}
-        <span className="inline-flex shrink-0 items-center justify-center border-2 border-border-strong bg-primary/10 p-1.5 text-primary">
-          <FungaMark size={18} />
+        {/* Icon glyph — circular */}
+        <span className="inline-flex shrink-0 items-center justify-center rounded-full border border-border bg-secondary/30 size-8 text-foreground">
+          <FungaMark size={14} />
         </span>
-        {/* Mobile wordmark: two stacked lines, compact mono */}
+        {/* Mobile wordmark */}
         <span className="flex flex-col leading-none md:hidden" aria-hidden="true">
           <span className="font-meetei font-black tracking-wide text-fine text-foreground">
             ꯐꯨꯡꯒꯥ ꯋꯥꯔꯤ
           </span>
-          <span className="font-mono font-bold text-nano text-muted-foreground/80 tracking-wider mt-0.5">
+          <span className="font-serif font-bold text-nano text-muted-foreground/80 tracking-wider mt-0.5">
             .Lab
           </span>
         </span>
-        {/* Desktop wordmark: horizontal */}
+        {/* Desktop wordmark */}
         <span className="hidden md:inline-flex items-center gap-1 leading-none">
           <span className="font-meetei font-black tracking-wide text-base text-foreground">
             ꯐꯨꯡꯒꯥ ꯋꯥꯔꯤ
           </span>
-          <span className="font-mono font-bold text-xs text-muted-foreground/80 opacity-90">
+          <span className="font-serif font-bold text-xs text-muted-foreground/80 opacity-90">
             .Lab
           </span>
         </span>
       </Link>
 
       {/* ── Desktop nav links ─────────────────────────────────────── */}
-      <div className="hidden items-center gap-2 md:flex border-l-2 border-foreground/20 pl-6 h-8">
+      <div className="hidden items-center gap-6 md:flex border-l border-border/50 pl-6 h-8">
         {navItems.map((item) => {
           const isCollections = item.name === "Folklore";
           const showDashboard = isCollections && isDashboardUser;
@@ -114,10 +114,10 @@ function Navbar() {
               <a
                 key={item.name}
                 href={href}
-                className="group relative rounded-none px-4 py-1 text-sm font-mono font-bold text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors overflow-hidden"
+                className="group relative px-2 py-1 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
               >
                 {name}
-                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-primary scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+                <span className="absolute bottom-0 left-2 right-2 h-[1px] bg-foreground scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
               </a>
             );
           }
@@ -126,10 +126,10 @@ function Navbar() {
             <Link
               key={item.name}
               href={href}
-              className="group relative rounded-none px-4 py-1 text-sm font-mono font-bold text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors overflow-hidden"
+              className="group relative px-2 py-1 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
             >
               {name}
-              <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-primary scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+              <span className="absolute bottom-0 left-2 right-2 h-[1px] bg-foreground scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
             </Link>
           );
         })}
@@ -140,17 +140,17 @@ function Navbar() {
         {isLoaded && !isAuthenticated && (
           <>
             <Button
-              variant="outline"
-              size="default"
-              className="rounded-none font-mono font-bold uppercase tracking-widest transition-all hover:bg-secondary border-border"
+              variant="ghost"
+              size="sm"
+              className="rounded-full font-sans transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
               asChild
             >
               <Link href="/login">Sign In</Link>
             </Button>
             <Button
               variant="default"
-              size="default"
-              className="rounded-none font-mono font-bold uppercase tracking-widest transition-all"
+              size="sm"
+              className="rounded-full font-sans transition-all bg-slate-800 text-white hover:bg-slate-700"
               asChild
             >
               <Link href="/register">Sign Up</Link>
@@ -159,8 +159,7 @@ function Navbar() {
         )}
         {isAuthenticated && (
           <div className="flex items-center gap-2">
-            {/* User avatar */}
-            <div className="relative size-8 border border-border bg-secondary overflow-hidden flex items-center justify-center">
+            <div className="relative size-8 border border-border/50 bg-secondary overflow-hidden rounded-full flex items-center justify-center">
               {userProfile?.avatar_url ? (
                 <Image
                   src={userProfile.avatar_url}
@@ -195,7 +194,7 @@ function Navbar() {
           <SheetTrigger asChild>
             <button
               aria-label="Open navigation menu"
-              className="flex items-center justify-center size-10 border-2 border-border bg-background text-foreground hover:bg-secondary hover:border-foreground/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex items-center justify-center size-10 rounded-full border border-border/50 bg-background text-foreground hover:bg-secondary transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Menu className="size-5" />
             </button>

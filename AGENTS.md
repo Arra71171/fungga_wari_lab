@@ -145,13 +145,14 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 ### Border Radius Tokens
 | Token | Value | Tailwind |
 |---|---|---|
-| `--radius` (base) | `0rem` | `rounded-none` |
-| `--radius-sm` | `0rem` | `rounded-none` |
-| `--radius-md` | `0rem` | `rounded-none` |
-| `--radius-lg` | `0rem` | `rounded-none` |
-| `--radius-xl` | `0rem` | `rounded-none` |
-| `--radius-2xl` | `0rem` | `rounded-none` |
-> ⚡ **Exception:** The Button component uses `rounded-none` intentionally — orthogonal Nordic Minimalist design.
+| `--radius` (base) | `0.5rem` | `rounded-lg` |
+| `--radius-sm` | `calc(var(--radius) * 0.6)` | `rounded-sm` |
+| `--radius-md` | `calc(var(--radius) * 0.8)` | `rounded-md` |
+| `--radius-lg` | `var(--radius)` | `rounded-lg` |
+| `--radius-xl` | `calc(var(--radius) * 1.5)` | `rounded-xl` |
+| `--radius-2xl` | `calc(var(--radius) * 2)` | `rounded-2xl` |
+| `--radius-3xl` | `calc(var(--radius) * 3)` | `rounded-3xl` |
+> ⚡ **Note:** Action buttons use `rounded-full` intentionally for the elegant, modern pill-shape aesthetic.
 
 ### Typography Tokens
 | Token | Tailwind | Usage |
@@ -175,11 +176,9 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 - ✅ When you need a new color not in the token set → add it to `globals.css` first → then use its Tailwind class
 
 ### ❌ Strict Design Enforcement (Zero Tolerance)
-- ❌ **NEVER** use `rounded-sm`, `rounded-md`, `rounded-full`, etc. 
-- ✅ **ALWAYS** maintain a zero-curve policy. All structural elements must strictly adhere to the Nordic Minimalist philosophy. No curved lines.
+- ✅ **ALWAYS** maintain a clean, elegant aesthetic. Use `rounded-full` for action buttons (pill buttons), and `rounded-2xl` or `rounded-3xl` for large imagery and frames.
 - ❌ **NEVER** use `aspect-video` or `aspect-[16/9]` for story imagery
-- ❌ **NEVER** use `aspect-square` for story covers
-- ✅ **ALWAYS** use `aspect-[3/4]` for all story cards, covers, and illustrations
+- ✅ **ALWAYS** use `aspect-[3/4]` or square for all story cards, covers, and illustrations
 - ❌ **NEVER** add a new component without adding `data-slot="component-name"` on the root element
 
 ### Cinematic Reader Token Rules (Iron Law)

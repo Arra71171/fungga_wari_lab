@@ -62,7 +62,9 @@ Shadows are soft, diffuse, and elegant (e.g., `0 4px 20px 0 oklch(0 0 0 / 0.05)`
 
 ## Shapes
 
-We employ a strict zero-curve policy. All radii are 0px (`rounded-none`). The visual hierarchy relies on stark geometry, raw edges, and brutalist shadows rather than rounded softness.
+We employ an elegant, modern aesthetic. Action buttons and primary CTA elements are pill-shaped (`rounded-full`). Large image frames and illustration containers use soft, large radii (`rounded-2xl` or `rounded-3xl`).
+
+Do not use sharp, rigid boxes for primary interactive elements.
 
 ## Do's and Don'ts
 
