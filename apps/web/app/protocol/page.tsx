@@ -37,45 +37,43 @@ export default function ProtocolPage() {
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navbar />
 
-      <main className="pt-28 pb-20 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
+      <main className="pt-32 pb-20 px-6 md:px-12">
+        <div className="max-w-3xl mx-auto">
           {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-[2px] w-8 bg-primary" />
-            <span className="text-fine font-mono uppercase tracking-ultra text-primary font-bold">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
               Methodology
             </span>
+            <div className="h-[1px] w-12 bg-border-subtle" />
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-foreground mb-6">
-            Neo-Archival <span className="italic text-primary">Protocol</span>
+          <h1 className="font-heading text-3xl md:text-4xl font-normal tracking-tight text-foreground mb-8">
+            Neo-Archival Protocol
           </h1>
 
-          <p className="text-sm text-muted-foreground font-mono leading-relaxed max-w-2xl mb-12">
-            Our methodology for preserving the endangered oral traditions of Kangleipak. The Neo-Archival Protocol defines how stories are collected, validated, structured, and presented to ensure cultural integrity across generations.
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mb-10">
+            Our methodology for preserving the endangered oral traditions of Kangleipak. The Neo-Archival Protocol defines how stories are collected, validated, structured, and presented to ensure cultural integrity.
           </p>
 
           {/* Protocol version badge */}
-          <div className="inline-flex items-center gap-2 border border-border bg-secondary/30 px-4 py-2 mb-12">
-            <div className="size-2 bg-primary" />
-            <span className="font-mono text-nano uppercase tracking-caps text-foreground font-bold">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-border-subtle mb-16">
+            <div className="size-1.5 rounded-full bg-primary" />
+            <span className="text-xs font-medium text-foreground">
               Protocol Version 2.0
             </span>
-            <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
-              — Active
+            <span className="text-xs text-muted-foreground">
+              Active
             </span>
           </div>
 
           {/* Principles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px border border-border bg-border mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mb-20">
             {PRINCIPLES.map((principle) => (
-              <div key={principle.title} className="bg-background p-6 flex flex-col gap-3">
-                <div className="size-10 border border-border flex items-center justify-center text-primary">
-                  <principle.icon className="size-5" />
-                </div>
-                <h3 className="font-heading text-lg font-bold uppercase tracking-tight">{principle.title}</h3>
-                <p className="text-xs font-mono text-muted-foreground leading-relaxed">
+              <div key={principle.title} className="flex flex-col gap-4">
+                <principle.icon className="size-4 text-muted-foreground" />
+                <h3 className="text-sm font-medium tracking-tight">{principle.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {principle.description}
                 </p>
               </div>
@@ -83,10 +81,10 @@ export default function ProtocolPage() {
           </div>
 
           {/* Process section */}
-          <h2 className="font-heading text-2xl font-bold uppercase tracking-tight mb-6 border-l-4 border-primary pl-4">
+          <h2 className="font-heading text-xl font-normal tracking-tight mb-8">
             Collection Process
           </h2>
-          <div className="space-y-4 mb-12">
+          <div className="space-y-8 mb-16 border-l border-border-subtle pl-6 ml-2">
             {[
               { step: "01", title: "Field Collection", desc: "Oral narratives are recorded from community elders and storytellers in their native language." },
               { step: "02", title: "Transcription & Translation", desc: "Audio recordings are transcribed in Meiteilon/Meitei and translated to English with cultural context notes." },
@@ -94,25 +92,26 @@ export default function ProtocolPage() {
               { step: "04", title: "Review & Validation", desc: "Community reviewers verify cultural accuracy, attribution, and contextual integrity before publication." },
               { step: "05", title: "Publication & Preservation", desc: "Validated stories are published to the archive with immersive illustrations and multi-format reading options." },
             ].map((item) => (
-              <div key={item.step} className="flex gap-4 p-4 border border-border hover:border-primary/30 transition-colors">
-                <span className="font-mono text-2xl font-black text-primary tabular-nums shrink-0 w-10">{item.step}</span>
-                <div>
-                  <h4 className="font-heading text-sm font-bold uppercase tracking-tight">{item.title}</h4>
-                  <p className="text-xs font-mono text-muted-foreground leading-relaxed mt-1">{item.desc}</p>
-                </div>
+              <div key={item.step} className="relative">
+                <div className="absolute -left-[31px] top-1.5 size-2 bg-background border border-border-subtle rounded-full" />
+                <h4 className="text-sm font-medium tracking-tight flex items-center gap-3">
+                  <span className="text-xs font-mono text-muted-foreground">{item.step}</span>
+                  {item.title}
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-2 pl-7">{item.desc}</p>
               </div>
             ))}
           </div>
 
           {/* CTA */}
-          <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="font-mono uppercase tracking-widest text-xs" asChild>
-              <Link href="/stories">View the Archive</Link>
+          <div className="flex flex-wrap gap-3">
+            <Button size="default" className="text-xs px-6 rounded-full font-medium" asChild>
+              <Link href="/stories">View Archive</Link>
             </Button>
-            <Button variant="outline" size="lg" className="font-mono uppercase tracking-widest text-xs" asChild>
+            <Button variant="ghost" size="default" className="text-xs px-6 rounded-full font-medium text-muted-foreground" asChild>
               <Link href="/">
-                <ArrowLeft className="size-4 mr-2" />
-                Return Home
+                <ArrowLeft className="size-3 mr-2" />
+                Return
               </Link>
             </Button>
           </div>

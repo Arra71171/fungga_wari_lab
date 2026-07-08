@@ -41,50 +41,48 @@ export default function SysStatusPage() {
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navbar />
 
-      <main className="pt-28 pb-20 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
+      <main className="pt-32 pb-20 px-6 md:px-12">
+        <div className="max-w-3xl mx-auto">
           {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-[2px] w-8 bg-primary" />
-            <span className="text-fine font-mono uppercase tracking-ultra text-primary font-bold">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
               Operations
             </span>
+            <div className="h-[1px] w-12 bg-border-subtle" />
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-foreground mb-6">
-            Sys<span className="italic text-primary">_</span>Status
+          <h1 className="font-heading text-3xl md:text-4xl font-normal tracking-tight text-foreground mb-8">
+            System Status
           </h1>
 
-          <p className="text-sm text-muted-foreground font-mono leading-relaxed max-w-2xl mb-12">
-            Current operational status of all Fungga Wari Lab platform services. All systems are monitored continuously to ensure archive integrity and user experience.
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mb-12">
+            Current operational status of all Fungga Wari Lab platform services. 
+            All systems are monitored continuously to ensure archive integrity and user experience.
           </p>
 
           {/* Overall status */}
-          <div className="border border-border bg-background p-6 mb-8 flex items-center gap-4">
-            <div className="size-3 bg-primary rounded-none animate-pulse" />
-            <span className="font-mono text-sm uppercase tracking-widest text-primary font-bold">
+          <div className="flex items-center gap-4 px-6 py-4 rounded-xl border border-border-subtle mb-10">
+            <div className="size-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-medium">
               All Systems Operational
             </span>
-            <span className="ml-auto font-mono text-nano uppercase tracking-caps text-muted-foreground">
-              Last checked: {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            <span className="ml-auto text-xs text-muted-foreground">
+              Updated: {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" })}
             </span>
           </div>
 
           {/* Service Grid */}
-          <div className="space-y-px border border-border bg-border mb-12">
+          <div className="space-y-6 mb-16">
             {SERVICES.map((service) => (
-              <div key={service.name} className="bg-background p-5 flex items-center gap-4">
-                <div className="size-10 border border-border flex items-center justify-center text-foreground shrink-0">
-                  <service.icon className="size-5" />
-                </div>
+              <div key={service.name} className="flex items-center gap-6 pb-6 border-b border-border-subtle last:border-0 last:pb-0">
+                <service.icon className="size-5 text-muted-foreground shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-heading text-sm font-bold uppercase tracking-tight">{service.name}</h3>
-                  <p className="text-nano font-mono text-muted-foreground">{service.description}</p>
+                  <h3 className="text-sm font-medium tracking-tight">{service.name}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{service.description}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <div className="size-2 bg-primary rounded-none" />
-                  <span className="font-mono text-nano uppercase tracking-widest text-primary font-bold">
+                  <span className="text-xs font-medium text-primary">
                     {service.status}
                   </span>
                 </div>
@@ -93,17 +91,17 @@ export default function SysStatusPage() {
           </div>
 
           {/* Architecture note */}
-          <div className="border-l-4 border-primary pl-6 py-4 mb-12">
-            <p className="text-sm text-muted-foreground font-mono leading-relaxed">
+          <div className="pl-6 border-l border-border-subtle mb-16 py-2">
+            <p className="text-sm text-foreground/80 leading-relaxed">
               Fungga Wari Lab runs on a modern JAMstack architecture: Next.js for rendering, Supabase for data persistence and auth, Cloudinary for media delivery, and Vercel for edge deployment.
             </p>
           </div>
 
           {/* CTA */}
-          <Button variant="outline" size="lg" className="font-mono uppercase tracking-widest text-xs" asChild>
+          <Button variant="ghost" size="default" className="text-xs px-6 rounded-full font-medium text-muted-foreground" asChild>
             <Link href="/">
-              <ArrowLeft className="size-4 mr-2" />
-              Return Home
+              <ArrowLeft className="size-3 mr-2" />
+              Return
             </Link>
           </Button>
         </div>
