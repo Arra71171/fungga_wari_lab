@@ -311,15 +311,15 @@ export default function Home() {
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section
         ref={heroRef}
-        className="relative px-6 md:px-12 pt-40 lg:pt-56 pb-12 min-h-[85vh] flex items-center overflow-hidden"
+        className="relative px-6 md:px-12 pt-28 lg:pt-36 pb-20 min-h-[90vh] flex items-center overflow-hidden"
       >
 
         <motion.div
           style={{ opacity: heroOpacity }}
-          className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center relative z-10"
+          className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10"
         >
           {/* Hero Content */}
-          <div className="lg:col-span-6 flex flex-col justify-center max-w-xl space-y-6">
+          <div className="flex flex-col justify-center max-w-xl space-y-6">
 
 
             {/* Layered headline */}
@@ -374,7 +374,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="lg:col-span-5 lg:col-start-8 relative flex items-center justify-center w-full">
+          <div className="relative flex items-center justify-center lg:justify-end w-full">
             {/* Ambient scroll-linked line */}
             <ScrollReveal direction="left" distance={100} duration={1.5} scrub={true}>
               <div className="absolute left-[-50px] top-1/2 w-48 h-[1px] bg-brand-ember/40 z-0 origin-left" />
