@@ -19,12 +19,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Allow HMR/WebSocket connections from LAN mobile devices
-  // Note: Experimental feature in some Next.js versions, but typed as string[] if present.
-  experimental: {
-    // @ts-ignore - this is undocumented in the types but allowed by next
-    allowedDevOrigins: ['192.168.1.2'],
-  },
+
   transpilePackages: ["@workspace/ui"],
   images: {
     // In dev, skip server-side optimization — avoids DNS failures when the
