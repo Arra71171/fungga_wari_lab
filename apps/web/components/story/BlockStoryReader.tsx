@@ -8,6 +8,8 @@ import { cn } from "@workspace/ui/lib/utils";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
 import { useStoryReader } from "./StoryReaderContext";
+import { StoryComments } from "./StoryComments";
+import { LikeButton } from "./LikeButton";
 
 // ─── TipTap → Plain Block Renderer ──────────────────────────────────────────
 
@@ -247,9 +249,19 @@ function ChoiceButtons({
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-type BlockStoryReaderProps = { slug: string };
+type BlockStoryReaderProps = { 
+  slug: string;
+  initialComments?: any[];
+  initialLikes?: any[];
+  currentUserId?: string;
+};
 
-function BlockStoryReader({ slug }: BlockStoryReaderProps) {
+function BlockStoryReader({ 
+  slug,
+  initialComments = [],
+  initialLikes = [],
+  currentUserId
+}: BlockStoryReaderProps) {
   const { activeScene, chapters, story, currentSceneId, setCurrentSceneId } = useStoryReader();
 
   // Refs for scrollable containers — needed because on mobile the scroll target
@@ -576,16 +588,31 @@ function BlockStoryReader({ slug }: BlockStoryReaderProps) {
                     )}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-center gap-4 mt-6 relative">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6 relative w-full">
+                    <LikeButton 
+                      storyId={story._id}
+                      initialLiked={initialLikes.some((like) => like.user_id === currentUserId)}
+                      likeCount={initialLikes.length}
+                      disabled={!currentUserId}
+                    />
                     <button
                       onClick={() => {
                         if (firstSceneId) setCurrentSceneId(firstSceneId);
                         scrollContentToTop();
                       }}
-                      className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors"
+                      className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors rounded-full"
                     >
                       Read Again
                     </button>
+                  </div>
+                  
+                  <div className="w-full text-left mt-12 relative z-10">
+                    <StoryComments 
+                      storyId={story._id}
+                      comments={initialComments}
+                      currentUserId={currentUserId}
+                    />
+                  </div>
                     <Link
                       href="/stories"
                       className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"

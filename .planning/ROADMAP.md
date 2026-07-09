@@ -56,8 +56,8 @@ Zod validation on all server actions, RLS policy audit (all tables), Clerk webho
 
 ---
 
-## 🟡 Phase 7: Cloudinary Full Integration
-**Status:** 🟡 In Progress
+## ✅ Phase 7: Cloudinary Full Integration
+**Status:** ✅ Complete
 **Complexity:** Medium
 **Requirements:** W3.1
 
@@ -71,8 +71,8 @@ Wire Cloudinary signed upload directly into the Tiptap scene editor. Currently c
 
 ---
 
-## 🔴 Phase 8: Reader Bookmark Persistence
-**Status:** 🔴 Not Started
+## ✅ Phase 8: Reader Bookmark Persistence
+**Status:** ✅ Complete
 **Complexity:** Low-Medium
 **Requirements:** W3.2
 
@@ -86,8 +86,8 @@ Allow signed-in readers to save their chapter/scene position. `bookmarks` table 
 
 ---
 
-## 🔴 Phase 9: Server-Side Full-Text Search
-**Status:** 🔴 Not Started
+## ✅ Phase 9: Server-Side Full-Text Search
+**Status:** ✅ Complete
 **Complexity:** Low
 **Requirements:** W3.3
 
@@ -101,8 +101,8 @@ Allow signed-in readers to save their chapter/scene position. `bookmarks` table 
 
 ---
 
-## 🔴 Phase 10: Admin Role Management UI
-**Status:** 🔴 Not Started
+## ✅ Phase 10: Admin Role Management UI
+**Status:** ✅ Complete
 **Complexity:** Medium
 **Requirements:** W3.4
 
@@ -116,8 +116,8 @@ Settings page in dashboard to promote/demote users. `users.role` enum exists wit
 
 ---
 
-## 🔴 Phase 11: Dashboard E2E Test Coverage
-**Status:** 🔴 Not Started
+## ✅ Phase 11: Dashboard E2E Test Coverage
+**Status:** ✅ Complete
 **Complexity:** Medium
 
 ### Description

@@ -114,6 +114,9 @@ export default function DraftEditorPage({
   const [tags, setTags] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [language, setLanguage] = React.useState("meiteilon");
+  const [seriesId, setSeriesId] = React.useState<string>("none");
+  const [seriesOrder, setSeriesOrder] = React.useState<number | "">("");
+  const [authorSeries, setAuthorSeries] = React.useState<any[]>([]);
 
   // Chapters
   const [chapters, setChapters] = React.useState<ChapterLocal[]>([]);
@@ -143,6 +146,22 @@ export default function DraftEditorPage({
       setTags((story.tags || []).join(", "));
       setCategory(story.category || "other");
       setLanguage(story.language || "meiteilon");
+      setSeriesId(story.series_id || "none");
+      setSeriesOrder(story.series_order ?? "");
+
+      // Fetch author's series
+      if (story.author_id) {
+        import("@/lib/supabase/client").then(({ createClient }) => {
+          const supabase = createClient();
+          supabase
+            .from("series")
+            .select("id, title")
+            .eq("author_id", story.author_id)
+            .then(({ data }) => {
+              if (data) setAuthorSeries(data);
+            });
+        });
+      }
 
       const mappedChapters: ChapterLocal[] = (story.chapters || []).map((c) => {
         const primaryScene = c.scenes && c.scenes.length > 0 ? c.scenes[0] : null;
@@ -314,6 +333,8 @@ export default function DraftEditorPage({
       attributed_author: attributedAuthor || undefined,
       category: (category || undefined) as never,
       language: language || undefined,
+      series_id: seriesId === "none" ? null : seriesId,
+      series_order: seriesId === "none" ? null : (seriesOrder === "" ? null : Number(seriesOrder)),
       tags: tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
     });
 
@@ -666,6 +687,45 @@ export default function DraftEditorPage({
                     </Select>
                   </div>
                 </div>
+
+                {authorSeries.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
+                        Series
+                      </Label>
+                      <Select value={seriesId} onValueChange={setSeriesId}>
+                        <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                          <SelectValue placeholder="No Series" />
+                        </SelectTrigger>
+                        <SelectContent className="border border-border/50 rounded-none shadow-xs bg-bg-surface">
+                          <SelectItem value="none" className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer text-muted-foreground">
+                            No Series
+                          </SelectItem>
+                          {authorSeries.map((s) => (
+                            <SelectItem key={s.id} value={s.id} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                              {s.title}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {seriesId !== "none" && (
+                      <div className="space-y-2">
+                        <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
+                          Order in Series
+                        </Label>
+                        <Input
+                          type="number"
+                          value={seriesOrder}
+                          onChange={(e) => setSeriesOrder(e.target.value ? Number(e.target.value) : "")}
+                          placeholder="e.g. 1"
+                          className="h-10 border border-border/50 bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </DashboardCard>
           </div>

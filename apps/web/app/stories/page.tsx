@@ -659,10 +659,11 @@ export default function StoriesPage() {
         query = query.eq("language", activeLanguage)
       }
       if (debouncedQuery) {
-        // basic ilike search on title or description
-        query = query.or(
-          `title.ilike.%${debouncedQuery}%,description.ilike.%${debouncedQuery}%`
-        )
+        // Full-text search using search_vector
+        query = query.textSearch("search_vector", debouncedQuery.trim(), {
+          type: "websearch",
+          config: "english",
+        })
       }
 
       const { data, error } = await query
