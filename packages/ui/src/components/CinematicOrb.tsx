@@ -123,7 +123,7 @@ export function CinematicOrb({ className }: CinematicOrbProps) {
   return (
     <canvas
       ref={canvasRef}
-      className={cn("absolute inset-0 size-full", className)}
+      data-slot="cinematicorb" className={cn("absolute inset-0 size-full", className)}
       aria-hidden="true"
     />
   );

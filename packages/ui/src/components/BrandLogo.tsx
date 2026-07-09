@@ -73,7 +73,7 @@ function BrandLogo({ variant = "full", size = "md", className }: BrandLogoProps)
         data-slot="brand-logo"
         aria-label="Fungga Wari Lab"
         className={cn(
-          "inline-flex items-center justify-center rounded-none border-2 border-border-strong bg-primary/10 p-1.5 text-primary",
+          "inline-flex items-center justify-center rounded-none border border-border/50 bg-primary/10 p-1.5 text-primary",
           className
         )}
       >
@@ -105,7 +105,7 @@ function BrandLogo({ variant = "full", size = "md", className }: BrandLogoProps)
       {/* SVG mark */}
       <span
         aria-hidden="true"
-        className="inline-flex shrink-0 items-center justify-center rounded-none border-2 border-border-strong bg-primary/10 p-1.5 text-primary"
+        className="inline-flex shrink-0 items-center justify-center rounded-none border border-border/50 bg-primary/10 p-1.5 text-primary"
       >
         <FungaMark size={svgSize} />
       </span>

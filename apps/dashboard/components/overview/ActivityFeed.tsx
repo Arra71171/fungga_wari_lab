@@ -1,7 +1,7 @@
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { formatDistanceToNow } from "date-fns";
 import { Eye, BookCheck, CheckCircle2, ArrowDownToDot } from "lucide-react";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type Activity = {
   _id: string;
@@ -16,7 +16,7 @@ type Activity = {
 export function ActivityFeed({ activities, isLoading }: { activities?: Activity[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <BrutalistCard variant="panel" className="w-full h-full min-h-[300px] animate-pulse" />
+      <DashboardCard variant="panel" className="w-full h-full min-h-[300px] animate-pulse" />
     );
   }
 
@@ -41,7 +41,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
   };
 
   return (
-    <BrutalistCard variant="panel" className="w-full h-[400px] flex flex-col relative group overflow-hidden">
+    <DashboardCard variant="panel" className="w-full h-[400px] flex flex-col relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ember/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
         <h3 className="font-heading text-xl text-foreground">Recent Activity</h3>
@@ -53,7 +53,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
       <ScrollArea className="flex-1 -mx-4 px-4 md:-mx-6 md:px-6">
         <div className="space-y-6 pr-4">
           {!activities || activities.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground font-mono text-xs uppercase tracking-widest">
+            <div className="text-center py-6 text-muted-foreground font-sans text-xs tracking-wide">
               No recent activity.
             </div>
           ) : activities.map((activity) => (
@@ -70,7 +70,7 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
                     {activity.storyTitle}
                   </span>
                 </p>
-                <time className="text-fine font-mono uppercase tracking-widest text-muted-foreground">
+                <time className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                 </time>
               </div>
@@ -78,6 +78,6 @@ export function ActivityFeed({ activities, isLoading }: { activities?: Activity[
           ))}
         </div>
       </ScrollArea>
-    </BrutalistCard>
+    </DashboardCard>
   );
 }

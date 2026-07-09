@@ -21,7 +21,7 @@ export function StoryTopNav() {
       <div className="flex items-center gap-4 flex-1">
         <Link href="/stories" className="text-cinematic-text-dim hover:text-brand-ember transition-colors flex items-center gap-1 group">
           <ChevronLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-mono uppercase tracking-widest hidden sm:inline-block">Archive</span>
+          <span className="text-xs font-sans font-medium tracking-wide hidden sm:inline-block">Archive</span>
         </Link>
       </div>
 
@@ -34,7 +34,7 @@ export function StoryTopNav() {
         )}
         <Link href="/stories" className="flex items-center gap-1 group mt-0.5">
           <FungaMark size={12} className="text-brand-ember/60 group-hover:text-brand-ember transition-colors" />
-          <span className="text-nano font-mono uppercase tracking-label text-cinematic-text-dim group-hover:text-brand-ember transition-colors">
+          <span className="text-nano font-sans font-medium tracking-wide text-cinematic-text-dim group-hover:text-brand-ember transition-colors">
             Fungga Wari
           </span>
         </Link>

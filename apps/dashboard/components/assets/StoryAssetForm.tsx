@@ -22,7 +22,7 @@ import { createChapter, updateChapter, updateSceneContent } from "@/actions/chap
 import { createAsset } from "@/actions/assetActions";
 import { getCloudinarySignature } from "@/actions/cloudinaryActions";
 import type { Database } from "@workspace/ui/types/supabase";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type StoryCategory = Database["public"]["Enums"]["story_category"];
 
@@ -216,7 +216,7 @@ export function StoryAssetForm() {
   };
 
   return (
-    <BrutalistCard variant="panel" padding="none">
+    <DashboardCard variant="panel" padding="none">
       <form
         onSubmit={handleSubmit}
         className="p-6 md:p-8 space-y-8 relative"
@@ -225,14 +225,14 @@ export function StoryAssetForm() {
         <h2 className="text-xl font-heading text-brand-ochre uppercase font-light tracking-wide mb-1">
           Story Bundle
         </h2>
-        <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+        <p className="text-xs font-mono text-muted-foreground tracking-wide">
           Upload manuscript and per-chapter illustrations
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+          <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
             Story Title *
           </Label>
           <Input
@@ -245,7 +245,7 @@ export function StoryAssetForm() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+            <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
               Category
             </Label>
             <Select
@@ -265,7 +265,7 @@ export function StoryAssetForm() {
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+            <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
               Language
             </Label>
             <Select value={language} onValueChange={setLanguage}>
@@ -285,7 +285,7 @@ export function StoryAssetForm() {
       </div>
 
       <div className="space-y-2">
-        <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+        <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
           Brief Description / Synopsis
         </Label>
         <Textarea
@@ -298,7 +298,7 @@ export function StoryAssetForm() {
 
       <div className="space-y-6 pt-4 border-t border-border">
         <div className="flex items-center justify-between">
-          <h3 className="font-mono text-sm text-foreground uppercase tracking-wider">
+          <h3 className="font-sans text-sm text-foreground tracking-wide">
             Chapters
           </h3>
           <Button
@@ -306,7 +306,7 @@ export function StoryAssetForm() {
             variant="outline"
             size="sm"
             onClick={addChapter}
-            className="rounded-none border-border hover:bg-bg-overlay font-mono text-xs uppercase tracking-widest h-8"
+            className="rounded-none border-border hover:bg-bg-overlay font-sans text-xs tracking-wide h-8"
           >
             <Plus className="size-3 mr-2" /> Add Chapter
           </Button>
@@ -328,14 +328,14 @@ export function StoryAssetForm() {
               </button>
             )}
 
-            <div className="font-mono text-fine text-brand-ochre uppercase tracking-label mb-4">
+            <div className="font-sans text-xs text-brand-ochre tracking-wide mb-4">
               Chapter {index + 1}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+                  <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
                     Chapter Title
                   </Label>
                   <Input
@@ -348,7 +348,7 @@ export function StoryAssetForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+                  <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
                     Manuscript Text
                   </Label>
                   <Textarea
@@ -363,7 +363,7 @@ export function StoryAssetForm() {
               </div>
 
               <div className="space-y-2">
-                <Label className="font-mono text-fine uppercase text-muted-foreground tracking-widest">
+                <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
                   Illustration
                 </Label>
                 <label className="relative flex w-full aspect-[3/4] min-h-56 flex-col items-center justify-center overflow-hidden border border-dashed border-border bg-bg-base transition-colors hover:border-brand-ember/50 hover:bg-bg-overlay/80 cursor-pointer group/upload">
@@ -376,14 +376,14 @@ export function StoryAssetForm() {
                         <p className="max-w-48 truncate bg-bg-base/80 px-2 text-xs font-mono text-brand-ochre">
                           {chapter.file.name}
                         </p>
-                        <p className="text-nano font-mono text-muted-foreground mt-1 uppercase tracking-widest">
+                        <p className="text-nano font-mono text-muted-foreground mt-1 tracking-wide">
                           Click to change
                         </p>
                       </div>
                     ) : (
                       <>
                         <UploadCloud className="size-8 text-muted-foreground mb-3 group-hover/upload:text-brand-ember transition-colors" />
-                        <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-1 group-hover/upload:text-foreground">
+                        <p className="text-xs font-mono text-muted-foreground tracking-wide mb-1 group-hover/upload:text-foreground">
                           Upload Image
                         </p>
                         <p className="text-fine text-muted-foreground/60">
@@ -413,7 +413,7 @@ export function StoryAssetForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-none font-mono tracking-widest uppercase bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-[200px] shadow-brutal hover:translate-y-0.5 hover:shadow-none transition-all"
+          className="rounded-none font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-[200px] shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
         >
           {isSubmitting ? (
             <Loader2 className="size-4 animate-spin mr-2" />
@@ -427,12 +427,12 @@ export function StoryAssetForm() {
       {isSubmitting && (
         <div className="absolute inset-0 bg-bg-base/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center border border-brand-ember/20">
           <Loader2 className="size-12 text-brand-ember animate-spin mb-4" />
-          <p className="font-mono text-sm tracking-widest text-brand-ochre uppercase animate-pulse">
+          <p className="font-sans text-sm tracking-widest text-brand-ochre uppercase animate-pulse">
             Processing Story Bundle Data...
           </p>
         </div>
       )}
     </form>
-    </BrutalistCard>
+    </DashboardCard>
   );
 }

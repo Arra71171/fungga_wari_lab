@@ -1,7 +1,7 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 import { 
   ChartConfig, 
   ChartContainer, 
@@ -33,21 +33,21 @@ type TopStory = {
 export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: TopStory[], isLoading?: boolean }) {
   if (isLoading) {
     return (
-      <BrutalistCard variant="panel" className="w-full h-[350px] animate-pulse flex items-center justify-center">
-        <div className="text-muted-foreground/30 font-mono text-sm uppercase tracking-widest">
+      <DashboardCard variant="panel" className="w-full h-[350px] animate-pulse flex items-center justify-center">
+        <div className="text-muted-foreground/30 font-sans text-sm tracking-wide">
           Loading Performance...
         </div>
-      </BrutalistCard>
+      </DashboardCard>
     );
   }
 
   if (!stories || stories.length === 0) {
     return (
-      <BrutalistCard variant="panel" className="w-full h-[350px] flex items-center justify-center">
-        <div className="text-muted-foreground/50 font-mono text-sm uppercase tracking-widest">
+      <DashboardCard variant="panel" className="w-full h-[350px] flex items-center justify-center">
+        <div className="text-muted-foreground/50 font-sans text-sm tracking-wide">
           No stories available
         </div>
-      </BrutalistCard>
+      </DashboardCard>
     );
   }
 
@@ -58,7 +58,7 @@ export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: Top
   }));
 
   return (
-    <BrutalistCard variant="panel" className="w-full h-full relative group overflow-hidden">
+    <DashboardCard variant="panel" className="w-full h-full relative group overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-ochre/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
       <div className="mb-4 md:mb-6 flex flex-col items-start gap-1">
@@ -91,6 +91,6 @@ export function StoryPerformanceBarChart({ stories, isLoading }: { stories?: Top
           <Bar dataKey="reads" fill="var(--color-reads)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ChartContainer>
-    </BrutalistCard>
+    </DashboardCard>
   );
 }

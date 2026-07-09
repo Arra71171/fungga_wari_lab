@@ -235,7 +235,7 @@ function StoryDialogueBlock({
       )}
       <div className="flex-1 min-w-0">
         {character && (
-          <span className="block mb-1 text-xs font-semibold uppercase tracking-wider text-brand-ochre">
+          <span className="block mb-1 text-xs font-semibold tracking-wide text-brand-ochre">
             {character}
           </span>
         )}
@@ -294,7 +294,7 @@ function ChoiceBlock({ options, text, targetSceneId, onChoose }: ChoiceBlockProp
             }
           }}
           className={cn(
-            "w-full text-left px-5 py-3 rounded-none border-2 border-border",
+            "w-full text-left px-5 py-3 rounded-none border border-border/50",
             "text-sm font-sans text-foreground",
             "transition-all duration-200",
             "hover:border-primary hover:bg-primary/5",
@@ -348,7 +348,7 @@ function QuoteBlock({ content, text, attribution, author }: QuoteBlockProps) {
   return (
     <blockquote
       data-slot="block-quote"
-      className="border-l-4 border-primary pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground"
+      className="border-l-2 border-primary/60 pl-6 py-2 my-6 bg-accent/20 italic text-muted-foreground"
     >
       <p className="text-lg leading-relaxed">{displayContent}</p>
       {displayAttribution && (
@@ -366,7 +366,7 @@ function SceneBreakBlock() {
   return (
     <div data-slot="block-scene-break" className="my-16 flex flex-col items-center gap-2">
       <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-      <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+      <span className="text-xs font-sans font-medium tracking-wide text-muted-foreground">
         Scene
       </span>
       <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />

@@ -1,45 +1,42 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Cinzel, Instrument_Serif, Poppins } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 import "@workspace/ui/globals.css";
 import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider";
 import { cn } from "@workspace/ui/lib/utils";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { AuthObserver } from "@/components/AuthObserver";
 
-// ── Folk-story heading: Literary, cinematic vibe (Mythological feel)
-const cinzel = Cinzel({
+// ── The Attention-Grabber (Headlines)
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
   preload: false,
 });
 
-// ── Display type: High-contrast, condensed serif for section hero titles
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
+// ── The Attention-Grabber (Hero Titles)
+const spaceGroteskDisplay = Space_Grotesk({
+  weight: ["700"],
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
   preload: false,
 });
 
-// ── Dashboard body: Geometric, modern UI contrast
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+// ── The Dashboard Workhorse (UI, Data, Microcopy)
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
   preload: false,
 });
 
-// ── Mono: Keep JetBrains Mono for IDs, tags, metadata
-const jetbrainsMono = JetBrains_Mono({ 
-  subsets: ["latin"], 
-  variable: "--font-mono", 
+// ── The Dashboard Workhorse (Mono Override for Consistency)
+const interMono = Inter({
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
-  preload: false, 
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -66,10 +63,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased font-sans flex flex-col min-h-screen",
-        cinzel.variable,
-        instrumentSerif.variable,
-        poppins.variable,
-        jetbrainsMono.variable,
+        spaceGrotesk.variable,
+        spaceGroteskDisplay.variable,
+        inter.variable,
+        interMono.variable,
       )}
     >
       <body suppressHydrationWarning>

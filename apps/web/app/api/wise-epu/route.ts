@@ -1,5 +1,9 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { createClient } from "@/lib/supabase/server";
+import { RateLimiter } from "@/lib/rateLimit";
+
+const wiseEpuRateLimiter = new RateLimiter(20, 60_000);
 
 // ─── Wise-Epu System Prompt ───────────────────────────────────────────────────
 
@@ -42,6 +46,24 @@ const MODEL_CHAIN = [
 // ─── Route Handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: Request) {
+  // 1. Verify Authentication
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    return new Response(
+      JSON.stringify({ error: "Unauthorized. Please sign in to consult Wise-Epu." }),
+      { status: 401, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  if (!wiseEpuRateLimiter.check(user.id)) {
+    return new Response(
+      JSON.stringify({ error: "Wise-Epu needs a moment to rest. Please try again in a minute." }),
+      { status: 429, headers: { "Content-Type": "application/json", "Retry-After": "60" } },
+    );
+  }
+
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     console.error("[wise-epu] OPENROUTER_API_KEY is not set.");

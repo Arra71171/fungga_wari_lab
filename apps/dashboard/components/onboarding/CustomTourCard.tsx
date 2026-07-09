@@ -22,7 +22,7 @@ export function CustomTourCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden border border-border bg-bg-panel text-foreground shadow-brutal",
+        "relative overflow-hidden border border-border bg-bg-panel text-foreground shadow-sm",
         isCentered ? "w-[520px] max-w-[95vw]" : "w-[400px] max-w-[90vw]"
       )}
     >
@@ -45,7 +45,7 @@ export function CustomTourCard({
               </div>
             )}
             <div>
-              <p className="font-mono text-nano uppercase tracking-eyebrow text-brand-ember mb-1">
+              <p className="font-mono text-nano tracking-wide text-brand-ember mb-1">
                 Step {currentStep + 1} of {totalSteps}
               </p>
               <h3 className="font-heading text-xl font-bold tracking-tight text-foreground leading-tight">
@@ -105,7 +105,7 @@ export function CustomTourCard({
               <Button
                 size="sm"
                 onClick={nextStep}
-                className="h-8 rounded-none bg-brand-ember px-5 font-mono text-fine uppercase tracking-widest text-primary-foreground hover:bg-brand-ember/90"
+                className="h-8 rounded-none bg-brand-ember px-5 font-sans text-xs font-medium tracking-wide text-primary-foreground hover:bg-brand-ember/90"
               >
                 {currentStep === totalSteps - 1 ? "Get Started" : "Next"}
                 {currentStep !== totalSteps - 1 && (

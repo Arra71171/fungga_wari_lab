@@ -42,7 +42,7 @@ function WelcomeContent() {
           >
             <Icon className="mt-0.5 size-4 shrink-0 text-brand-ember" />
             <div>
-              <p className="font-mono text-fine font-semibold uppercase tracking-wide text-foreground">
+              <p className="font-sans text-xs font-semibold uppercase tracking-wide text-foreground">
                 {label}
               </p>
               <p className="mt-0.5 text-tight-label text-muted-foreground">{desc}</p>
@@ -82,7 +82,7 @@ function OverviewContent() {
             <p className="text-tight-label text-muted-foreground">Drafts → In Review → Published. Track every story&apos;s progress.</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 border-l-2 border-border-strong pl-3">
+        <div className="flex items-center gap-3 border-l border-border/50 pl-3">
           <BookCheck className="size-4 shrink-0 text-muted-foreground" />
           <div>
             <p className="text-tight-label font-semibold text-foreground">Engagement Charts</p>
@@ -148,7 +148,7 @@ function ProfileSettingsContent() {
             <p className="text-tight-label text-muted-foreground">Switch between light and dark mode instantly — your preference is saved.</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 border-l-2 border-border-strong pl-3">
+        <div className="flex items-center gap-3 border-l border-border/50 pl-3">
           <Globe className="size-4 shrink-0 text-muted-foreground" />
           <div>
             <p className="text-tight-label font-semibold text-foreground">View Stories (Public Site)</p>

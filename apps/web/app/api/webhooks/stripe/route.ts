@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
         if (error) {
           console.error("Failed to grant lifetime access:", error);
           return NextResponse.json(
-            { error: "Database update failed" },
+            { error: "Database update failed: " + error.message, details: error },
             { status: 500 }
           );
         }

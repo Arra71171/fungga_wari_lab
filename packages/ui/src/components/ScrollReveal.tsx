@@ -106,7 +106,7 @@ export function ScrollReveal({
   )
 
   return (
-    <div ref={containerRef} className={cn(className)} {...props}>
+    <div ref={containerRef} data-slot="scrollreveal" className={cn(className)} {...props}>
       {children}
     </div>
   )

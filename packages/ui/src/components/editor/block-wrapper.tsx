@@ -69,7 +69,7 @@ function BlockWrapper({
       {/* Action toolbar (top-right) */}
       {isSelected && (
         <div className="absolute -top-9 right-0 flex items-center gap-1 bg-background border border-border rounded-none px-2 py-1 z-10">
-          <span className="text-2xs font-mono uppercase tracking-wider text-muted-foreground mr-2">
+          <span className="text-2xs font-sans font-medium tracking-wide text-muted-foreground mr-2">
             {blockType}
           </span>
           <button

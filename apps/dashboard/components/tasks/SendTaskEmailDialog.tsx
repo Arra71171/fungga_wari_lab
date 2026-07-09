@@ -105,7 +105,7 @@ export function SendTaskEmailDialog({
           variant="ghost"
           size="sm"
           aria-label={`Send brief email about task: ${taskTitle}`}
-          className="h-7 px-2 gap-1.5 text-muted-foreground hover:text-brand-ember hover:bg-brand-ember/10 rounded-none font-mono text-xs tracking-widest uppercase"
+          className="h-7 px-2 gap-1.5 text-muted-foreground hover:text-brand-ember hover:bg-brand-ember/10 rounded-none font-sans text-xs tracking-widest uppercase"
         >
           <Mail className="size-3" />
           Brief
@@ -121,7 +121,7 @@ export function SendTaskEmailDialog({
             Dispatch Brief
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Send an email brief about this task to a team operative.
+            Send an email brief about this task to a team member.
           </DialogDescription>
         </DialogHeader>
 
@@ -129,7 +129,7 @@ export function SendTaskEmailDialog({
         <div className="flex items-start gap-3 bg-bg-surface border border-border-subtle p-3">
           <CheckCircle className="size-4 text-brand-ochre/60 mt-0.5 shrink-0" />
           <div className="min-w-0">
-            <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-0.5">
+            <p className="text-xs font-mono text-muted-foreground tracking-wide mb-0.5">
               Task Brief
             </p>
             <p className="text-sm font-heading text-foreground leading-tight truncate">
@@ -143,9 +143,9 @@ export function SendTaskEmailDialog({
           <div className="space-y-2">
             <Label
               htmlFor="recipientId"
-              className="font-mono text-xs uppercase tracking-widest text-muted-foreground"
+              className="font-sans text-xs tracking-wide text-muted-foreground"
             >
-              Recipient Operative
+              Recipient
             </Label>
             {usersWithEmail.length === 0 ? (
               <p className="text-xs font-mono text-destructive bg-destructive/10 border border-destructive/20 p-3">
@@ -160,13 +160,13 @@ export function SendTaskEmailDialog({
               >
                 <SelectTrigger
                   id="recipientId"
-                  className="rounded-none bg-bg-surface border-border font-mono text-sm focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50"
+                  className="rounded-none bg-bg-surface border-border font-sans text-sm focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50"
                 >
-                  <SelectValue placeholder="Select operative..." />
+                  <SelectValue placeholder="Select member..." />
                 </SelectTrigger>
                 <SelectContent className="rounded-none border-border bg-bg-panel">
                   {usersWithEmail.map((u) => (
-                    <SelectItem key={u.id} value={u.id} className="font-mono text-sm">
+                    <SelectItem key={u.id} value={u.id} className="font-sans text-sm">
                       <span>{u.name ?? u.email}</span>
                       {u.email && u.name && (
                         <span className="ml-2 text-muted-foreground text-xs opacity-70">
@@ -184,7 +184,7 @@ export function SendTaskEmailDialog({
           <div className="space-y-2">
             <Label
               htmlFor="task-brief-message"
-              className="font-mono text-xs uppercase tracking-widest text-muted-foreground"
+              className="font-sans text-xs tracking-wide text-muted-foreground"
             >
               Brief Message
             </Label>
@@ -192,19 +192,19 @@ export function SendTaskEmailDialog({
               id="task-brief-message"
               name="message"
               required
-              className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-mono text-sm focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50"
-              placeholder="Describe what you need from this operative..."
+              className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-sans text-sm focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50"
+              placeholder="Describe what you need from this member..."
             />
           </div>
 
           <div className="flex justify-between items-center pt-3 border-t border-border-subtle">
-            <p className="text-xs font-mono text-muted-foreground/60 uppercase tracking-widest">
+            <p className="text-xs font-mono text-muted-foreground/60 tracking-wide">
               via Gmail SMTP
             </p>
             <Button
               type="submit"
               disabled={sending || usersWithEmail.length === 0 || !selectedUserId}
-              className="bg-brand-ember hover:bg-brand-ember/80 text-primary-foreground font-mono uppercase tracking-widest text-xs rounded-none gap-2"
+              className="bg-brand-ember hover:bg-brand-ember/80 text-primary-foreground font-sans font-medium tracking-wide text-xs rounded-none gap-2"
             >
               {sending ? (
                 <>

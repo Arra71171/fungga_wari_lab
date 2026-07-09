@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ChevronRight, ChevronLeft,
   BarChart2, BookOpen, Library, Settings2,
@@ -32,7 +32,7 @@ function WelcomeContent() {
           <div key={label} className="flex items-start gap-2 border border-border-subtle bg-bg-surface/50 p-3">
             <Icon className="mt-0.5 size-4 shrink-0 text-brand-ember" />
             <div>
-              <p className="font-mono text-fine font-semibold uppercase tracking-wide text-foreground">{label}</p>
+              <p className="font-sans text-xs font-semibold uppercase tracking-wide text-foreground">{label}</p>
               <p className="mt-0.5 text-tight-label text-muted-foreground">{desc}</p>
             </div>
           </div>
@@ -73,7 +73,7 @@ function AnalyticsContent() {
             </p>
           </div>
         </div>
-        <div className="flex items-start gap-3 border-l-2 border-border-strong pl-3">
+        <div className="flex items-start gap-3 border-l border-border/50 pl-3">
           <BookCheck className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
           <div>
             <p className="text-tight-label font-semibold text-foreground">Engagement Charts</p>
@@ -145,7 +145,7 @@ function ProfileContent() {
           </div>
         ))}
       </div>
-      <p className="font-mono text-xs text-brand-ember tracking-wide">
+      <p className="font-sans text-xs text-brand-ember tracking-wide">
         You&apos;re all set. Start building the archive. 🔥
       </p>
     </div>
@@ -187,7 +187,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: direction > 0 ? -40 : 40, scale: 0.97 }}
       transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
-      className="relative w-[560px] max-w-[92vw] overflow-hidden border border-border bg-bg-panel text-foreground shadow-brutal"
+      className="relative w-[560px] max-w-[92vw] overflow-hidden border border-border bg-bg-panel text-foreground shadow-sm"
     >
       {/* Top accent bar */}
       <div className="h-[3px] w-full bg-gradient-to-r from-brand-ember via-brand-ochre to-brand-glow" />
@@ -206,7 +206,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
               {step.icon}
             </div>
             <div>
-              <p className="font-mono text-nano uppercase tracking-eyebrow text-brand-ember mb-1">
+              <p className="font-mono text-nano tracking-wide text-brand-ember mb-1">
                 Step {stepIndex + 1} of {totalSteps}
               </p>
               <h3 className="font-heading text-xl font-bold tracking-tight text-foreground leading-tight">
@@ -256,7 +256,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
             )}
             <button
               onClick={onNext}
-              className="flex h-8 items-center gap-1 bg-brand-ember px-5 font-mono text-fine uppercase tracking-widest text-primary-foreground transition-colors hover:bg-brand-ember/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex h-8 items-center gap-1 bg-brand-ember px-5 font-sans text-xs font-medium tracking-wide text-primary-foreground transition-colors hover:bg-brand-ember/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {stepIndex === totalSteps - 1 ? "Get Started" : "Next"}
               {stepIndex !== totalSteps - 1 && <ChevronRight className="size-3" />}
@@ -331,7 +331,7 @@ export function DashboardOnboarding() {
               <AnimatePresence mode="wait" custom={direction}>
                 <TourCard
                   key={stepIndex}
-                  step={STEPS[stepIndex]}
+                  step={STEPS[stepIndex]!}
                   stepIndex={stepIndex}
                   totalSteps={STEPS.length}
                   direction={direction}

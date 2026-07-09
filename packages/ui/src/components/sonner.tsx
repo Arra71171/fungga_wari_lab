@@ -16,7 +16,7 @@ function Toaster({ ...props }: ToasterProps) {
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
-      className="toaster group"
+      data-slot="sonner" className="toaster group"
       position="bottom-right"
       icons={{
         success: <CircleCheckIcon className="size-4 text-primary" />,
@@ -28,13 +28,13 @@ function Toaster({ ...props }: ToasterProps) {
       toastOptions={{
         classNames: {
           toast:
-            "group font-mono text-xs bg-cinematic-panel border-2 border-border text-foreground shadow-none rounded-none",
-          title: "font-mono text-xs font-bold uppercase tracking-widest",
-          description: "font-mono text-fine text-muted-foreground tracking-wide",
+            "group font-sans text-xs bg-cinematic-panel border border-border/50 text-foreground shadow-none rounded-none",
+          title: "font-sans text-xs font-bold tracking-wide",
+          description: "font-sans text-xs text-muted-foreground tracking-wide",
           actionButton:
-            "font-mono text-fine uppercase tracking-widest bg-primary text-primary-foreground rounded-none",
+            "font-sans text-xs font-medium tracking-wide bg-primary text-primary-foreground rounded-none",
           cancelButton:
-            "font-mono text-fine uppercase tracking-widest bg-muted text-muted-foreground rounded-none",
+            "font-sans text-xs font-medium tracking-wide bg-muted text-muted-foreground rounded-none",
           closeButton:
             "border border-border bg-cinematic-panel text-muted-foreground hover:text-foreground rounded-none",
           success: "border-primary/40",

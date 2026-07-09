@@ -37,7 +37,17 @@ import { MobileReaderBar } from "./MobileReaderBar";
  *   └──────────────────────┘
  *   + Sheet drawers for chapters (left) and reader panel (bottom)
  */
-export function StoryReaderShell({ slug }: { slug: string }) {
+export function StoryReaderShell({ 
+  slug,
+  initialComments = [],
+  initialLikes = [],
+  currentUserId
+}: { 
+  slug: string;
+  initialComments?: any[];
+  initialLikes?: any[];
+  currentUserId?: string;
+}) {
   const { story, isLoading } = useStoryReader();
   const [rightPanelOpen, setRightPanelOpen] = React.useState(true);
 
@@ -54,7 +64,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
         {/* Center skeleton */}
         <div className="flex-1 flex flex-col items-center justify-center gap-4 min-w-0">
           <Loader2 className="size-8 text-brand-ember animate-spin" />
-          <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+          <span className="text-xs font-sans font-medium tracking-wide text-muted-foreground">
             Loading Story…
           </span>
         </div>
@@ -68,7 +78,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
   if (!story) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center bg-cinematic-bg gap-4">
-        <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+        <span className="text-xs font-sans font-medium tracking-wide text-muted-foreground">
           Story not found
         </span>
       </div>
@@ -116,7 +126,7 @@ export function StoryReaderShell({ slug }: { slug: string }) {
           side="bottom"
           showCloseButton
           aria-describedby={undefined}
-          className="max-h-[70vh] p-0 bg-cinematic-panel border-cinematic-border rounded-t-xl"
+          className="max-h-[70vh] p-0 bg-cinematic-panel border-cinematic-border rounded-none"
         >
           <SheetTitle className="sr-only">Reader Settings</SheetTitle>
           <div className="overflow-y-auto max-h-[65vh]">
@@ -127,7 +137,12 @@ export function StoryReaderShell({ slug }: { slug: string }) {
 
       {/* ─── Center canvas ─────────────────────────────────────────────── */}
       <div className="flex-1 min-w-0">
-        <BlockStoryReader slug={slug} />
+        <BlockStoryReader 
+          slug={slug} 
+          initialComments={initialComments}
+          initialLikes={initialLikes}
+          currentUserId={currentUserId}
+        />
       </div>
 
       {/* ─── Desktop: Right panel with built-in toggle ─────────────────── */}

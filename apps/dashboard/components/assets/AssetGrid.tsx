@@ -7,7 +7,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { getAllAssets, deleteAsset, updateAsset } from "@/actions/assetActions";
 import type { Database } from "@workspace/ui/types/supabase";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type AssetRow = Database["public"]["Tables"]["assets"]["Row"];
 
@@ -71,7 +71,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <BrutalistCard
+          <DashboardCard
             key={i}
             variant="ghost"
             padding="none"
@@ -87,14 +87,14 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
   if (assets.length === 0) {
     return (
-      <BrutalistCard variant="panel" className="flex items-center justify-center p-12 border-dashed">
+      <DashboardCard variant="panel" className="flex items-center justify-center p-12 border-dashed">
         <div className="text-center space-y-2">
           <Flame className="size-8 text-primary/20 mx-auto" />
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground/50">
+          <p className="font-sans text-xs tracking-wide text-muted-foreground/50">
             {filterType ? `No ${filterType.replace(/_/g, " ")} assets` : "Vault is empty"}
           </p>
         </div>
-      </BrutalistCard>
+      </DashboardCard>
     );
   }
 
@@ -127,7 +127,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
             tabIndex={0}
             className="text-left outline-none group cursor-pointer"
           >
-            <BrutalistCard
+            <DashboardCard
               variant="interactive"
               padding="none"
               className={cn(
@@ -185,10 +185,10 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
           <div className="p-2 border-t border-border flex items-center justify-between">
             <div className="truncate pr-2">
-              <p className="font-mono text-nano uppercase tracking-wider text-foreground truncate">
+              <p className="font-mono text-nano tracking-wide text-foreground truncate">
                 {asset.title}
               </p>
-              <p className="font-mono text-micro uppercase tracking-widest text-primary truncate">
+              <p className="font-mono text-micro tracking-wide text-primary truncate">
                 {asset.type.replace(/_/g, " ")}
               </p>
             </div>
@@ -201,7 +201,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
                     navigator.clipboard.writeText(asset.url);
                     toast.success("URL Copied", { description: "Asset URL copied to clipboard." });
                   }}
-                  className="bg-background/80 backdrop-blur text-foreground p-1.5 border border-border hover:bg-brand-ember hover:text-primary-foreground hover:border-brand-ember transition-colors shadow-brutal-sm"
+                  className="bg-background/80 backdrop-blur text-foreground p-1.5 border border-border hover:bg-brand-ember hover:text-primary-foreground hover:border-brand-ember transition-colors shadow-xs"
                   title="Copy URL"
                 >
                   <Copy className="size-3.5" />
@@ -213,14 +213,14 @@ function AssetGrid({ filterType }: AssetGridProps) {
                       handleDelete(asset.id);
                     }
                   }}
-                  className="bg-background/80 backdrop-blur text-foreground p-1.5 border border-border hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shadow-brutal-sm"
+                  className="bg-background/80 backdrop-blur text-foreground p-1.5 border border-border hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shadow-xs"
                   title="Delete Asset"
                 >
                   <Trash2 className="size-3.5" />
                 </button>
               </div>
             )}
-            </div></BrutalistCard>
+            </div></DashboardCard>
           </div>
         ))}
       </div>
@@ -257,7 +257,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-fine font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                <label className="block text-fine font-sans font-medium tracking-wide text-muted-foreground mb-1.5">
                   Title
                 </label>
                 <input
@@ -268,13 +268,13 @@ function AssetGrid({ filterType }: AssetGridProps) {
                     setSelectedAsset((prev) => prev ? { ...prev, title: e.target.value } : prev);
                   }}
                   onBlur={(e) => handleUpdate(selectedAsset.id, { title: e.target.value })}
-                  className="w-full h-9 px-3 bg-bg-base border border-border font-mono text-sm focus:outline-none focus:ring-1 focus:ring-brand-ember"
+                  className="w-full h-9 px-3 bg-bg-base border border-border font-sans text-sm focus:outline-none focus:ring-1 focus:ring-brand-ember"
                   disabled={isUpdating}
                 />
               </div>
 
               <div>
-                <label className="block text-fine font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                <label className="block text-fine font-sans font-medium tracking-wide text-muted-foreground mb-1.5">
                   Tags (comma separated)
                 </label>
                 <input
@@ -288,19 +288,19 @@ function AssetGrid({ filterType }: AssetGridProps) {
                     const tags = e.target.value.split(",").map(t => t.trim()).filter(Boolean);
                     handleUpdate(selectedAsset.id, { tags });
                   }}
-                  className="w-full h-9 px-3 bg-bg-base border border-border font-mono text-sm focus:outline-none focus:ring-1 focus:ring-brand-ember"
+                  className="w-full h-9 px-3 bg-bg-base border border-border font-sans text-sm focus:outline-none focus:ring-1 focus:ring-brand-ember"
                   placeholder="e.g. hero, forest, sketch"
                   disabled={isUpdating}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+              <div className="grid grid-cols-2 gap-2 font-sans text-xs">
                 <div className="p-2 bg-bg-base border border-border-subtle">
-                  <span className="block text-muted-foreground uppercase tracking-widest mb-1 text-[10px]">Type</span>
+                  <span className="block text-muted-foreground tracking-wide mb-1 text-[10px]">Type</span>
                   <span className="text-foreground truncate block" title={selectedAsset.type}>{selectedAsset.type}</span>
                 </div>
                 <div className="p-2 bg-bg-base border border-border-subtle">
-                  <span className="block text-muted-foreground uppercase tracking-widest mb-1 text-[10px]">Date</span>
+                  <span className="block text-muted-foreground tracking-wide mb-1 text-[10px]">Date</span>
                   <span className="text-foreground truncate block">
                     {selectedAsset.created_at ? new Date(selectedAsset.created_at).toLocaleDateString() : "Unknown"}
                   </span>
@@ -313,7 +313,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
                     navigator.clipboard.writeText(selectedAsset.url);
                     toast.success("URL Copied", { description: "Asset URL copied to clipboard." });
                   }}
-                  className="w-full h-9 flex items-center justify-center gap-2 border border-border bg-bg-base hover:bg-muted font-mono text-xs uppercase tracking-widest transition-colors"
+                  className="w-full h-9 flex items-center justify-center gap-2 border border-border bg-bg-base hover:bg-muted font-sans text-xs tracking-wide transition-colors"
                 >
                   <Copy className="size-3.5" /> Copy URL
                 </button>
@@ -323,7 +323,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
                       handleDelete(selectedAsset.id);
                     }
                   }}
-                  className="w-full h-9 flex items-center justify-center gap-2 border border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground font-mono text-xs uppercase tracking-widest transition-colors"
+                  className="w-full h-9 flex items-center justify-center gap-2 border border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground font-sans text-xs tracking-wide transition-colors"
                 >
                   <Trash2 className="size-3.5" /> Delete Asset
                 </button>

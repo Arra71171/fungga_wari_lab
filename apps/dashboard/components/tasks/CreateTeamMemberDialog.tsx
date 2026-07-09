@@ -43,16 +43,16 @@ export function CreateTeamMemberDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full mt-2 rounded-none bg-bg-surface border-dashed text-xs text-muted-foreground font-mono uppercase tracking-widest px-2">
+        <Button variant="outline" size="sm" className="w-full mt-2 rounded-none bg-bg-surface border-dashed text-xs text-muted-foreground font-sans font-medium tracking-wide px-2">
           <PlusCircle className="size-3 mr-2 shrink-0" />
-          <span className="truncate">New Operative</span>
+          <span className="truncate">New Member</span>
         </Button>
       </DialogTrigger>
       
       <DialogContent className="max-w-xs bg-bg-panel border-border rounded-none shadow-2xl">
         <DialogHeader>
           <DialogTitle className="font-heading uppercase tracking-tighter text-lg text-brand-ochre border-b border-border-subtle pb-3">
-            Register Operative
+            Register Member
           </DialogTitle>
           <DialogDescription className="sr-only">
             Register a new team member to assign tasks to.
@@ -61,40 +61,40 @@ export function CreateTeamMemberDialog() {
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="name" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
               Full Name
             </Label>
             <Input
               id="name"
               name="name"
               required
-              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-mono text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="e.g., Jane Doe"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="email" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
               Email Address
             </Label>
             <Input
               id="email"
               name="email"
               type="email"
-              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-mono text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="jane@example.com"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="phone" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
               Phone (Optional)
             </Label>
             <Input
               id="phone"
               name="phone"
               type="tel"
-              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-mono text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="+1234567890"
             />
           </div>
@@ -102,7 +102,7 @@ export function CreateTeamMemberDialog() {
           <div className="flex justify-end pt-2 border-t border-border-subtle">
             <Button
               type="submit"
-              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-mono uppercase tracking-widest text-xs rounded-none"
+              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-sans font-medium tracking-wide text-xs rounded-none"
             >
               Add Member
             </Button>

@@ -1,12 +1,61 @@
 "use server"
 
+import { z } from "zod"
+
 import { createClient } from "@/lib/supabase/server"
-import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+import { createAdminClient } from "@/lib/supabase/admin"
 import type { Database } from "@workspace/ui/types/supabase"
 import { requireUser } from "./authHelpers"
 import { revalidatePath } from "next/cache"
 
 type StoryCategory = Database["public"]["Enums"]["story_category"]
+
+
+const storyCategorySchema = z.enum([
+  "creation_myth", 
+  "animal_fable", 
+  "historical", 
+  "legend", 
+  "moral_tale", 
+  "romance", 
+  "adventure", 
+  "supernatural", 
+  "other"
+])
+
+const createStorySchema = z.object({
+  title: z.string().min(1).max(200),
+  slug: z.string().max(200).optional(),
+  description: z.string().max(2000).optional(),
+  category: storyCategorySchema,
+  language: z.string().min(1).max(100),
+  cover_image_url: z.string().url().optional(),
+  tags: z.array(z.string()).max(20),
+  moral: z.string().max(1000).optional()
+})
+
+const updateStorySchema = z.object({
+  id: z.string().uuid(),
+  patch: z.object({
+    title: z.string().min(1).max(200).optional(),
+    description: z.string().max(2000).optional(),
+    category: storyCategorySchema.optional(),
+    language: z.string().min(1).max(100).optional(),
+    cover_image_url: z.string().url().optional().or(z.literal("")),
+    tags: z.array(z.string()).max(20).optional(),
+    moral: z.string().max(1000).optional(),
+    attributed_author: z.string().max(200).optional()
+  })
+})
+
+const createStoryWithSceneSchema = z.object({
+  title: z.string().min(1).max(200),
+  slug: z.string().max(200).optional(),
+  description: z.string().max(2000).optional(),
+  category: storyCategorySchema,
+  language: z.string().min(1).max(100),
+  cover_image_url: z.string().url().optional()
+})
 
 // ─── Slug Helpers ─────────────────────────────────────────────────────────────
 
@@ -77,7 +126,8 @@ export async function getAllStoriesAdmin() {
 /**
  * getStoryById — single story by UUID (auth required).
  */
-export async function getStoryById(id: string) {
+export async function getStoryById(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const userId = user?.id
@@ -95,7 +145,8 @@ export async function getStoryById(id: string) {
 /**
  * getFullStoryById — story + chapters + scenes + choices (auth required).
  */
-export async function getFullStoryById(id: string) {
+export async function getFullStoryById(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   console.log(`[getFullStoryById] Called with id: ${id}`)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -114,7 +165,8 @@ export async function getFullStoryById(id: string) {
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
           is_draft, version, reading_time, excerpt,
-          choices:choices!choices_scene_id_fkey ( id, label, next_scene_id )
+          choices:choices!choices_scene_id_fkey ( id, label, next_scene_id ),
+          translation_blocks ( id, language_code, tiptap_content )
         )
       )
     `)
@@ -169,16 +221,8 @@ export async function createDraftStory() {
 /**
  * createStory — create a full story record.
  */
-export async function createStory(args: {
-  title: string
-  slug?: string
-  description?: string
-  category: StoryCategory
-  language: string
-  cover_image_url?: string
-  tags: string[]
-  moral?: string
-}) {
+export async function createStory(rawArgs: z.infer<typeof createStorySchema>) {
+  const args = createStorySchema.parse(rawArgs)
   const { supabase, user } = await requireUser()
   const authorId = user.id
   if (!authorId) throw new Error("Cannot resolve author identity")
@@ -220,18 +264,10 @@ export async function createStory(args: {
  * updateStory — patch story metadata.
  */
 export async function updateStory(
-  id: string,
-  patch: {
-    title?: string
-    description?: string
-    category?: StoryCategory
-    language?: string
-    cover_image_url?: string
-    tags?: string[]
-    moral?: string
-    attributed_author?: string
-  }
+  rawId: string,
+  rawPatch: z.infer<typeof updateStorySchema>["patch"]
 ) {
+  const { id, patch } = updateStorySchema.parse({ id: rawId, patch: rawPatch })
   const { supabase, user } = await requireUser()
 
   const { error } = await supabase
@@ -252,7 +288,8 @@ export async function updateStory(
 /**
  * publishStory — set status to published + update searchable_text.
  */
-export async function publishStory(id: string) {
+export async function publishStory(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const { supabase, user } = await requireUser()
 
   // Fetch story to build searchable text + get current slug for update
@@ -301,7 +338,8 @@ export async function publishStory(id: string) {
 /**
  * unpublishStory — revert to draft.
  */
-export async function unpublishStory(id: string) {
+export async function unpublishStory(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const { supabase, user } = await requireUser()
 
   const { error } = await supabase
@@ -317,7 +355,8 @@ export async function unpublishStory(id: string) {
 /**
  * submitForReview — move story to in_review status.
  */
-export async function submitForReview(id: string) {
+export async function submitForReview(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const { supabase, user } = await requireUser()
 
   const { error } = await supabase
@@ -334,7 +373,8 @@ export async function submitForReview(id: string) {
  * deleteStory — cascade deletes chapters → scenes → choices via FK ON DELETE CASCADE.
  * Uses service role to bypass RLS for administrative delete.
  */
-export async function deleteStory(id: string) {
+export async function deleteStory(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   try {
     const { supabase, user, profile } = await requireUser()
 
@@ -358,18 +398,9 @@ export async function deleteStory(id: string) {
       }
     }
 
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-    if (!serviceRoleKey) {
-      console.error("[deleteStory] SUPABASE_SERVICE_ROLE_KEY is not configured")
-      return { success: false, error: "Server configuration error: missing service role key" }
-    }
-
     // Use service role client to bypass RLS for the cascade delete.
     // FK ON DELETE CASCADE handles chapters → scenes → choices automatically.
-    const supabaseAdmin = createSupabaseClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      serviceRoleKey
-    )
+    const supabaseAdmin = createAdminClient()
 
     const { error } = await supabaseAdmin
       .from("stories")
@@ -392,14 +423,8 @@ export async function deleteStory(id: string) {
 /**
  * createStoryWithInitialScene — create story + first chapter + first scene atomically.
  */
-export async function createStoryWithInitialScene(args: {
-  title: string
-  slug?: string
-  description?: string
-  category: StoryCategory
-  language: string
-  cover_image_url?: string
-}) {
+export async function createStoryWithInitialScene(rawArgs: z.infer<typeof createStoryWithSceneSchema>) {
+  const args = createStoryWithSceneSchema.parse(rawArgs)
   const { supabase, user } = await requireUser()
   const authorId = user.id
   if (!authorId) throw new Error("Cannot resolve author identity")

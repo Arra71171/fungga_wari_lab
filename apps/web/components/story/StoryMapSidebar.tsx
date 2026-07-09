@@ -25,17 +25,17 @@ export function StoryMapSidebar() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="text-fine font-mono uppercase tracking-widest text-muted-foreground hover:text-brand-ember transition-colors flex items-center gap-2">
+        <button className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember transition-colors flex items-center gap-2">
           <Map className="size-3" />
           Map
         </button>
       </SheetTrigger>
       <SheetContent side="right" className="bg-cinematic-bg border-l border-border/10 w-80 p-0 flex flex-col">
         <SheetHeader className="p-6 border-b border-border/10">
-          <SheetTitle className="font-heading text-lg font-black uppercase tracking-widest text-brand-ember">
+          <SheetTitle className="font-heading text-lg font-black tracking-wide text-brand-ember">
             Story Map
           </SheetTitle>
-          <p className="font-mono text-nano uppercase tracking-widest text-muted-foreground">
+          <p className="font-mono text-nano tracking-wide text-muted-foreground">
             Navigate the manuscript
           </p>
         </SheetHeader>
@@ -45,10 +45,10 @@ export function StoryMapSidebar() {
             {story.chapters.map((chapter: ChapterWithScenes, index: number) => (
               <div key={chapter.id} className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-fine text-muted-foreground/50 tabular-nums">
+                  <span className="font-sans text-xs text-muted-foreground/50 tabular-nums">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="font-heading text-sm uppercase tracking-wider text-muted-foreground">
+                  <h3 className="font-heading text-sm tracking-wide text-muted-foreground">
                     {chapter.title}
                   </h3>
                 </div>
@@ -74,7 +74,7 @@ export function StoryMapSidebar() {
                             isActive ? "bg-brand-ember shadow-[0_0_8px_rgba(255,165,0,0.5)]" : "bg-muted-foreground/50 group-hover:bg-brand-ember/50"
                           )} />
                           <span className={cn(
-                            "font-mono text-fine uppercase tracking-widest truncate",
+                            "font-sans text-xs font-medium tracking-wide truncate",
                             isActive ? "text-brand-ember font-bold" : "text-muted-foreground"
                           )}>
                             {scene.title || "Scene"}
@@ -85,7 +85,7 @@ export function StoryMapSidebar() {
                   </div>
                 ) : (
                   <div className="pl-6 border-l border-border/10 ml-2">
-                    <span className="font-mono text-nano uppercase tracking-widest text-muted-foreground/30">
+                    <span className="font-mono text-nano tracking-wide text-muted-foreground/30">
                       Fragments lost to time
                     </span>
                   </div>

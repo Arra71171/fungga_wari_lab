@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Inter, Outfit, Noto_Sans_Meetei_Mayek } from "next/font/google"
+import { Space_Grotesk, DM_Sans, Noto_Sans_Meetei_Mayek } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { SupabaseAuthProvider } from "@workspace/auth/supabase-provider"
@@ -10,34 +10,35 @@ import { AuthObserver } from "@/components/AuthObserver"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 
-// ── Clean Nordic Sans for body text
-const inter = Inter({
+// ── The Storyteller (Subheadings, captions, body copy)
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
   preload: false,
 })
 
-// ── Clean Geometric Sans for headings and display
-const outfit = Outfit({
+// ── Mono Override for Consistency
+const dmSansMono = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  preload: false,
+})
+
+// ── The Attention-Grabber (Headlines)
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
   preload: false,
 })
 
-const outfitDisplay = Outfit({
-  weight: ["700", "900"],
+// ── The Attention-Grabber (Story Titles, Hero Text)
+const spaceGroteskDisplay = Space_Grotesk({
+  weight: ["700"],
   subsets: ["latin"],
   variable: "--font-display",
-  display: "swap",
-  preload: false,
-})
-
-// ── Mono: JetBrains Mono for IDs, tags, metadata labels
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
   display: "swap",
   preload: false,
 })
@@ -91,10 +92,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased font-sans flex flex-col min-h-screen",
-        inter.variable,
-        jetbrainsMono.variable,
-        outfit.variable,
-        outfitDisplay.variable,
+        dmSans.variable,
+        dmSansMono.variable,
+        spaceGrotesk.variable,
+        spaceGroteskDisplay.variable,
         meeteiMayek.variable
       )}
     >

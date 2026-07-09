@@ -102,7 +102,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full h-10 rounded-none border border-border bg-cinematic-bg/80 px-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
+            className="w-full h-10 rounded-none border border-border bg-cinematic-bg/80 px-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
             placeholder="your@email.com"
           />
         </div>
@@ -123,7 +123,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full h-10 rounded-none border border-border bg-cinematic-bg/80 px-3 pr-10 font-mono text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
+              className="w-full h-10 rounded-none border border-border bg-cinematic-bg/80 px-3 pr-10 font-sans text-sm text-foreground placeholder:text-muted-foreground/35 transition-all duration-200 focus:border-primary focus:bg-primary/5 outline-none"
               placeholder="••••••••"
             />
             <button

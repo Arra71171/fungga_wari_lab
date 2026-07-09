@@ -48,7 +48,7 @@ function DialogueBlock({
     >
       <AvatarBadge src={avatarUrl} alt={characterName} size="lg" className="border-2 border-brand-ember/20" />
       <div className={cn("flex max-w-[80%] flex-col gap-1", align === "right" && "items-end")}>
-        <span className="text-xs font-semibold uppercase tracking-wider text-brand-ochre">
+        <span className="text-xs font-semibold tracking-wide text-brand-ochre">
           {characterName}
         </span>
         <div className="rounded-none bg-secondary/50 px-5 py-3 text-sm leading-relaxed text-foreground shadow-sm">

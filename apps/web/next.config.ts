@@ -1,12 +1,11 @@
-/* global process */
 import bundleAnalyzer from "@next/bundle-analyzer";
+import type { NextConfig } from "next";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   async rewrites() {
     const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000";
     return [
@@ -20,8 +19,7 @@ const nextConfig = {
       },
     ];
   },
-  // Allow HMR/WebSocket connections from LAN mobile devices
-  allowedDevOrigins: ['192.168.1.2'],
+
   transpilePackages: ["@workspace/ui"],
   images: {
     // In dev, skip server-side optimization — avoids DNS failures when the

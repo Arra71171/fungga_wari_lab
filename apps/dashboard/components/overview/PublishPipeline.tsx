@@ -30,7 +30,7 @@ export function PublishPipeline({ data, totalStories, isLoading }: Props) {
   if (isLoading) {
     return (
       <div className="w-full h-[350px] bg-bg-surface border border-border-subtle animate-pulse flex items-center justify-center">
-        <div className="text-muted-foreground/30 font-mono text-sm uppercase tracking-widest">
+        <div className="text-muted-foreground/30 font-sans text-sm tracking-wide">
           Loading Pipeline...
         </div>
       </div>
@@ -87,7 +87,7 @@ export function PublishPipeline({ data, totalStories, isLoading }: Props) {
       {/* Legend */}
       <div className="mt-4 flex flex-wrap gap-2">
         {(data ?? []).filter(d => d.count > 0).map(d => (
-          <span key={d.status} className="flex items-center gap-1 font-mono text-nano uppercase tracking-widest text-muted-foreground">
+          <span key={d.status} className="flex items-center gap-1 font-mono text-nano tracking-wide text-muted-foreground">
             <span className="inline-block size-2 rounded-none" style={{ backgroundColor: d.fill }} />
             {d.status} ({d.count})
           </span>

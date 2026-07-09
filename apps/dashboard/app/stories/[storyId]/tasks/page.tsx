@@ -71,7 +71,7 @@ export default function StoryTasksPage() {
             </div>
           </Link>
           <div className="h-4 w-px bg-border/20" />
-          <span className="font-mono text-xs uppercase tracking-label text-brand-ember/80 font-bold">
+          <span className="font-sans text-xs tracking-wide text-brand-ember/80 font-bold">
             Workflow Engine
           </span>
           <span className="text-muted-foreground/30 px-2">/</span>
@@ -97,7 +97,7 @@ export default function StoryTasksPage() {
               <h1 className="font-display text-4xl md:text-5xl tracking-tight text-foreground drop-shadow-lg">
                 Team Assignments
               </h1>
-              <p className="text-muted-foreground font-mono text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-subtle uppercase">
+              <p className="text-muted-foreground font-sans text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-subtle uppercase">
                 Coordinate the transcription and illustration pipeline.
               </p>
             </div>
@@ -106,7 +106,7 @@ export default function StoryTasksPage() {
           {/* Task Grid */}
           <div className="grid grid-cols-1 gap-4">
             {/* Header Row */}
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-border text-fine font-mono uppercase tracking-label text-muted-foreground">
+            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-border text-fine font-sans font-medium tracking-wide text-muted-foreground">
               <div className="col-span-5">Directive</div>
               <div className="col-span-3">Operative</div>
               <div className="col-span-2">Deadline</div>
@@ -115,11 +115,11 @@ export default function StoryTasksPage() {
 
             {/* Rows */}
             {tasks === undefined ? (
-              <div className="px-6 py-5 border border-border-subtle text-muted-foreground font-mono text-sm text-center">
+              <div className="px-6 py-5 border border-border-subtle text-muted-foreground font-sans text-sm text-center">
                 Loading tasks...
               </div>
             ) : tasks.length === 0 ? (
-              <div className="px-6 py-5 border border-border-subtle text-muted-foreground font-mono text-sm text-center">
+              <div className="px-6 py-5 border border-border-subtle text-muted-foreground font-sans text-sm text-center">
                 No tasks initialized for this story yet.
               </div>
             ) : (
@@ -166,7 +166,7 @@ export default function StoryTasksPage() {
                     <div className="col-span-3">
                       <span
                        className={cn(
-                          "inline-flex items-center px-2 py-1 text-fine font-mono tracking-widest uppercase border",
+                          "inline-flex items-center px-2 py-1 text-fine font-sans font-medium tracking-wide border",
                           task.assignee_id
                             ? "border-brand-ember/20 bg-brand-ember/5 text-brand-ember/80"
                             : "border-dashed border-border-strong text-muted-foreground/50"

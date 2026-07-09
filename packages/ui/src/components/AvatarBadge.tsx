@@ -54,7 +54,7 @@ function AvatarBadge({
           unoptimized
         />
       ) : (
-        <span className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground font-heading font-bold uppercase tracking-wider">
+        <span className="flex h-full w-full items-center justify-center bg-secondary text-secondary-foreground font-heading font-bold tracking-wide">
           {fallback || alt.charAt(0)}
         </span>
       )}

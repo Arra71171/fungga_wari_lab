@@ -14,75 +14,67 @@ export default function ArchivePage() {
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navbar />
 
-      <main className="pt-28 pb-20 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
+      <main className="pt-32 pb-20 px-6 md:px-12">
+        <div className="max-w-3xl mx-auto">
           {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-[2px] w-8 bg-primary" />
-            <span className="text-fine font-mono uppercase tracking-ultra text-primary font-bold">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="text-xs font-mono tracking-widest text-muted-foreground uppercase">
               Digital Repository
             </span>
+            <div className="h-[1px] w-12 bg-border-subtle" />
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.9] text-foreground mb-6">
-            The <span className="italic text-primary">Archive</span>
+          <h1 className="font-heading text-3xl md:text-4xl font-normal tracking-tight text-foreground mb-8">
+            The Archive
           </h1>
 
-          <p className="text-sm text-muted-foreground font-mono leading-relaxed max-w-2xl mb-12">
-            A living digital repository safeguarding the oral traditions of Kangleipak — stories, myths, legends, and cultural narratives passed down through generations around the evening hearth.
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mb-16">
+            A digital repository safeguarding the oral traditions of Kangleipak. 
+            Stories, myths, and legends preserved for the future.
           </p>
 
           {/* Info Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px border border-border bg-border mb-12">
-            <div className="bg-background p-6 flex flex-col gap-3">
-              <div className="size-10 border border-border flex items-center justify-center text-primary">
-                <Archive className="size-5" />
-              </div>
-              <h3 className="font-heading text-lg font-bold uppercase tracking-tight">Preservation</h3>
-              <p className="text-xs font-mono text-muted-foreground leading-relaxed">
-                Every story is digitally catalogued with structured metadata — category, language, cultural context, and attributed authorship — ensuring nothing is lost.
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-16">
+            <div className="flex flex-col gap-4">
+              <Archive className="size-4 text-muted-foreground" />
+              <h3 className="text-sm font-medium tracking-tight">Preservation</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Digitally catalogued with structured metadata, ensuring no story is lost to time.
               </p>
             </div>
-            <div className="bg-background p-6 flex flex-col gap-3">
-              <div className="size-10 border border-border flex items-center justify-center text-primary">
-                <BookOpen className="size-5" />
-              </div>
-              <h3 className="font-heading text-lg font-bold uppercase tracking-tight">Accessibility</h3>
-              <p className="text-xs font-mono text-muted-foreground leading-relaxed">
-                Stories are presented in an immersive cinematic reader experience with text-to-speech narration, scene illustrations, and multi-language support.
+            <div className="flex flex-col gap-4">
+              <BookOpen className="size-4 text-muted-foreground" />
+              <h3 className="text-sm font-medium tracking-tight">Accessibility</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Immersive reading experiences with multi-language support and illustrations.
               </p>
             </div>
-            <div className="bg-background p-6 flex flex-col gap-3">
-              <div className="size-10 border border-border flex items-center justify-center text-primary">
-                <Globe className="size-5" />
-              </div>
-              <h3 className="font-heading text-lg font-bold uppercase tracking-tight">Community</h3>
-              <p className="text-xs font-mono text-muted-foreground leading-relaxed">
-                Creators and storytellers contribute through the Creator Studio — a managed CMS where folklore keepers collaborate to record the living lore.
+            <div className="flex flex-col gap-4">
+              <Globe className="size-4 text-muted-foreground" />
+              <h3 className="text-sm font-medium tracking-tight">Community</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                A collaborative platform for creators and folklore keepers.
               </p>
             </div>
           </div>
 
           {/* Mission quote */}
-          <div className="border-l-4 border-primary pl-6 py-4 mb-12">
-            <p className="text-sm text-muted-foreground font-mono italic leading-relaxed">
-              &ldquo;We stand at the threshold of silence, recording the whispers of the hearth before they vanish into the ash of time.&rdquo;
+          <div className="pl-6 border-l border-border-subtle mb-16 py-2">
+            <p className="text-sm text-foreground/80 italic leading-relaxed">
+              &ldquo;Recording the whispers of the hearth before they vanish into the ash of time.&rdquo;
             </p>
-            <span className="text-nano font-mono uppercase tracking-caps text-primary mt-2 block">
-              — Fungga Wari Lab Manifesto
-            </span>
           </div>
 
           {/* CTA */}
-          <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="font-mono uppercase tracking-widest text-xs" asChild>
-              <Link href="/stories">Browse the Archive</Link>
+          <div className="flex flex-wrap gap-3">
+            <Button size="default" className="text-xs px-6 rounded-none font-medium" asChild>
+              <Link href="/stories">Browse</Link>
             </Button>
-            <Button variant="outline" size="lg" className="font-mono uppercase tracking-widest text-xs" asChild>
+            <Button variant="ghost" size="default" className="text-xs px-6 rounded-none font-medium text-muted-foreground" asChild>
               <Link href="/">
-                <ArrowLeft className="size-4 mr-2" />
-                Return Home
+                <ArrowLeft className="size-3 mr-2" />
+                Return
               </Link>
             </Button>
           </div>
@@ -92,10 +84,10 @@ export default function ArchivePage() {
       {/* Footer */}
       <footer className="border-t border-border px-6 md:px-12 py-6">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
+          <span className="font-mono text-nano tracking-wide text-muted-foreground">
             Fungga Wari Lab © {new Date().getFullYear()}
           </span>
-          <span className="font-mono text-nano uppercase tracking-caps text-muted-foreground">
+          <span className="font-mono text-nano tracking-wide text-muted-foreground">
             Kangleipak Heritage Systems
           </span>
         </div>

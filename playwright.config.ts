@@ -22,6 +22,13 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
+  
+  webServer: {
+    command: "pnpm run dev",
+    port: 3001,
+    reuseExistingServer: true,
+    timeout: 120000,
+  },
   projects: [
     {
       name: "web-chromium",

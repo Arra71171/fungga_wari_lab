@@ -81,7 +81,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="w-[calc(100vw-3rem)] sm:w-[360px] h-[min(520px,80dvh)] max-h-[80dvh] flex flex-col border border-border bg-background shadow-brutal overflow-hidden origin-bottom-right pointer-events-auto"
+            className="w-[calc(100vw-3rem)] sm:w-[360px] h-[min(520px,80dvh)] max-h-[80dvh] flex flex-col border border-border bg-background shadow-sm overflow-hidden origin-bottom-right pointer-events-auto"
             role="dialog"
             aria-label="Wise-Epu — Ancient Lore Keeper"
             aria-modal="false"
@@ -104,7 +104,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
                   <p className="text-xs font-heading font-black uppercase tracking-tight text-foreground">
                     Wise-Epu
                   </p>
-                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-0.5">
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-wide mt-0.5">
                     Lore Keeper · Active
                   </p>
                 </div>
@@ -290,7 +290,7 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? "Close Wise-Epu" : "Open Wise-Epu — Lore Keeper"}
         aria-expanded={isOpen}
-        className="pointer-events-auto relative size-14 flex items-center justify-center bg-primary text-primary-foreground shadow-brutal hover:-translate-y-1 active:translate-y-0 hover:shadow-brutal-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="pointer-events-auto relative size-14 flex items-center justify-center bg-primary text-primary-foreground shadow-sm hover:-translate-y-1 active:translate-y-0 hover:shadow-xs transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         {/* Pulse ring when closed */}
         <AnimatePresence>

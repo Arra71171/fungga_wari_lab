@@ -74,6 +74,14 @@ export default async function StoryPage({ params }: StoryPageProps) {
   const hasAccess = await checkUserAccess(slug);
 
   const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  let currentUserId: string | undefined;
+  if (user) {
+    const { data: dbUser } = await supabase.from("users").select("id").eq("auth_id", user.id).single();
+    if (dbUser) currentUserId = dbUser.id;
+  }
+
   const { data: storyData, error } = await supabase
     .from("stories")
     .select(`
@@ -85,7 +93,9 @@ export default async function StoryPage({ params }: StoryPageProps) {
         id, title, "order", illustration_url, audio_url, tiptap_content,
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
-          is_draft, version, reading_time, excerpt
+          is_draft, version, reading_time, excerpt,
+          choices:choices!choices_scene_id_fkey ( id, label, next_scene_id ),
+          translation_blocks ( id, language_code, tiptap_content )
         )
       )
     `)
@@ -132,7 +142,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
     initialStory = {
       ...storyData,
       _id: storyData.id,
-      chapters: sortedChapters,
+      chapters: sortedChapters as any,
     };
   }
 
@@ -162,7 +172,12 @@ export default async function StoryPage({ params }: StoryPageProps) {
           <PaymentSuccessHandler />
         </React.Suspense>
         <PaywallGate slug={slug} hasAccess={hasAccess} initialStory={initialStory}>
-          <StoryReaderShell slug={slug} />
+          <StoryReaderShell 
+            slug={slug} 
+            initialComments={[]}
+            initialLikes={[]}
+            currentUserId={currentUserId}
+          />
         </PaywallGate>
       </div>
     </div>

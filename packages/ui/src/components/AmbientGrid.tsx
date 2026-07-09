@@ -10,7 +10,7 @@ interface AmbientGridProps {
 
 export function AmbientGrid({ className }: AmbientGridProps) {
   return (
-    <div className={cn("absolute inset-0 z-0 overflow-hidden pointer-events-none", className)} aria-hidden="true">
+    <div data-slot="ambientgrid" className={cn("absolute inset-0 z-0 overflow-hidden pointer-events-none", className)} aria-hidden="true">
       <div className="absolute left-0 right-0 top-1/2 h-px bg-border/40 w-full" />
       {[20, 40, 60, 80].map((pct, i) => (
         <motion.div

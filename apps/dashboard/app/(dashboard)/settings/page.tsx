@@ -9,14 +9,14 @@ import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
 import { Button } from "@workspace/ui/components/button";
 import { ShieldCheck, UserCheck, Eye, Loader2, Settings2, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 const RichTextEditor = dynamic(
   () => import("@workspace/ui/components/editor/rich-text-editor").then((mod) => mod.RichTextEditor),
   {
     ssr: false,
     loading: () => (
-      <div className="w-full border-2 border-border-strong bg-cinematic-bg text-muted-foreground font-mono text-xs flex items-center justify-center min-h-[400px]">
+      <div className="w-full border border-border/50 rounded-none bg-background text-muted-foreground font-sans text-xs flex items-center justify-center min-h-[400px]">
         Loading Global Content Editor...
       </div>
     ),
@@ -48,7 +48,7 @@ function RoleBadge({ role }: { role: string }) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-2 px-3 py-1.5 border-2 text-fine font-mono tracking-widest uppercase shadow-brutal-sm whitespace-nowrap",
+        "flex items-center justify-center gap-2 px-3 py-1.5 border text-fine font-sans font-medium tracking-wide shadow-xs whitespace-nowrap",
         role === "superadmin" && "border-brand-ember text-brand-ember bg-brand-ember/5",
         role === "admin" && "border-primary text-primary bg-primary/5",
         role === "editor" && "border-brand-ochre text-brand-ochre bg-brand-ochre/5",
@@ -98,7 +98,7 @@ function MemberRow({
 
   const handleDelete = async () => {
     if (!member.id) return;
-    if (!window.confirm(`Are you sure you want to permanently delete operative ${member.email ?? member.id}? This action cannot be undone.`)) {
+    if (!window.confirm(`Are you sure you want to permanently delete user ${member.email ?? member.id}? This action cannot be undone.`)) {
       return;
     }
     setIsDeleting(true);
@@ -113,9 +113,9 @@ function MemberRow({
   };
 
   return (
-    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-4 md:p-6 gap-4 border-b-2 border-border-strong bg-cinematic-panel transition-all group hover:bg-bg-surface/5">
+    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-4 md:p-6 gap-4 border-b border-border-subtle bg-background transition-all group hover:bg-secondary/10">
       <div className="flex items-start md:items-center gap-4 md:gap-6 min-w-0 flex-col sm:flex-row">
-        <div className="border-2 border-border p-1 bg-cinematic-bg group-hover:border-primary transition-colors shrink-0">
+        <div className="border border-border/50 p-1 bg-background group-hover:border-primary transition-colors shrink-0">
           <AvatarBadge
             src={member.avatar_url ?? undefined}
             alt={member.alias || member.name || "?"}
@@ -125,16 +125,16 @@ function MemberRow({
         </div>
         <div className="min-w-0 w-full">
           <p className="font-heading text-xl text-foreground font-bold tracking-tight truncate flex flex-wrap items-center gap-2">
-            <span className="truncate">{member.alias || member.name || member.email?.split("@")[0] || "Unnamed Operative"}</span>
+            <span className="truncate">{member.alias || member.name || member.email?.split("@")[0] || "Unknown User"}</span>
             {isSelf && (
-              <span className="px-2 py-0.5 text-nano font-mono font-bold text-brand-ember uppercase tracking-label border border-brand-ember/30 bg-brand-ember/5 whitespace-nowrap shrink-0">
-                Active Uplink
+              <span className="px-2.5 py-1 text-[10px] font-sans font-semibold text-brand-ember tracking-wide border border-brand-ember/20 bg-brand-ember/5 whitespace-nowrap shrink-0 rounded-none">
+                You
               </span>
             )}
           </p>
           <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-1.5">
             {member.alias && member.name && (
-              <span className="text-fine font-mono tracking-widest text-muted-foreground/50 truncate border-r-2 border-border-strong pr-3">
+              <span className="text-fine font-mono tracking-widest text-muted-foreground/50 truncate border-r border-border/50 pr-3">
                 {member.name}
               </span>
             )}
@@ -157,9 +157,9 @@ function MemberRow({
                 size="sm"
                 onClick={cycleRole}
               disabled={isPending || isDeleting}
-              className="font-mono text-fine font-bold uppercase tracking-label h-10 px-4 sm:px-6 border-2 border-border rounded-none bg-cinematic-bg hover:border-primary hover:bg-cinematic-bg text-muted-foreground transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none flex-1 sm:flex-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="font-sans text-xs font-semibold tracking-wide h-10 px-4 sm:px-6 border border-border/50 rounded-none bg-background hover:border-primary hover:bg-secondary/10 text-muted-foreground transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform flex-1 sm:flex-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Cycle Clearance"}
+              {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Change Role"}
             </Button>
             )}
             {(isCallerSuperAdmin || currentRole !== "superadmin") && (
@@ -168,7 +168,7 @@ function MemberRow({
                 size="icon"
                 onClick={handleDelete}
                 disabled={isPending || isDeleting}
-                className="h-10 w-10 border-2 border-border rounded-none bg-cinematic-bg hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-brutal active:translate-x-1 active:translate-y-1 active:shadow-none shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="h-10 w-10 border border-border/50 rounded-none bg-background hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 title="Delete Operative"
                 aria-label="Delete Operative"
               >
@@ -225,21 +225,21 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   };
 
   return (
-    <BrutalistCard variant="panel" padding="none" className="bg-cinematic-bg overflow-hidden mt-12 relative">
+    <DashboardCard variant="panel" padding="none" className="bg-background overflow-hidden mt-12 relative border border-border-subtle">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      <div className="p-4 md:p-6 border-b-2 border-border flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4 bg-bg-surface/10">
+      <div className="p-4 md:p-6 border-b border-border-subtle flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4 bg-background">
         <div>
           <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
-            Global Configurations
+            Global Settings
           </h2>
-          <p className="text-fine font-mono text-muted-foreground uppercase tracking-widest mt-1 border-l-2 border-border/50 pl-2">
+          <p className="text-fine font-mono text-muted-foreground tracking-wide mt-1 border-l-2 border-border/50 pl-2">
             {isCallerAdmin
-              ? "Modify the central lore and protocols globally."
-              : "Insufficient clearance to alter global content. View-only mode active."}
+              ? "Manage site-wide terms and content."
+              : "You do not have permission to edit global settings."}
           </p>
         </div>
-        <div className="flex flex-wrap border-2 border-border-strong p-1 gap-1 bg-cinematic-panel">
+        <div className="flex flex-wrap flex gap-2">
           {(["manifesto", "terms"] as const).map((tab) => (
             <Button
               key={tab}
@@ -247,10 +247,10 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               size="sm"
               onClick={() => setActiveTab(tab)}
               className={cn(
-                "font-mono text-fine font-bold uppercase tracking-label rounded-none h-10 px-6 transition-colors",
+                "font-sans text-xs font-semibold tracking-wide rounded-none h-10 px-6 transition-colors",
                 activeTab === tab
-                  ? "bg-primary text-primary-foreground border-2 border-primary"
-                  : "text-muted-foreground hover:bg-bg-overlay border-2 border-transparent"
+                  ? "bg-primary text-primary-foreground border border-primary"
+                  : "text-muted-foreground hover:bg-bg-overlay border border-transparent"
               )}
             >
               {tab === "manifesto" ? "Manifesto" : "Terms"}
@@ -261,11 +261,11 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
 
       <div className="p-6">
         {isLoading ? (
-          <div className="animate-pulse h-[400px] border-2 border-border-strong bg-bg-surface/20 blur-sm" />
+          <div className="animate-pulse h-[400px] border border-border/50 rounded-none bg-bg-surface/20 blur-sm" />
         ) : (
           <div className="space-y-4">
             {!isCallerAdmin && (
-              <div className="p-4 border-2 border-brand-ember/50 bg-brand-ember/5 text-brand-ember font-mono text-fine font-bold uppercase tracking-caps">
+              <div className="p-4 border-2 border-brand-ember/50 bg-brand-ember/5 text-brand-ember font-sans text-xs font-semibold tracking-wide">
                 View-Only Clearance. Unauthorized modifications denied.
               </div>
             )}
@@ -273,13 +273,13 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               key={activeTab}
               value={editorContent}
               onChange={setEditorContent}
-              className="min-h-[400px] border-2 border-border-strong bg-cinematic-bg"
+              className="min-h-[400px] border border-border/50 rounded-none bg-background"
               editable={isCallerAdmin}
             />
             {isCallerAdmin && (
-              <div className="flex flex-col sm:flex-row justify-end pt-4 items-end sm:items-center gap-4 border-t-2 border-border-strong mt-6 pt-6">
+              <div className="flex flex-col sm:flex-row justify-end pt-4 items-end sm:items-center gap-4 border-t border-border-subtle mt-6 pt-6">
                 {saveSuccess && (
-                  <span className="font-mono text-fine font-bold text-primary uppercase tracking-label text-right">
+                  <span className="font-sans text-xs font-semibold text-primary tracking-wide text-right">
                     Protocol Overwritten Successfully
                   </span>
                 )}
@@ -287,16 +287,16 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
                   id="global-content-deploy-btn"
                   onClick={handleSave}
                   disabled={isSaving || !editorContent}
-                  className="font-mono text-xs font-bold uppercase tracking-label rounded-none w-full sm:w-auto min-w-[160px] h-12 border-2 border-primary bg-primary text-primary-foreground hover:bg-cinematic-bg hover:text-primary transition-all shadow-brutal active:translate-y-1 active:translate-x-1 active:shadow-none"
+                  className="font-sans text-xs font-semibold tracking-wide rounded-none w-full sm:w-auto min-w-[160px] h-12 border border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform"
                 >
-                  {isSaving ? <Loader2 className="animate-spin size-4" /> : "Deploy Changes"}
+                  {isSaving ? <Loader2 className="animate-spin size-4" /> : "Save Settings"}
                 </Button>
               </div>
             )}
           </div>
         )}
       </div>
-    </BrutalistCard>
+    </DashboardCard>
   );
 }
 
@@ -324,20 +324,20 @@ export default function SettingsPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-full p-6 lg:p-10 lg:px-14 max-w-[1400px] mx-auto w-full space-y-16 animate-in fade-in duration-700">
+    <div className="flex flex-col min-h-full p-6 lg:p-10 lg:px-14 max-w-5xl mx-auto w-full space-y-16 animate-in fade-in duration-700">
 
       {/* Header */}
-      <div className="flex flex-col border-b-4 border-foreground pb-8 shrink-0 relative z-10 w-full pt-8">
+      <div className="flex flex-col border-b border-border-subtle pb-8 shrink-0 relative z-10 w-full pt-8">
         <div className="space-y-4">
-          <div className="flex items-center gap-4 text-primary font-mono text-fine font-bold uppercase tracking-caps mb-2 border-l-4 border-primary pl-3 bg-primary/5 w-fit py-1 pr-4">
+          <div className="flex items-center gap-4 text-primary font-sans text-xs font-semibold tracking-wide mb-2 border-l-2 border-primary/60 pl-3 bg-primary/5 w-fit py-1 pr-4">
             <Settings2 className="size-4" />
-            <span>Core Mainframe</span>
+            <span>System Settings</span>
           </div>
-          <h1 className="font-heading text-5xl md:text-7xl font-black tracking-tighter uppercase text-foreground leading-[0.8]">
+          <h1 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground">
             System Configuration.
           </h1>
-          <p className="text-muted-foreground font-mono text-fine font-bold tracking-label uppercase max-w-2xl mt-4">
-            Global access controls, network roles, and identity dossier protocols for authorized operatives.
+          <p className="text-muted-foreground font-sans text-sm max-w-2xl mt-2">
+            Manage team roles, access controls, and workspace configurations.
           </p>
         </div>
       </div>
@@ -347,18 +347,18 @@ export default function SettingsPage() {
         <OperativeDossier />
 
         {/* Roster Sector */}
-        <BrutalistCard variant="panel" padding="none" className="bg-cinematic-panel overflow-hidden relative">
+        <DashboardCard variant="panel" padding="none" className="bg-background overflow-hidden relative border border-border-subtle">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-          <div className="p-6 border-b-2 border-border flex justify-between items-end bg-bg-surface/10">
+          <div className="p-6 border-b border-border-subtle flex justify-between items-end bg-background">
             <div>
               <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
-                Operative Roster
+                Team Members
               </h2>
-              <p className="text-fine font-mono text-muted-foreground uppercase tracking-widest mt-1 border-l-2 border-border/50 pl-2">
+              <p className="text-fine font-mono text-muted-foreground tracking-wide mt-1 border-l-2 border-border/50 pl-2">
                 {isCallerAdmin
-                  ? "Admin Access: Cycle classifications to upgrade privileges."
-                  : "Insufficient clearance to alter roles. View-only matrix active."}
+                  ? "Admin Access: Change user roles to upgrade privileges."
+                  : "Insufficient clearance to alter roles. View-only access."}
               </p>
             </div>
           </div>
@@ -367,12 +367,12 @@ export default function SettingsPage() {
             {members === undefined ? (
               <div className="animate-pulse flex flex-col p-4 gap-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-24 border-2 border-border bg-cinematic-bg" />
+                  <div key={i} className="h-24 border border-border/50 bg-background" />
                 ))}
               </div>
             ) : members.length === 0 ? (
-              <div className="p-16 text-center text-muted-foreground font-mono text-sm font-bold uppercase tracking-caps">
-                NO SIGNALS DETECTED.
+              <div className="p-16 text-center text-muted-foreground font-sans text-sm font-bold tracking-wide">
+                No members found.
               </div>
             ) : (
               <div className="flex flex-col">
@@ -388,33 +388,33 @@ export default function SettingsPage() {
               </div>
             )}
           </div>
-        </BrutalistCard>
+        </DashboardCard>
 
         {/* Role Legend */}
-        <BrutalistCard variant="panel" className="bg-cinematic-bg mt-6">
+        <DashboardCard variant="panel" className="bg-background mt-6">
           <div className="flex items-center gap-3 mb-6">
             <span className="size-2 bg-primary" />
-            <h3 className="font-mono text-xs font-bold tracking-label uppercase text-foreground">
-              Role Classification Matrix
+            <h3 className="font-sans text-xs font-semibold tracking-wide text-foreground">
+              Role Permissions
             </h3>
-            <div className="flex-1 h-[2px] bg-border-strong" />
+            <div className="flex-1 h-px bg-border/50" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {Object.keys(ROLE_META).map((role) => (
-              <div key={role} className="flex flex-col gap-3 p-4 border-2 border-border">
+              <div key={role} className="flex flex-col gap-3 p-4 border border-border/50">
                 <div className="w-fit">
                   <RoleBadge role={role} />
                 </div>
                 <p className="text-fine font-mono text-muted-foreground tracking-widest leading-relaxed uppercase">
-                  {role === "superadmin" && "Root access level. Complete matrix control over configuration and roles."}
-                  {role === "admin" && "Administrative access. Can manage the operative roster and edit global configurations."}
-                  {role === "editor" && "Authoring access. Ability to overwrite literature and sequence flows."}
-                  {role === "viewer" && "Observer level. Access granted strictly for reading and verifying."}
+                  {role === "superadmin" && "Full access to manage the platform and all users."}
+                  {role === "admin" && "Manage users and global platform settings."}
+                  {role === "editor" && "Can create and edit stories."}
+                  {role === "viewer" && "View-only access."}
                 </p>
               </div>
             ))}
           </div>
-        </BrutalistCard>
+        </DashboardCard>
 
         {/* Global Content */}
         <GlobalContentSection isCallerAdmin={isCallerAdmin} />

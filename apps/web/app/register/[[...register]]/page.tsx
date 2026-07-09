@@ -67,7 +67,7 @@ function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name" className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+        <Label htmlFor="name" className="font-sans text-xs tracking-widest uppercase text-muted-foreground">
           Name
         </Label>
         <Input
@@ -79,12 +79,12 @@ function RegisterForm() {
           required
           minLength={2}
           autoComplete="name"
-          className="bg-bg-surface border-border font-mono text-sm"
+          className="bg-bg-surface border-border font-sans text-sm"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email" className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+        <Label htmlFor="email" className="font-sans text-xs tracking-widest uppercase text-muted-foreground">
           Email
         </Label>
         <Input
@@ -95,12 +95,12 @@ function RegisterForm() {
           placeholder="keeper@fungga-wari.com"
           required
           autoComplete="email"
-          className="bg-bg-surface border-border font-mono text-sm"
+          className="bg-bg-surface border-border font-sans text-sm"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password" className="font-mono text-xs tracking-widest uppercase text-muted-foreground">
+        <Label htmlFor="password" className="font-sans text-xs tracking-widest uppercase text-muted-foreground">
           Password
         </Label>
         <div className="relative">
@@ -113,7 +113,7 @@ function RegisterForm() {
             required
             minLength={6}
             autoComplete="new-password"
-            className="bg-bg-surface border-border font-mono text-sm pr-10"
+            className="bg-bg-surface border-border font-sans text-sm pr-10"
           />
           <button
             type="button"
@@ -141,7 +141,7 @@ function RegisterForm() {
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full font-mono text-xs tracking-widest uppercase"
+        className="w-full font-sans text-xs tracking-widest uppercase"
       >
         {isLoading ? (
           <Loader2 className="size-4 mr-2 animate-spin" />

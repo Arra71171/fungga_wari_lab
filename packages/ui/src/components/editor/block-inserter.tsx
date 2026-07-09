@@ -73,7 +73,7 @@ function BlockInserter({ onSelect, onClose, className }: BlockInserterProps) {
       ref={containerRef}
       data-slot="block-inserter"
       className={cn(
-        "w-64 bg-background border-2 border-border rounded-none shadow-brutal p-2 z-50",
+        "w-64 bg-background border border-border/50 rounded-none shadow-sm p-2 z-50",
         className
       )}
     >

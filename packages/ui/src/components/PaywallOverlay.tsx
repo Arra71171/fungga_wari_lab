@@ -30,9 +30,9 @@ function SubmitButton() {
       className={cn(
         "w-full h-14 flex items-center justify-center gap-3",
         "border border-primary bg-primary text-primary-foreground",
-        "font-mono text-sm uppercase tracking-widest font-bold",
+        "font-sans text-sm tracking-wide font-bold",
         "transition-all duration-200",
-        "hover:bg-primary/90 hover:shadow-brutal",
+        "hover:bg-primary/90 hover:shadow-sm",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "disabled:opacity-60 disabled:cursor-not-allowed shadow-xl"
       )}

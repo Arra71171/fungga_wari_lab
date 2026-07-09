@@ -25,8 +25,8 @@ test.describe.serial("Creator-to-reader premium lifecycle", () => {
 
   test.beforeAll(async () => {
     user = await ensureE2EUser();
-    await deleteAuditStories(user.clerkId);
-    await updateLifetimeAccess(user.clerkId, false);
+    await deleteAuditStories(user.authId);
+    await updateLifetimeAccess(user.authId, false);
   });
 
   test.afterAll(async () => {
@@ -34,17 +34,17 @@ test.describe.serial("Creator-to-reader premium lifecycle", () => {
       await deleteStoryById(storyId);
     }
 
-    await updateLifetimeAccess(user.clerkId, false);
+    await updateLifetimeAccess(user.authId, false);
   });
 
   test("creates a manuscript, uploads cover media, and publishes it", async ({ page }) => {
     await loginToDashboard(page, user);
 
     await expect
-      .poll(async () => Boolean(await findUserRow(user.clerkId)), { timeout: 60_000 })
+      .poll(async () => Boolean(await findUserRow(user.authId)), { timeout: 60_000 })
       .toBe(true);
 
-    await page.goto(`${urls.dashboard}/stories`);
+    await page.goto("/dashboard/stories");
     await page.getByRole("button", { name: /new manuscript|establish first manuscript/i }).click();
     await page.waitForURL(/\/stories\/draft\/([0-9a-f-]+)$/i, { timeout: 60_000 });
 
@@ -88,7 +88,7 @@ test.describe.serial("Creator-to-reader premium lifecycle", () => {
 
         return Boolean(
           story?.cover_image_url &&
-            (await findCoverAssetByUrl(user.clerkId, story.cover_image_url)),
+            (await findCoverAssetByUrl(user.authId, story.cover_image_url)),
         );
       }, {
         timeout: 120_000,
@@ -127,7 +127,7 @@ test.describe.serial("Creator-to-reader premium lifecycle", () => {
     expect(storySlug).toBeTruthy();
 
     await loginToDashboard(page, user);
-    await updateLifetimeAccess(user.clerkId, false);
+    await updateLifetimeAccess(user.authId, false);
 
     const storyUrl = `${urls.web}/stories/${storySlug}`;
 
@@ -140,11 +140,11 @@ test.describe.serial("Creator-to-reader premium lifecycle", () => {
       page.getByRole("button", { name: /unlock lifetime access/i }).click(),
     ]);
 
-    const webhookResponse = await simulateSuccessfulCheckoutWebhook(request, user.clerkId);
+    const webhookResponse = await simulateSuccessfulCheckoutWebhook(request, user.authId);
     expect(webhookResponse.ok()).toBeTruthy();
 
     await expect
-      .poll(async () => (await findUserRow(user.clerkId))?.has_lifetime_access ?? false, {
+      .poll(async () => (await findUserRow(user.authId))?.has_lifetime_access ?? false, {
         timeout: 60_000,
       })
       .toBe(true);

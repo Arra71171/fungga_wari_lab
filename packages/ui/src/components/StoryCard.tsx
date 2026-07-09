@@ -7,7 +7,7 @@ import { ProgressBar } from "@workspace/ui/components/ProgressBar"
 import { Flame, BookOpen, Globe2 } from "lucide-react"
 
 const storyCardVariants = cva(
-  "group relative flex flex-col overflow-hidden border-2 border-border shadow-brutal-sm bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-brutal cursor-pointer hover:-translate-y-1 rounded-none",
+  "group relative flex flex-col overflow-hidden border border-border/50 shadow-xs bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-sm cursor-pointer hover:-translate-y-1 rounded-none",
   {
     variants: {
       variant: {
@@ -99,7 +99,7 @@ function StoryCard({
               </span>
             )}
           </div>
-          <div className="mt-2 flex items-center gap-3 text-nano font-mono uppercase tracking-widest text-muted-foreground">
+          <div className="mt-2 flex items-center gap-3 text-nano font-sans font-medium tracking-wide text-muted-foreground">
             <span>{category}</span>
             {language && <span>· {language}</span>}
           </div>
@@ -164,15 +164,15 @@ function StoryCard({
       {/* 3. Metadata Compartments Split (Bento Bottom) */}
       <div className="grid grid-cols-2 gap-px bg-border shrink-0">
         <div className="bg-background p-3 flex flex-col justify-center items-center text-center">
-          <span className="text-micro font-mono uppercase tracking-label text-muted-foreground mb-1">Category</span>
+          <span className="text-micro font-sans font-medium tracking-wide text-muted-foreground mb-1">Category</span>
           <span className="text-fine uppercase font-bold tracking-widest font-mono text-primary truncate w-full px-1">{category}</span>
         </div>
         
         <div className="bg-background p-3 flex flex-col justify-center items-center text-center">
-          <span className="text-micro font-mono uppercase tracking-label text-muted-foreground mb-1">
+          <span className="text-micro font-sans font-medium tracking-wide text-muted-foreground mb-1">
             {language ? "Language" : "Chapters"}
           </span>
-          <span className="text-fine uppercase tracking-widest font-mono text-foreground flex items-center gap-1.5 truncate flex-wrap justify-center">
+          <span className="text-fine tracking-wide font-mono text-foreground flex items-center gap-1.5 truncate flex-wrap justify-center">
             {language ? (
               <>
                 <Globe2 className="size-2.5 text-muted-foreground shrink-0" />
@@ -191,7 +191,7 @@ function StoryCard({
       {/* Progress Compartment (If Applicable) */}
       {progress > 0 && (
         <div className="bg-background p-3 pt-2 shrink-0 border-t border-border">
-          <div className="flex items-center justify-between text-fine text-muted-foreground font-mono uppercase tracking-widest mb-2">
+          <div className="flex items-center justify-between text-fine text-muted-foreground font-sans font-medium tracking-wide mb-2">
             <span>{Math.round((progress / totalScenes) * 100)}%</span>
             <span>{progress} / {totalScenes}</span>
           </div>

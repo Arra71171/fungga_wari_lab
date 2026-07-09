@@ -77,7 +77,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
       let toName = "";
       if (assigneeId === "custom") {
         toEmail = formData.get("customEmail") as string;
-        toName = "External Operative";
+        toName = "External Member";
       } else if (assigneeId !== "none") {
         const u = users.find((u) => u.id === assigneeId);
         if (u?.email) {
@@ -150,51 +150,51 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
 
         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="title" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="title" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
               Task Designation
             </Label>
             <Input
               id="title"
               name="title"
               required
-              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-mono text-sm"
+              className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50 font-sans text-sm"
               placeholder="e.g., Translate Chapter 4..."
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="priority" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+              <Label htmlFor="priority" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
                 Priority
               </Label>
               <Select name="priority" defaultValue="medium">
-                <SelectTrigger id="priority" className="rounded-none bg-bg-surface border-border font-mono text-sm">
+                <SelectTrigger id="priority" className="rounded-none bg-bg-surface border-border font-sans text-sm">
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
                 <SelectContent className="rounded-none border-border bg-bg-panel">
-                  <SelectItem value="high" className="font-mono text-sm focus:bg-brand-ember/20">High</SelectItem>
-                  <SelectItem value="medium" className="font-mono text-sm">Medium</SelectItem>
-                  <SelectItem value="low" className="font-mono text-sm">Low</SelectItem>
+                  <SelectItem value="high" className="font-sans text-sm focus:bg-brand-ember/20">High</SelectItem>
+                  <SelectItem value="medium" className="font-sans text-sm">Medium</SelectItem>
+                  <SelectItem value="low" className="font-sans text-sm">Low</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="assigneeId" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+              <Label htmlFor="assigneeId" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
                 Assign To
               </Label>
               <Select name="assigneeId" value={assigneeId} onValueChange={setAssigneeId}>
-                <SelectTrigger id="assigneeId" className="rounded-none bg-bg-surface border-border font-mono text-sm">
+                <SelectTrigger id="assigneeId" className="rounded-none bg-bg-surface border-border font-sans text-sm">
                   <SelectValue placeholder="Unassigned" />
                 </SelectTrigger>
                 <SelectContent className="rounded-none border-border bg-bg-panel">
-                  <SelectItem value="none" className="font-mono text-sm italic opacity-50">Unassigned</SelectItem>
+                  <SelectItem value="none" className="font-sans text-sm italic opacity-50">Unassigned</SelectItem>
                   {users.map((u) => (
-                    <SelectItem key={u.id} value={u.id} className="font-mono text-sm">
+                    <SelectItem key={u.id} value={u.id} className="font-sans text-sm">
                       {u.name ?? u.email ?? "Unknown User"}
                     </SelectItem>
                   ))}
-                  <SelectItem value="custom" className="font-mono text-sm text-brand-ochre">Custom Email...</SelectItem>
+                  <SelectItem value="custom" className="font-sans text-sm text-brand-ochre">Custom Email...</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -202,7 +202,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
 
           {assigneeId === "custom" && (
             <div className="space-y-2">
-              <Label htmlFor="customEmail" className="font-mono text-fine uppercase tracking-widest text-brand-ochre">
+              <Label htmlFor="customEmail" className="font-sans text-xs font-medium tracking-wide text-brand-ochre">
                 External Dispatch Email
               </Label>
               <Input
@@ -210,21 +210,21 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                 name="customEmail"
                 type="email"
                 required
-                className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ochre/20 focus-visible:border-brand-ochre/50 font-mono text-sm"
-                placeholder="operative@external.com"
+                className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ochre/20 focus-visible:border-brand-ochre/50 font-sans text-sm"
+                placeholder="member@external.com"
               />
             </div>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="font-mono text-fine uppercase tracking-widest text-muted-foreground">
+            <Label htmlFor="description" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
               Briefing (Optional)
             </Label>
             <Textarea
               id="description"
               name="description"
               maxLength={2000}
-              className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-mono text-sm"
+              className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-sans text-sm"
               placeholder="Provide operation details..."
             />
           </div>
@@ -233,7 +233,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-mono uppercase tracking-widest text-xs rounded-none gap-2"
+              className="bg-brand-ember hover:bg-brand-ember/80 text-foreground font-sans font-medium tracking-wide text-xs rounded-none gap-2"
             >
               {isSubmitting && <Loader2 className="size-3 animate-spin" />}
               Dispatch Task

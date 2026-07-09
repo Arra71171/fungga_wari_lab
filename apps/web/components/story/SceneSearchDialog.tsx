@@ -108,7 +108,7 @@ export function SceneSearchDialog() {
                   }}
                 >
                   <span className="font-heading font-semibold">{s.title}</span>
-                  <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest mt-1">
+                  <span className="text-xs font-mono text-muted-foreground tracking-wide mt-1">
                     {s.chapterTitle}
                   </span>
                 </button>
