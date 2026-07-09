@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 
+import { z } from "zod";
+
 export type SearchResult = {
   id: string;
   title: string;
@@ -11,8 +13,13 @@ export type SearchResult = {
   category: string | null;
 };
 
-export async function searchStories(query: string): Promise<SearchResult[]> {
-  if (!query || query.trim().length < 2) return [];
+const searchQuerySchema = z.string().min(2).max(100);
+
+export async function searchStories(rawQuery: string): Promise<SearchResult[]> {
+  const parsed = searchQuerySchema.safeParse(rawQuery.trim());
+  if (!parsed.success) return [];
+  const query = parsed.data;
+
 
   const supabase = await createClient();
 

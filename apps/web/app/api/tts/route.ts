@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import https from "node:https";
 
+import { RateLimiter } from "@/lib/rateLimit";
+
 const requestSchema = z.object({
   text: z.string().min(1).max(2500),
   // Use voice from env or fallback to George — "Warm, Captivating Storyteller"
   // George is a premade voice confirmed available on free tier API
   voiceId: z.string().default(process.env.ELEVENLABS_VOICE_ID || "JBFqnCBsd6RMkjVDRZzb"),
 });
+
+// 10 requests per minute per IP to prevent TTS bill shock
+const ttsRateLimiter = new RateLimiter(10, 60_000);
 
 // eleven_turbo_v2_5 — lowest latency, free tier compatible
 const ELEVENLABS_MODEL = "eleven_turbo_v2_5";
@@ -56,6 +61,14 @@ function elevenLabsRequest(
 }
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for") || "unknown";
+  if (!ttsRateLimiter.check(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please slow down." },
+      { status: 429 }
+    );
+  }
+
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
