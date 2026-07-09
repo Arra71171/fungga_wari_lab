@@ -1,4 +1,3 @@
-import { createClerkClient } from "@clerk/backend";
 import { loadEnvConfig } from "@next/env";
 import type { APIRequestContext, Page } from "@playwright/test";
 import Stripe from "stripe";
@@ -17,7 +16,7 @@ function requireEnv(name: string): string {
 }
 
 export type E2EUser = {
-  clerkId: string;
+  authId: string;
   email: string;
   password: string;
 };
@@ -44,7 +43,6 @@ type UserRecord = {
   id: string;
 };
 
-const clerkSecretKey = requireEnv("CLERK_SECRET_KEY");
 const stripeSecretKey = requireEnv("STRIPE_SECRET_KEY");
 const stripeWebhookSecret = requireEnv("STRIPE_WEBHOOK_SECRET");
 const supabaseServiceRoleKey = requireEnv("SUPABASE_SERVICE_ROLE_KEY");
@@ -55,7 +53,6 @@ export const urls = {
   web: process.env.NEXT_PUBLIC_WEB_URL ?? "http://localhost:3001",
 };
 
-const clerkClient = createClerkClient({ secretKey: clerkSecretKey });
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: "2026-03-25.dahlia",
   typescript: true,
@@ -68,8 +65,8 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   },
 });
 
-const testEmail = process.env.E2E_CLERK_EMAIL ?? "qa.audit.playwright@funggawari.dev";
-const testPassword = process.env.E2E_CLERK_PASSWORD ?? "FunggaWari!1234";
+const testEmail = process.env.E2E_USER_EMAIL ?? "qa.audit.playwright@funggawari.dev";
+const testPassword = process.env.E2E_USER_PASSWORD ?? "FunggaWari!1234";
 const testCoverFileName = "qa-audit-cover.png";
 const qaAuditName = "QA Audit";
 
@@ -82,45 +79,11 @@ export const auditCoverUpload = {
   name: testCoverFileName,
 };
 
-async function ensureE2EOrganization(clerkId: string, organizationId?: string | null) {
-  let organization;
-
-  if (organizationId) {
-    try {
-      organization = await clerkClient.organizations.getOrganization({ organizationId });
-    } catch {
-      organization = null;
-    }
-  }
-
-  if (!organization) {
-    organization = await clerkClient.organizations.createOrganization({
-      createdBy: clerkId,
-      name: `${qaAuditName} Forge`,
-    });
-  }
-
-  const memberships = await clerkClient.organizations.getOrganizationMembershipList({
-    limit: 1,
-    organizationId: organization.id,
-    userId: [clerkId],
-  });
-
-  if (memberships.data.length === 0) {
-    await clerkClient.organizations.createOrganizationMembership({
-      organizationId: organization.id,
-      role: "org:admin",
-      userId: clerkId,
-    });
-  }
-
-  return organization.id;
-}
 
 async function ensureAdminUserRow(user: E2EUser) {
   const { error } = await supabase.from("users").upsert(
     {
-      auth_id: user.clerkId,
+      auth_id: user.authId,
       email: user.email,
       has_lifetime_access: false,
       name: qaAuditName,
@@ -135,58 +98,41 @@ async function ensureAdminUserRow(user: E2EUser) {
 }
 
 export async function ensureE2EUser(): Promise<E2EUser> {
-  const existingUsers = await clerkClient.users.getUserList({
-    emailAddress: [testEmail],
-    limit: 1,
-  });
+  const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
+  
+  if (listError) {
+    throw new Error(`Failed to list users: ${listError.message}`);
+  }
 
-  const existingUser = existingUsers.data[0];
+  const existingUser = users.find(u => u.email === testEmail);
 
   if (existingUser) {
     const user = {
-      clerkId: existingUser.id,
+      authId: existingUser.id,
       email: testEmail,
       password: testPassword,
     };
-
-    const organizationId =
-      typeof existingUser.privateMetadata?.qaOrgId === "string"
-        ? existingUser.privateMetadata.qaOrgId
-        : null;
-    const ensuredOrganizationId = await ensureE2EOrganization(user.clerkId, organizationId);
-    await clerkClient.users.updateUser(existingUser.id, {
-      firstName: "QA",
-      lastName: "Audit",
-      password: testPassword,
-      privateMetadata: { qaOrgId: ensuredOrganizationId },
-      publicMetadata: { role: "admin" },
-      skipPasswordChecks: true,
-    });
     await ensureAdminUserRow(user);
-
     return user;
   }
 
-  const createdUser = await clerkClient.users.createUser({
-    emailAddress: [testEmail],
-    firstName: "QA",
-    lastName: "Audit",
+  const { data: { user: createdUser }, error: createError } = await supabase.auth.admin.createUser({
+    email: testEmail,
     password: testPassword,
-    skipLegalChecks: true,
-    skipPasswordChecks: true,
+    email_confirm: true,
+    user_metadata: { role: "admin" }
   });
 
+  if (createError || !createdUser) {
+    throw new Error(`Failed to create test user: ${createError?.message}`);
+  }
+
   const user = {
-    clerkId: createdUser.id,
+    authId: createdUser.id,
     email: testEmail,
     password: testPassword,
   };
 
-  const ensuredOrganizationId = await ensureE2EOrganization(user.clerkId);
-  await clerkClient.users.updateUser(createdUser.id, {
-    privateMetadata: { qaOrgId: ensuredOrganizationId },
-    publicMetadata: { role: "admin" },
-  });
   await ensureAdminUserRow(user);
 
   return user;
@@ -199,27 +145,27 @@ export async function loginToDashboard(page: Page, existingUser?: E2EUser): Prom
     window.localStorage.setItem("hasSeenDashboardTour", "true");
   });
 
-  await page.goto(`${urls.dashboard}/overview`);
+  await page.goto("/dashboard/overview");
   await page.waitForURL(/\/(login|overview)/, { timeout: 60_000 });
 
   if (!page.url().includes("/overview")) {
-    await page.locator("input[name='identifier']").fill(user.email);
-    await page.locator("input[name='password']").fill(user.password);
+    await page.locator("input[type='email']").fill(user.email);
+    await page.locator("input[type='password']").fill(user.password);
 
     await Promise.all([
       page.waitForURL(/\/overview$/, { timeout: 90_000 }),
-      page.getByRole("button", { name: /accessing|sign in|continue/i }).first().click(),
+      page.getByRole("button", { name: /accessing|access archive|sign in|continue/i }).first().click(),
     ]);
   }
 
   return user;
 }
 
-export async function findUserRow(clerkId: string): Promise<UserRecord | null> {
+export async function findUserRow(authId: string): Promise<UserRecord | null> {
   const { data, error } = await supabase
     .from("users")
     .select("id, auth_id, has_lifetime_access")
-    .eq("auth_id", clerkId)
+    .eq("auth_id", authId)
     .maybeSingle();
 
   if (error) {
@@ -229,22 +175,22 @@ export async function findUserRow(clerkId: string): Promise<UserRecord | null> {
   return data;
 }
 
-export async function updateLifetimeAccess(clerkId: string, hasLifetimeAccess: boolean) {
+export async function updateLifetimeAccess(authId: string, hasLifetimeAccess: boolean) {
   const { error } = await supabase
     .from("users")
     .update({ has_lifetime_access: hasLifetimeAccess })
-    .eq("auth_id", clerkId);
+    .eq("auth_id", authId);
 
   if (error) {
     throw new Error(`Failed to update lifetime access: ${error.message}`);
   }
 }
 
-export async function deleteAuditStories(clerkId: string) {
+export async function deleteAuditStories(authId: string) {
   const { data: stories, error: storyQueryError } = await supabase
     .from("stories")
     .select("id")
-    .eq("author_id", clerkId)
+    .eq("author_id", authId)
     .ilike("title", "QA Audit %");
 
   if (storyQueryError) {
@@ -276,7 +222,7 @@ export async function deleteAuditStories(clerkId: string) {
   const { error: coverCleanupError } = await supabase
     .from("assets")
     .delete()
-    .eq("uploaded_by", clerkId)
+    .eq("uploaded_by", authId)
     .eq("title", testCoverFileName);
 
   if (coverCleanupError) {
@@ -360,11 +306,11 @@ export async function getScenesForStory(storyId: string): Promise<SceneRecord[]>
   return data ?? [];
 }
 
-export async function findCoverAssetByUrl(clerkId: string, url: string) {
+export async function findCoverAssetByUrl(authId: string, url: string) {
   const { data, error } = await supabase
     .from("assets")
     .select("id")
-    .eq("uploaded_by", clerkId)
+    .eq("uploaded_by", authId)
     .eq("type", "cover")
     .eq("url", url)
     .maybeSingle();
@@ -378,7 +324,7 @@ export async function findCoverAssetByUrl(clerkId: string, url: string) {
 
 export async function simulateSuccessfulCheckoutWebhook(
   request: APIRequestContext,
-  clerkId: string,
+  authId: string,
 ) {
   const payload = JSON.stringify({
     api_version: "2026-03-25.dahlia",
@@ -386,7 +332,7 @@ export async function simulateSuccessfulCheckoutWebhook(
       object: {
         id: `cs_test_${Date.now()}`,
         metadata: {
-          auth_id: clerkId,
+          auth_id: authId,
         },
         object: "checkout.session",
         payment_status: "paid",
@@ -402,7 +348,7 @@ export async function simulateSuccessfulCheckoutWebhook(
     secret: stripeWebhookSecret,
   });
 
-  return request.post(`${urls.web}/api/webhooks/stripe`, {
+  const response = await request.post(`${urls.web}/api/webhooks/stripe`, {
     data: payload,
     failOnStatusCode: false,
     headers: {
@@ -410,4 +356,8 @@ export async function simulateSuccessfulCheckoutWebhook(
       "stripe-signature": signature,
     },
   });
+  if (!response.ok()) {
+    console.error("Webhook failed:", response.status(), await response.text());
+  }
+  return response;
 }
