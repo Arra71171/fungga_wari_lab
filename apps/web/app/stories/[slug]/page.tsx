@@ -93,14 +93,11 @@ export default async function StoryPage({ params }: StoryPageProps) {
         id, title, "order", illustration_url, audio_url, tiptap_content,
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
-          is_draft, version, reading_time, excerpt
+          is_draft, version, reading_time, excerpt,
+          choices:choices!choices_scene_id_fkey ( id, label, next_scene_id ),
+          translation_blocks ( id, language_code, tiptap_content )
         )
-      ),
-      comments (
-        id, content, created_at, user_id,
-        users (name, username, avatar_url)
-      ),
-      likes (id, user_id)
+      )
     `)
     .eq("slug", slug)
     .single();
@@ -145,7 +142,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
     initialStory = {
       ...storyData,
       _id: storyData.id,
-      chapters: sortedChapters,
+      chapters: sortedChapters as any,
     };
   }
 
@@ -177,8 +174,8 @@ export default async function StoryPage({ params }: StoryPageProps) {
         <PaywallGate slug={slug} hasAccess={hasAccess} initialStory={initialStory}>
           <StoryReaderShell 
             slug={slug} 
-            initialComments={storyData?.comments ?? []}
-            initialLikes={storyData?.likes ?? []}
+            initialComments={[]}
+            initialLikes={[]}
             currentUserId={currentUserId}
           />
         </PaywallGate>

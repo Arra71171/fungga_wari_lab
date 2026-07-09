@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { addComment, deleteComment } from "@/actions/socialActions";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+
 import { Trash2 } from "lucide-react";
 
 type Comment = {
@@ -14,7 +14,7 @@ type Comment = {
   user_id: string;
   users: {
     name: string | null;
-    username: string | null;
+    alias: string | null;
     avatar_url: string | null;
   } | null;
 };
@@ -87,18 +87,21 @@ export function StoryComments({
       <div className="space-y-6">
         {comments.map((comment) => (
           <div key={comment.id} className="flex gap-4">
-            <Avatar className="size-10 border border-border">
-              <AvatarImage src={comment.users?.avatar_url || ""} />
-              <AvatarFallback className="bg-secondary font-mono text-xs">
-                {comment.users?.name?.slice(0, 2).toUpperCase() || "AN"}
-              </AvatarFallback>
-            </Avatar>
+            <div className="size-10 border border-border rounded-full overflow-hidden flex items-center justify-center shrink-0">
+              {comment.users?.avatar_url ? (
+                <img src={comment.users.avatar_url} alt="" className="object-cover w-full h-full" />
+              ) : (
+                <div className="bg-secondary font-mono text-xs w-full h-full flex items-center justify-center">
+                  {comment.users?.name?.slice(0, 2).toUpperCase() || "AN"}
+                </div>
+              )}
+            </div>
             
             <div className="flex-1 space-y-1">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="font-sans text-sm font-bold text-foreground">
-                    {comment.users?.name || comment.users?.username || "Anonymous"}
+                    {comment.users?.name || comment.users?.alias || "Anonymous"}
                   </span>
                   <span className="font-mono text-xs text-muted-foreground">
                     {new Date(comment.created_at).toLocaleDateString()}

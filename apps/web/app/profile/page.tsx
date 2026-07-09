@@ -2,7 +2,6 @@ import * as React from "react";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { Navbar } from "@/components/layout/Navbar";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
 import Link from "next/link";
 import { Flame, Clock, Heart } from "lucide-react";
 import Image from "next/image";
@@ -34,17 +33,17 @@ export default async function ReaderProfilePage() {
   // Get user profile
   const { data: profile } = await supabase
     .from("users")
-    .select("id, name, username, avatar_url, created_at")
+    .select("id, name, alias, avatar_url, created_at")
     .eq("auth_id", user.id)
     .single();
 
   const dbUserId = profile?.id;
 
-  // Fetch Liked Stories
+  // Fetch Bookmarked Stories
   let likedStories: any[] = [];
   if (dbUserId) {
-    const { data: likes } = await supabase
-      .from("likes")
+    const { data: bookmarks } = await supabase
+      .from("bookmarks")
       .select(`
         created_at,
         stories (id, title, slug, cover_image_url, category, language, chapter_count)
@@ -52,8 +51,8 @@ export default async function ReaderProfilePage() {
       .eq("user_id", dbUserId)
       .order("created_at", { ascending: false });
     
-    if (likes) {
-      likedStories = likes.map((like) => like.stories).filter(Boolean);
+    if (bookmarks) {
+      likedStories = bookmarks.map((b) => b.stories).filter(Boolean);
     }
   }
 
@@ -65,19 +64,22 @@ export default async function ReaderProfilePage() {
         
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 mb-20 border-b border-border pb-16">
-          <Avatar className="size-32 md:size-48 rounded-none border border-border bg-secondary/10 shrink-0">
-            <AvatarImage src={profile?.avatar_url || ""} className="object-cover" />
-            <AvatarFallback className="font-heading text-4xl uppercase rounded-none bg-secondary text-muted-foreground">
-              {profile?.name?.slice(0, 2) || profile?.username?.slice(0, 2) || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <div className="size-32 md:size-48 rounded-none border border-border bg-secondary/10 shrink-0 flex items-center justify-center overflow-hidden relative">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="object-cover w-full h-full" />
+            ) : (
+              <div className="font-heading text-4xl uppercase rounded-none bg-secondary text-muted-foreground w-full h-full flex items-center justify-center">
+                {profile?.name?.slice(0, 2) || profile?.alias?.slice(0, 2) || "U"}
+              </div>
+            )}
+          </div>
 
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
             <div className="mb-2">
               <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-foreground leading-[0.9]">
-                {profile?.name || profile?.username || "Reader"}
+                {profile?.name || profile?.alias || "Reader"}
               </h1>
-              <p className="font-mono text-lg text-primary mt-2">@{profile?.username || "reader"}</p>
+              <p className="font-mono text-lg text-primary mt-2">@{profile?.alias || "reader"}</p>
             </div>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 mt-8 pt-6 border-t border-border w-full">

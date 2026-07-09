@@ -238,7 +238,7 @@ function ChoiceButtons({
           onClick={() => {
             onChoose(choice.next_scene_id);
           }}
-          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {choice.label}
         </button>
@@ -268,6 +268,21 @@ function BlockStoryReader({
   // is the inner div (overflow-y-auto), NOT the window.
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const mainRef = React.useRef<HTMLElement>(null);
+
+  const availableTranslations = React.useMemo(() => {
+    if (!activeScene?.translation_blocks) return ["original"];
+    const langs = activeScene.translation_blocks.map((b) => b.language_code);
+    return ["original", ...langs];
+  }, [activeScene]);
+
+  const [readerLanguage, setReaderLanguage] = React.useState("original");
+
+  // Revert to original if chosen language isn't available in this scene
+  React.useEffect(() => {
+    if (readerLanguage !== "original" && !availableTranslations.includes(readerLanguage)) {
+      setReaderLanguage("original");
+    }
+  }, [readerLanguage, availableTranslations]);
 
   // Derive first scene ID for "restart" logic
   const firstSceneId = chapters[0]?.scenes[0]?.id ?? null;
@@ -454,6 +469,20 @@ function BlockStoryReader({
           </div>
 
           <div className="flex items-center gap-4">
+            {availableTranslations.length > 1 && (
+              <select
+                value={readerLanguage}
+                onChange={(e) => setReaderLanguage(e.target.value)}
+                className="bg-transparent text-nano font-mono text-brand-ember uppercase outline-none focus:ring-0 cursor-pointer"
+                aria-label="Select language"
+              >
+                {availableTranslations.map((lang) => (
+                  <option key={lang} value={lang} className="bg-bg-panel text-foreground">
+                    {lang === "original" ? story.language || "EN" : lang}
+                  </option>
+                ))}
+              </select>
+            )}
             <div className="hidden lg:block">
               <AnimatedThemeToggler />
             </div>
@@ -498,16 +527,24 @@ function BlockStoryReader({
           {hasContent ? (
             <>
               {/* TipTap rich content */}
-              {activeScene?.tiptap_content ? (
-                renderTipTapNode(activeScene.tiptap_content as TipTapNode, 0)
-              ) : chapterFallbackContent ? (
-                renderTipTapNode(chapterFallbackContent as TipTapNode, 0)
-              ) : (
-                /* Plain text fallback */
-                <div className="whitespace-pre-wrap font-sans text-base leading-[1.9] text-cinematic-text">
-                  {activeScene?.content}
-                </div>
-              )}
+              {(() => {
+                let contentToRender = activeScene?.tiptap_content;
+                if (readerLanguage !== "original" && activeScene?.translation_blocks) {
+                  const block = activeScene.translation_blocks.find(b => b.language_code === readerLanguage);
+                  if (block?.tiptap_content) contentToRender = block.tiptap_content;
+                }
+                if (contentToRender) {
+                  return renderTipTapNode(contentToRender as TipTapNode, 0);
+                }
+                if (chapterFallbackContent) {
+                  return renderTipTapNode(chapterFallbackContent as TipTapNode, 0);
+                }
+                return (
+                  <div className="whitespace-pre-wrap font-sans text-base leading-[1.9] text-cinematic-text">
+                    {activeScene?.content}
+                  </div>
+                );
+              })()}
 
               {/* Choices */}
               {activeScene?.choices && activeScene.choices.length > 0 && (
@@ -620,8 +657,8 @@ function BlockStoryReader({
                       Archive
                     </Link>
                   </div>
-                </div>
-              )}
+                )
+              }
             </div>
           )}
         </div>

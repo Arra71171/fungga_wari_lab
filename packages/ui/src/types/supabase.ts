@@ -651,7 +651,42 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "stories"
             referencedColumns: ["id"]
-          },
+          }
+        ]
+      }
+      translation_blocks: {
+        Row: {
+          id: string
+          created_at: string | null
+          updated_at: string | null
+          scene_id: string
+          language_code: string
+          tiptap_content: Json
+        }
+        Insert: {
+          id?: string
+          created_at?: string | null
+          updated_at?: string | null
+          scene_id: string
+          language_code: string
+          tiptap_content: Json
+        }
+        Update: {
+          id?: string
+          created_at?: string | null
+          updated_at?: string | null
+          scene_id?: string
+          language_code?: string
+          tiptap_content?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_blocks_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "scenes"
+            referencedColumns: ["id"]
+          }
         ]
       }
       users: {

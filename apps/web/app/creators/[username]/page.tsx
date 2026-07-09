@@ -2,7 +2,7 @@ import * as React from "react";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { Navbar } from "@/components/layout/Navbar";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+
 import Link from "next/link";
 import { Flame, BookOpen, Clock } from "lucide-react";
 import Image from "next/image";
@@ -27,8 +27,8 @@ export default async function CreatorProfilePage({ params }: ProfilePageProps) {
   // Find user by username
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("id, name, username, avatar_url, bio, role, created_at")
-    .eq("username", username)
+    .select("id, name, alias, avatar_url, bio, role, created_at")
+    .eq("alias", username)
     .single();
 
   if (!profile || profileError) {
@@ -67,19 +67,22 @@ export default async function CreatorProfilePage({ params }: ProfilePageProps) {
         
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 mb-20 border-b border-border pb-16">
-          <Avatar className="size-32 md:size-48 rounded-none border border-border bg-secondary/10 shrink-0">
-            <AvatarImage src={profile.avatar_url || ""} className="object-cover" />
-            <AvatarFallback className="font-heading text-4xl uppercase rounded-none bg-secondary text-muted-foreground">
-              {profile.name?.slice(0, 2) || profile.username?.slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+          <div className="size-32 md:size-48 rounded-none border border-border bg-secondary/10 shrink-0 flex items-center justify-center overflow-hidden relative">
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="object-cover w-full h-full" />
+            ) : (
+              <div className="font-heading text-4xl uppercase rounded-none bg-secondary text-muted-foreground w-full h-full flex items-center justify-center">
+                {profile.name?.slice(0, 2) || profile.alias?.slice(0, 2)}
+              </div>
+            )}
+          </div>
 
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
             <div className="mb-2">
               <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-foreground leading-[0.9]">
-                {profile.name || profile.username}
+                {profile.name || profile.alias}
               </h1>
-              <p className="font-mono text-lg text-primary mt-2">@{profile.username}</p>
+              <p className="font-mono text-lg text-primary mt-2">@{profile.alias}</p>
             </div>
 
             {profile.bio ? (
@@ -105,7 +108,7 @@ export default async function CreatorProfilePage({ params }: ProfilePageProps) {
                 <span className="font-mono text-sm font-medium">
                   <span className="text-muted-foreground">Joined</span>
                   <span className="text-foreground ml-1.5">
-                    {new Date(profile.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}
+                    {profile.created_at ? new Date(profile.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : 'Unknown'}
                   </span>
                 </span>
               </div>
@@ -117,7 +120,7 @@ export default async function CreatorProfilePage({ params }: ProfilePageProps) {
         <section>
           <div className="flex items-center justify-between mb-10">
             <h2 className="font-heading text-3xl font-black uppercase text-foreground">
-              Manuscripts <span className="text-brand-ember">by {profile.username}</span>
+              Manuscripts <span className="text-brand-ember">by {profile.alias}</span>
             </h2>
           </div>
 
@@ -162,7 +165,7 @@ export default async function CreatorProfilePage({ params }: ProfilePageProps) {
                     </h3>
                     <div className="mt-auto flex items-center justify-between text-[10px] font-mono text-muted-foreground">
                       <span>{story.language || "Unknown Language"}</span>
-                      {story.chapter_count > 0 && <span>{story.chapter_count} Ch.</span>}
+                      {(story.chapter_count ?? 0) > 0 && <span>{story.chapter_count} Ch.</span>}
                     </div>
                   </div>
                 </Link>

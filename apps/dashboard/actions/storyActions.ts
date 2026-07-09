@@ -165,7 +165,8 @@ export async function getFullStoryById(rawId: string) {
         scenes (
           id, title, "order", content, tiptap_content, illustration_url,
           is_draft, version, reading_time, excerpt,
-          choices:choices!choices_scene_id_fkey ( id, label, next_scene_id )
+          choices:choices!choices_scene_id_fkey ( id, label, next_scene_id ),
+          translation_blocks ( id, language_code, tiptap_content )
         )
       )
     `)

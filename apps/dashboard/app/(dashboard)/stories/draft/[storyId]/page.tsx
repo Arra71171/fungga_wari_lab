@@ -45,6 +45,7 @@ import {
   addChoice,
   deleteChoice,
 } from "@/actions/chapterActions";
+import { saveTranslation } from "@/actions/translationActions";
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 
@@ -87,6 +88,7 @@ export type ChapterLocal = {
   audioUrl?: string;
   isNew?: boolean;
   choices: ChoiceLocal[];
+  translationBlocks?: { id: string; language_code: string; tiptap_content: Record<string, unknown> }[];
 };
 
 // ─── Component ─────────────────────────────────────────────────────────────
@@ -146,26 +148,12 @@ export default function DraftEditorPage({
       setTags((story.tags || []).join(", "));
       setCategory(story.category || "other");
       setLanguage(story.language || "meiteilon");
-      setSeriesId(story.series_id || "none");
-      setSeriesOrder(story.series_order ?? "");
-
-      // Fetch author's series
-      if (story.author_id) {
-        import("@/lib/supabase/client").then(({ createClient }) => {
-          const supabase = createClient();
-          supabase
-            .from("series")
-            .select("id, title")
-            .eq("author_id", story.author_id)
-            .then(({ data }) => {
-              if (data) setAuthorSeries(data);
-            });
-        });
-      }
+      setLanguage(story.language || "meiteilon");
 
       const mappedChapters: ChapterLocal[] = (story.chapters || []).map((c) => {
         const primaryScene = c.scenes && c.scenes.length > 0 ? c.scenes[0] : null;
         const sceneChoices = primaryScene?.choices ?? [];
+        const translationBlocks = primaryScene?.translation_blocks ?? [];
 
         return {
           id: c.id,
@@ -176,6 +164,7 @@ export default function DraftEditorPage({
           tiptapContent: (primaryScene?.tiptap_content || c.tiptap_content) as Record<string, unknown> | undefined,
           illustrationUrl: c.illustration_url ?? undefined,
           audioUrl: c.audio_url ?? undefined,
+          translationBlocks: translationBlocks as any,
           choices: sceneChoices.map((choice: { id: string; label: string; next_scene_id?: string }) => ({
             id: choice.id,
             label: choice.label,
@@ -225,6 +214,26 @@ export default function DraftEditorPage({
   const handleUpdateChapterTiptap = (id: string, content: Record<string, unknown>) => {
     setChapters(
       chapters.map((ch) => (ch.id === id ? { ...ch, tiptapContent: content } : ch))
+    );
+  };
+
+  const handleUpdateTranslation = (
+    id: string,
+    languageCode: string,
+    tiptapContent: Record<string, unknown>
+  ) => {
+    setChapters((prev) =>
+      prev.map((ch) => {
+        if (ch.id !== id) return ch;
+        const blocks = ch.translationBlocks ? [...ch.translationBlocks] : [];
+        const existingIdx = blocks.findIndex((b) => b.language_code === languageCode);
+        if (existingIdx !== -1) {
+          blocks[existingIdx] = { ...blocks[existingIdx]!, tiptap_content: tiptapContent };
+        } else {
+          blocks.push({ id: `temp-${crypto.randomUUID()}`, language_code: languageCode, tiptap_content: tiptapContent });
+        }
+        return { ...ch, translationBlocks: blocks };
+      })
     );
   };
 
@@ -333,8 +342,6 @@ export default function DraftEditorPage({
       attributed_author: attributedAuthor || undefined,
       category: (category || undefined) as never,
       language: language || undefined,
-      series_id: seriesId === "none" ? null : seriesId,
-      series_order: seriesId === "none" ? null : (seriesOrder === "" ? null : Number(seriesOrder)),
       tags: tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
     });
 
@@ -449,6 +456,22 @@ export default function DraftEditorPage({
           });
         }
         // Existing choice updates would require updateChoice — add if needed
+      }
+    }
+
+    // 6. Upsert translations
+    for (let i = 0; i < updatedChapters.length; i++) {
+      const ch = updatedChapters[i]!;
+      const currentSceneId = ch.sceneId || chapterIdToSceneId[ch.id];
+      if (!currentSceneId || !ch.translationBlocks) continue;
+
+      for (const block of ch.translationBlocks) {
+        if (!block.tiptap_content) continue;
+        await saveTranslation({
+          sceneId: currentSceneId,
+          languageCode: block.language_code,
+          tiptapContent: block.tiptap_content,
+        });
       }
     }
 
@@ -763,10 +786,12 @@ export default function DraftEditorPage({
                   illustrationUrl={ch.illustrationUrl}
                   audioUrl={ch.audioUrl}
                   choices={ch.choices}
+                  translationBlocks={ch.translationBlocks}
                   allChapters={chapters}
                   isExpanded={expandedChapterIds.has(ch.id)}
                   onUpdate={handleUpdateChapter}
                   onUpdateTiptap={handleUpdateChapterTiptap}
+                  onUpdateTranslation={handleUpdateTranslation}
                   onDelete={handleDeleteChapterClick}
                   onToggleExpand={handleToggleExpand}
                   onAddChoice={() => handleAddChoice(ch.id)}
