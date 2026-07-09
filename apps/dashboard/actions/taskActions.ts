@@ -1,10 +1,39 @@
 "use server"
 
+import { z } from "zod"
+
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
 type TaskStatus = Database["public"]["Enums"]["task_status"]
 type TaskPriority = Database["public"]["Enums"]["task_priority"]
+
+
+// ─── Zod Schemas ─────────────────────────────────────────────────────────────
+
+const taskStatusSchema = z.enum(["lore_gathering", "translating", "illustrating", "review", "done"])
+const taskPrioritySchema = z.enum(["low", "medium", "high"])
+
+const createTaskSchema = z.object({
+  title: z.string().min(1).max(255),
+  description: z.any().optional(),
+  assigneeId: z.string().uuid().optional(),
+  status: taskStatusSchema.optional(),
+  priority: taskPrioritySchema.optional(),
+  dueDate: z.string().optional(),
+  storyId: z.string().uuid().optional(),
+  chapterId: z.string().uuid().optional(),
+  sceneId: z.string().uuid().optional()
+})
+
+const updateTaskPatchSchema = z.object({
+  title: z.string().min(1).max(255).optional(),
+  priority: taskPrioritySchema.optional(),
+  assignee_id: z.string().uuid().optional().nullable(),
+  due_date: z.string().optional().nullable(),
+  story_id: z.string().uuid().optional().nullable(),
+  description: z.any().optional()
+})
 
 // ─── Task Queries ─────────────────────────────────────────────────────────────
 
@@ -27,7 +56,8 @@ export async function getAllTasks() {
 /**
  * getTasksByStatus — filter tasks by pipeline status.
  */
-export async function getTasksByStatus(status: TaskStatus) {
+export async function getTasksByStatus(rawStatus: TaskStatus) {
+  const status = taskStatusSchema.parse(rawStatus)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return []
@@ -44,7 +74,8 @@ export async function getTasksByStatus(status: TaskStatus) {
 /**
  * getTasksByStoryId — tasks scoped to a specific story.
  */
-export async function getTasksByStoryId(storyId: string) {
+export async function getTasksByStoryId(rawStoryId: string) {
+  const storyId = z.string().uuid().parse(rawStoryId)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return []
@@ -81,17 +112,8 @@ export async function getMyTasks() {
 /**
  * createTask — create a new production task.
  */
-export async function createTask(args: {
-  title: string
-  description?: Record<string, unknown>
-  assigneeId?: string
-  status?: TaskStatus
-  priority?: TaskPriority
-  dueDate?: string
-  storyId?: string
-  chapterId?: string
-  sceneId?: string
-}) {
+export async function createTask(rawArgs: z.infer<typeof createTaskSchema>) {
+  const args = createTaskSchema.parse(rawArgs)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -119,7 +141,9 @@ export async function createTask(args: {
 /**
  * updateTaskStatus — move task through the Kanban pipeline.
  */
-export async function updateTaskStatus(id: string, status: TaskStatus) {
+export async function updateTaskStatus(rawId: string, rawStatus: TaskStatus) {
+  const id = z.string().uuid().parse(rawId)
+  const status = taskStatusSchema.parse(rawStatus)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -133,16 +157,11 @@ export async function updateTaskStatus(id: string, status: TaskStatus) {
  * updateTask — patch task metadata.
  */
 export async function updateTask(
-  id: string,
-  patch: {
-    title?: string
-    priority?: TaskPriority
-    assignee_id?: string | null
-    due_date?: string | null
-    story_id?: string | null
-    description?: Record<string, unknown>
-  }
+  rawId: string,
+  rawPatch: z.infer<typeof updateTaskPatchSchema>
 ) {
+  const id = z.string().uuid().parse(rawId)
+  const patch = updateTaskPatchSchema.parse(rawPatch)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -159,7 +178,8 @@ export async function updateTask(
 /**
  * deleteTask — delete a task.
  */
-export async function deleteTask(id: string) {
+export async function deleteTask(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")

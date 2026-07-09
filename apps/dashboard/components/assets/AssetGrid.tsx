@@ -7,7 +7,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { getAllAssets, deleteAsset, updateAsset } from "@/actions/assetActions";
 import type { Database } from "@workspace/ui/types/supabase";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type AssetRow = Database["public"]["Tables"]["assets"]["Row"];
 
@@ -71,7 +71,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <BrutalistCard
+          <DashboardCard
             key={i}
             variant="ghost"
             padding="none"
@@ -87,14 +87,14 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
   if (assets.length === 0) {
     return (
-      <BrutalistCard variant="panel" className="flex items-center justify-center p-12 border-dashed">
+      <DashboardCard variant="panel" className="flex items-center justify-center p-12 border-dashed">
         <div className="text-center space-y-2">
           <Flame className="size-8 text-primary/20 mx-auto" />
           <p className="font-sans text-xs tracking-wide text-muted-foreground/50">
             {filterType ? `No ${filterType.replace(/_/g, " ")} assets` : "Vault is empty"}
           </p>
         </div>
-      </BrutalistCard>
+      </DashboardCard>
     );
   }
 
@@ -127,7 +127,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
             tabIndex={0}
             className="text-left outline-none group cursor-pointer"
           >
-            <BrutalistCard
+            <DashboardCard
               variant="interactive"
               padding="none"
               className={cn(
@@ -220,7 +220,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
                 </button>
               </div>
             )}
-            </div></BrutalistCard>
+            </div></DashboardCard>
           </div>
         ))}
       </div>

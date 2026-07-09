@@ -17,7 +17,7 @@ import { Plus, Search, BookOpen, Sparkles, Globe, EyeOff, Loader2, Trash2, Trian
 import Link from "next/link";
 import { Input } from "@workspace/ui/components/input";
 import { StoryCard } from "@workspace/ui/components/StoryCard";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 import { useRouter } from "next/navigation";
 import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
@@ -123,7 +123,7 @@ export default function StoriesOverviewPage() {
 
   if (stories === undefined) {
     return (
-      <div className="flex flex-col h-full space-y-6 md:space-y-8 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto animate-pulse">
+      <div className="flex flex-col h-full space-y-6 md:space-y-8 p-4 md:p-8 lg:p-10 max-w-5xl mx-auto animate-pulse">
         <div className="h-20 bg-muted/30 rounded-none w-1/3" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
@@ -170,7 +170,7 @@ export default function StoriesOverviewPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="flex flex-col h-full space-y-6 md:space-y-8 animate-in fade-in duration-700 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto">
+      <div className="flex flex-col h-full space-y-6 md:space-y-8 animate-in fade-in duration-700 p-4 md:p-8 lg:p-10 max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-subtle pb-6 shrink-0 relative z-10">
           <div className="space-y-2">
@@ -207,7 +207,7 @@ export default function StoriesOverviewPage() {
         </div>
 
         {stories.length === 0 ? (
-          <BrutalistCard variant="panel" className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border-dashed relative z-10">
+          <DashboardCard variant="panel" className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border-border-subtle relative z-10">
             <BookOpen className="size-12 text-muted-foreground/30 mb-6" />
             <h3 className="font-heading text-xl font-semibold mb-2 text-foreground/80">The Archive is Empty</h3>
             <p className="text-muted-foreground mb-8 max-w-md text-center font-sans text-sm leading-relaxed">
@@ -220,7 +220,7 @@ export default function StoriesOverviewPage() {
             >
               {isCreating ? "Initializing..." : "Establish First Manuscript"}
             </Button>
-          </BrutalistCard>
+          </DashboardCard>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10 pb-20">
             {stories.map((story, index) => (

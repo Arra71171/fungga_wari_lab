@@ -45,14 +45,14 @@ export function CreateTeamMemberDialog() {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="w-full mt-2 rounded-none bg-bg-surface border-dashed text-xs text-muted-foreground font-sans font-medium tracking-wide px-2">
           <PlusCircle className="size-3 mr-2 shrink-0" />
-          <span className="truncate">New Operative</span>
+          <span className="truncate">New Member</span>
         </Button>
       </DialogTrigger>
       
       <DialogContent className="max-w-xs bg-bg-panel border-border rounded-none shadow-2xl">
         <DialogHeader>
           <DialogTitle className="font-heading uppercase tracking-tighter text-lg text-brand-ochre border-b border-border-subtle pb-3">
-            Register Operative
+            Register Member
           </DialogTitle>
           <DialogDescription className="sr-only">
             Register a new team member to assign tasks to.

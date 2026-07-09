@@ -77,7 +77,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
       let toName = "";
       if (assigneeId === "custom") {
         toEmail = formData.get("customEmail") as string;
-        toName = "External Operative";
+        toName = "External Member";
       } else if (assigneeId !== "none") {
         const u = users.find((u) => u.id === assigneeId);
         if (u?.email) {
@@ -211,7 +211,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
                 type="email"
                 required
                 className="rounded-none bg-bg-surface border-border focus-visible:ring-brand-ochre/20 focus-visible:border-brand-ochre/50 font-sans text-sm"
-                placeholder="operative@external.com"
+                placeholder="member@external.com"
               />
             </div>
           )}

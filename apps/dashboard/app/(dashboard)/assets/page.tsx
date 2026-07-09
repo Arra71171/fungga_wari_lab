@@ -18,7 +18,7 @@ export default function AssetsPage() {
   const [activeFolder, setActiveFolder] = React.useState<string>("all");
 
   return (
-    <div className="flex flex-col min-h-full p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-6 animate-in fade-in duration-700">
+    <div className="flex flex-col min-h-full p-6 lg:p-10 max-w-5xl mx-auto w-full space-y-6 animate-in fade-in duration-700">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-4 gap-4">
         <div>

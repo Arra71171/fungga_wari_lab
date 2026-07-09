@@ -22,7 +22,7 @@ import { createChapter, updateChapter, updateSceneContent } from "@/actions/chap
 import { createAsset } from "@/actions/assetActions";
 import { getCloudinarySignature } from "@/actions/cloudinaryActions";
 import type { Database } from "@workspace/ui/types/supabase";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type StoryCategory = Database["public"]["Enums"]["story_category"];
 
@@ -216,7 +216,7 @@ export function StoryAssetForm() {
   };
 
   return (
-    <BrutalistCard variant="panel" padding="none">
+    <DashboardCard variant="panel" padding="none">
       <form
         onSubmit={handleSubmit}
         className="p-6 md:p-8 space-y-8 relative"
@@ -433,6 +433,6 @@ export function StoryAssetForm() {
         </div>
       )}
     </form>
-    </BrutalistCard>
+    </DashboardCard>
   );
 }

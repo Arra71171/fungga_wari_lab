@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ChevronRight, ChevronLeft,
   BarChart2, BookOpen, Library, Settings2,
@@ -331,7 +331,7 @@ export function DashboardOnboarding() {
               <AnimatePresence mode="wait" custom={direction}>
                 <TourCard
                   key={stepIndex}
-                  step={STEPS[stepIndex]}
+                  step={STEPS[stepIndex]!}
                   stepIndex={stepIndex}
                   totalSteps={STEPS.length}
                   direction={direction}

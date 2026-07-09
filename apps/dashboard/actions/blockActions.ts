@@ -1,16 +1,33 @@
 "use server"
 
+import { z } from "zod"
+
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
 type BlockType = Database["public"]["Enums"]["block_type"]
+
+
+// ─── Zod Schemas ─────────────────────────────────────────────────────────────
+
+const blockTypeSchema = z.enum(["text", "heading", "image", "dialogue", "audio", "choice", "divider", "quote", "scene_break"])
+
+const createBlockSchema = z.object({
+  storyId: z.string().uuid(),
+  type: blockTypeSchema,
+  order: z.number().int().min(1),
+  props: z.any().optional(),
+  chapterId: z.string().uuid().optional(),
+  sceneId: z.string().uuid().optional()
+})
 
 // ─── Block Queries ────────────────────────────────────────────────────────────
 
 /**
  * getBlocksByStoryId — ordered list of blocks for a story.
  */
-export async function getBlocksByStoryId(storyId: string) {
+export async function getBlocksByStoryId(rawStoryId: string) {
+  const storyId = z.string().uuid().parse(rawStoryId)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return []
@@ -29,14 +46,8 @@ export async function getBlocksByStoryId(storyId: string) {
 /**
  * createBlock — insert a new block into a story.
  */
-export async function createBlock(args: {
-  storyId: string
-  type: BlockType
-  order: number
-  props?: Record<string, unknown>
-  chapterId?: string
-  sceneId?: string
-}) {
+export async function createBlock(rawArgs: z.infer<typeof createBlockSchema>) {
+  const args = createBlockSchema.parse(rawArgs)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -62,9 +73,11 @@ export async function createBlock(args: {
  * updateBlock — patch block props.
  */
 export async function updateBlock(
-  id: string,
-  props: Record<string, unknown>
+  rawId: string,
+  rawProps: Record<string, unknown>
 ) {
+  const id = z.string().uuid().parse(rawId)
+  const props = z.record(z.any()).parse(rawProps)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -84,7 +97,9 @@ export async function updateBlock(
 /**
  * updateBlockOrder — update the order of a single block.
  */
-export async function updateBlockOrder(id: string, order: number) {
+export async function updateBlockOrder(rawId: string, rawOrder: number) {
+  const id = z.string().uuid().parse(rawId)
+  const order = z.number().int().min(1).parse(rawOrder)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -98,7 +113,8 @@ export async function updateBlockOrder(id: string, order: number) {
   return id
 }
 
-export async function reorderBlocks(blockIds: string[]) {
+export async function reorderBlocks(rawBlockIds: string[]) {
+  const blockIds = z.array(z.string().uuid()).parse(rawBlockIds)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")
@@ -120,7 +136,8 @@ export async function reorderBlocks(blockIds: string[]) {
 /**
  * removeBlock — delete a block by ID.
  */
-export async function removeBlock(id: string) {
+export async function removeBlock(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error("Unauthenticated")

@@ -12,7 +12,7 @@ import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
 import { CoverImageUpload } from "@/components/cover-image-upload";
 import { ChapterBuilderCard } from "./_components/chapter-builder-card";
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 import {
   getFullStoryById,
   updateStory,
@@ -604,7 +604,7 @@ export default function DraftEditorPage({
               </p>
             )}
 
-            <BrutalistCard variant="panel" padding="md" className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6 bg-bg-panel border-border-strong">
+            <DashboardCard variant="panel" padding="md" className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 mt-6 bg-bg-panel border-border-strong">
               <div className="space-y-2">
                 <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
                   Cover Art
@@ -667,13 +667,13 @@ export default function DraftEditorPage({
                   </div>
                 </div>
               </div>
-            </BrutalistCard>
+            </DashboardCard>
           </div>
 
           <hr className="border border-border/50" />
 
           {/* Chapters Builder */}
-          <BrutalistCard variant="panel" padding="md" className="space-y-6 bg-bg-panel border-border-strong">
+          <DashboardCard variant="panel" padding="md" className="space-y-6 bg-bg-panel border-border-strong">
             <div className="flex items-center justify-between border-b border-border/50 pb-4 mb-4">
               <div>
                 <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground">Chapters</h2>
@@ -732,12 +732,12 @@ export default function DraftEditorPage({
                 </div>
               )}
             </div>
-          </BrutalistCard>
+          </DashboardCard>
 
           <hr className="border border-border/50" />
 
           {/* Post-Story Metadata */}
-          <BrutalistCard variant="panel" padding="md" className="space-y-8 bg-bg-panel border-border-strong">
+          <DashboardCard variant="panel" padding="md" className="space-y-8 bg-bg-panel border-border-strong">
             <h2 className="font-heading text-xl font-black uppercase tracking-tighter text-foreground border-b border-border/50 pb-4">Closing Details</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -782,7 +782,7 @@ export default function DraftEditorPage({
                 </div>
               </div>
             </div>
-          </BrutalistCard>
+          </DashboardCard>
         </div>
       </div>
 

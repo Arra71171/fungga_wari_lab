@@ -1,17 +1,65 @@
 "use server"
 
+import { z } from "zod"
+
 import { createClient } from "@/lib/supabase/server"
 import type { Database } from "@workspace/ui/types/supabase"
 
 type ChapterRow = Database["public"]["Tables"]["chapters"]["Row"]
 type SceneRow = Database["public"]["Tables"]["scenes"]["Row"]
 
+
+// ─── Zod Schemas ─────────────────────────────────────────────────────────────
+
+const createChapterSchema = z.object({
+  storyId: z.string().uuid(),
+  title: z.string().min(1).max(255),
+  order: z.number().int().min(1)
+})
+
+const updateChapterPatchSchema = z.object({
+  title: z.string().min(1).max(255).optional(),
+  order: z.number().int().min(1).optional(),
+  illustration_url: z.string().url().optional().nullable().or(z.literal("")),
+  audio_url: z.string().url().optional().nullable().or(z.literal("")),
+  content: z.string().optional().nullable(),
+  tiptap_content: z.any().optional().nullable()
+})
+
+const createSceneSchema = z.object({
+  chapterId: z.string().uuid(),
+  title: z.string().max(255).optional(),
+  order: z.number().int().min(1)
+})
+
+const updateSceneContentSchema = z.object({
+  content: z.string().optional(),
+  tiptap_content: z.any().optional(),
+  reading_time: z.number().int().min(0).optional(),
+  excerpt: z.string().max(1000).optional(),
+  title: z.string().max(255).optional()
+})
+
+const updateScenePatchSchema = z.object({
+  title: z.string().min(1).max(255).optional().nullable(),
+  order: z.number().int().min(1).optional(),
+  illustration_url: z.string().url().optional().nullable().or(z.literal("")),
+  is_draft: z.boolean().optional()
+})
+
+const addChoiceSchema = z.object({
+  sceneId: z.string().uuid(),
+  label: z.string().min(1).max(255),
+  nextSceneId: z.string().uuid()
+})
+
 // ─── Chapters ─────────────────────────────────────────────────────────────────
 
 /**
  * getChaptersByStory — ordered list of chapters for a story.
  */
-export async function getChaptersByStory(storyId: string) {
+export async function getChaptersByStory(rawStoryId: string) {
+  const storyId = z.string().uuid().parse(rawStoryId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return []
@@ -28,11 +76,8 @@ export async function getChaptersByStory(storyId: string) {
 /**
  * createChapter — add a chapter to a story.
  */
-export async function createChapter(args: {
-  storyId: string
-  title: string
-  order: number
-}) {
+export async function createChapter(rawArgs: z.infer<typeof createChapterSchema>) {
+  const args = createChapterSchema.parse(rawArgs)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -76,9 +121,11 @@ export async function createChapter(args: {
  * updateChapter — patch chapter fields.
  */
 export async function updateChapter(
-  id: string,
-  patch: Partial<Pick<ChapterRow, "title" | "order" | "illustration_url" | "audio_url" | "content" | "tiptap_content">>
+  rawId: string,
+  rawPatch: z.infer<typeof updateChapterPatchSchema>
 ) {
+  const id = z.string().uuid().parse(rawId)
+  const patch = updateChapterPatchSchema.parse(rawPatch)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -95,7 +142,8 @@ export async function updateChapter(
 /**
  * deleteChapter — deletes chapter + cascades scenes/choices via FK.
  */
-export async function deleteChapter(id: string) {
+export async function deleteChapter(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -122,7 +170,8 @@ export async function deleteChapter(id: string) {
 /**
  * getScenesByChapter — ordered list of scenes for a chapter.
  */
-export async function getScenesByChapter(chapterId: string) {
+export async function getScenesByChapter(rawChapterId: string) {
+  const chapterId = z.string().uuid().parse(rawChapterId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return []
@@ -139,7 +188,8 @@ export async function getScenesByChapter(chapterId: string) {
 /**
  * getSceneById — single scene with content + choices.
  */
-export async function getSceneById(id: string) {
+export async function getSceneById(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return null
@@ -161,11 +211,8 @@ export async function getSceneById(id: string) {
 /**
  * createScene — add a scene to a chapter.
  */
-export async function createScene(args: {
-  chapterId: string
-  title?: string
-  order: number
-}) {
+export async function createScene(rawArgs: z.infer<typeof createSceneSchema>) {
+  const args = createSceneSchema.parse(rawArgs)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -190,15 +237,11 @@ export async function createScene(args: {
  * updateSceneContent — save TipTap editor content + auto-extract excerpt.
  */
 export async function updateSceneContent(
-  id: string,
-  args: {
-    content?: string
-    tiptap_content?: Record<string, unknown>
-    reading_time?: number
-    excerpt?: string
-    title?: string
-  }
+  rawId: string,
+  rawArgs: z.infer<typeof updateSceneContentSchema>
 ) {
+  const id = z.string().uuid().parse(rawId)
+  const args = updateSceneContentSchema.parse(rawArgs)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -219,9 +262,11 @@ export async function updateSceneContent(
  * updateScene — patch scene metadata.
  */
 export async function updateScene(
-  id: string,
-  patch: Partial<Pick<SceneRow, "title" | "order" | "illustration_url" | "is_draft">>
+  rawId: string,
+  rawPatch: z.infer<typeof updateScenePatchSchema>
 ) {
+  const id = z.string().uuid().parse(rawId)
+  const patch = updateScenePatchSchema.parse(rawPatch)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -234,7 +279,8 @@ export async function updateScene(
 /**
  * publishScene — mark scene as non-draft + increment version.
  */
-export async function publishScene(id: string) {
+export async function publishScene(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -258,7 +304,8 @@ export async function publishScene(id: string) {
 /**
  * deleteScene — cascades choices via FK ON DELETE CASCADE.
  */
-export async function deleteScene(id: string) {
+export async function deleteScene(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -273,11 +320,8 @@ export async function deleteScene(id: string) {
 /**
  * addChoice — add interactive choice to a scene.
  */
-export async function addChoice(args: {
-  sceneId: string
-  label: string
-  nextSceneId: string
-}) {
+export async function addChoice(rawArgs: z.infer<typeof addChoiceSchema>) {
+  const args = addChoiceSchema.parse(rawArgs)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")
@@ -299,7 +343,8 @@ export async function addChoice(args: {
 /**
  * deleteChoice — remove a branching choice.
  */
-export async function deleteChoice(id: string) {
+export async function deleteChoice(rawId: string) {
+  const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) throw new Error("Unauthenticated")

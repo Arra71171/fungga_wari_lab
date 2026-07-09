@@ -6,7 +6,7 @@ import { deleteTask } from "@/actions/taskActions";
 import type { Database } from "@workspace/ui/types/supabase";
 import { SendTaskEmailDialog } from "./SendTaskEmailDialog";
 
-import { BrutalistCard } from "@workspace/ui/components/BrutalistCard";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type TaskStatus = Database["public"]["Enums"]["task_status"];
 type TaskPriority = Database["public"]["Enums"]["task_priority"];
@@ -36,7 +36,7 @@ export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
   };
 
   return (
-    <BrutalistCard
+    <DashboardCard
       variant="interactive"
       className={cn(
         "group relative p-5",
@@ -63,7 +63,7 @@ export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
         </h4>
         <button
           onClick={handleDelete}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive absolute top-4 right-4 bg-bg-base/80 p-1 md:backdrop-blur"
+          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive absolute top-4 right-4 bg-background p-1 md:backdrop-blur"
           aria-label="Delete task"
         >
           <Trash2 className="size-4" />
@@ -97,13 +97,13 @@ export function TaskCard({ task, users = [], onDeleted }: TaskCardProps) {
               ? "border-brand-ochre/30 text-brand-ochre bg-brand-ochre/10"
               : task.status === "illustrating"
               ? "border-brand-ochre/50 text-brand-ochre bg-brand-ochre/10"
-              : "border-border-strong text-muted-foreground/80 bg-bg-base"
+              : "border-border-subtle text-muted-foreground/80 bg-background"
           )}
         >
           {task.status === "done" && <CheckCircle2 className="size-3" />}
           <span>{task.status.replace(/_/g, " ")}</span>
         </div>
       </div>
-    </BrutalistCard>
+    </DashboardCard>
   );
 }

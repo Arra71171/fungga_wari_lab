@@ -121,7 +121,7 @@ export function SendTaskEmailDialog({
             Dispatch Brief
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Send an email brief about this task to a team operative.
+            Send an email brief about this task to a team member.
           </DialogDescription>
         </DialogHeader>
 
@@ -145,7 +145,7 @@ export function SendTaskEmailDialog({
               htmlFor="recipientId"
               className="font-sans text-xs tracking-wide text-muted-foreground"
             >
-              Recipient Operative
+              Recipient
             </Label>
             {usersWithEmail.length === 0 ? (
               <p className="text-xs font-mono text-destructive bg-destructive/10 border border-destructive/20 p-3">
@@ -162,7 +162,7 @@ export function SendTaskEmailDialog({
                   id="recipientId"
                   className="rounded-none bg-bg-surface border-border font-sans text-sm focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50"
                 >
-                  <SelectValue placeholder="Select operative..." />
+                  <SelectValue placeholder="Select member..." />
                 </SelectTrigger>
                 <SelectContent className="rounded-none border-border bg-bg-panel">
                   {usersWithEmail.map((u) => (
@@ -193,7 +193,7 @@ export function SendTaskEmailDialog({
               name="message"
               required
               className="rounded-none bg-bg-surface border-border min-h-[100px] resize-y font-sans text-sm focus-visible:ring-brand-ember/20 focus-visible:border-brand-ember/50"
-              placeholder="Describe what you need from this operative..."
+              placeholder="Describe what you need from this member..."
             />
           </div>
 

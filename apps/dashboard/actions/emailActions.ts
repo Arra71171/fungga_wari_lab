@@ -59,7 +59,7 @@ export async function sendTaskEmail(args: z.infer<typeof sendTaskEmailSchema>) {
     console.warn("[sendTaskEmail] Could not fetch sender profile:", profileError.message)
   }
 
-  const senderName = senderProfile?.name ?? "Studio Operative"
+  const senderName = senderProfile?.name ?? "Studio Member"
   const senderEmail = senderProfile?.email ?? user.email ?? "noreply@fungga-wari.com"
 
   // Build a canonical task URL — omit the CTA entirely if env var is not set
