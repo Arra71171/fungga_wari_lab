@@ -74,7 +74,7 @@ function SplitText({
       variants={containerVariants(stagger, delay)}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
-      className={cn("overflow-hidden", className)}
+      data-slot="splittext" className={cn("overflow-hidden", className)}
       aria-label={text}
     >
       {words.map((word, i) => (

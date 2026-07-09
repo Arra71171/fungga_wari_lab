@@ -26,7 +26,7 @@ export function MagneticBackLink({
     <Link href={href} aria-label={`Return to ${label}`}>
       <MagneticButton
         strength={0.35}
-        className={cn(
+        data-slot="magneticbacklink" className={cn(
           "group flex flex-col sm:flex-row items-start sm:items-center gap-3 outline-none pointer-events-auto",
           className
         )}

@@ -8,7 +8,7 @@ interface NoiseOverlayProps extends React.HTMLAttributes<HTMLDivElement> {
 export function NoiseOverlay({ opacity = 0.04, className, ...props }: NoiseOverlayProps) {
   return (
     <div
-      className={cn("pointer-events-none fixed inset-0 z-50 size-full overflow-hidden", className)}
+      data-slot="noiseoverlay" className={cn("pointer-events-none fixed inset-0 z-50 size-full overflow-hidden", className)}
       style={{ opacity }}
       aria-hidden="true"
       {...props}

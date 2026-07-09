@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 import { cn } from "@workspace/ui/lib/utils"
 
-const brutalistCardVariants = cva(
+const dashboardCardVariants = cva(
   "border border-border/50 rounded-none transition-all duration-300",
   {
     variants: {
@@ -27,27 +27,27 @@ const brutalistCardVariants = cva(
   }
 )
 
-type BrutalistCardProps = React.ComponentProps<"div"> & 
-  VariantProps<typeof brutalistCardVariants> & {
+type DashboardCardProps = React.ComponentProps<"div"> & 
+  VariantProps<typeof dashboardCardVariants> & {
     asChild?: boolean
   }
 
-function BrutalistCard({
+function DashboardCard({
   className,
   variant,
   padding,
   asChild = false,
   ...props
-}: BrutalistCardProps) {
+}: DashboardCardProps) {
   const Comp = asChild ? Slot.Root : "div"
   return (
     <Comp
-      data-slot="brutalist-card"
-      className={cn(brutalistCardVariants({ variant, padding, className }))}
+      data-slot="dashboard-card"
+      className={cn(dashboardCardVariants({ variant, padding, className }))}
       {...props}
     />
   )
 }
 
-export { BrutalistCard, brutalistCardVariants }
-export type { BrutalistCardProps }
+export { DashboardCard, dashboardCardVariants }
+export type { DashboardCardProps }

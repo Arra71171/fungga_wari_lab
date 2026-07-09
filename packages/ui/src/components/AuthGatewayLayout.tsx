@@ -62,7 +62,7 @@ export function AuthGatewayLayout({
      * Auth portals respect the user's theme preference from next-themes.
      * All tokens use semantic design-system values that adapt to light/dark.
      */
-    <div className="relative min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 overflow-x-hidden">
+    <div data-slot="authgatewaylayout" className="relative min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 overflow-x-hidden">
       <AmbientGrid />
       <NoiseOverlay opacity={0.028} />
 

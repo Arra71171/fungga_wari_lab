@@ -131,7 +131,7 @@ export function EmberParticles({ density = 50, speed = 1, className, ...props }:
   return (
     <canvas
       ref={canvasRef}
-      className={cn("pointer-events-none absolute inset-0 size-full mix-blend-screen", className)}
+      data-slot="emberparticles" className={cn("pointer-events-none absolute inset-0 size-full mix-blend-screen", className)}
       aria-hidden="true"
       {...props}
     />

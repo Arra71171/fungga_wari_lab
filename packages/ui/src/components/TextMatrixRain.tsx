@@ -158,7 +158,7 @@ function TextMatrixRain({
      * This avoids CLS (cumulative layout shift) on mount.
      */
     <span
-      className={cn("relative inline-block cursor-pointer", className)}
+      data-slot="textmatrixrain" className={cn("relative inline-block cursor-pointer", className)}
       aria-label={children}
       aria-live="off"
       onMouseEnter={handleInteraction}

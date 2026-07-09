@@ -50,7 +50,7 @@ function MagneticButton({
       style={{ x, y, display: "inline-block" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={cn("cursor-pointer", className)}
+      data-slot="magneticbutton" className={cn("cursor-pointer", className)}
       {...props}
     >
       {children}

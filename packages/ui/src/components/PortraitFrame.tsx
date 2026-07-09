@@ -33,7 +33,7 @@ function PortraitFrame({
       alt={alt}
       fill
       sizes={imageSizes}
-      className={imageClassName}
+      data-slot="portraitframe" className={imageClassName}
       unoptimized
     />
   )

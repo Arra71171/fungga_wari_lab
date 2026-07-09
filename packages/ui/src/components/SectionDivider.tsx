@@ -32,7 +32,7 @@ export function SectionDivider({
     "absolute bottom-0 left-0 w-full overflow-hidden translate-y-[1px]"
 
   return (
-    <div className={cn(containerClass, "h-8 md:h-16 lg:h-24 pointer-events-none text-background fill-current z-10", className)}>
+    <div data-slot="sectiondivider" className={cn(containerClass, "h-8 md:h-16 lg:h-24 pointer-events-none text-background fill-current z-10", className)}>
       <svg 
         viewBox="0 0 1200 100" 
         preserveAspectRatio="none" 
