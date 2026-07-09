@@ -380,11 +380,11 @@
 }
 
 .ProseMirror code {
-  @apply font-mono bg-secondary/50 border border-border/50 px-1.5 py-0.5 rounded-md text-[0.85em];
+  @apply font-mono bg-secondary/50 border border-border/50 px-1.5 py-0.5 rounded-none text-[0.85em];
 }
 
 .ProseMirror pre {
-  @apply font-mono bg-secondary/30 border border-border/50 p-4 rounded-lg my-4 overflow-x-auto;
+  @apply font-mono bg-secondary/30 border border-border/50 p-4 rounded-none my-4 overflow-x-auto;
 }
 
 .ProseMirror pre code {

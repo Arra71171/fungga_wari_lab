@@ -86,6 +86,7 @@ export function HeroIsland() {
   return (
     <section
       ref={heroRef}
+      data-slot="hero-island"
       className="relative px-6 md:px-12 lg:px-20 py-24 min-h-[85vh] flex items-center justify-center overflow-hidden"
     >
       <motion.div
@@ -180,7 +181,7 @@ export function HeroIsland() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-muted-foreground/60 uppercase font-semibold">Integrity</span>
-                    <span className="font-medium text-foreground flex items-center gap-1.5"><div className="size-1.5 bg-green-500/80 rounded-none"/> Verified</span>
+                     <span className="font-medium text-foreground flex items-center gap-1.5"><div className="size-1.5 bg-primary/60 rounded-none"/> Verified</span>
                   </div>
                 </div>
               </div>
@@ -197,7 +198,7 @@ export function SectionHeadingIsland({ title, subtitle, badge }: { title: string
   const isInView = useInView(ref, { once: true, margin: "0px 0px -80px 0px" });
 
   return (
-    <div ref={ref} className="mb-20 md:mb-24 flex flex-col items-center text-center max-w-3xl mx-auto">
+    <div ref={ref} data-slot="section-heading-island" className="mb-20 md:mb-24 flex flex-col items-center text-center max-w-3xl mx-auto">
       <AnimatePresence>
         {badge && (
           <motion.span
@@ -254,7 +255,7 @@ export function BentoGridIsland() {
   }, { scope: bentoGridRef });
 
   return (
-    <div className="max-w-5xl mx-auto w-full" ref={bentoGridRef}>
+    <div data-slot="bento-grid-island" className="max-w-5xl mx-auto w-full" ref={bentoGridRef}>
       <SectionHeadingIsland
         badge="Catalogue Index"
         title="The Archive of Orality"
@@ -394,7 +395,7 @@ export function CapabilityCellIsland({ icon, title, desc }: { icon: React.ReactN
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="group p-8 border-r border-border/50 bg-background/50 hover:bg-secondary/20 transition-colors duration-300 cursor-default">
+    <div ref={containerRef} data-slot="capability-cell-island" className="group p-8 border-r border-border/50 bg-background/50 hover:bg-secondary/20 transition-colors duration-300 cursor-default">
       <div ref={iconRef} className="size-12 mb-8 rounded-none border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm">
         {icon}
       </div>
@@ -407,7 +408,7 @@ export function CapabilityCellIsland({ icon, title, desc }: { icon: React.ReactN
 
 export function CtaIsland() {
   return (
-    <div className="relative z-30 max-w-5xl mx-auto w-full flex items-center justify-center text-center">
+    <div data-slot="cta-island" className="relative z-30 max-w-5xl mx-auto w-full flex items-center justify-center text-center">
       <motion.div
         variants={{ hidden: { opacity: 0, scale: 0.94, y: 30 }, visible: { opacity: 1, scale: 1, y: 0 } }}
         initial="hidden"
@@ -440,7 +441,7 @@ export function CtaIsland() {
 
 export function FooterLinksIsland() {
   return (
-    <div className="flex flex-wrap justify-center gap-6 text-2xs font-mono text-muted-foreground tracking-wide font-bold">
+    <div data-slot="footer-links-island" className="flex flex-wrap justify-center gap-6 text-2xs font-mono text-muted-foreground tracking-wide font-bold">
       {[
         { label: "Archive", href: "/archive" },
         { label: "Sys_Status", href: "/sys-status" },
