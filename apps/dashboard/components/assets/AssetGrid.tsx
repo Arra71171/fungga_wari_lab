@@ -268,7 +268,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
                     setSelectedAsset((prev) => prev ? { ...prev, title: e.target.value } : prev);
                   }}
                   onBlur={(e) => handleUpdate(selectedAsset.id, { title: e.target.value })}
-                  className="w-full h-9 px-3 bg-bg-base border border-border font-sans text-sm focus:outline-none focus:ring-1 focus:ring-brand-ember"
+                  className="w-full h-9 px-3 bg-bg-base border border-border font-sans text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember"
                   disabled={isUpdating}
                 />
               </div>
@@ -288,7 +288,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
                     const tags = e.target.value.split(",").map(t => t.trim()).filter(Boolean);
                     handleUpdate(selectedAsset.id, { tags });
                   }}
-                  className="w-full h-9 px-3 bg-bg-base border border-border font-sans text-sm focus:outline-none focus:ring-1 focus:ring-brand-ember"
+                  className="w-full h-9 px-3 bg-bg-base border border-border font-sans text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember"
                   placeholder="e.g. hero, forest, sketch"
                   disabled={isUpdating}
                 />

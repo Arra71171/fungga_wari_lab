@@ -1,5 +1,8 @@
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/react-vite";
-const path = require("path");
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -21,8 +24,8 @@ const config: StorybookConfig = {
         ...config.resolve,
         alias: {
           ...config.resolve?.alias,
-          "next/image": path.resolve(__dirname, "./mocks/next-image.tsx"),
-          "next/link": path.resolve(__dirname, "./mocks/next-link.tsx"),
+          "next/image": resolve(__dirname, "./mocks/next-image.tsx"),
+          "next/link": resolve(__dirname, "./mocks/next-link.tsx"),
         },
       },
       define: {

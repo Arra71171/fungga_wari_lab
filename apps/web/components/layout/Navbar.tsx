@@ -151,7 +151,7 @@ function Navbar() {
               <Button
                 variant="default"
                 size="sm"
-                className="rounded-none font-sans transition-all bg-slate-800 text-white hover:bg-slate-700"
+                className="rounded-none font-sans transition-all bg-primary text-primary-foreground hover:bg-primary/90"
                 asChild
               >
                 <Link href="/register">Sign Up</Link>

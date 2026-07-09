@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import https from "node:https";
 
-import { RateLimiter } from "@/lib/rateLimit";
+import { RateLimiter, getClientIp } from "@/lib/rateLimit";
 
 const requestSchema = z.object({
   text: z.string().min(1).max(2500),
@@ -61,7 +61,7 @@ function elevenLabsRequest(
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for") || "unknown";
+  const ip = getClientIp(req.headers.get("x-forwarded-for"));
   if (!ttsRateLimiter.check(ip)) {
     return NextResponse.json(
       { error: "Too many requests. Please slow down." },
