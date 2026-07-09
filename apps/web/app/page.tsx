@@ -93,10 +93,10 @@ export default async function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-border">
               {[
-                { title: "Lore Preservation", desc: "High-performance storage for multi-vocal multimedia formats.", icon: Globe },
-                { title: "Narrative Engine", desc: "Structured Zen Brutalist editor for deep narrative craft.", icon: Cpu },
-                { title: "Real-time Epigraphy", desc: "Collaborative tools for deep translation & cultural tagging.", icon: BookOpen },
-                { title: "Heritage Schemas", desc: "Structured data models designed for indigenous heritage.", icon: Database },
+                { title: "Lore Preservation", desc: "High-performance storage for multi-vocal multimedia formats.", icon: <Globe className="size-5" /> },
+                { title: "Narrative Engine", desc: "Structured Zen Brutalist editor for deep narrative craft.", icon: <Cpu className="size-5" /> },
+                { title: "Real-time Epigraphy", desc: "Collaborative tools for deep translation & cultural tagging.", icon: <BookOpen className="size-5" /> },
+                { title: "Heritage Schemas", desc: "Structured data models designed for indigenous heritage.", icon: <Database className="size-5" /> },
               ].map((cap, i) => (
                 <CapabilityCellIsland key={i} icon={cap.icon} title={cap.title} desc={cap.desc} />
               ))}

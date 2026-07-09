@@ -374,7 +374,7 @@ export function BentoGridIsland() {
   );
 }
 
-export function CapabilityCellIsland({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc: string; }) {
+export function CapabilityCellIsland({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string; }) {
   const containerRef = React.useRef(null);
   const lineRef = React.useRef(null);
   const iconRef = React.useRef(null);
@@ -396,7 +396,7 @@ export function CapabilityCellIsland({ icon: Icon, title, desc }: { icon: React.
   return (
     <div ref={containerRef} className="group p-8 border-r border-border/50 bg-background/50 hover:bg-secondary/20 transition-colors duration-300 cursor-default">
       <div ref={iconRef} className="size-12 mb-8 rounded-none border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm">
-        <Icon className="size-5" />
+        {icon}
       </div>
       <h3 className="text-lg font-medium tracking-wide text-foreground mb-3">{title}</h3>
       <p className="text-muted-foreground font-sans text-xs leading-relaxed mb-6 h-12">{desc}</p>
