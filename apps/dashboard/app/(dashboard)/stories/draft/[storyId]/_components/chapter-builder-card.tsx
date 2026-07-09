@@ -64,6 +64,8 @@ interface ChapterBuilderCardProps {
   onAddChoice?: () => void;
   onUpdateChoice?: (choiceId: string, field: string, value: string) => void;
   onDeleteChoice?: (choiceId: string) => void;
+  translationBlocks?: { id: string; language_code: string; tiptap_content: Record<string, unknown> }[];
+  onUpdateTranslation?: (id: string, languageCode: string, tiptapContent: Record<string, unknown>) => void;
 }
 
 export function ChapterBuilderCard({
@@ -84,7 +86,10 @@ export function ChapterBuilderCard({
   onAddChoice,
   onUpdateChoice,
   onDeleteChoice,
+  translationBlocks = [],
+  onUpdateTranslation,
 }: ChapterBuilderCardProps) {
+  const [activeLang, setActiveLang] = React.useState<"original" | "es" | "pt" | "qu">("original");
   const [showIllustration, setShowIllustration] = React.useState(
     !!illustrationUrl
   );
@@ -272,21 +277,45 @@ export function ChapterBuilderCard({
 
           {/* Story Content — the main blog-post editor */}
           <div className="space-y-3">
-            <Label className="text-fine font-sans font-medium tracking-wide text-brand-ember font-bold">
-              Story Content
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label className="text-fine font-sans font-medium tracking-wide text-brand-ember font-bold">
+                Story Content
+              </Label>
+              <div className="flex items-center gap-1">
+                {(["original", "es", "pt", "qu"] as const).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setActiveLang(lang)}
+                    className={cn(
+                      "px-3 py-1 text-[10px] font-mono tracking-wide uppercase transition-colors border",
+                      activeLang === lang 
+                        ? "bg-brand-ember text-primary-foreground border-brand-ember"
+                        : "bg-bg-panel text-muted-foreground border-border/50 hover:bg-bg-surface"
+                    )}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="text-tight-label text-muted-foreground font-mono bg-bg-surface px-4 py-2 border-l-2 border-brand-ember/40 leading-relaxed">
-              Write the narrative for this chapter. Use bold, italics, and
-              headings to shape the reading experience.
+              {activeLang === "original"
+                ? "Write the narrative for this chapter. Use bold, italics, and headings to shape the reading experience."
+                : `Translate the narrative to ${activeLang.toUpperCase()}.`}
             </div>
             <RichTextEditor
-              value={tiptapContent}
-              onChange={(updatedContent) =>
-                onUpdateTiptap(
-                  id,
-                  updatedContent as Record<string, unknown>
-                )
+              value={
+                activeLang === "original" 
+                  ? tiptapContent 
+                  : translationBlocks.find((b) => b.language_code === activeLang)?.tiptap_content
               }
+              onChange={(updatedContent) => {
+                if (activeLang === "original") {
+                  onUpdateTiptap(id, updatedContent as Record<string, unknown>);
+                } else if (onUpdateTranslation) {
+                  onUpdateTranslation(id, activeLang, updatedContent as Record<string, unknown>);
+                }
+              }}
               onImageUpload={handleImageUpload}
               className="w-full bg-bg-panel border border-border/50 rounded-none min-h-[480px]"
             />

@@ -45,6 +45,7 @@ import {
   addChoice,
   deleteChoice,
 } from "@/actions/chapterActions";
+import { saveTranslation } from "@/actions/translationActions";
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 
@@ -87,6 +88,7 @@ export type ChapterLocal = {
   audioUrl?: string;
   isNew?: boolean;
   choices: ChoiceLocal[];
+  translationBlocks?: { id: string; language_code: string; tiptap_content: Record<string, unknown> }[];
 };
 
 // ─── Component ─────────────────────────────────────────────────────────────
@@ -114,6 +116,9 @@ export default function DraftEditorPage({
   const [tags, setTags] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [language, setLanguage] = React.useState("meiteilon");
+  const [seriesId, setSeriesId] = React.useState<string>("none");
+  const [seriesOrder, setSeriesOrder] = React.useState<number | "">("");
+  const [authorSeries, setAuthorSeries] = React.useState<any[]>([]);
 
   // Chapters
   const [chapters, setChapters] = React.useState<ChapterLocal[]>([]);
@@ -143,10 +148,12 @@ export default function DraftEditorPage({
       setTags((story.tags || []).join(", "));
       setCategory(story.category || "other");
       setLanguage(story.language || "meiteilon");
+      setLanguage(story.language || "meiteilon");
 
       const mappedChapters: ChapterLocal[] = (story.chapters || []).map((c) => {
         const primaryScene = c.scenes && c.scenes.length > 0 ? c.scenes[0] : null;
         const sceneChoices = primaryScene?.choices ?? [];
+        const translationBlocks = primaryScene?.translation_blocks ?? [];
 
         return {
           id: c.id,
@@ -157,6 +164,7 @@ export default function DraftEditorPage({
           tiptapContent: (primaryScene?.tiptap_content || c.tiptap_content) as Record<string, unknown> | undefined,
           illustrationUrl: c.illustration_url ?? undefined,
           audioUrl: c.audio_url ?? undefined,
+          translationBlocks: translationBlocks as any,
           choices: sceneChoices.map((choice: { id: string; label: string; next_scene_id?: string }) => ({
             id: choice.id,
             label: choice.label,
@@ -206,6 +214,26 @@ export default function DraftEditorPage({
   const handleUpdateChapterTiptap = (id: string, content: Record<string, unknown>) => {
     setChapters(
       chapters.map((ch) => (ch.id === id ? { ...ch, tiptapContent: content } : ch))
+    );
+  };
+
+  const handleUpdateTranslation = (
+    id: string,
+    languageCode: string,
+    tiptapContent: Record<string, unknown>
+  ) => {
+    setChapters((prev) =>
+      prev.map((ch) => {
+        if (ch.id !== id) return ch;
+        const blocks = ch.translationBlocks ? [...ch.translationBlocks] : [];
+        const existingIdx = blocks.findIndex((b) => b.language_code === languageCode);
+        if (existingIdx !== -1) {
+          blocks[existingIdx] = { ...blocks[existingIdx]!, tiptap_content: tiptapContent };
+        } else {
+          blocks.push({ id: `temp-${crypto.randomUUID()}`, language_code: languageCode, tiptap_content: tiptapContent });
+        }
+        return { ...ch, translationBlocks: blocks };
+      })
     );
   };
 
@@ -428,6 +456,22 @@ export default function DraftEditorPage({
           });
         }
         // Existing choice updates would require updateChoice — add if needed
+      }
+    }
+
+    // 6. Upsert translations
+    for (let i = 0; i < updatedChapters.length; i++) {
+      const ch = updatedChapters[i]!;
+      const currentSceneId = ch.sceneId || chapterIdToSceneId[ch.id];
+      if (!currentSceneId || !ch.translationBlocks) continue;
+
+      for (const block of ch.translationBlocks) {
+        if (!block.tiptap_content) continue;
+        await saveTranslation({
+          sceneId: currentSceneId,
+          languageCode: block.language_code,
+          tiptapContent: block.tiptap_content,
+        });
       }
     }
 
@@ -666,6 +710,45 @@ export default function DraftEditorPage({
                     </Select>
                   </div>
                 </div>
+
+                {authorSeries.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
+                        Series
+                      </Label>
+                      <Select value={seriesId} onValueChange={setSeriesId}>
+                        <SelectTrigger className="flex h-10 w-full border border-border/50 bg-bg-surface px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-ember/50 text-foreground rounded-none">
+                          <SelectValue placeholder="No Series" />
+                        </SelectTrigger>
+                        <SelectContent className="border border-border/50 rounded-none shadow-xs bg-bg-surface">
+                          <SelectItem value="none" className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer text-muted-foreground">
+                            No Series
+                          </SelectItem>
+                          {authorSeries.map((s) => (
+                            <SelectItem key={s.id} value={s.id} className="font-sans text-sm focus:bg-primary focus:text-primary-foreground rounded-none cursor-pointer">
+                              {s.title}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {seriesId !== "none" && (
+                      <div className="space-y-2">
+                        <Label className="text-fine font-sans font-medium tracking-wide text-muted-foreground">
+                          Order in Series
+                        </Label>
+                        <Input
+                          type="number"
+                          value={seriesOrder}
+                          onChange={(e) => setSeriesOrder(e.target.value ? Number(e.target.value) : "")}
+                          placeholder="e.g. 1"
+                          className="h-10 border border-border/50 bg-bg-surface rounded-none focus-visible:ring-1 focus-visible:ring-brand-ember/50"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </DashboardCard>
           </div>
@@ -703,10 +786,12 @@ export default function DraftEditorPage({
                   illustrationUrl={ch.illustrationUrl}
                   audioUrl={ch.audioUrl}
                   choices={ch.choices}
+                  translationBlocks={ch.translationBlocks}
                   allChapters={chapters}
                   isExpanded={expandedChapterIds.has(ch.id)}
                   onUpdate={handleUpdateChapter}
                   onUpdateTiptap={handleUpdateChapterTiptap}
+                  onUpdateTranslation={handleUpdateTranslation}
                   onDelete={handleDeleteChapterClick}
                   onToggleExpand={handleToggleExpand}
                   onAddChoice={() => handleAddChoice(ch.id)}

@@ -37,7 +37,17 @@ import { MobileReaderBar } from "./MobileReaderBar";
  *   └──────────────────────┘
  *   + Sheet drawers for chapters (left) and reader panel (bottom)
  */
-export function StoryReaderShell({ slug }: { slug: string }) {
+export function StoryReaderShell({ 
+  slug,
+  initialComments = [],
+  initialLikes = [],
+  currentUserId
+}: { 
+  slug: string;
+  initialComments?: any[];
+  initialLikes?: any[];
+  currentUserId?: string;
+}) {
   const { story, isLoading } = useStoryReader();
   const [rightPanelOpen, setRightPanelOpen] = React.useState(true);
 
@@ -127,7 +137,12 @@ export function StoryReaderShell({ slug }: { slug: string }) {
 
       {/* ─── Center canvas ─────────────────────────────────────────────── */}
       <div className="flex-1 min-w-0">
-        <BlockStoryReader slug={slug} />
+        <BlockStoryReader 
+          slug={slug} 
+          initialComments={initialComments}
+          initialLikes={initialLikes}
+          currentUserId={currentUserId}
+        />
       </div>
 
       {/* ─── Desktop: Right panel with built-in toggle ─────────────────── */}
