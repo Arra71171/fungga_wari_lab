@@ -23,8 +23,10 @@ export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boole
 
   const { error } = await adminSupabase
     .from("users")
-    .update({ has_lifetime_access: grantAccess })
-    .eq("auth_id", authId);
+    .upsert(
+      { auth_id: authId, has_lifetime_access: grantAccess },
+      { onConflict: "auth_id" }
+    );
 
   if (error) {
     throw new Error("Failed to update access: " + error.message);
@@ -39,7 +41,11 @@ export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boole
  */
 export async function getBillingStatus(rawAuthId: string) {
   const authId = authIdSchema.parse(rawAuthId);
-  await requireUser();
+  const { profile: caller } = await requireUser();
+
+  if (caller.auth_id !== authId && caller.role !== "superadmin" && caller.role !== "admin") {
+    throw new Error("Forbidden — you can only view your own billing status");
+  }
 
   const adminSupabase = createAdminClient();
 
