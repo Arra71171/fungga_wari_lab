@@ -70,14 +70,15 @@ export function StoryComments({
           />
           <Button 
             type="submit" 
+            size="sm"
             disabled={isSubmitting || !content.trim()}
-            className="rounded-full bg-primary font-mono text-primary-foreground hover:bg-primary/90"
+            className="rounded-none font-mono tracking-widest text-[10px] uppercase"
           >
             Post Comment
           </Button>
         </form>
       ) : (
-        <div className="mb-10 rounded-lg border border-border bg-secondary/10 p-6 text-center">
+        <div className="mb-10 rounded-none border border-border bg-secondary/10 p-6 text-center">
           <p className="font-mono text-sm text-muted-foreground">
             Please sign in to join the discussion.
           </p>
@@ -87,11 +88,11 @@ export function StoryComments({
       <div className="space-y-6">
         {comments.map((comment) => (
           <div key={comment.id} className="flex gap-4">
-            <div className="size-10 border border-border rounded-full overflow-hidden flex items-center justify-center shrink-0">
+            <div className="size-8 border border-border rounded-none overflow-hidden flex items-center justify-center shrink-0">
               {comment.users?.avatar_url ? (
-                <img src={comment.users.avatar_url} alt="" className="object-cover w-full h-full" />
+                <img src={comment.users.avatar_url} alt="" className="object-cover w-full h-full rounded-none" />
               ) : (
-                <div className="bg-secondary font-mono text-xs w-full h-full flex items-center justify-center">
+                <div className="bg-secondary font-mono text-[10px] w-full h-full flex items-center justify-center rounded-none">
                   {comment.users?.name?.slice(0, 2).toUpperCase() || "AN"}
                 </div>
               )}

@@ -192,9 +192,9 @@ function ExpandedStoryView({ story }: { story: Story }) {
       </motion.div>
 
       {/* Content — scrollable on mobile, fills right on desktop */}
-      <div className="flex flex-1 flex-col overflow-y-auto p-6 md:w-[60%] md:p-10">
+      <div className="flex flex-1 flex-col overflow-y-auto p-6 md:w-[60%] md:p-8">
         {/* Header */}
-        <div className="border-b border-border pb-6">
+        <div className="pb-4">
           <span className="mb-2 block font-mono text-xs font-medium tracking-widest text-primary uppercase">
             {getCategoryLabel(story.category)}
           </span>
@@ -207,8 +207,8 @@ function ExpandedStoryView({ story }: { story: Story }) {
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-8 py-8 lg:grid lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
+        <div className="flex flex-col pt-4 pb-0">
+          <div className="w-full">
             {story.description && (
               <motion.p
                 layoutId={`desc-${layoutId}`}
@@ -218,19 +218,9 @@ function ExpandedStoryView({ story }: { story: Story }) {
               </motion.p>
             )}
 
-            {story.moral && (
-              <div className="border-l-2 border-brand-ochre/30 pl-4">
-                <p className="font-mono text-sm leading-relaxed text-brand-ochre/90 italic">
-                  &ldquo;{story.moral}&rdquo;
-                </p>
-                <span className="mt-2 block font-mono text-[10px] tracking-widest text-brand-ochre/50 uppercase">
-                  Moral of the story
-                </span>
-              </div>
-            )}
           </div>
 
-          <div className="space-y-5 font-mono text-xs lg:col-span-1">
+          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 font-mono text-xs">
             {story.attributedAuthor && (
               <div>
                 <span className="mb-1 block tracking-widest text-muted-foreground uppercase">
@@ -277,11 +267,11 @@ function ExpandedStoryView({ story }: { story: Story }) {
         </div>
 
         {/* CTA */}
-        <div className="mt-auto border-t border-border pt-6">
+        <div className="mt-auto pt-6">
           <Link href={`/stories/${story.slug}`} className="block">
-            <Button className="h-12 w-full rounded-none font-heading text-lg font-black uppercase tracking-widest">
+            <Button size="sm" className="w-full rounded-none font-mono text-xs tracking-widest uppercase">
               Enter the Archive
-              <ArrowRight className="ml-2 size-5" />
+              <ArrowRight className="ml-2 size-4" />
             </Button>
           </Link>
         </div>
@@ -349,7 +339,7 @@ function StoryCard({ story, index }: { story: Story; index: number }) {
         trigger={trigger}
         expandedContent={<ExpandedStoryView story={story} />}
         className="h-full flex flex-col"
-        contentClassName="md:flex-row md:max-w-[1000px] md:overflow-hidden h-full max-h-[90vh]"
+        contentClassName="md:flex-row md:max-w-[800px] md:overflow-hidden h-[85vh] md:h-[75vh] md:max-h-[680px]"
       />
     </motion.div>
   )
@@ -632,7 +622,7 @@ export default function StoriesPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5 lg:grid-cols-4"
+                className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-6 md:gap-8 lg:gap-10 sm:grid-cols-2 lg:grid-cols-3"
               >
                 {Array.from({ length: 8 }).map((_, i) => (
                   <SkeletonCard key={i} />
@@ -681,7 +671,7 @@ export default function StoriesPage() {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0 }}
-                className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5 lg:grid-cols-4"
+                className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-6 md:gap-8 lg:gap-10 sm:grid-cols-2 lg:grid-cols-3"
               >
                 {stories.map((s, i) => (
                   <StoryCard key={s._id} story={s} index={i} />

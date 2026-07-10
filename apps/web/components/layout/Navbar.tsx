@@ -34,6 +34,7 @@ import { ProfileMenu } from "./ProfileMenu";
 
 const navItems = [
   { name: "Library", href: "/stories", icon: BookOpen },
+  { name: "Pricing", href: "/pricing", icon: CreditCard },
   { name: "System", href: "/#features", icon: Home },
   { name: "Community", href: "/#community", icon: Users },
   { name: "Folklore", href: "/#archive", icon: Library },
