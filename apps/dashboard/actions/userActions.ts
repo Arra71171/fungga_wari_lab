@@ -1,7 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
-import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { z } from "zod"
 import { requireUser } from "./authHelpers"
 
@@ -206,17 +206,8 @@ export async function deleteUserAccount(targetUserId: string) {
     throw new Error("Self-deletion is not permitted here")
   }
 
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!serviceRoleKey) {
-    console.error("[deleteUserAccount] SUPABASE_SERVICE_ROLE_KEY is not configured")
-    throw new Error("Server configuration error: missing service role key")
-  }
-
   // Use service role client to bypass RLS and use Admin API
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    serviceRoleKey
-  )
+  const supabaseAdmin = createAdminClient()
 
   if (target.auth_id) {
     // Delete from auth.users, which cascades to public.users

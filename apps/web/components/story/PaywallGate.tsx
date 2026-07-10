@@ -45,10 +45,12 @@ export function PaywallGate({ slug, hasAccess, initialStory, children }: Paywall
       </div>
 
       {/* Paywall overlay */}
-      <PaywallOverlay
-        onUnlock={checkoutWithSlug}
-        storySlug={slug}
-      />
+      <React.Suspense fallback={<div className="absolute inset-0 z-30 bg-cinematic-bg/80" />}>
+        <PaywallOverlay
+          onUnlock={checkoutWithSlug}
+          storySlug={slug}
+        />
+      </React.Suspense>
     </div>
   );
 }

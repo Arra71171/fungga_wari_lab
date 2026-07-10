@@ -9,6 +9,7 @@ import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react"
 import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
+import { toast } from "sonner"
 
 function LoginForm() {
   const searchParams = useSearchParams()
@@ -39,27 +40,33 @@ function LoginForm() {
     setError(null)
     setIsLoading(true)
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (signInError) {
-      setError(signInError.message)
-      setIsLoading(false)
-      return
-    }
-
-    /**
-     * Use a hard navigation (window.location) instead of router.push() + router.refresh().
-     *
-     * We add a slight delay to ensure the @supabase/ssr auth listener has time to
-     * write the session into document.cookie. Without this delay, the redirect can
-     * fire before the cookie is set, causing a double-login bug.
-     */
-    setTimeout(() => {
-      window.location.replace(redirectTo)
-    }, 500)
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+        if (signInError) {
+          reject(signInError)
+          return
+        }
+        resolve(true)
+      }),
+      {
+        loading: "Authenticating your credentials...",
+        success: () => {
+          setTimeout(() => {
+            window.location.replace(redirectTo)
+          }, 500)
+          return "Welcome to the Archives."
+        },
+        error: (err: any) => {
+          setError(err.message)
+          setIsLoading(false)
+          return err.message
+        }
+      }
+    )
   }
 
   return (

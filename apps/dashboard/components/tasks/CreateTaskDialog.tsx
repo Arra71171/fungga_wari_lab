@@ -162,7 +162,7 @@ export function CreateTaskDialog({ users, storyId, onCreated }: CreateTaskDialog
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="priority" className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
                 Priority

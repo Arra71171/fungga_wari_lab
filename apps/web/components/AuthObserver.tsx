@@ -13,11 +13,7 @@ export function AuthObserver() {
     const prevState = sessionStorage.getItem("fw_auth_state_web");
     const currentStr = user ? "true" : "false";
 
-    if (currentStr === "true" && prevState === "false") {
-      toast.success("Identity Verified", {
-        description: "Welcome to the Archives.",
-      });
-    } else if (currentStr === "false" && prevState === "true") {
+    if (currentStr === "false" && prevState === "true") {
       toast.info("Session Terminated", {
         description: "You have been logged out.",
       });

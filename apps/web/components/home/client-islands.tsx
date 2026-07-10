@@ -24,15 +24,18 @@ import {
   Database,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
+import { BentoGrid, BentoCard } from "@workspace/ui/components/bento-grid";
 import {
   Card,
   CardDescription,
   CardTitle,
 } from "@workspace/ui/components/card";
+import { Lens } from "@workspace/ui/components/lens";
 import { MagneticButton } from "@workspace/ui/components/MagneticButton";
 import { SplitText } from "@workspace/ui/components/SplitText";
 import { BorderBeam } from "@workspace/ui/components/border-beam";
 import { ScrollReveal } from "@workspace/ui/components/ScrollReveal";
+import { TypingAnimation } from "@workspace/ui/components/typing-animation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -87,7 +90,7 @@ export function HeroIsland() {
     <section
       ref={heroRef}
       data-slot="hero-island"
-      className="relative px-6 md:px-12 lg:px-20 py-24 min-h-[85vh] flex items-center justify-center overflow-hidden"
+      className="relative px-6 md:px-12 lg:px-20 pt-[126px] pb-24 min-h-[85vh] flex items-center justify-center overflow-hidden"
     >
       <motion.div
         style={{ opacity: heroOpacity }}
@@ -97,10 +100,13 @@ export function HeroIsland() {
           <motion.div variants={fadeUp} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.05] text-foreground">
               <span className="font-heading font-medium block">Where stories</span>
-              <span className="block whitespace-nowrap">
-                <span className="font-display italic text-brand-amber pr-2">outlive</span>
-                <span className="font-heading font-medium text-outline">silence.</span>
-              </span>
+              <TypingAnimation
+                className="font-heading font-medium text-brand-amber block whitespace-nowrap min-h-[1.2em]"
+                words={["outlive silence.", "defy erasure.", "echo forever.", "forge memory."]}
+                loop={true}
+                duration={100}
+                pauseDelay={2500}
+              />
             </h1>
           </motion.div>
 
@@ -113,9 +119,9 @@ export function HeroIsland() {
           <motion.div variants={fadeUp} initial="hidden" animate="visible" transition={{ delay: 0.6 }} className="flex flex-col gap-4">
             <div className="flex pt-4">
               <MagneticButton strength={0.2}>
-                <Button size="lg" className="h-12 px-8 rounded-none bg-foreground text-background hover:bg-foreground/90 text-sm font-sans font-medium transition-all shadow-sm" asChild>
+                <Button size="lg" className="rounded-none bg-foreground text-background hover:bg-foreground/90 text-sm font-sans font-medium transition-all shadow-sm" asChild>
                   <Link href="/stories">
-                    Explore the Archive
+                    Explore
                     <ArrowRight className="ml-2 size-4 opacity-70" />
                   </Link>
                 </Button>
@@ -126,7 +132,7 @@ export function HeroIsland() {
 
         <div className="relative flex items-center justify-center lg:justify-end w-full lg:pr-8">
           <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
-            <div className="relative w-full aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-background rounded-none p-6 flex flex-col justify-between group transition-all duration-500 hover:shadow-xl z-10 border border-border/40">
+            <div className="relative w-full aspect-auto sm:aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-card rounded-none p-6 flex flex-col justify-between group transition-all duration-500 hover:shadow-nordic z-10 border border-border/40">
               <motion.div
                 className="absolute inset-0 bg-primary/5 blur-[80px] rounded-none pointer-events-none z-[-1]"
                 animate={{ scale: [1, 1.02, 1], opacity: [0.3, 0.5, 0.3] }}
@@ -143,22 +149,24 @@ export function HeroIsland() {
                 <Users className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
 
-              <div className="flex-1 flex items-center justify-center relative rounded-none border border-border/40 bg-secondary/10 overflow-hidden mb-5">
-                <video
-                  ref={(el) => {
-                    if (el) {
-                      el.defaultMuted = true;
-                      el.muted = true;
-                      el.play().catch(() => {});
-                    }
-                  }}
-                  src="https://res.cloudinary.com/dlytqegcw/video/upload/v1776645841/tvyuk7g4k0ojvtdgz6lk.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full min-h-[220px] max-h-[480px] object-cover pointer-events-none"
-                />
+              <div className="flex-1 min-h-[180px] sm:min-h-0 w-full flex items-center justify-center relative rounded-none border border-border/40 bg-secondary/10 overflow-hidden mb-5">
+                <Lens zoomFactor={1.5} lensSize={180}>
+                  <video
+                    ref={(el) => {
+                      if (el) {
+                        el.defaultMuted = true;
+                        el.muted = true;
+                        el.play().catch(() => {});
+                      }
+                    }}
+                    src="https://res.cloudinary.com/dlytqegcw/video/upload/v1776645841/tvyuk7g4k0ojvtdgz6lk.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full min-h-[220px] max-h-[480px] object-cover pointer-events-none"
+                  />
+                </Lens>
                 
                 <div className="absolute bottom-0 right-0 px-3 py-1.5 bg-background/90 backdrop-blur-sm rounded-none border-t border-l border-border/50 z-20 pointer-events-auto">
                   <span className="text-[10px] font-sans font-semibold tracking-wider text-muted-foreground uppercase">Loktak Lake</span>
@@ -166,7 +174,7 @@ export function HeroIsland() {
               </div>
 
               <div className="border-t border-border/30 pt-4">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-[10px] font-sans tracking-wide text-foreground/70">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-[10px] font-sans tracking-wide text-foreground/70">
                   <div className="flex flex-col gap-1">
                     <span className="text-muted-foreground/60 uppercase font-semibold">Location</span>
                     <span className="font-medium text-foreground">Loktak Lake, Manipur</span>
@@ -233,7 +241,7 @@ export function BentoGridIsland() {
   useGSAP(() => {
     if (bentoGridRef.current) {
       gsap.fromTo(
-        gsap.utils.toArray(".bento-feature-card"),
+        gsap.utils.toArray("[data-slot='bento-card']"),
         { y: 80, opacity: 0, rotateX: 5, z: -50 },
         {
           y: 0,
@@ -262,115 +270,55 @@ export function BentoGridIsland() {
         subtitle="A curated index of ancient folklore, recorded precisely as they were spoken under the evening hearth."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[250px]">
-        {/* Feature 1 */}
-        <div className="md:col-span-8 bento-feature-card" style={{ perspective: "1000px" }}>
-          <Card className="h-full transition-all duration-300 bg-background p-6 flex flex-col justify-between group relative overflow-hidden text-foreground hover:border-border-strong">
-            <BorderBeam size={250} duration={10} delay={0} />
-            <div className="absolute top-0 right-0 w-2/3 h-full z-0 opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 ease-in-out">
+      <BentoGrid className="mt-8">
+        <BentoCard
+          name="Folklore Repository"
+          description="Deep-earth oral traditions and cultural lore, structured for digital permanence."
+          Icon={Archive}
+          href="/stories"
+          cta="Explore Repository"
+          className="md:col-span-2"
+          background={
+            <>
               <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10" />
               <Image
                 src="/Folk-Stories-Archive.png"
                 alt="Folk Stories Archive"
                 fill
                 sizes="(max-width: 768px) 100vw, 66vw"
-                className="object-cover object-right"
+                className="object-cover object-right opacity-70 transition-transform duration-700 ease-in-out group-hover:scale-105 group-hover:opacity-100"
               />
-            </div>
-            <div className="relative z-10 flex flex-col justify-between h-full w-full">
-              <div className="flex justify-between items-start w-full">
-                <motion.div
-                  whileHover={{ scale: 1.1, rotate: -3 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                  className="size-12 border border-border/50 bg-secondary/50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                >
-                  <Archive className="size-5" />
-                </motion.div>
-                <span className="font-sans text-xs text-muted-foreground/50 font-medium group-hover:text-primary-foreground/50 transition-colors">
-                  REF_01
-                </span>
-              </div>
-              <div className="mt-8 max-w-sm">
-                <CardTitle className="text-2xl lg:text-3xl tracking-tight mb-4 text-foreground">
-                  Folklore Repository
-                </CardTitle>
-                <CardDescription className="font-sans text-sm max-w-xs font-semibold text-muted-foreground drop-shadow-sm">
-                  Deep-earth oral traditions and cultural lore, structured for digital permanence.
-                </CardDescription>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Feature 2 */}
-        <div className="md:col-span-4 bento-feature-card" style={{ perspective: "1000px" }}>
-          <Card className="h-full transition-all duration-300 bg-background p-6 flex flex-col justify-between group hover:border-border-strong">
-            <div className="flex justify-between items-start">
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 3 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="size-10 border border-primary/10 bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-              >
-                <BookOpen className="size-5" />
-              </motion.div>
-            </div>
-            <div>
-              <CardTitle className="text-xl tracking-tight mb-2">Polyvocal Streams</CardTitle>
-              <CardDescription className="text-xs font-mono">
-                Meticulously captured records of the many voices that carry our heritage.
-              </CardDescription>
-            </div>
-          </Card>
-        </div>
-
-        {/* Feature 3 */}
-        <div className="md:col-span-5 bento-feature-card" style={{ perspective: "1000px" }}>
-          <Card className="h-full transition-all duration-300 bg-background p-6 flex flex-col justify-between group hover:border-border-strong">
-            <div className="flex justify-between items-start">
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: -3 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="size-10 border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center text-primary-foreground group-hover:bg-primary-foreground group-hover:text-primary transition-colors"
-              >
-                <Users className="size-5" />
-              </motion.div>
-              <span className="font-sans text-xs text-primary-foreground/50">REF_03</span>
-            </div>
-            <div>
-              <CardTitle className="text-xl tracking-tight mb-2">The Hearth (CMS)</CardTitle>
-              <CardDescription className="text-xs font-mono opacity-80 text-primary-foreground">
-                Where creators co-author history and validate the living breath of local lore.
-              </CardDescription>
-            </div>
-          </Card>
-        </div>
-
-        {/* Feature 4 */}
-        <div className="md:col-span-7 bento-feature-card" style={{ perspective: "1000px" }}>
-          <Card className="h-full transition-all duration-300 bg-background p-6 flex flex-col justify-between group hover:border-border-strong">
-            <div className="flex justify-between items-start">
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="size-10 border border-border/50 bg-secondary/50 flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors"
-              >
-                <Layers className="size-5" />
-              </motion.div>
-            </div>
-            <div className="flex items-end justify-between">
-              <div className="max-w-xs">
-                <CardTitle className="text-xl tracking-tight mb-2">Neo-Archival Protocol</CardTitle>
-                <CardDescription className="text-xs font-mono">
-                  End-to-end systems for archiving endangered cultural data with modern stability.
-                </CardDescription>
-              </div>
-              <div className="hidden sm:flex border border-border p-4 bg-secondary items-center justify-center font-sans text-xs uppercase text-muted-foreground">
-                Integrity: Verified
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
+            </>
+          }
+        />
+        <BentoCard
+          name="Polyvocal Streams"
+          description="Meticulously captured records of the many voices that carry our heritage."
+          Icon={BookOpen}
+          href="/#archive"
+          cta="Learn More"
+          className="md:col-span-1"
+          background={<div className="absolute inset-0 bg-secondary/10" />}
+        />
+        <BentoCard
+          name="The Hearth (CMS)"
+          description="Where creators co-author history and validate the living breath of local lore."
+          Icon={Users}
+          href="/login"
+          cta="Access Studio"
+          className="md:col-span-1"
+          background={<div className="absolute inset-0 bg-primary/5" />}
+        />
+        <BentoCard
+          name="Neo-Archival Protocol"
+          description="End-to-end systems for archiving endangered cultural data with modern stability."
+          Icon={Layers}
+          href="/sys-status"
+          cta="View Protocol"
+          className="md:col-span-2"
+          background={<div className="absolute inset-0 bg-secondary/10" />}
+        />
+      </BentoGrid>
     </div>
   );
 }
@@ -396,7 +344,7 @@ export function CapabilityCellIsland({ icon, title, desc }: { icon: React.ReactN
 
   return (
     <div ref={containerRef} data-slot="capability-cell-island" className="group p-8 border-r border-border/50 bg-background/50 hover:bg-secondary/20 transition-colors duration-300 cursor-default">
-      <div ref={iconRef} className="size-12 mb-8 rounded-none border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-sm">
+      <div ref={iconRef} className="size-12 mb-8 border border-border/50 flex items-center justify-center bg-secondary/30 text-foreground group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-brand-ember group-hover:text-primary-foreground transition-all duration-300 shadow-nordic-sm rounded-none">
         {icon}
       </div>
       <h3 className="text-lg font-medium tracking-wide text-foreground mb-3">{title}</h3>
@@ -415,7 +363,7 @@ export function CtaIsland() {
         whileInView="visible"
         viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.1 }}
-        className="w-full max-w-3xl bg-cinematic-bg/90 dark:bg-cinematic-panel/85 border border-cinematic-border/40 text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-sm"
+        className="w-full max-w-3xl bg-cinematic-bg/90 dark:bg-cinematic-panel/85 border border-cinematic-border/40 text-cinematic-text p-12 md:p-20 backdrop-blur-md shadow-nordic rounded-none"
       >
         <motion.div
           className="mx-auto size-16 border border-primary/40 bg-primary/10 mb-8 flex items-center justify-center text-primary"
@@ -456,6 +404,33 @@ export function FooterLinksIsland() {
           </motion.span>
         </ScrollReveal>
       ))}
+    </div>
+  );
+}
+
+export function ScrollTopology() {
+  const { scrollYProgress } = useScroll();
+  const pathLength = useSpring(scrollYProgress, { stiffness: 80, damping: 20 });
+
+  return (
+    <div data-slot="scroll-topology" className="fixed top-0 right-[2vw] bottom-0 w-12 pointer-events-none z-[5] hidden lg:block opacity-40">
+      <svg viewBox="0 0 100 1000" className="w-full h-full" preserveAspectRatio="none">
+        <motion.path
+          d="M 50 0 L 50 150 L 80 180 L 80 300 L 20 330 L 20 500 L 80 530 L 80 750 L 50 780 L 50 1000"
+          fill="none"
+          stroke="var(--color-primary)"
+          strokeWidth="1.5"
+          style={{ pathLength }}
+        />
+        <motion.path
+          d="M 50 0 L 50 150 L 80 180 L 80 300 L 20 330 L 20 500 L 80 530 L 80 750 L 50 780 L 50 1000"
+          fill="none"
+          stroke="var(--color-muted-foreground)"
+          strokeWidth="0.5"
+          strokeDasharray="2 4"
+          className="opacity-20"
+        />
+      </svg>
     </div>
   );
 }

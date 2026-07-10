@@ -127,7 +127,7 @@ export default async function ReaderProfilePage() {
                 <Link 
                   key={story.id} 
                   href={`/stories/${story.slug}`}
-                  className="group flex flex-col bg-background border border-border hover:border-brand-ember/50 transition-colors"
+                  className="group flex flex-col bg-card border border-border hover:border-brand-ember/50 transition-colors"
                 >
                   <div className="relative aspect-[3/4] w-full overflow-hidden bg-secondary/10 border-b border-border">
                     {story.cover_image_url ? (

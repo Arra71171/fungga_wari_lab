@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import successAnimation from "../../../../public/lottie/success_payment.json";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { verifyAndGrantAccess } from "@/actions/paywallActions";
+import { toast } from "sonner";
 
 // Dynamically import Lottie to prevent SSR hydration issues
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -25,9 +26,10 @@ export function PaymentSuccessHandler() {
     let cancelled = false;
 
     async function grantAndRedirect() {
+      let result = null;
       if (sessionId) {
         // Directly verify the Stripe session and write to DB — no webhook needed.
-        const result = await verifyAndGrantAccess(sessionId);
+        result = await verifyAndGrantAccess(sessionId);
         if (!result.success) {
           console.error("verifyAndGrantAccess failed:", result.error);
         }
@@ -35,6 +37,9 @@ export function PaymentSuccessHandler() {
 
       if (!cancelled) {
         setStatus("done");
+        if (result && result.success) {
+          toast.success("Payment Verified", { description: "The manuscript has been unlocked." });
+        }
       }
 
       // Hard reload after 4 seconds so Next.js re-runs the server component

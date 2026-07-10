@@ -26,7 +26,11 @@ import {
   Users,
   BookOpen,
   Home,
+  CreditCard,
 } from "lucide-react";
+
+import { createCustomerPortalSession } from "@/actions/paywallActions";
+import { ProfileMenu } from "./ProfileMenu";
 
 const navItems = [
   { name: "Library", href: "/stories", icon: BookOpen },
@@ -42,10 +46,20 @@ const DASHBOARD_URL = "/dashboard";
 function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = React.useState(false);
+  const [hidden, setHidden] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user, userProfile, isLoaded, signOut } = useSupabaseAuth();
 
   useMotionValueEvent(scrollY, "change", (latest: number) => {
+    const previous = scrollY.getPrevious() || 0;
+    
+    // Smart Header Logic: Hide on scroll down after 150px, show on scroll up
+    if (latest > previous && latest > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+    
     setScrolled(latest > 20);
   });
 
@@ -62,15 +76,15 @@ function Navbar() {
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      animate={{ y: hidden ? -100 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300",
-        "bg-background/90 backdrop-blur-md",
-        scrolled ? "border-b border-border shadow-sm" : "border-b border-transparent"
+        "fixed top-0 left-0 right-0 z-50 w-full transition-shadow duration-300",
+        "bg-background border-b border-border",
+        scrolled ? "shadow-nordic-sm" : ""
       )}
     >
-      <div className="max-w-5xl mx-auto w-full px-6 md:px-12 lg:px-20 py-3 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto w-full px-6 md:px-12 lg:px-20 py-3 flex items-center justify-between">
         {/* Brand — compact on mobile: icon + stacked wordmark to prevent wrap */}
         <Link
           href="/"
@@ -102,7 +116,7 @@ function Navbar() {
         </Link>
 
         {/* ── Desktop nav links ─────────────────────────────────────── */}
-        <div className="hidden items-center gap-6 md:flex border-l border-border/50 pl-6 h-8">
+        <div className="hidden items-center gap-2 md:flex border-l border-border/50 pl-6 h-8">
           {navItems.map((item) => {
             const isCollections = item.name === "Folklore";
             const showDashboard = isCollections && isDashboardUser;
@@ -115,10 +129,9 @@ function Navbar() {
                 <a
                   key={item.name}
                   href={href}
-                  className="group relative px-2 py-1 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
+                  className="px-4 py-1.5 text-xs font-mono tracking-widest uppercase text-muted-foreground hover:bg-foreground hover:text-background transition-colors"
                 >
                   {name}
-                  <span className="absolute bottom-0 left-2 right-2 h-[1px] bg-foreground scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                 </a>
               );
             }
@@ -127,10 +140,9 @@ function Navbar() {
               <Link
                 key={item.name}
                 href={href}
-                className="group relative px-2 py-1 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
+                className="px-4 py-1.5 text-xs font-mono tracking-widest uppercase text-muted-foreground hover:bg-foreground hover:text-background transition-colors"
               >
                 {name}
-                <span className="absolute bottom-0 left-2 right-2 h-[1px] bg-foreground scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
               </Link>
             );
           })}
@@ -143,48 +155,31 @@ function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="rounded-none font-sans transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
+                className="font-mono text-xs tracking-widest uppercase rounded-none transition-all hover:bg-foreground hover:text-background text-muted-foreground"
                 asChild
               >
-                <Link href="/login">Sign In</Link>
+                <Link href="/login">SIGN IN</Link>
               </Button>
               <Button
                 variant="default"
                 size="sm"
-                className="rounded-none font-sans transition-all bg-primary text-primary-foreground hover:bg-primary/90"
+                className="font-mono text-xs tracking-widest uppercase rounded-none transition-all bg-primary text-primary-foreground hover:bg-primary/90"
                 asChild
               >
-                <Link href="/register">Sign Up</Link>
+                <Link href="/register">SIGN UP</Link>
               </Button>
+              <div className="pl-2 border-l border-border h-6 flex items-center">
+                <AnimatedThemeToggler />
+              </div>
             </>
           )}
           {isAuthenticated && (
-            <div className="flex items-center gap-2">
-              <div className="relative size-8 border border-border/50 bg-secondary overflow-hidden rounded-none flex items-center justify-center">
-                {userProfile?.avatar_url ? (
-                  <Image
-                    src={userProfile.avatar_url}
-                    alt={`${userProfile.name || "User"}'s avatar`}
-                    fill
-                    sizes="32px"
-                    className="object-cover grayscale opacity-80"
-                  />
-                ) : (
-                  <User className="size-4 text-muted-foreground" />
-                )}
-              </div>
-              <button
-                onClick={handleSignOut}
-                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Sign out"
-              >
-                <LogOut className="size-4" />
-              </button>
-            </div>
+            <ProfileMenu
+              userProfile={userProfile}
+              onSignOut={handleSignOut}
+              createPortalSessionAction={createCustomerPortalSession}
+            />
           )}
-          <div className="pl-2 border-l border-border h-6 flex items-center">
-            <AnimatedThemeToggler />
-          </div>
         </div>
 
         {/* ── Mobile right side: theme + hamburger ──────────────────── */}
@@ -227,7 +222,7 @@ function Navbar() {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-semibold tracking-wide text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors border-l-2 border-transparent hover:border-primary"
+                    className="flex items-center gap-3 px-3 py-3 text-xs font-mono tracking-widest uppercase text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors border-l-2 border-transparent hover:border-primary"
                   >
                     <item.icon className="size-4 shrink-0" />
                     {item.name}
@@ -245,7 +240,7 @@ function Navbar() {
                     <a
                       href={DASHBOARD_URL}
                       onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-semibold tracking-wide text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/10 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
+                      className="flex items-center gap-3 px-3 py-3 text-xs font-mono tracking-widest uppercase text-brand-ember hover:text-brand-ember/80 hover:bg-brand-ember/10 transition-colors border-l-2 border-brand-ember/40 hover:border-brand-ember"
                     >
                       <LayoutDashboard className="size-4 shrink-0" />
                       Dashboard
@@ -260,20 +255,20 @@ function Navbar() {
                   <div className="flex flex-col gap-2">
                     <Button
                       variant="outline"
-                      className="w-full rounded-none font-sans font-semibold tracking-wide"
+                      className="w-full font-mono text-xs tracking-widest uppercase"
                       asChild
                     >
                       <Link href="/login" onClick={() => setMobileOpen(false)}>
-                        Sign In
+                        SIGN IN
                       </Link>
                     </Button>
                     <Button
                       variant="default"
-                      className="w-full rounded-none font-sans font-semibold tracking-wide"
+                      className="w-full font-mono text-xs tracking-widest uppercase"
                       asChild
                     >
                       <Link href="/register" onClick={() => setMobileOpen(false)}>
-                        Sign Up
+                        SIGN UP
                       </Link>
                     </Button>
                   </div>
@@ -316,13 +311,25 @@ function Navbar() {
                         )}
                       </div>
                     </div>
-                    <button
-                      onClick={handleSignOut}
-                      className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Sign out"
-                    >
-                      <LogOut className="size-4" />
-                    </button>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <form action={createCustomerPortalSession}>
+                        <button
+                          type="submit"
+                          className="p-2 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          aria-label="Manage Billing"
+                          title="Manage Billing"
+                        >
+                          <CreditCard className="size-4" />
+                        </button>
+                      </form>
+                      <button
+                        onClick={handleSignOut}
+                        className="p-2 text-muted-foreground hover:text-foreground transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        aria-label="Sign out"
+                      >
+                        <LogOut className="size-4" />
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

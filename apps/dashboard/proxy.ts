@@ -11,6 +11,7 @@ function isPublicRoute(pathname: string) {
 }
 
 export default async function middleware(req: NextRequest) {
+  console.log("PROXY RUNNING FOR:", req.url)
   let supabaseResponse = NextResponse.next({ request: req })
 
   const supabase = createServerClient(

@@ -2,12 +2,31 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Trash2, Flame, FileAudio, FileText, Copy } from "lucide-react";
+import { Trash2, Flame, FileAudio, FileText, Copy, X } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { getAllAssets, deleteAsset, updateAsset } from "@/actions/assetActions";
 import type { Database } from "@workspace/ui/types/supabase";
 import { DashboardCard } from "@workspace/ui/components/DashboardCard";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@workspace/ui/components/pagination";
+import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+  AttachmentTrigger
+} from "@workspace/ui/components/attachment";
 
 type AssetRow = Database["public"]["Tables"]["assets"]["Row"];
 
@@ -17,14 +36,21 @@ type AssetGridProps = {
 
 // ─── Component ─────────────────────────────────────────────────────────────
 
+const ITEMS_PER_PAGE = 20;
+
 function AssetGrid({ filterType }: AssetGridProps) {
   const [assets, setAssets] = React.useState<AssetRow[] | undefined>(undefined);
   const [selectedAsset, setSelectedAsset] = React.useState<AssetRow | null>(null);
   const [isUpdating, setIsUpdating] = React.useState(false);
+  const [currentPage, setCurrentPage] = React.useState(1);
 
   React.useEffect(() => {
     let cancelled = false;
     const type = filterType as Database["public"]["Enums"]["asset_type"] | undefined;
+    
+    // Reset page when filter changes
+    setCurrentPage(1);
+    
     getAllAssets(type).then((data) => {
       if (!cancelled) setAssets(data as AssetRow[]);
     });
@@ -105,138 +131,188 @@ function AssetGrid({ filterType }: AssetGridProps) {
     try { return new URL(url).pathname } catch { return url }
   }
 
+  // --- Pagination Logic ---
+  const totalItems = assets.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedAssets = assets.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (e: React.MouseEvent, page: number) => {
+    e.preventDefault();
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      // Optional: scroll to top of grid
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="flex gap-6 h-full items-start">
-      <div className={cn(
-        "grid gap-4 flex-1 transition-all",
-        selectedAsset 
-          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-          : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-      )}>
-        {assets.map((asset) => (
-          <div
+      <div className="flex-1 flex flex-col gap-6">
+        <div className={cn(
+          "grid gap-4 transition-all",
+          selectedAsset 
+            ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+            : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        )}>
+          {paginatedAssets.map((asset) => (
+          <Attachment
             key={asset.id}
-            onClick={() => setSelectedAsset(asset)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setSelectedAsset(asset);
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            className="text-left outline-none group cursor-pointer"
+            size="default"
+            orientation="vertical"
+            className={cn(
+              "w-full bg-bg-surface hover:shadow-nordic-sm transition-all flex-nowrap",
+              selectedAsset?.id === asset.id && "ring-2 ring-brand-ember ring-offset-2 ring-offset-bg-panel border-transparent"
+            )}
           >
-            <DashboardCard
-              variant="interactive"
-              padding="none"
+            <AttachmentMedia
+              variant={isImageType(asset.type) ? "image" : "icon"}
               className={cn(
-                "relative overflow-hidden flex flex-col transition-all",
-                selectedAsset?.id === asset.id && "ring-2 ring-brand-ember ring-offset-2 ring-offset-bg-panel"
+                "w-full bg-brand-ochre/5 aspect-[3/4]",
+                !isImageType(asset.type) && "border-b border-border/50"
               )}
             >
-          {asset.type.includes("audio") ? (
-            <div className="flex-1 flex flex-col items-center justify-center bg-brand-ochre/5 aspect-square p-2">
-              <FileAudio className="size-8 text-brand-ochre/40 mb-2" />
-              <audio
-                src={asset.url}
-                controls
-                className="w-full h-8 opacity-70 hover:opacity-100 transition-opacity"
-              />
-            </div>
-          ) : (asset.type as string) === "text_story" ? (
-            <div className="flex-1 flex flex-col items-center justify-center bg-brand-ochre/5 aspect-[3/4] p-2 hover:bg-brand-ochre/10 transition-colors group/doc relative">
-              <FileText className="size-12 text-brand-ochre/40 mb-2 group-hover/doc:text-brand-ember/60 transition-colors" />
-              {/* eslint-disable-next-line no-restricted-syntax -- external URL: MS Office viewer or Cloudinary proxy, next/link not applicable */}
-              <a
-                href={(() => {
-                  const pathname = getAssetPathname(asset.url).toLowerCase()
-                  return pathname.endsWith(".doc") || pathname.endsWith(".docx")
-                    ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(asset.url)}`
-                    : `/dashboard/api/view-asset?url=${encodeURIComponent(asset.url)}`
-                })()}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs font-mono text-brand-ochre/60 hover:text-brand-ember underline mt-2 relative z-10"
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') e.stopPropagation()
+              {asset.type.includes("audio") ? (
+                <FileAudio className="size-12 text-brand-ochre/40" />
+              ) : (asset.type as string) === "text_story" ? (
+                <FileText className="size-12 text-brand-ochre/40" />
+              ) : (
+                <Image
+                  src={asset.url}
+                  alt={asset.title || "Asset"}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                  className="object-cover"
+                />
+              )}
+            </AttachmentMedia>
+
+            <AttachmentContent className="p-3">
+              <AttachmentTitle 
+                className="font-mono text-nano text-foreground whitespace-normal line-clamp-2 break-all" 
+                title={asset.title}
+              >
+                {asset.title}
+              </AttachmentTitle>
+              <AttachmentDescription className="font-mono text-micro text-primary mt-1">
+                {asset.type.replace(/_/g, " ")}
+              </AttachmentDescription>
+            </AttachmentContent>
+
+            <AttachmentActions className={cn(
+              "absolute top-2 right-2 transition-opacity duration-200",
+              selectedAsset?.id === asset.id ? "hidden" : "opacity-0 group-hover/attachment:opacity-100"
+            )}>
+              <AttachmentAction
+                aria-label="Copy URL"
+                className="bg-background/80 backdrop-blur-md shadow-sm border border-border text-foreground hover:bg-brand-ember hover:text-primary-foreground"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigator.clipboard.writeText(asset.url);
+                  toast.success("URL Copied", { description: "Asset URL copied to clipboard." });
                 }}
               >
-                View Document
-              </a>
-            </div>
-          ) : (
-            <div
-              className={cn(
-                "relative bg-muted",
-                isImageType(asset.type) ? "aspect-[3/4]" : "aspect-square"
-              )}
-            >
-              <Image
-                src={asset.url}
-                alt={asset.title}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-              />
-            </div>
-          )}
+                <Copy />
+              </AttachmentAction>
+              <AttachmentAction
+                aria-label="Delete Asset"
+                className="bg-background/80 backdrop-blur-md shadow-sm border border-border text-foreground hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm("Are you sure you want to delete this asset?")) {
+                    handleDelete(asset.id);
+                  }
+                }}
+              >
+                <Trash2 />
+              </AttachmentAction>
+            </AttachmentActions>
 
-          <div className="p-2 border-t border-border flex items-center justify-between">
-            <div className="truncate pr-2">
-              <p className="font-mono text-nano tracking-wide text-foreground truncate">
-                {asset.title}
-              </p>
-              <p className="font-mono text-micro tracking-wide text-primary truncate">
-                {asset.type.replace(/_/g, " ")}
-              </p>
-            </div>
-            {/* Hover Actions - Only show if not selected */}
-            {selectedAsset?.id !== asset.id && (
-              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigator.clipboard.writeText(asset.url);
-                    toast.success("URL Copied", { description: "Asset URL copied to clipboard." });
-                  }}
-                  className="bg-background/80 backdrop-blur text-foreground p-1.5 border border-border hover:bg-brand-ember hover:text-primary-foreground hover:border-brand-ember transition-colors shadow-xs"
-                  title="Copy URL"
-                >
-                  <Copy className="size-3.5" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (window.confirm("Are you sure you want to delete this asset?")) {
-                      handleDelete(asset.id);
-                    }
-                  }}
-                  className="bg-background/80 backdrop-blur text-foreground p-1.5 border border-border hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-colors shadow-xs"
-                  title="Delete Asset"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
-              </div>
-            )}
-            </div></DashboardCard>
-          </div>
+            <AttachmentTrigger
+              onClick={() => setSelectedAsset(asset)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelectedAsset(asset);
+                }
+              }}
+              aria-label={`Select ${asset.title}`}
+            />
+          </Attachment>
         ))}
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="py-4 border-t border-border-subtle mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    href="#" 
+                    onClick={(e) => handlePageChange(e, currentPage - 1)}
+                    aria-disabled={currentPage === 1}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show current page, first, last, and neighbors
+                  if (
+                    page === 1 || 
+                    page === totalPages || 
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationLink 
+                          href="#" 
+                          isActive={page === currentPage}
+                          onClick={(e) => handlePageChange(e, page)}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  }
+                  
+                  // Show ellipsis for gaps
+                  if (page === 2 && currentPage > 3) {
+                    return <PaginationItem key="ellipsis-start"><PaginationEllipsis /></PaginationItem>;
+                  }
+                  if (page === totalPages - 1 && currentPage < totalPages - 2) {
+                    return <PaginationItem key="ellipsis-end"><PaginationEllipsis /></PaginationItem>;
+                  }
+                  
+                  return null;
+                })}
+
+                <PaginationItem>
+                  <PaginationNext 
+                    href="#" 
+                    onClick={(e) => handlePageChange(e, currentPage + 1)}
+                    aria-disabled={currentPage === totalPages}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
 
       {/* Asset Detail Panel */}
       {selectedAsset && (
-        <div className="w-[320px] shrink-0 sticky top-0 hidden lg:block border-l border-border-subtle pl-6 animate-in slide-in-from-right duration-300">
-          <div className="space-y-6">
+        <div className="w-[320px] shrink-0 sticky top-0 hidden lg:flex flex-col max-h-[calc(100vh-16rem)] overflow-y-auto border-l border-border-subtle pl-6 animate-in slide-in-from-right duration-300">
+          <div className="space-y-6 pb-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-heading text-lg tracking-tight uppercase">Asset Details</h3>
+              <h3 className="font-heading text-lg tracking-tight uppercase text-foreground">Asset Details</h3>
               <button
                 onClick={() => setSelectedAsset(null)}
-                className="text-muted-foreground hover:text-foreground p-1"
+                className="text-muted-foreground hover:text-foreground transition-colors p-1 bg-bg-base border border-transparent hover:border-border-strong rounded-none"
                 aria-label="Close details"
               >
-                &times;
+                <X className="size-4" />
               </button>
             </div>
 

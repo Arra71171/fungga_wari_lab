@@ -2,7 +2,7 @@
 extra_instructions = """
 You are reviewing code for the Fungga Wari Lab project. 
 Strictly enforce these Iron Laws:
-1. No curved borders (rounded-none). The aesthetic is strict Nordic Minimalist.
+1. No curved borders (rounded-none). The aesthetic is Nordic philosophy.
 2. All backend code MUST use Supabase. Convex is legacy and strictly forbidden.
 3. Every new table must have Row Level Security (RLS) enabled.
 4. All media assets must be handled via Cloudinary, not Supabase Storage.

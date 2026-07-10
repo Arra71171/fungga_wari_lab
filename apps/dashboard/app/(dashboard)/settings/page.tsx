@@ -10,6 +10,17 @@ import { Button } from "@workspace/ui/components/button";
 import { ShieldCheck, UserCheck, Eye, Loader2, Settings2, Trash2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { DashboardCard } from "@workspace/ui/components/DashboardCard";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@workspace/ui/components/alert-dialog";
 
 const RichTextEditor = dynamic(
   () => import("@workspace/ui/components/editor/rich-text-editor").then((mod) => mod.RichTextEditor),
@@ -68,14 +79,17 @@ function MemberRow({
   currentUserAuthId,
   isCallerAdmin,
   isCallerSuperAdmin,
+  onDeleted,
 }: {
   member: Member;
   currentUserAuthId?: string;
   isCallerAdmin: boolean;
   isCallerSuperAdmin: boolean;
+  onDeleted?: (id: string) => void;
 }) {
   const [isPending, setIsPending] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const isSelf = member.auth_id === currentUserAuthId;
   const currentRole = (member.role ?? "viewer") as Role;
 
@@ -98,13 +112,11 @@ function MemberRow({
 
   const handleDelete = async () => {
     if (!member.id) return;
-    if (!window.confirm(`Are you sure you want to permanently delete user ${member.email ?? member.id}? This action cannot be undone.`)) {
-      return;
-    }
     setIsDeleting(true);
+    setShowDeleteAlert(false);
     try {
       await deleteUserAccount(String(member.id));
-      window.location.reload(); // Quick refresh to update the roster
+      onDeleted?.(String(member.id));
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Failed to delete user");
       console.error(e);
@@ -113,9 +125,9 @@ function MemberRow({
   };
 
   return (
-    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-4 md:p-6 gap-4 border-b border-border-subtle bg-background transition-all group hover:bg-secondary/10">
+    <div className="flex flex-col xl:flex-row xl:items-center justify-between p-4 md:p-6 gap-4 border-b border-border-subtle bg-transparent transition-all group hover:bg-secondary/10">
       <div className="flex items-start md:items-center gap-4 md:gap-6 min-w-0 flex-col sm:flex-row">
-        <div className="border border-border/50 p-1 bg-background group-hover:border-primary transition-colors shrink-0">
+        <div className="border border-border/50 p-1 bg-bg-surface group-hover:border-primary transition-colors shrink-0">
           <AvatarBadge
             src={member.avatar_url ?? undefined}
             alt={member.alias || member.name || "?"}
@@ -162,22 +174,43 @@ function MemberRow({
               {isPending ? <Loader2 className="size-4 animate-spin text-primary" /> : "Change Role"}
             </Button>
             )}
-            {(isCallerSuperAdmin || currentRole !== "superadmin") && (
+            {currentRole !== "superadmin" && (
               <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleDelete}
-                disabled={isPending || isDeleting}
-                className="h-10 w-10 border border-border/50 rounded-none bg-background hover:border-destructive hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all shadow-none hover:shadow-sm active:scale-[0.98] transition-transform shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                title="Delete Operative"
-                aria-label="Delete Operative"
+                variant="destructive"
+                size="sm"
+                onClick={() => setShowDeleteAlert(true)}
+                disabled={isDeleting || isPending}
+                className="rounded-none border border-destructive h-8 px-3"
               >
-                {isDeleting ? <Loader2 className="size-4 animate-spin text-destructive" /> : <Trash2 className="size-4" />}
+                {isDeleting ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
               </Button>
             )}
           </div>
         )}
       </div>
+
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete User Account</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to permanently delete {member.email ?? member.id}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleDelete();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -225,10 +258,10 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
   };
 
   return (
-    <DashboardCard variant="panel" padding="none" className="bg-background overflow-hidden mt-12 relative border border-border-subtle">
+    <DashboardCard variant="panel" padding="none" className="overflow-hidden mt-12 relative border border-border-subtle">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-      <div className="p-4 md:p-6 border-b border-border-subtle flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4 bg-background">
+      <div className="p-4 md:p-6 border-b border-border-subtle flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4 bg-bg-surface">
         <div>
           <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
             Global Settings
@@ -239,7 +272,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               : "You do not have permission to edit global settings."}
           </p>
         </div>
-        <div className="flex flex-wrap flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {(["manifesto", "terms"] as const).map((tab) => (
             <Button
               key={tab}
@@ -273,7 +306,7 @@ function GlobalContentSection({ isCallerAdmin }: { isCallerAdmin: boolean }) {
               key={activeTab}
               value={editorContent}
               onChange={setEditorContent}
-              className="min-h-[400px] border border-border/50 rounded-none bg-background"
+              className="min-h-[400px] border border-border/50 rounded-none bg-bg-surface"
               editable={isCallerAdmin}
             />
             {isCallerAdmin && (
@@ -347,10 +380,10 @@ export default function SettingsPage() {
         <OperativeDossier />
 
         {/* Roster Sector */}
-        <DashboardCard variant="panel" padding="none" className="bg-background overflow-hidden relative border border-border-subtle">
+        <DashboardCard variant="panel" padding="none" className="overflow-hidden relative border border-border-subtle">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-          <div className="p-6 border-b border-border-subtle flex justify-between items-end bg-background">
+          <div className="p-6 border-b border-border-subtle flex justify-between items-end bg-bg-surface">
             <div>
               <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
                 Team Members
@@ -367,7 +400,7 @@ export default function SettingsPage() {
             {members === undefined ? (
               <div className="animate-pulse flex flex-col p-4 gap-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-24 border border-border/50 bg-background" />
+                  <div key={i} className="h-24 border border-border/50 bg-bg-surface" />
                 ))}
               </div>
             ) : members.length === 0 ? (
@@ -383,6 +416,9 @@ export default function SettingsPage() {
                     currentUserAuthId={user?.id}
                     isCallerAdmin={isCallerAdmin}
                     isCallerSuperAdmin={isCallerSuperAdmin}
+                    onDeleted={(id) => {
+                      setMembers((prev) => prev?.filter((m) => String(m.id) !== id));
+                    }}
                   />
                 ))}
               </div>
@@ -391,7 +427,7 @@ export default function SettingsPage() {
         </DashboardCard>
 
         {/* Role Legend */}
-        <DashboardCard variant="panel" className="bg-background mt-6">
+        <DashboardCard variant="panel" className="mt-6">
           <div className="flex items-center gap-3 mb-6">
             <span className="size-2 bg-primary" />
             <h3 className="font-sans text-xs font-semibold tracking-wide text-foreground">

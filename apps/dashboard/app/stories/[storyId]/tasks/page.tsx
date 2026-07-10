@@ -94,7 +94,7 @@ export default function StoryTasksPage() {
 
           <div className="flex flex-col md:flex-row gap-6 md:items-end justify-between border-b border-border-subtle pb-8">
             <div className="space-y-2">
-              <h1 className="font-display text-4xl md:text-5xl tracking-tight text-foreground drop-shadow-lg">
+              <h1 className="font-display text-4xl md:text-5xl tracking-tight text-foreground">
                 Team Assignments
               </h1>
               <p className="text-muted-foreground font-sans text-xs max-w-lg leading-relaxed mix-blend-plus-lighter tracking-subtle uppercase">

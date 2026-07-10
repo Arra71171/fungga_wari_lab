@@ -12,7 +12,6 @@ jobs:
       pull-requests: write
     steps:
       - name: Trigger Qodo
-        if: github.event.pull_request.draft == false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}

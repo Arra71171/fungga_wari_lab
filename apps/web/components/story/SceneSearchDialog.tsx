@@ -74,7 +74,7 @@ export function SceneSearchDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px] bg-cinematic-panel border-cinematic-border p-0 overflow-hidden text-cinematic-text">
+      <DialogContent className="w-[95vw] sm:max-w-[425px] bg-cinematic-panel border-cinematic-border p-0 overflow-hidden text-cinematic-text">
         <DialogTitle className="sr-only">Search Scenes</DialogTitle>
         <div className="flex items-center border-b border-cinematic-border px-3">
           <Search className="size-4 text-muted-foreground mr-2" />
