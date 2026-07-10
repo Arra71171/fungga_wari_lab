@@ -42,7 +42,7 @@ export async function createCheckoutSession(slug: string, planType: "bard" | "ca
   // Check if user already has access
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("has_lifetime_access, subscription_status, email")
+    .select("has_lifetime_access, subscription_status, email, stripe_customer_id")
     .eq("auth_id", user.id)
     .maybeSingle();
 
@@ -56,6 +56,14 @@ export async function createCheckoutSession(slug: string, planType: "bard" | "ca
   }
 
   const email = profile?.email ?? user.email ?? undefined;
+  let customerId = profile?.stripe_customer_id;
+
+  if (!customerId && email) {
+    const customers = await stripe.customers.list({ email, limit: 1 });
+    if (customers.data.length > 0) {
+      customerId = customers.data[0]!.id;
+    }
+  }
 
   const baseUrl = getAppUrl("web");
 
@@ -72,7 +80,7 @@ export async function createCheckoutSession(slug: string, planType: "bard" | "ca
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
-    customer_email: email,
+    ...(customerId ? { customer: customerId } : email ? { customer_email: email } : {}),
     line_items: [
       {
         price_data: {
@@ -121,7 +129,7 @@ export async function createWandererCheckoutSession(_formData: FormData) {
 
   const { data: profile, error } = await supabase
     .from("users")
-    .select("has_lifetime_access, subscription_status, email")
+    .select("has_lifetime_access, subscription_status, email, stripe_customer_id")
     .eq("auth_id", user.id)
     .maybeSingle();
 
@@ -134,11 +142,20 @@ export async function createWandererCheckoutSession(_formData: FormData) {
   }
 
   const email = profile?.email ?? user.email ?? undefined;
+  let customerId = profile?.stripe_customer_id;
+
+  if (!customerId && email) {
+    const customers = await stripe.customers.list({ email, limit: 1 });
+    if (customers.data.length > 0) {
+      customerId = customers.data[0]!.id;
+    }
+  }
+
   const baseUrl = getAppUrl("web");
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    customer_email: email,
+    ...(customerId ? { customer: customerId } : email ? { customer_email: email } : {}),
     line_items: [
       {
         price_data: {

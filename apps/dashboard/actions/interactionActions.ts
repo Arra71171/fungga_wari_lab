@@ -5,11 +5,16 @@ import { createClient } from "@/lib/supabase/server";
 export async function getRecentActivityAction(limit = 20, offset = 0) {
   const supabase = await createClient();
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("interactions")
     .select("id, type, story_id, created_at, stories(title, slug)")
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
+
+  if (error) {
+    console.error("Failed to fetch interactions:", error);
+    return [];
+  }
 
   if (!data) return [];
 

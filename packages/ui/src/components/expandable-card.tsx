@@ -106,7 +106,7 @@ export function ExpandableCard({
               <motion.button
                 aria-label="Close card"
                 layoutId={`button-${layoutId}`}
-                className="absolute top-4 right-4 z-50 flex size-10 items-center justify-center rounded-none border border-border bg-background text-foreground transition-colors hover:bg-secondary hover:text-primary focus:outline-none"
+                className="absolute top-4 right-4 z-50 flex size-10 items-center justify-center rounded-none border border-border bg-background text-foreground transition-colors hover:bg-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleSetActive(false)

@@ -57,9 +57,10 @@ function RegisterForm() {
       }),
       {
         loading: "Forging your identity...",
-        success: (signUpData: any) => {
+        success: (signUpData: unknown) => {
           setIsLoading(false)
-          if (signUpData.session) {
+          const data = signUpData as { session: unknown | null }
+          if (data?.session) {
             router.push("/")
             router.refresh()
             return "Identity forged successfully. Welcome."
@@ -69,10 +70,11 @@ function RegisterForm() {
             return msg
           }
         },
-        error: (err: any) => {
-          setError(err.message)
+        error: (err: unknown) => {
+          const errorMsg = err instanceof Error ? err.message : String(err)
+          setError(errorMsg)
           setIsLoading(false)
-          return err.message
+          return errorMsg
         }
       }
     )

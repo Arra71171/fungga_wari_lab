@@ -13,7 +13,7 @@ export interface SpotlightCardProps extends HTMLMotionProps<"div"> {
 export function SpotlightCard({
   children,
   className,
-  spotlightColor = "rgba(255, 255, 255, 0.08)",
+  spotlightColor = "color-mix(in oklch, var(--primary) 15%, transparent)",
   ...props
 }: SpotlightCardProps) {
   const mouseX = useMotionValue(0);

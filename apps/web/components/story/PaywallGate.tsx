@@ -39,7 +39,12 @@ export function PaywallGate({ slug, hasAccess, initialStory, children }: Paywall
       </div>
 
       {/* Paywall overlay */}
-      <React.Suspense fallback={<div className="absolute inset-0 z-30 bg-cinematic-bg/80" />}>
+      <React.Suspense fallback={
+        <div className="absolute inset-0 z-30 bg-cinematic-bg/80 backdrop-blur-sm flex flex-col items-center justify-center">
+           <div className="size-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+           <p className="text-sm font-mono text-muted-foreground mt-4 animate-pulse">Loading archive protocol...</p>
+        </div>
+      }>
         <PaywallOverlay />
       </React.Suspense>
     </div>

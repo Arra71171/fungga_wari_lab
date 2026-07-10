@@ -14,7 +14,7 @@ interface FlickeringGridProps extends React.HTMLAttributes<HTMLDivElement> {
   maxOpacity?: number
 }
 
-export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
+export function FlickeringGrid({
   squareSize = 4,
   gridGap = 6,
   flickerChance = 0.3,
@@ -24,7 +24,7 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   className,
   maxOpacity = 0.3,
   ...props
-}) => {
+}: FlickeringGridProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isInView, setIsInView] = useState(false)
@@ -184,7 +184,8 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn(`h-full w-full ${className}`)}
+      data-slot="flickering-grid"
+      className={cn("h-full w-full", className)}
       {...props}
     >
       <canvas

@@ -85,11 +85,10 @@ export function ProfileMenu({
         <DropdownMenuGroup>
           {isDashboardUser && (
             <DropdownMenuItem asChild>
-              {/* eslint-disable-next-line no-restricted-syntax */}
-              <a href={DASHBOARD_URL} className="cursor-pointer">
+              <Link href={DASHBOARD_URL} className="cursor-pointer">
                 <LayoutDashboard className="mr-2 size-4" />
                 Creator Studio
-              </a>
+              </Link>
             </DropdownMenuItem>
           )}
           
