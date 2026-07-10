@@ -15,6 +15,7 @@ import {
   Globe,
   ExternalLink,
   Menu,
+  Flame,
 } from "lucide-react";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { useSupabaseAuth } from "@workspace/auth/supabase-provider";
@@ -34,6 +35,7 @@ const navItems = [
   { name: "Manuscripts", href: "/stories", icon: BookOpen },
   { name: "Tasks", href: "/tasks", icon: ListTodo },
   { name: "Assets", href: "/assets", icon: Library },
+  { name: "Billing", href: "/billing", icon: Flame },
   { name: "Settings", href: "/settings", icon: Settings2 },
 ];
 
@@ -124,7 +126,7 @@ function SidebarContent({ pathname, onSignOut }: { pathname: string; onSignOut: 
           );
         })}
 
-        <div className="text-[10px] font-sans font-semibold tracking-wide text-muted-foreground/60 mb-2 pl-3">
+        <div className="text-[10px] font-sans font-semibold tracking-wide text-muted-foreground/60 mt-6 mb-2 pl-3">
           Public Site
         </div>
         {/* eslint-disable-next-line no-restricted-syntax -- external link, target=_blank requires raw <a> */}
@@ -183,9 +185,12 @@ export default function DashboardLayout({
   // Guard: redirect unauthorized roles to the public web app
   const isDashboardUser = ["admin", "superadmin", "editor"].includes(userProfile?.role || "");
   React.useEffect(() => {
-    if (isLoaded && user && !isDashboardUser) {
-      const webUrl = getAppUrl("web");
-      window.location.href = webUrl;
+    if (isLoaded) {
+      if (!user) {
+        window.location.href = "/dashboard/login";
+      } else if (!isDashboardUser) {
+        window.location.href = getAppUrl("web");
+      }
     }
   }, [isLoaded, user, isDashboardUser]);
 

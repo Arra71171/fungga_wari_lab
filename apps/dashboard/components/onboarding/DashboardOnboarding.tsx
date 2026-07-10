@@ -22,7 +22,7 @@ function WelcomeContent() {
         — your command center for building and managing the Fungga Wari oral
         literature archive.
       </p>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {[
           { icon: BarChart2, label: "Analytics", desc: "KPIs, charts & pipeline" },
           { icon: BookOpen,  label: "Manuscripts", desc: "Write, edit & publish" },
@@ -187,7 +187,7 @@ function TourCard({ step, stepIndex, totalSteps, direction, onNext, onPrev, onSk
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: direction > 0 ? -40 : 40, scale: 0.97 }}
       transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
-      className="relative w-[560px] max-w-[92vw] overflow-hidden border border-border bg-bg-panel text-foreground shadow-sm"
+      className="relative w-full sm:w-[560px] overflow-hidden border border-border bg-bg-panel text-foreground shadow-sm"
     >
       {/* Top accent bar */}
       <div className="h-[3px] w-full bg-gradient-to-r from-brand-ember via-brand-ochre to-brand-glow" />

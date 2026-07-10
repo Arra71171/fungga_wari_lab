@@ -9,6 +9,13 @@ import { CreateTaskDialog } from "./CreateTaskDialog";
 import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 import { Loader2, Users } from "lucide-react";
 import { AvatarBadge } from "@workspace/ui/components/AvatarBadge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 
 type Task = Awaited<ReturnType<typeof getAllTasks>>[number];
 type User = Awaited<ReturnType<typeof getAllUsers>>[number];
@@ -16,6 +23,7 @@ type User = Awaited<ReturnType<typeof getAllUsers>>[number];
 export function TaskBoard() {
   const [tasks, setTasks] = useState<Task[] | null>(null);
   const [users, setUsers] = useState<User[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const loadData = () => {
     Promise.all([getAllTasks(), getAllUsers()]).then(([t, u]) => {
@@ -41,7 +49,7 @@ export function TaskBoard() {
       user,
       avatarUrl: user.avatar_url ?? undefined,
       tasks: tasks.filter(
-        (t) => t.assignee_id === user.id
+        (t) => t.assignee_id === user.id && (statusFilter === "all" || t.status === statusFilter)
       ),
     })),
     {
@@ -49,7 +57,7 @@ export function TaskBoard() {
       name: "Unassigned Protocols",
       user: null as null,
       avatarUrl: undefined,
-      tasks: tasks.filter((t) => !t.assignee_id),
+      tasks: tasks.filter((t) => !t.assignee_id && (statusFilter === "all" || t.status === statusFilter)),
     },
   ].filter((group) => group.tasks.length > 0);
 
@@ -57,14 +65,29 @@ export function TaskBoard() {
     <div className="flex flex-col h-full space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-border-subtle pb-6 shrink-0 gap-4">
         <div>
-          <h1 className="text-4xl font-display text-foreground drop-shadow-lg tracking-tight">
+          <h1 className="text-4xl font-display text-foreground tracking-tight">
             Studio Tasks
           </h1>
           <p className="text-xs font-mono tracking-widest text-muted-foreground uppercase mt-2">
             Active directives and team assignments
           </p>
         </div>
-        <CreateTaskDialog users={users} onCreated={loadData} />
+        <div className="flex items-center gap-4">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full sm:w-[180px] h-10 border-border bg-bg-surface text-foreground font-sans text-xs rounded-none">
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent className="bg-bg-surface border-border rounded-none">
+              <SelectItem value="all" className="rounded-none">All Statuses</SelectItem>
+              <SelectItem value="lore_gathering" className="rounded-none">Lore Gathering</SelectItem>
+              <SelectItem value="translating" className="rounded-none">Translating</SelectItem>
+              <SelectItem value="illustrating" className="rounded-none">Illustrating</SelectItem>
+              <SelectItem value="review" className="rounded-none">Review</SelectItem>
+              <SelectItem value="done" className="rounded-none">Done</SelectItem>
+            </SelectContent>
+          </Select>
+          <CreateTaskDialog users={users} onCreated={loadData} />
+        </div>
       </div>
 
       {renderedGroups.length === 0 ? (
@@ -79,7 +102,7 @@ export function TaskBoard() {
           {renderedGroups.map((group) => (
             <div key={group.id} className="flex flex-col space-y-4">
               {/* Group Header */}
-              <div className="flex items-center gap-4 border-b border-border-subtle pb-4 bg-background sticky top-0 z-10 backdrop-blur-sm">
+              <div className="flex items-center gap-4 border-b border-border-subtle pb-4 bg-background sticky top-0 z-10">
                 {group.user ? (
                   <AvatarBadge src={group.avatarUrl} alt={group.name} size="default" />
                 ) : (

@@ -35,7 +35,8 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/login?redirect=${validatedSlug ? `/stories/${validatedSlug}` : "/stories"}`);
+    const redirectUrl = validatedSlug ? `/stories/${validatedSlug}?checkout=true` : "/stories?checkout=true";
+    redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
   }
 
   // Check if user already has access
@@ -43,13 +44,13 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
     .from("users")
     .select("has_lifetime_access, email")
     .eq("auth_id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (profileError || !profile) {
-    throw new Error("Failed to lookup user profile");
+  if (profileError) {
+    console.error("createCheckoutSession profile lookup error:", profileError);
   }
 
-  if (profile.has_lifetime_access) {
+  if (profile?.has_lifetime_access) {
     // Already paid — just redirect back
     redirect(slug ? `/stories/${slug}` : "/stories");
   }
@@ -80,9 +81,9 @@ export async function createCheckoutSession(slug: string, _formData: FormData) {
             name: "Fungga Wari Lab — Lifetime Access",
             description:
               "Unlock the complete folk story archive. One-time payment, unlimited access forever.",
-            images: [
-              `${baseUrl}/og-cover.png`,
-            ],
+            ...(baseUrl.startsWith("https") && {
+              images: [`${baseUrl}/og-cover.png`],
+            }),
           },
         },
       },
@@ -202,4 +203,47 @@ export async function checkUserAccess(slug?: string): Promise<boolean> {
     .single();
 
   return data?.has_lifetime_access ?? false;
+}
+/**
+ * createCustomerPortalSession — creates a Stripe Customer Portal session
+ * for users to manage their billing and download receipts.
+ */
+export async function createCustomerPortalSession() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: profile, error } = await supabase
+    .from("users")
+    .select("email")
+    .eq("auth_id", user.id)
+    .single();
+
+  if (error || !profile?.email) {
+    throw new Error("Failed to find user email for Customer Portal");
+  }
+
+  const baseUrl = getAppUrl("web");
+
+  // Search for the customer in Stripe by email
+  const customers = await stripe.customers.search({
+    query: `email:'${profile.email}'`,
+    limit: 1,
+  });
+
+  if (customers.data.length === 0) {
+    throw new Error("No Stripe customer found for this email. Have you made a purchase?");
+  }
+
+  const customerId = customers.data[0]!.id;
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: `${baseUrl}/stories`,
+  });
+
+  redirect(session.url);
 }

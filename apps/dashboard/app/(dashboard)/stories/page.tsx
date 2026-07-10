@@ -37,6 +37,7 @@ export default function StoriesOverviewPage() {
   const [isCreating, setIsCreating] = React.useState(false);
   const [togglingId, setTogglingId] = React.useState<string | null>(null);
   const [deletingId, setDeletingId] = React.useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = React.useState("");
   // AlertDialog confirmation state
   const [pendingDelete, setPendingDelete] = React.useState<{ id: string; title: string } | null>(null);
 
@@ -121,6 +122,17 @@ export default function StoriesOverviewPage() {
     }
   };
 
+  const filteredStories = React.useMemo(() => {
+    if (!stories) return undefined;
+    if (!searchQuery) return stories;
+    const lowerQuery = searchQuery.toLowerCase();
+    return stories.filter((story) => {
+      const matchTitle = story.title?.toLowerCase().includes(lowerQuery);
+      const matchCategory = story.category?.toLowerCase().includes(lowerQuery);
+      return matchTitle || matchCategory;
+    });
+  }, [stories, searchQuery]);
+
   if (stories === undefined) {
     return (
       <div className="flex flex-col h-full space-y-6 md:space-y-8 p-4 md:p-8 lg:p-10 max-w-5xl mx-auto animate-pulse">
@@ -178,7 +190,7 @@ export default function StoriesOverviewPage() {
               <Sparkles className="size-3" />
               <span>Fungga Wari Archive</span>
             </div>
-            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl italic tracking-tight text-foreground drop-shadow-lg">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl italic tracking-tight text-foreground">
               Manuscripts
             </h1>
             <p className="text-muted-foreground font-sans text-sm max-w-lg leading-relaxed">
@@ -202,11 +214,13 @@ export default function StoriesOverviewPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             placeholder="Search by title or category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 h-12 border-border bg-primary/5 hover:bg-primary/10 focus-visible:ring-brand-ember/50 text-foreground placeholder:text-muted-foreground/50 rounded-none transition-all font-sans text-sm"
           />
         </div>
 
-        {stories.length === 0 ? (
+        {filteredStories?.length === 0 ? (
           <DashboardCard variant="panel" className="flex-1 flex flex-col items-center justify-center p-12 mt-12 border-border-subtle relative z-10">
             <BookOpen className="size-12 text-muted-foreground/30 mb-6" />
             <h3 className="font-heading text-xl font-semibold mb-2 text-foreground/80">The Archive is Empty</h3>
@@ -223,7 +237,7 @@ export default function StoriesOverviewPage() {
           </DashboardCard>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10 pb-20">
-            {stories.map((story, index) => (
+            {filteredStories?.map((story, index) => (
               <div key={story.id} className="relative group/card">
                 <Link href={`/stories/draft/${story.id}`}>
                   <StoryCard

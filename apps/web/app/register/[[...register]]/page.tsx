@@ -9,6 +9,7 @@ import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
 import { Eye, EyeOff, UserPlus, Loader2 } from "lucide-react"
 import { AuthGatewayLayout } from "@workspace/ui/components/AuthGatewayLayout"
+import { toast } from "sonner"
 
 function RegisterForm() {
   const router = useRouter()
@@ -36,32 +37,45 @@ function RegisterForm() {
     setSuccess(null)
     setIsLoading(true)
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: name,
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: name,
+            },
+          },
+        })
+
+        if (signUpError) {
+          reject(signUpError)
+          return
+        }
+        resolve(signUpData)
+      }),
+      {
+        loading: "Forging your identity...",
+        success: (signUpData: any) => {
+          setIsLoading(false)
+          if (signUpData.session) {
+            router.push("/")
+            router.refresh()
+            return "Identity forged successfully. Welcome."
+          } else {
+            const msg = "Account created! Please check your email to confirm."
+            setSuccess(msg)
+            return msg
+          }
         },
-      },
-    })
-
-    if (signUpError) {
-      setError(signUpError.message)
-      setIsLoading(false)
-      return
-    }
-
-    if (signUpData.session) {
-      // Session exists — email confirmation is disabled, user is authenticated
-      setIsLoading(false)
-      router.push("/")
-      router.refresh()
-    } else {
-      // Email confirmation required — Supabase default
-      setIsLoading(false)
-      setSuccess("Account created! Please check your email to confirm your address before signing in.")
-    }
+        error: (err: any) => {
+          setError(err.message)
+          setIsLoading(false)
+          return err.message
+        }
+      }
+    )
   }
 
   return (

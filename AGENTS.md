@@ -139,20 +139,20 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 | `--bg-panel` | `oklch(0.95 0.01 60)` | `oklch(0.14 0.03 50)` | `bg-bg-panel` | Panel layer |
 | `--bg-surface` | `oklch(0.98 0.01 60)` | `oklch(0.18 0.04 50)` | `bg-bg-surface` | Card/content layer |
 | `--bg-overlay` | `oklch(0.99 0.005 60)` | `oklch(0.22 0.05 50)` | `bg-bg-overlay` | Overlay/modals |
-| `--shadow-brutal` | `0px 8px 30px -4px oklch(0.14 0.02 50 / 0.15)` | `0px 8px 30px -4px oklch(0 0 0 / 0.4)` | `shadow-brutal` | Soft, diffuse elevation |
-| `--shadow-brutal-sm` | `0px 4px 15px -2px oklch(0.14 0.02 50 / 0.1)` | `0px 4px 15px -2px oklch(0 0 0 / 0.3)` | `shadow-brutal-sm` | Subtle floating elevation |
+| `--shadow-nordic` | `0px 8px 30px -4px oklch(0.14 0.02 50 / 0.15)` | `0px 8px 30px -4px oklch(0 0 0 / 0.4)` | `shadow-nordic` | Soft, diffuse elevation |
+| `--shadow-nordic-sm` | `0px 4px 15px -2px oklch(0.14 0.02 50 / 0.1)` | `0px 4px 15px -2px oklch(0 0 0 / 0.3)` | `shadow-nordic-sm` | Subtle floating elevation |
 
-### Border Radius Tokens
+### Border Radius Tokens (Strict Zero Curves Law)
 | Token | Value | Tailwind |
 |---|---|---|
-| `--radius` (base) | `0.5rem` | `rounded-lg` |
-| `--radius-sm` | `calc(var(--radius) * 0.6)` | `rounded-sm` |
-| `--radius-md` | `calc(var(--radius) * 0.8)` | `rounded-md` |
-| `--radius-lg` | `var(--radius)` | `rounded-lg` |
-| `--radius-xl` | `calc(var(--radius) * 1.5)` | `rounded-xl` |
-| `--radius-2xl` | `calc(var(--radius) * 2)` | `rounded-2xl` |
-| `--radius-3xl` | `calc(var(--radius) * 3)` | `rounded-3xl` |
-> ⚡ **Note:** Action buttons use `rounded-full` intentionally for the elegant, modern pill-shape aesthetic.
+| `--radius` (base) | `0rem` | `rounded-none` |
+| `--radius-sm` | `0rem` | `rounded-none` |
+| `--radius-md` | `0rem` | `rounded-none` |
+| `--radius-lg` | `0rem` | `rounded-none` |
+| `--radius-xl` | `0rem` | `rounded-none` |
+| `--radius-2xl` | `0rem` | `rounded-none` |
+| `--radius-3xl` | `0rem` | `rounded-none` |
+> ⚡ **Strict Law:** ABSOLUTE ZERO CURVES. All elements (buttons, images, containers) MUST use `rounded-none` (0rem radius).
 
 ### Typography Tokens
 | Token | Tailwind | Usage |
@@ -176,7 +176,7 @@ All tokens are defined in `:root` and `.dark` using **OKLCH**. Every component c
 - ✅ When you need a new color not in the token set → add it to `globals.css` first → then use its Tailwind class
 
 ### ❌ Strict Design Enforcement (Zero Tolerance)
-- ✅ **ALWAYS** maintain a clean, elegant aesthetic. Use `rounded-full` for action buttons (pill buttons), and `rounded-2xl` or `rounded-3xl` for large imagery and frames.
+- ✅ **ALWAYS** maintain a raw, Nordic philosophy aesthetic. Use `rounded-none` exclusively. ABSOLUTELY NO CURVES ALLOWED.
 - ❌ **NEVER** use `aspect-video` or `aspect-[16/9]` for story imagery
 - ✅ **ALWAYS** use `aspect-[3/4]` or square for all story cards, covers, and illustrations
 - ❌ **NEVER** add a new component without adding `data-slot="component-name"` on the root element
@@ -662,11 +662,11 @@ Run this after EVERY migration. Commit the updated types immediately.
 
 ## 15. GitHub & CI/CD Rules
 
-### Mandatory Macroscope Review
-- ❌ **EVERY** Pull Request MUST trigger a Macroscope review — no exceptions
-- ❌ **NEVER** bypass or delete the `@macroscope-app review` comment requirement
-- The automated workflow `.github/workflows/macroscope-review.yml` is the source of truth
-- If automation fails: manually comment `@macroscope-app review` on the PR before merging
+### Mandatory Qodo Review
+- ✅ **EVERY** Pull Request MUST trigger a Qodo review - no exceptions
+- ❌ **NEVER** bypass or delete the `/review` command requirement
+- The automated workflow `.github/workflows/qodo-review.yml` is the source of truth
+- If automation fails: manually comment `/review` on the PR before merging
 
 ### CI Requirements before merge
 - ✅ `pnpm run typecheck` — zero errors

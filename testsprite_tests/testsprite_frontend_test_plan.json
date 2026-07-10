@@ -1,9 +1,9 @@
 [
   {
     "id": "TC001",
-    "title": "Log in and reach the dashboard overview",
-    "description": "Verifies an existing creator can log in with valid credentials and land on the dashboard overview.",
-    "category": "User Login",
+    "title": "Access the dashboard overview after signing in",
+    "description": "An authenticated creator can sign in and land on the overview page with dashboard metrics and shortcuts visible.",
+    "category": "Dashboard Overview",
     "steps": [
       {
         "type": "action",
@@ -19,123 +19,176 @@
       },
       {
         "type": "action",
-        "description": "Submit the login form"
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /overview"
       },
       {
         "type": "assertion",
-        "description": "Verify the user lands on the dashboard overview"
+        "description": "Verify dashboard summary metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard navigation shortcuts are displayed"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC002",
-    "title": "Protect the dashboard from anonymous deep-link access and redirect back after login",
-    "description": "Verifies an anonymous user deep-linking to the dashboard is redirected to login and after successful login is redirected back to the dashboard overview.",
-    "category": "Creator Studio Dashboard",
+    "title": "Block media assets access without authentication",
+    "description": "An unauthenticated visitor cannot access media assets and is asked to authenticate before continuing.",
+    "category": "Media Assets",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /dashboard/overview"
+        "description": "Navigate to /assets"
       },
       {
         "type": "assertion",
-        "description": "Verify the user is redirected to the login page"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
+        "description": "Verify media asset content is not displayed"
       },
       {
         "type": "assertion",
-        "description": "Verify the user lands on the dashboard overview"
+        "description": "Verify a sign-in prompt is displayed"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC003",
-    "title": "Create a new creator account",
-    "description": "Verifies a new user can register with a valid email and password and sees a confirmation that the account was created.",
-    "category": "User Registration",
+    "title": "Block overview access when signed out",
+    "description": "A signed-out visitor cannot view dashboard overview data and is prompted to sign in instead.",
+    "category": "Dashboard Overview",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /register"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with creator+new1@example.com"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with a valid password"
-      },
-      {
-        "type": "action",
-        "description": "Submit the registration form"
+        "description": "Navigate to /overview"
       },
       {
         "type": "assertion",
-        "description": "Verify a confirmation of account creation is visible"
+        "description": "Verify sign-in is required before dashboard data is shown"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC004",
-    "title": "View dashboard overview statistics and open the story editor",
-    "description": "Verifies an authenticated creator can view overview statistics and navigate from the dashboard into the story editor flow.",
-    "category": "Creator Studio Dashboard",
+    "title": "Block library access when not signed in",
+    "description": "An unauthenticated visitor is prevented from viewing library content and is prompted to sign in.",
+    "category": "Library",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to /login"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with {{LOGIN_USER}}"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
-      },
-      {
-        "type": "action",
-        "description": "Submit the login form"
-      },
-      {
-        "type": "action",
-        "description": "Wait for the dashboard overview to finish loading"
+        "description": "Navigate to /library"
       },
       {
         "type": "assertion",
-        "description": "Verify overview statistics are displayed"
-      },
-      {
-        "type": "action",
-        "description": "Click the dashboard control that opens the story editor"
+        "description": "Verify library content is not displayed"
       },
       {
         "type": "assertion",
-        "description": "Verify the story editor is displayed"
+        "description": "Verify a sign-in prompt is displayed"
       }
     ],
     "priority": "High"
   },
   {
     "id": "TC005",
-    "title": "Edit story metadata, save, and see updates reflected on the overview",
-    "description": "Verifies a creator can open a story from the dashboard, update metadata, save, and return to the overview where the updated metadata is reflected.",
-    "category": "Creator Studio Dashboard",
+    "title": "Block billing access when not authenticated",
+    "description": "A signed-out visitor cannot load Billing and is prompted to authenticate.",
+    "category": "Billing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /billing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to Billing is blocked or redirected to authentication"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Block tasks access for unauthenticated visitors",
+    "description": "An unauthenticated visitor is blocked from viewing tasks and is prompted to sign in.",
+    "category": "Tasks",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tasks"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify task content is not displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a sign-in prompt is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Block settings access when not authenticated",
+    "description": "A signed-out visitor cannot load Settings and is prompted to authenticate.",
+    "category": "Settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to Settings is blocked or redirected to authentication"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Block stories access when unauthenticated",
+    "description": "A visitor without a valid session cannot view story data and is shown an access or sign-in state.",
+    "category": "Story Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify sign-in is required before story data is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Block series access when unauthenticated",
+    "description": "A visitor without a valid session cannot view series data and is shown an access or sign-in state.",
+    "category": "Series Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /series"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify sign-in is required before series data is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Open the stories page from the overview",
+    "description": "An authenticated creator can move from the overview into story management and see the story list.",
+    "category": "Story Management",
     "steps": [
       {
         "type": "action",
@@ -151,185 +204,28 @@
       },
       {
         "type": "action",
-        "description": "Submit the login form"
+        "description": "Submit the sign-in form"
       },
       {
         "type": "action",
-        "description": "Click the dashboard control that opens the story editor"
-      },
-      {
-        "type": "action",
-        "description": "Fill a new value into the story title field"
-      },
-      {
-        "type": "action",
-        "description": "Save the story changes"
-      },
-      {
-        "type": "action",
-        "description": "Navigate back to the dashboard overview using in-app navigation"
+        "description": "Navigate to /stories"
       },
       {
         "type": "assertion",
-        "description": "Verify the updated story metadata is shown on the overview"
+        "description": "Verify story rows are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify story management actions are available"
       }
     ],
     "priority": "High"
   },
   {
-    "id": "TC006",
-    "title": "Read a featured published story from the landing page",
-    "description": "Verifies an anonymous visitor can open a featured story from the landing page and read the story content in the reader view.",
-    "category": "Public Landing and Reader",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Scroll to the featured stories section"
-      },
-      {
-        "type": "action",
-        "description": "Click a featured story to open it"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the story reader view is displayed"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify story content is displayed"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC007",
-    "title": "Return to landing page from the story reader",
-    "description": "Verifies an anonymous visitor can navigate back to the landing page after opening a story in the reader.",
-    "category": "Public Landing and Reader",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Scroll to the featured stories section"
-      },
-      {
-        "type": "action",
-        "description": "Click a featured story to open it"
-      },
-      {
-        "type": "action",
-        "description": "Click the navigation control to return to the landing page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the landing page is displayed"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify featured stories are displayed"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC008",
-    "title": "Landing page shows featured stories list",
-    "description": "Verifies the landing page renders a list of featured stories for anonymous visitors.",
-    "category": "Public Landing and Reader",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Scroll through the landing page content"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify featured stories are displayed"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC009",
-    "title": "Reader supports moving through story content",
-    "description": "Verifies an anonymous visitor can progress through a story in the reader using standard reader navigation controls.",
-    "category": "Public Landing and Reader",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Scroll to the featured stories section"
-      },
-      {
-        "type": "action",
-        "description": "Click a featured story to open it"
-      },
-      {
-        "type": "action",
-        "description": "Click the reader control to go to the next part of the story"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the reader remains open and displays story content"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
-    "id": "TC010",
-    "title": "Open a published story from site search",
-    "description": "Verifies an anonymous visitor can use site search (when available) to open a published story and reach the reader.",
-    "category": "Public Landing and Reader",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /"
-      },
-      {
-        "type": "action",
-        "description": "Click into the site search input if it is present"
-      },
-      {
-        "type": "action",
-        "description": "Fill \"folk\" into the site search field"
-      },
-      {
-        "type": "action",
-        "description": "Press Enter"
-      },
-      {
-        "type": "action",
-        "description": "Click a story result to open it"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify the story reader view is displayed"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify story content is displayed"
-      }
-    ],
-    "priority": "Medium"
-  },
-  {
     "id": "TC011",
-    "title": "Reject login with non-existent account credentials",
-    "description": "Verifies login shows an invalid credentials message when a non-existent account attempts to sign in.",
-    "category": "User Login",
+    "title": "Review tasks as an authenticated user",
+    "description": "A signed-in user can open the tasks page and view task items, statuses, and completion controls.",
+    "category": "Tasks",
     "steps": [
       {
         "type": "action",
@@ -337,57 +233,36 @@
       },
       {
         "type": "action",
-        "description": "Fill in the email field with creator+doesnotexist@example.com"
+        "description": "Fill in the username field with {{LOGIN_USER}}"
       },
       {
         "type": "action",
-        "description": "Fill in the password field with any-password"
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
       },
       {
         "type": "action",
         "description": "Submit the login form"
       },
       {
+        "type": "action",
+        "description": "Click the link to open the tasks page"
+      },
+      {
         "type": "assertion",
-        "description": "Verify an invalid credentials message is visible"
+        "description": "Verify task items are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify completion controls are displayed"
       }
     ],
-    "priority": "Low"
+    "priority": "High"
   },
   {
     "id": "TC012",
-    "title": "Block registration with invalid email format",
-    "description": "Verifies registration shows an inline email validation error when the email format is invalid.",
-    "category": "User Registration",
-    "steps": [
-      {
-        "type": "action",
-        "description": "Navigate to /register"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the email field with invalid-email"
-      },
-      {
-        "type": "action",
-        "description": "Fill in the password field with a valid password"
-      },
-      {
-        "type": "action",
-        "description": "Submit the registration form"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify an email validation error is visible"
-      }
-    ],
-    "priority": "Low"
-  },
-  {
-    "id": "TC013",
-    "title": "Show email validation error on login for invalid email format",
-    "description": "Verifies the login form shows an email validation error when an invalid email is submitted.",
-    "category": "User Login",
+    "title": "Open the series page from the dashboard",
+    "description": "An authenticated creator can access series management and see collections available for organizing stories.",
+    "category": "Series Management",
     "steps": [
       {
         "type": "action",
@@ -395,19 +270,413 @@
       },
       {
         "type": "action",
-        "description": "Fill in the email field with not-an-email"
+        "description": "Fill in the email field with {{LOGIN_USER}}"
       },
       {
         "type": "action",
-        "description": "Fill in the password field with any-password"
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /series"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify series collections are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify series management controls are available"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "View media assets after signing in",
+    "description": "A signed-in user can open the assets page and see uploaded media assets with management controls.",
+    "category": "Media Assets",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
       },
       {
         "type": "action",
         "description": "Submit the login form"
       },
       {
+        "type": "action",
+        "description": "Click the link to open the assets page"
+      },
+      {
         "type": "assertion",
-        "description": "Verify an email validation error is visible"
+        "description": "Verify media assets are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify asset management controls are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Move from overview to stories through dashboard navigation",
+    "description": "An authenticated creator can use dashboard navigation to reach story management after signing in.",
+    "category": "Dashboard Overview",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /overview"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open story management"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the story management page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify story rows are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Access the library as a signed-in user",
+    "description": "A signed-in user can open the library page and see reference materials and reusable assets.",
+    "category": "Library",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the library"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify library materials are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify asset listings are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Return to the overview from stories",
+    "description": "An authenticated creator can navigate back to the overview after viewing story management.",
+    "category": "Story Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /stories"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the overview"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard summary metrics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard navigation shortcuts are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "View billing status after signing in",
+    "description": "An authenticated user can open Billing and see subscription and paywall information.",
+    "category": "Billing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open Billing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify billing status information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify subscription management actions are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC018",
+    "title": "View settings after signing in",
+    "description": "An authenticated user can open Settings and see account and organization configuration forms.",
+    "category": "Settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open Settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify account settings controls are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify organization settings controls are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Keep billing and settings available in an authenticated session",
+    "description": "A logged-in dashboard user can move between Billing and Settings without losing access.",
+    "category": "Billing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open Billing"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open Settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify settings controls are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the authenticated dashboard remains accessible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Show billing management state after visiting settings",
+    "description": "An authenticated user can move from Settings to Billing and still see subscription and paywall details.",
+    "category": "Billing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open Settings"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open Billing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify billing status information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify plan management actions are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Show an empty tasks state when no work items exist",
+    "description": "A signed-in user sees an empty state on the tasks page when there are no tasks to review.",
+    "category": "Tasks",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the tasks page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty state message is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify task completion controls are not displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC022",
+    "title": "Show an empty library state when no reference items are available",
+    "description": "A signed-in user sees an empty state on the library page when no library materials are available.",
+    "category": "Library",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open the library"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty state message is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify library asset listings are not displayed"
       }
     ],
     "priority": "Low"

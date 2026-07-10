@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { Label } from "@workspace/ui/components/label";
-import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 // ─── Cloudinary config ───────────────────────────────────────────────────────
 // Files are uploaded directly to Cloudinary CDN using signed requests.
@@ -87,73 +86,82 @@ export function MediaUploader() {
       return;
     }
 
-    try {
-      setIsUploading(true);
+    setIsUploading(true);
 
-      // 1. Get signed signature from server
-      const { signature, timestamp, apiKey, folder } =
-        await getCloudinarySignature("fungga-wari-lab/assets");
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        try {
+          // 1. Get signed signature from server
+          const { signature, timestamp, apiKey, folder } =
+            await getCloudinarySignature("fungga-wari-lab/assets");
 
-      // 2. Upload directly to Cloudinary using signed details
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("api_key", apiKey);
-      formData.append("timestamp", timestamp.toString());
-      formData.append("signature", signature);
-      formData.append("folder", folder);
+          // 2. Upload directly to Cloudinary using signed details
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("api_key", apiKey);
+          formData.append("timestamp", timestamp.toString());
+          formData.append("signature", signature);
+          formData.append("folder", folder);
 
-      const resourceType = assetType === "text_story" ? "raw" : "auto";
-      const cloudinaryRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
-        { method: "POST", body: formData }
-      );
+          const resourceType = assetType === "text_story" ? "raw" : "auto";
+          const cloudinaryRes = await fetch(
+            `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
+            { method: "POST", body: formData }
+          );
 
-      if (!cloudinaryRes.ok) {
-        throw new Error("Cloudinary upload failed");
+          if (!cloudinaryRes.ok) {
+            throw new Error("Cloudinary upload failed");
+          }
+
+          const cloudinaryData = await cloudinaryRes.json();
+          const { secure_url, public_id } = cloudinaryData as {
+            secure_url: string;
+            public_id: string;
+          };
+
+          // 3. Save the Cloudinary URL to the assets table (no storageId)
+          startTransition(() => {
+            createAsset({
+              title: file.name,
+              url: secure_url,
+              publicId: public_id,
+              type: assetType as
+                | "illustration"
+                | "sketch"
+                | "reference_photo"
+                | "audio_lore"
+                | "text_story",
+            }).catch((err) => {
+              console.error("Failed to save asset into supabase:", err);
+            });
+          });
+
+          resolve(true);
+        } catch (err) {
+          reject(err);
+        }
+      }),
+      {
+        loading: "Uploading to CDN...",
+        success: () => {
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+          setIsUploading(false);
+          return "Asset successfully uploaded.";
+        },
+        error: (err) => {
+          console.error("Upload failed:", err);
+          setIsUploading(false);
+          return "Failed to upload media file.";
+        }
       }
-
-      const cloudinaryData = await cloudinaryRes.json();
-      const { secure_url, public_id } = cloudinaryData as {
-        secure_url: string;
-        public_id: string;
-      };
-
-      // 3. Save the Cloudinary URL to the assets table (no storageId)
-      startTransition(() => {
-        createAsset({
-          title: file.name,
-          url: secure_url,
-          publicId: public_id,
-          type: assetType as
-            | "illustration"
-            | "sketch"
-            | "reference_photo"
-            | "audio_lore"
-            | "text_story",
-        }).catch((err) => {
-          console.error("Failed to save asset into supabase:", err);
-        });
-      });
-
-      toast.success("Asset uploaded", { description: "Saved to Cloudinary CDN." });
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error("Upload Failed", { description: "Failed to upload media file." });
-    } finally {
-      setIsUploading(false);
-    }
+    );
   };
 
   return (
-    <DashboardCard
-      variant="panel"
-      className="p-6 flex flex-col items-center justify-center space-y-4"
-    >
-      <div className="flex gap-4 w-full max-w-sm mb-4">
+    <div className="flex flex-col items-center justify-center space-y-4 w-full">
+      <div className="flex gap-4 w-full mb-4">
         <div className="flex-1 space-y-1">
           <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
             Asset Type
@@ -201,7 +209,7 @@ export function MediaUploader() {
           fileInputRef.current?.click();
         }}
         disabled={isUploading}
-        className="h-40 w-full max-w-sm border border-dashed border-border-strong bg-bg-overlay hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors flex flex-col gap-2 rounded-none group"
+        className="h-40 w-full border border-dashed border-border-strong bg-bg-overlay hover:bg-bg-overlay/80 hover:border-brand-ember/50 transition-colors flex flex-col gap-2 rounded-none group"
         variant="ghost"
         aria-label="Upload media asset"
       >
@@ -228,12 +236,12 @@ export function MediaUploader() {
           id="asset-upload-error"
           role="alert"
           aria-live="assertive"
-          className="flex items-start gap-2 w-full max-w-sm font-sans text-xs text-destructive border-l-2 border-destructive pl-3 py-1 bg-destructive/5"
+          className="flex items-start gap-2 w-full font-sans text-xs text-destructive border-l-2 border-destructive pl-3 py-1 bg-destructive/5"
         >
           <AlertCircle className="size-3 mt-0.5 shrink-0" aria-hidden />
           {validationError}
         </p>
       )}
-    </DashboardCard>
+    </div>
   );
 }

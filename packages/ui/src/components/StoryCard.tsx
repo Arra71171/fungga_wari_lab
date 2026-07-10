@@ -7,7 +7,7 @@ import { ProgressBar } from "@workspace/ui/components/ProgressBar"
 import { Flame, BookOpen, Globe2 } from "lucide-react"
 
 const storyCardVariants = cva(
-  "group relative flex flex-col overflow-hidden border border-border/50 shadow-xs bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-sm cursor-pointer hover:-translate-y-1 rounded-none",
+  "group relative flex flex-col overflow-hidden border border-border/50 shadow-sm bg-bg-surface transition-all duration-300 hover:border-primary hover:shadow-nordic-sm cursor-pointer hover:-translate-y-1 rounded-none",
   {
     variants: {
       variant: {
@@ -108,7 +108,7 @@ function StoryCard({
     )
   }
 
-  // Bento Grid Zen Brutalist Vertical Layout
+  // Bento Grid Nordic Philosophy Vertical Layout
   return (
     <div
       data-slot="story-card"

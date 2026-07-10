@@ -217,7 +217,7 @@ export function RichTextEditor({ value, onChange, className, onImageUpload, scen
       attributes: {
         class: cn(
           "prose prose-neutral dark:prose-invert max-w-none min-h-[500px] w-full p-8 outline-none bg-background text-foreground transition-shadow",
-          // Zen Brutalist typography overrides
+          // Nordic Philosophy typography overrides
           "prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight",
           "prose-h1:text-4xl prose-h1:mt-12",
           "prose-h2:text-2xl prose-h2:mt-10 prose-h2:text-primary",

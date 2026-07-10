@@ -8,6 +8,8 @@ import { Send, Loader, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
+import { Bubble, BubbleContent } from "@workspace/ui/components/bubble";
+import { Marker, MarkerContent, MarkerIcon } from "@workspace/ui/components/marker";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -161,19 +163,15 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
 
               {/* Message list */}
               {messages.map((message) => (
-                <div
+                <Bubble
                   key={message.id}
-                  className={cn(
-                    "flex",
-                    message.role === "user" ? "justify-end" : "justify-start",
-                  )}
+                  variant={message.role === "user" ? "default" : "secondary"}
+                  align={message.role === "user" ? "end" : "start"}
                 >
-                  <div
+                  <BubbleContent
                     className={cn(
-                      "max-w-[88%] px-3 py-2 text-[11px] font-sans leading-relaxed",
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-foreground border border-border",
+                      "text-[11px] font-sans",
+                      message.role !== "user" && "border-border"
                     )}
                   >
                     {message.parts.map((part, i) => {
@@ -186,64 +184,101 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
                       }
                       if (part.type === "tool-invocation") {
                         return (
-                          <span
-                            key={i}
-                            className="text-muted-foreground italic text-[10px]"
-                          >
-                            Consulting the archive…
-                          </span>
+                          <Marker key={i} className="mt-2 bg-transparent border-none p-0">
+                            <MarkerIcon>
+                              <Loader className="size-3 animate-spin text-muted-foreground" />
+                            </MarkerIcon>
+                            <MarkerContent className="text-muted-foreground italic text-[10px]">
+                              Consulting the archive…
+                            </MarkerContent>
+                          </Marker>
                         );
                       }
                       return null;
                     })}
-                  </div>
-                </div>
+                  </BubbleContent>
+                </Bubble>
               ))}
 
               {/* Typing indicator */}
               {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-secondary border border-border px-3 py-2 flex gap-1 items-center">
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={i}
-                        className="size-1.5 bg-brand-ember rounded-none"
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          delay: i * 0.2,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    ))}
-                  </div>
+                <div className="flex justify-start pl-1 pt-1">
+                  <Marker role="status" className="bg-transparent border-none p-0">
+                    <MarkerIcon>
+                      <Loader className="size-3 animate-spin text-muted-foreground" />
+                    </MarkerIcon>
+                    <MarkerContent className="text-muted-foreground text-[10px]">
+                      Thinking…
+                    </MarkerContent>
+                  </Marker>
                 </div>
               )}
 
               {/* Error state */}
               {error && (
                 <div className="flex justify-start mt-2">
-                  <div className="bg-destructive/10 text-destructive border border-destructive/20 px-3 py-2 text-[11px] font-sans leading-relaxed max-w-[88%] space-y-1.5">
-                    <p className="font-bold">
-                      {error.message.includes("rate") || error.message.includes("429")
-                        ? "Wise-Epu is resting…"
-                        : "Connection Error"}
-                    </p>
-                    <p className="text-destructive/80">
-                      {error.message.includes("rate") || error.message.includes("429")
-                        ? "Too many questions at once! Please wait a moment before asking again."
-                        : error.message}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={clearError}
-                      className="text-[10px] underline underline-offset-2 text-destructive/70 hover:text-destructive focus-visible:ring-1 focus-visible:ring-ring"
-                      aria-label="Dismiss error"
-                    >
-                      Dismiss
-                    </button>
-                  </div>
+                  {(() => {
+                    let errText = error.message;
+                    try {
+                      const json = JSON.parse(error.message);
+                      if (json.error) errText = json.error;
+                    } catch (e) {
+                      // ignore parse error, use raw string
+                    }
+
+                    const isAuthError = errText.toLowerCase().includes("unauthorized") || errText.toLowerCase().includes("sign in");
+                    const isRateLimit = errText.toLowerCase().includes("rate") || errText.includes("429");
+
+                    if (isAuthError) {
+                      return (
+                        <div className="bg-secondary/40 border border-border px-4 py-3 text-[11px] font-sans leading-relaxed max-w-[88%] space-y-2 relative overflow-hidden group">
+                          {/* Decorative background element */}
+                          <div className="absolute right-0 top-0 opacity-5 text-4xl font-meetei pointer-events-none -mr-2 -mt-1 select-none">ꯏ</div>
+                          
+                          <p className="font-serif italic text-muted-foreground">
+                            "The sacred lore is reserved for those known to the Archive. Reveal your name, traveler, and we shall speak."
+                          </p>
+                          
+                          <div className="pt-1 flex items-center gap-3">
+                            <a 
+                              href="/login"
+                              className="inline-flex items-center justify-center bg-primary text-primary-foreground px-3 py-1.5 font-bold tracking-wide hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                            >
+                              Sign In
+                            </a>
+                            <button
+                              type="button"
+                              onClick={clearError}
+                              className="text-muted-foreground hover:text-foreground transition-colors font-mono tracking-wide focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="bg-destructive/10 text-destructive border border-destructive/20 px-3 py-2 text-[11px] font-sans leading-relaxed max-w-[88%] space-y-1.5">
+                        <p className="font-bold">
+                          {isRateLimit ? "Wise-Epu is resting…" : "System Error"}
+                        </p>
+                        <p className="text-destructive/80">
+                          {isRateLimit 
+                            ? "Too many questions at once! Please wait a moment before asking again."
+                            : errText}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={clearError}
+                          className="text-[10px] underline underline-offset-2 text-destructive/70 hover:text-destructive focus-visible:ring-1 focus-visible:ring-ring"
+                          aria-label="Dismiss error"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
@@ -290,14 +325,14 @@ function WiseEpu({ apiRoute = "/api/wise-epu", className }: WiseEpuProps) {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? "Close Wise-Epu" : "Open Wise-Epu — Lore Keeper"}
         aria-expanded={isOpen}
-        className="pointer-events-auto relative size-14 flex items-center justify-center bg-primary text-primary-foreground shadow-sm hover:-translate-y-1 active:translate-y-0 hover:shadow-xs transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="pointer-events-auto relative size-14 flex items-center justify-center rounded-none bg-primary text-primary-foreground shadow-nordic-sm hover:-translate-y-1 active:translate-y-0 hover:shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         {/* Pulse ring when closed */}
         <AnimatePresence>
           {!isOpen && (
             <motion.span
               key="pulse"
-              className="absolute inset-0 border-2 border-primary"
+              className="absolute inset-0 border-2 border-primary rounded-none"
               initial={{ scale: 1, opacity: 0.7 }}
               animate={{ scale: 1.5, opacity: 0 }}
               exit={{ opacity: 0 }}

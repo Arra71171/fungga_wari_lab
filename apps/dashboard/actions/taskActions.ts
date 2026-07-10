@@ -3,6 +3,7 @@
 import { z } from "zod"
 
 import { createClient } from "@/lib/supabase/server"
+import { requireUser } from "./authHelpers"
 import type { Database } from "@workspace/ui/types/supabase"
 
 type TaskStatus = Database["public"]["Enums"]["task_status"]
@@ -145,8 +146,15 @@ export async function updateTaskStatus(rawId: string, rawStatus: TaskStatus) {
   const id = z.string().uuid().parse(rawId)
   const status = taskStatusSchema.parse(rawStatus)
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { profile, user } = await requireUser()
+
+  // Verify ownership/role
+  if (profile.role !== "admin" && profile.role !== "superadmin") {
+    const { data: task } = await supabase.from("tasks").select("assignee_id").eq("id", id).single()
+    if (task?.assignee_id !== user.id) {
+      throw new Error("Forbidden — you do not have permission to update this task's status")
+    }
+  }
 
   const { error } = await supabase.from("tasks").update({ status }).eq("id", id)
   if (error) throw new Error(`Failed to update task status: ${error.message}`)
@@ -163,8 +171,14 @@ export async function updateTask(
   const id = z.string().uuid().parse(rawId)
   const patch = updateTaskPatchSchema.parse(rawPatch)
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { profile, user } = await requireUser()
+
+  if (profile.role !== "admin" && profile.role !== "superadmin") {
+    const { data: task } = await supabase.from("tasks").select("assignee_id").eq("id", id).single()
+    if (task?.assignee_id !== user.id) {
+      throw new Error("Forbidden — you do not have permission to update this task")
+    }
+  }
 
   const { error } = await supabase
     .from("tasks")
@@ -181,8 +195,11 @@ export async function updateTask(
 export async function deleteTask(rawId: string) {
   const id = z.string().uuid().parse(rawId)
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error("Unauthenticated")
+  const { profile } = await requireUser()
+
+  if (profile.role !== "admin" && profile.role !== "superadmin") {
+    throw new Error("Forbidden — only admins can delete tasks")
+  }
 
   const { error } = await supabase.from("tasks").delete().eq("id", id)
   if (error) throw new Error(`Failed to delete task: ${error.message}`)

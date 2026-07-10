@@ -11,6 +11,7 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { Loader2, Fingerprint, Activity, BookOpen, CheckCircle2, ShieldCheck, ScanFace } from "lucide-react";
 import { getMyProfile, updateUserProfile, getOperativeStats } from "@/actions/userActions";
 import { getCloudinarySignature } from "@/actions/cloudinaryActions";
+import { DashboardCard } from "@workspace/ui/components/DashboardCard";
 
 type Profile = Awaited<ReturnType<typeof getMyProfile>>;
 
@@ -68,7 +69,7 @@ export function OperativeDossier() {
 
   if (me === undefined) {
     return (
-      <div className="animate-pulse h-[300px] bg-bg-surface/20 border border-border/50 rounded-none rounded-none shadow-xs" />
+      <div className="animate-pulse h-[300px] bg-bg-surface/20 border border-border/50 rounded-none shadow-xs" />
     );
   }
 
@@ -143,11 +144,11 @@ export function OperativeDossier() {
   const currentAvatar = me?.avatar_url;
 
   return (
-    <div className="border border-border-subtle rounded-none bg-background relative overflow-hidden shadow-sm transition-all">
+    <DashboardCard variant="panel" padding="none" className="relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
       {/* Header */}
-      <div className="p-6 border-b border-border-subtle flex justify-between items-center bg-background">
+      <div className="p-6 border-b border-border-subtle flex justify-between items-center bg-bg-surface">
         <div>
           <h2 className="font-heading text-2xl font-black uppercase tracking-tighter text-foreground/90">
             User Profile
@@ -166,7 +167,7 @@ export function OperativeDossier() {
 
           {/* Avatar Upload Zone */}
           <div
-            className="relative group cursor-pointer w-40 h-40 flex items-center justify-center p-1 bg-background border border-border-subtle hover:border-primary transition-all duration-300"
+            className="relative group cursor-pointer w-40 h-40 flex items-center justify-center p-1 bg-bg-surface border border-border-subtle hover:border-primary transition-all duration-300"
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="w-full h-full relative overflow-hidden">
@@ -220,7 +221,7 @@ export function OperativeDossier() {
           </div>
 
           {/* Performance Metrics */}
-          <div className="w-full border border-border-subtle rounded-none bg-background p-4 space-y-3">
+          <div className="w-full border border-border-subtle rounded-none bg-bg-surface p-4 space-y-3">
             <h3 className="font-sans text-xs font-semibold tracking-wide text-muted-foreground border-b border-border/50 pb-2">
               Metrics
             </h3>
@@ -260,7 +261,7 @@ export function OperativeDossier() {
                   if (aliasError) setAliasError("");
                 }}
                 placeholder="Enter display name..."
-                className="h-12 border border-border-subtle bg-background font-sans text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none"
+                className="h-12 border border-border-subtle bg-bg-surface font-sans text-sm tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none"
               />
               {aliasError && (
                 <p className="font-sans text-xs text-destructive tracking-wide pl-4 border-l-2 border-destructive">
@@ -284,7 +285,7 @@ export function OperativeDossier() {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Tell us about yourself..."
-                className="min-h-[160px] resize-none border border-border-subtle bg-background font-mono leading-relaxed tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none p-4"
+                className="min-h-[160px] resize-none border border-border-subtle bg-bg-surface font-mono leading-relaxed tracking-wide text-foreground focus-visible:ring-0 focus-visible:border-primary focus-visible:bg-primary/5 rounded-none transition-colors shadow-none p-4"
               />
             </div>
           </div>
@@ -304,7 +305,7 @@ export function OperativeDossier() {
               id="dossier-sync-btn"
               onClick={handleSave}
               disabled={isSaving || !!aliasError || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
-              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-none bg-primary border border-primary text-primary-foreground hover:bg-background hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform w-full sm:w-auto min-w-[200px]"
+              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-none bg-primary border border-primary text-primary-foreground hover:bg-background hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform w-full sm:w-auto min-w-0 sm:min-w-[200px]"
             >
               {isSaving ? <Loader2 className="animate-spin size-4 mr-2" /> : <Activity className="size-4 mr-2" />}
               {isSaving ? "Saving..." : "Save Changes"}
@@ -313,6 +314,6 @@ export function OperativeDossier() {
         </div>
 
       </div>
-    </div>
+    </DashboardCard>
   );
 }

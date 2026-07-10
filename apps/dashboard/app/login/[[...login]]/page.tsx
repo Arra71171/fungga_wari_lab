@@ -40,36 +40,37 @@ export default function LoginPage() {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
 
-      if (error) {
-        toast.error("Authentication Failed", {
-          description: error.message,
-        });
-        return;
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        try {
+          const { error } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve(true);
+        } catch (err) {
+          reject(err);
+        }
+      }),
+      {
+        loading: "Authenticating your credentials...",
+        success: () => {
+          setTimeout(() => {
+            window.location.replace(redirectUrl);
+          }, 500);
+          return "Identity Verified: Access granted to the Forge.";
+        },
+        error: (err: any) => {
+          setIsSubmitting(false);
+          return err.message || "Connection Error: Unable to reach authentication server.";
+        }
       }
-
-      toast.success("Identity Verified", {
-        description: "Access granted to the Forge.",
-      });
-
-      // Hard navigation — forces browser to send fresh session cookies to the
-      // middleware on the very first request. We add a slight delay to ensure
-      // the @supabase/ssr auth listener has time to write the session into document.cookie.
-      setTimeout(() => {
-        window.location.replace(redirectUrl);
-      }, 500);
-    } catch {
-      toast.error("Connection Error", {
-        description: "Unable to reach authentication server.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    );
   }
 
   return (

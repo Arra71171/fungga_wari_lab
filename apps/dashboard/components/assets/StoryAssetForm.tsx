@@ -243,7 +243,7 @@ export function StoryAssetForm() {
             placeholder="e.g. Khamba Thoibi"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
             <Label className="font-sans text-xs uppercase text-muted-foreground tracking-widest">
               Category
@@ -413,7 +413,7 @@ export function StoryAssetForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-none font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-[200px] shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
+          className="rounded-none font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-0 w-full sm:w-auto sm:min-w-[200px] shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
         >
           {isSubmitting ? (
             <Loader2 className="size-4 animate-spin mr-2" />

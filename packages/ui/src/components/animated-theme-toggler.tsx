@@ -14,7 +14,7 @@ interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"butt
 
 export function AnimatedThemeToggler({
   className,
-  duration = 600, // Slightly longer duration to match Zen Brutalist relaxed pacing
+  duration = 600, // Slightly longer duration to match Nordic Philosophy relaxed pacing
   ...props
 }: AnimatedThemeTogglerProps) {
   const { setTheme, resolvedTheme } = useTheme();
@@ -71,7 +71,7 @@ export function AnimatedThemeToggler({
           },
           {
             duration,
-            easing: "cubic-bezier(0.22, 1, 0.36, 1)", // Zen brutalist ease
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)", // Zen Nordic philosophy ease
             pseudoElement: "::view-transition-new(root)",
           }
         );
@@ -83,7 +83,7 @@ export function AnimatedThemeToggler({
   // eslint-disable-next-line react-hooks/set-state-in-effect
   React.useEffect(() => { setMounted(true) }, []);
 
-  // Clean, brutalist interactions without spinning
+  // Clean, Nordic philosophy interactions without spinning
   return (
     <Button
       type="button"
