@@ -50,22 +50,25 @@ export async function POST(req: NextRequest) {
         const subscriptionData = subscription as unknown as { current_period_end: number };
         const periodEnd = new Date(subscriptionData.current_period_end * 1000).toISOString();
 
-        const { error } = await supabase
+        const { data: updatedProfile, error } = await supabase
           .from("users")
-          .update({
+          .upsert({
+            auth_id: authId,
             stripe_customer_id: customerId,
             stripe_subscription_id: subscription.id,
             subscription_status: subscription.status,
             subscription_price_id: priceId,
             subscription_period_end: periodEnd,
             updated_at: new Date().toISOString(),
-          })
-          .eq("auth_id", authId);
+          }, { onConflict: "auth_id" })
+          .select("id")
+          .maybeSingle();
 
-        if (error) {
-          console.error("Failed to sync subscription to db:", error);
+        if (error || !updatedProfile) {
+          const errorMessage = error ? error.message : "User row not found after upsert";
+          console.error("Failed to sync subscription to db:", error ?? "Silent no-op");
           return NextResponse.json(
-            { error: "Database update failed: " + error.message },
+            { error: "Database update failed: " + errorMessage },
             { status: 500 }
           );
         }
@@ -86,18 +89,20 @@ export async function POST(req: NextRequest) {
         
         if (authId) {
           const periodEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
-          const { error } = await supabase
+          const { data: updatedProfile, error } = await supabase
             .from("users")
-            .update({
+            .upsert({
+              auth_id: authId,
               subscription_status: "wanderer",
               subscription_period_end: periodEnd,
               ...(customerId ? { stripe_customer_id: customerId } : {}),
               updated_at: new Date().toISOString(),
-            })
-            .eq("auth_id", authId);
+            }, { onConflict: "auth_id" })
+            .select("id")
+            .maybeSingle();
             
-          if (error) {
-            console.error("Failed to grant Wanderer access:", error);
+          if (error || !updatedProfile) {
+            console.error("Failed to grant Wanderer access:", error ?? "Silent no-op");
             return NextResponse.json({ error: "Failed to grant Wanderer access" }, { status: 500 });
           }
           console.log(`✅ Wanderer 14-day pass granted to auth_id: ${authId}`);

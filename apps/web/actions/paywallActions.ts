@@ -35,7 +35,7 @@ export async function createCheckoutSession(slug: string, planType: "bard" | "ca
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    const redirectUrl = validatedSlug ? `/stories/${validatedSlug}?checkout=true` : "/stories?checkout=true";
+    const redirectUrl = validatedSlug ? `/stories/${validatedSlug}?checkout=true` : `/pricing?plan=${validatedPlanType}`;
     redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
   }
 
@@ -119,11 +119,15 @@ export async function createWandererCheckoutSession(_formData: FormData) {
     redirect(`/login?redirect=${encodeURIComponent("/pricing")}`);
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("users")
     .select("has_lifetime_access, subscription_status, email")
     .eq("auth_id", user.id)
     .maybeSingle();
+
+  if (error) {
+    console.error("createWandererCheckoutSession profile lookup error:", error);
+  }
 
   if (profile?.has_lifetime_access || profile?.subscription_status === "active" || profile?.subscription_status === "trialing") {
     redirect("/stories");
@@ -210,13 +214,17 @@ export async function verifyAndGrantAccess(
     // We update basic fields. Webhook will handle the detailed sync.
     const { data: updatedProfile, error } = await adminSupabase
       .from("users")
-      .update({
-        ...(customerId ? { stripe_customer_id: customerId } : {}),
-        ...(subscriptionId ? { stripe_subscription_id: subscriptionId, subscription_status: statusToSet } : {}),
-        ...(isWanderer ? { subscription_status: "wanderer", subscription_period_end: periodEnd } : {}),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("auth_id", user.id)
+      .upsert(
+        {
+          auth_id: user.id,
+          ...(email ? { email } : {}),
+          ...(customerId ? { stripe_customer_id: customerId } : {}),
+          ...(subscriptionId ? { stripe_subscription_id: subscriptionId, subscription_status: statusToSet } : {}),
+          ...(isWanderer ? { subscription_status: "wanderer", subscription_period_end: periodEnd } : {}),
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "auth_id" }
+      )
       .select("id")
       .maybeSingle();
 
@@ -263,11 +271,15 @@ export async function checkUserAccess(slug?: string): Promise<boolean> {
 
   if (!user) return false;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("users")
     .select("has_lifetime_access, subscription_status, subscription_period_end")
     .eq("auth_id", user.id)
     .single();
+
+  if (error) {
+    console.error("checkUserAccess profile lookup error:", error);
+  }
 
   const isWandererActive = data?.subscription_status === "wanderer" && data?.subscription_period_end && new Date(data.subscription_period_end) > new Date();
   const hasSub = data?.subscription_status === "active" || data?.subscription_status === "trialing" || isWandererActive;
@@ -300,8 +312,8 @@ export async function createCustomerPortalSession() {
 
   // Search for the customer in Stripe by email if no ID is saved
   if (!customerId) {
-    const customers = await stripe.customers.search({
-      query: `email:'${profile.email}'`,
+    const customers = await stripe.customers.list({
+      email: profile.email,
       limit: 1,
     });
 

@@ -1,4 +1,3 @@
-"use client";
 
 import * as React from "react";
 import { Flame, Lock, Sparkles, BookOpen, Loader2 } from "lucide-react";
@@ -14,7 +13,7 @@ const FEATURES = [
   { icon: Flame, label: "Immersive cinematic reader", detail: "Ambient audio, focus modes & scene search" },
 ];
 
-import { toast } from "sonner";
+
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 
