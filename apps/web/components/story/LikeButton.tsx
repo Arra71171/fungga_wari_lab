@@ -47,7 +47,7 @@ export function LikeButton({
       onClick={handleLike}
       disabled={disabled || isLoading}
       className={cn(
-        "group flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 transition-all hover:bg-secondary/20",
+        "group flex items-center gap-2 rounded-none border border-border bg-background px-3 py-1.5 transition-all hover:bg-secondary/20",
         liked && "border-brand-ember/50 bg-brand-ember/5"
       )}
       aria-label={liked ? "Unlike story" : "Like story"}

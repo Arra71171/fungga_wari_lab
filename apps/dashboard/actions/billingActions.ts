@@ -45,13 +45,16 @@ export async function getBillingStatus(rawAuthId: string) {
 
   const { data, error } = await adminSupabase
     .from("users")
-    .select("has_lifetime_access")
+    .select("has_lifetime_access, subscription_status")
     .eq("auth_id", authId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error("Failed to fetch billing status");
   }
 
-  return data?.has_lifetime_access ?? false;
+  return {
+    has_lifetime_access: data?.has_lifetime_access ?? false,
+    subscription_status: data?.subscription_status ?? "none",
+  };
 }

@@ -9,6 +9,8 @@ import { NoiseOverlay } from "@workspace/ui/components/NoiseOverlay"
 import { AuthObserver } from "@/components/AuthObserver"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
+import { PaymentSuccessHandler } from "@/components/story/PaymentSuccessHandler"
+import React from "react"
 
 // ── The Storyteller (Subheadings, captions, body copy)
 const dmSans = DM_Sans({
@@ -99,10 +101,13 @@ export default function RootLayout({
         meeteiMayek.variable
       )}
     >
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="bg-premium-mesh">
         <NoiseOverlay opacity={0.03} />
         <SupabaseAuthProvider>
           {children}
+          <React.Suspense fallback={null}>
+            <PaymentSuccessHandler />
+          </React.Suspense>
           <AuthObserver />
           <Toaster />
         </SupabaseAuthProvider>

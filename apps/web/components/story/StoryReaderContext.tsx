@@ -152,22 +152,14 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
     initialStory?.chapters?.[0]?.scenes?.[0]?.id ?? null
   );
 
-  // Set currentSceneId from localStorage only if it exists
+  // Always initialize currentSceneId to the first scene of Chapter 1 when story loads
   React.useEffect(() => {
     if (!story || story.chapters.length === 0) return;
 
-    const storageKey = `fungga:scene:${story.id}`;
-    const saved = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
-
-    if (saved) {
-      // Verify the saved scene still exists
-      const allScenes = story.chapters.flatMap((ch) => ch.scenes);
-      if (allScenes.some((s) => s.id === saved)) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCurrentSceneIdState(saved);
-      }
+    const firstSceneId = story.chapters[0]?.scenes?.[0]?.id ?? null;
+    if (firstSceneId) {
+      setCurrentSceneIdState(firstSceneId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [story?.id]);
 
   const setCurrentSceneId = React.useCallback(

@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { getAppUrl } from "@workspace/ui/lib/utils";
 
-export default function LoginPage() {
+function LoginContent() {
   const searchParams = useSearchParams();
   // window.location.replace() is a raw browser API — it has NO knowledge of the
   // Next.js basePath ("/dashboard"). We must manually prepend the basePath so that
@@ -152,5 +152,13 @@ export default function LoginPage() {
         </button>
       </form>
     </AuthGatewayLayout>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading gateway...</div>}>
+      <LoginContent />
+    </React.Suspense>
   );
 }

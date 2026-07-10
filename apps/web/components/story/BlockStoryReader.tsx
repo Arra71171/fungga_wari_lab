@@ -238,7 +238,7 @@ function ChoiceButtons({
           onClick={() => {
             onChoose(choice.next_scene_id);
           }}
-          className="w-full max-w-sm px-6 py-3 border border-cinematic-border/40 hover:border-brand-ember text-left text-sm font-sans text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="w-full max-w-sm px-4 py-2.5 border border-cinematic-border/40 hover:border-brand-ember text-left text-xs font-mono uppercase tracking-wider text-cinematic-text hover:text-cinematic-text hover:bg-brand-ember/5 transition-all rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {choice.label}
         </button>
@@ -637,7 +637,7 @@ function BlockStoryReader({
                         if (firstSceneId) setCurrentSceneId(firstSceneId);
                         scrollContentToTop();
                       }}
-                      className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-5 py-2.5 transition-colors rounded-full"
+                      className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground hover:text-brand-ember border border-border/30 hover:border-brand-ember px-4 py-2 transition-colors rounded-none"
                     >
                       Read Again
                     </button>
@@ -652,7 +652,7 @@ function BlockStoryReader({
                   </div>
                     <Link
                       href="/stories"
-                      className="text-fine font-sans font-medium tracking-wide text-muted-foreground hover:text-brand-ember transition-colors px-5 py-2.5"
+                      className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground hover:text-brand-ember transition-colors px-4 py-2"
                     >
                       Archive
                     </Link>
