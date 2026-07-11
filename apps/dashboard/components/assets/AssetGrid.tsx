@@ -43,6 +43,12 @@ function AssetGrid({ filterType }: AssetGridProps) {
   const [selectedAsset, setSelectedAsset] = React.useState<AssetRow | null>(null);
   const [isUpdating, setIsUpdating] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [prevFilterType, setPrevFilterType] = React.useState(filterType);
+
+  if (filterType !== prevFilterType) {
+    setPrevFilterType(filterType);
+    setCurrentPage(1);
+  }
 
   React.useEffect(() => {
     let cancelled = false;
@@ -90,6 +96,14 @@ function AssetGrid({ filterType }: AssetGridProps) {
     }
   };
 
+  // --- Pagination Logic & Clamping ---
+  const totalItems = assets?.length || 0;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+  
+  if (assets && currentPage > totalPages) {
+    setCurrentPage(totalPages);
+  }
+
   if (assets === undefined) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -126,18 +140,6 @@ function AssetGrid({ filterType }: AssetGridProps) {
   /** Parse the URL pathname to safely detect file extension, even with query strings */
   function getAssetPathname(url: string): string {
     try { return new URL(url).pathname } catch { return url }
-  }
-
-  // --- Pagination Logic ---
-  const totalItems = assets.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  
-  const [prevFilterType, setPrevFilterType] = React.useState(filterType);
-  if (filterType !== prevFilterType) {
-    setPrevFilterType(filterType);
-    setCurrentPage(1);
-  } else if (currentPage > Math.max(1, totalPages)) {
-    setCurrentPage(Math.max(1, totalPages));
   }
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
