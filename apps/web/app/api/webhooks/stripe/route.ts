@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
       try {
         const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer.id;
         const priceId = subscription.items.data[0]?.price.id;
-        const subscriptionData = subscription as unknown as { current_period_end: number };
-        const periodEnd = new Date(subscriptionData.current_period_end * 1000).toISOString();
+        const periodEndRaw = (subscription as any).current_period_end || subscription.items.data[0]?.current_period_end || 0;
+        const periodEnd = periodEndRaw ? new Date(periodEndRaw * 1000).toISOString() : new Date().toISOString();
 
         const { data: updatedProfile, error } = await supabase
           .from("users")
