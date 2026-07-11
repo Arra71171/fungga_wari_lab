@@ -95,6 +95,8 @@ export function ExpandableCard({
             <motion.div
               layoutId={layoutId}
               ref={cardRef}
+              role="dialog"
+              aria-modal="true"
               className={cn(
                 "relative flex h-full max-h-[90vh] w-full max-w-[850px] flex-col overflow-auto bg-card shadow-nordic rounded-none border border-border pointer-events-auto [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [scrollbar-width:none]",
                 contentClassName
@@ -106,7 +108,7 @@ export function ExpandableCard({
               <motion.button
                 aria-label="Close card"
                 layoutId={`button-${layoutId}`}
-                className="absolute top-4 right-4 z-50 flex size-10 items-center justify-center rounded-none border border-border bg-background text-foreground transition-colors hover:bg-secondary hover:text-primary focus:outline-none"
+                className="absolute top-4 right-4 z-50 flex size-10 items-center justify-center rounded-none border border-border bg-background text-foreground transition-colors hover:bg-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleSetActive(false)
@@ -122,7 +124,16 @@ export function ExpandableCard({
       <motion.div
         layoutId={layoutId}
         onClick={() => handleSetActive(true)}
-        className={cn("cursor-pointer rounded-none group/expandable", className)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            handleSetActive(true)
+          }
+        }}
+        tabIndex={0}
+        role="button"
+        aria-expanded={active}
+        className={cn("cursor-pointer rounded-none group/expandable focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)}
       >
         {trigger}
       </motion.div>

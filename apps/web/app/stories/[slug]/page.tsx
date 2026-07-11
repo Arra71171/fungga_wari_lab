@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import { StoryReaderShell } from "@/components/story/StoryReaderShell";
 import { PaywallGate } from "@/components/story/PaywallGate";
 import { checkUserAccess } from "@/actions/paywallActions";
-import { PaymentSuccessHandler } from "@/components/story/PaymentSuccessHandler";
 import type { StoryShape } from "@/components/story/StoryReaderContext";
 
 type StoryPageProps = {
@@ -168,9 +167,6 @@ export default async function StoryPage({ params }: StoryPageProps) {
       )}
 
       <div className="relative z-10 w-full">
-        <React.Suspense fallback={null}>
-          <PaymentSuccessHandler />
-        </React.Suspense>
         <PaywallGate slug={slug} hasAccess={hasAccess} initialStory={initialStory}>
           <StoryReaderShell 
             slug={slug} 

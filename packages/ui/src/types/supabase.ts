@@ -704,6 +704,11 @@ export type Database = {
           name: string | null
           phone: string | null
           role: Database["public"]["Enums"]["user_role"] | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_status: string | null
+          subscription_price_id: string | null
+          subscription_period_end: string | null
           updated_at: string | null
         }
         Insert: {
@@ -720,6 +725,11 @@ export type Database = {
           name?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?: string | null
+          subscription_price_id?: string | null
+          subscription_period_end?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -736,6 +746,11 @@ export type Database = {
           name?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?: string | null
+          subscription_price_id?: string | null
+          subscription_period_end?: string | null
           updated_at?: string | null
         }
         Relationships: []

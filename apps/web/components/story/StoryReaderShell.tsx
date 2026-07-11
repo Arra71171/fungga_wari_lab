@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@workspace/ui/lib/utils";
-import { Loader2, ChevronLeft } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -50,6 +50,7 @@ export function StoryReaderShell({
 }) {
   const { story, isLoading } = useStoryReader();
   const [rightPanelOpen, setRightPanelOpen] = React.useState(true);
+  const [leftSidebarOpen, setLeftSidebarOpen] = React.useState(true);
 
   // Mobile drawer states
   const [chaptersOpen, setChaptersOpen] = React.useState(false);
@@ -103,8 +104,27 @@ export function StoryReaderShell({
       <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-brand-ember/10 dark:bg-brand-ember/5 blur-[120px] pointer-events-none z-0" />
 
       {/* ─── Desktop: Left sidebar (hidden on mobile) ──────────────────── */}
-      <div className="hidden lg:flex">
-        <StorySidebar />
+      <div
+        className={cn(
+          "hidden lg:flex flex-col transition-all duration-300 ease-in-out shrink-0 overflow-hidden border-r border-cinematic-border bg-cinematic-panel/90 backdrop-blur-md",
+          leftSidebarOpen ? "w-72" : "w-10"
+        )}
+        aria-label="Story sidebar"
+      >
+        {leftSidebarOpen ? (
+          <StorySidebar onClose={() => setLeftSidebarOpen(false)} />
+        ) : (
+          /* Collapsed strip — single icon to re-open */
+          <div className="flex-1 flex flex-col items-center pt-5">
+            <button
+              onClick={() => setLeftSidebarOpen(true)}
+              aria-label="Open navigation sidebar"
+              className="size-8 flex items-center justify-center border border-cinematic-border/40 text-muted-foreground hover:text-cinematic-text hover:border-brand-ember/40 transition-all rounded-none"
+            >
+              <ChevronRight className="size-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ─── Mobile: Chapters drawer (Sheet left) ──────────────────────── */}

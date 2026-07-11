@@ -29,49 +29,86 @@ export async function POST(req: NextRequest) {
     );
   }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
-  
-      const authId = session.metadata?.auth_id;
+    const supabase = createAdminClient();
+
+    if (
+      event.type === "customer.subscription.created" ||
+      event.type === "customer.subscription.updated" ||
+      event.type === "customer.subscription.deleted"
+    ) {
+      const subscription = event.data.object as Stripe.Subscription;
+      const authId = subscription.metadata?.auth_id;
+
       if (!authId) {
-        console.error("Stripe webhook: missing auth_id in session metadata");
-        return NextResponse.json({ error: "Missing auth_id" }, { status: 400 });
+        console.error("Stripe webhook: missing auth_id in subscription metadata");
+        return NextResponse.json({ error: "Missing auth_id in metadata" }, { status: 400 });
       }
-  
-      if (session.payment_status !== "paid") {
-        // Not yet paid — ignore (async payment methods may still be pending)
-        return NextResponse.json({ received: true });
-      }
-  
+
       try {
-        const supabase = createAdminClient();
-  
-        const email = session.customer_details?.email ?? session.customer_email ?? "";
-  
-        // We use the admin client to grant access by updating public.users matching the auth_id
-        const { error } = await supabase
+        const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer.id;
+        const priceId = subscription.items.data[0]?.price.id;
+        const periodEndRaw = (subscription as any).current_period_end || subscription.items.data[0]?.current_period_end || 0;
+        const periodEnd = periodEndRaw ? new Date(periodEndRaw * 1000).toISOString() : new Date().toISOString();
+
+        const { data: updatedProfile, error } = await supabase
           .from("users")
-          .update(
-            {
-              has_lifetime_access: true,
-              updated_at: new Date().toISOString(),
-            }
-          )
-          .eq("auth_id", authId);
-  
-        if (error) {
-          console.error("Failed to grant lifetime access:", error);
+          .upsert({
+            auth_id: authId,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscription.id,
+            subscription_status: subscription.status,
+            subscription_price_id: priceId,
+            subscription_period_end: periodEnd,
+            updated_at: new Date().toISOString(),
+          }, { onConflict: "auth_id" })
+          .select("id")
+          .maybeSingle();
+
+        if (error || !updatedProfile) {
+          const errorMessage = error ? error.message : "User row not found after upsert";
+          console.error("Failed to sync subscription to db:", error ?? "Silent no-op");
           return NextResponse.json(
-            { error: "Database update failed: " + error.message, details: error },
+            { error: "Database update failed: " + errorMessage },
             { status: 500 }
           );
         }
-  
-        console.log(`✅ Lifetime access granted to auth_id: ${authId}`);
+        
+        console.log(`✅ Subscription ${subscription.id} synced for auth_id: ${authId}. Status: ${subscription.status}`);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Unknown error";
         console.error("Supabase update error:", message);
         return NextResponse.json({ error: message }, { status: 500 });
+      }
+    } else if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      
+      // Handle Wanderer pass (one-time payment)
+      if (session.mode === "payment" && session.payment_status === "paid" && session.metadata?.plan === "wanderer") {
+        const authId = session.metadata.auth_id;
+        const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
+        
+        if (authId) {
+          const periodEnd = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+          const { data: updatedProfile, error } = await supabase
+            .from("users")
+            .upsert({
+              auth_id: authId,
+              subscription_status: "wanderer",
+              subscription_period_end: periodEnd,
+              ...(customerId ? { stripe_customer_id: customerId } : {}),
+              updated_at: new Date().toISOString(),
+            }, { onConflict: "auth_id" })
+            .select("id")
+            .maybeSingle();
+            
+          if (error || !updatedProfile) {
+            console.error("Failed to grant Wanderer access:", error ?? "Silent no-op");
+            return NextResponse.json({ error: "Failed to grant Wanderer access" }, { status: 500 });
+          }
+          console.log(`✅ Wanderer 14-day pass granted to auth_id: ${authId}`);
+        }
+      } else if (session.mode === "subscription" && session.payment_status === "paid") {
+         console.log("Checkout session completed for subscription, awaiting subscription.created webhook for full sync");
       }
     }
 

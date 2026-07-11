@@ -93,6 +93,7 @@ export function VelocityMarquee({ items, baseVelocity = 2, className }: Velocity
       className={cn("relative w-full overflow-hidden whitespace-nowrap", className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      data-slot="velocity-marquee"
     >
       <motion.div
         className="flex w-[400%]"

@@ -40,19 +40,18 @@ function LoginForm() {
     setError(null)
     setIsLoading(true)
 
-    toast.promise(
-      new Promise(async (resolve, reject) => {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
-        if (signInError) {
-          reject(signInError)
-          return
-        }
-        resolve(true)
-      }),
-      {
+    const signInPromise = (async () => {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      if (signInError) {
+        throw signInError
+      }
+      return true
+    })()
+
+    toast.promise(signInPromise, {
         loading: "Authenticating your credentials...",
         success: () => {
           setTimeout(() => {

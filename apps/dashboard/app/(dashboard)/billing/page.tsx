@@ -16,7 +16,7 @@ export default function BillingPage() {
 
   useEffect(() => {
     if (user?.id) {
-      getBillingStatus(user.id).then(setHasAccess).catch(console.error);
+      getBillingStatus(user.id).then(status => setHasAccess(status.has_lifetime_access || status.subscription_status === 'active' || status.subscription_status === 'trialing')).catch(console.error);
     }
   }, [user?.id]);
 
@@ -28,8 +28,8 @@ export default function BillingPage() {
       setHasAccess(!hasAccess);
       toast.success(
         !hasAccess 
-          ? "Lifetime access granted. You will bypass the paywall." 
-          : "Lifetime access revoked. You will now see the paywall.",
+          ? "Archive access granted. You will bypass the paywall." 
+          : "Archive access revoked. You will now see the paywall.",
         { id: "billing-toast" }
       );
     } catch (e: unknown) {
@@ -37,12 +37,6 @@ export default function BillingPage() {
     } finally {
       setIsPending(false);
     }
-  };
-
-  const mockCheckoutAction = async () => {
-    toast.loading("Initiating test checkout...", { id: "mock-checkout" });
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    toast.success("Checkout simulation complete.", { id: "mock-checkout" });
   };
 
   return (
@@ -83,7 +77,7 @@ export default function BillingPage() {
               </div>
               <div>
                 <p className="font-sans font-bold text-lg tracking-tight">
-                  {hasAccess === null ? "Loading..." : hasAccess ? "Lifetime Access Active" : "No Access (Paywall Active)"}
+                  {hasAccess === null ? "Loading..." : hasAccess ? "Archive Access Active" : "No Access (Paywall Active)"}
                 </p>
                 <p className="text-sm font-mono text-muted-foreground tracking-wide mt-1">
                   {hasAccess ? "You bypass all paywalls." : "You will be prompted to pay."}
@@ -102,7 +96,7 @@ export default function BillingPage() {
                     : "border border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary"
                 }`}
               >
-                {isPending ? <Loader2 className="size-4 animate-spin" /> : hasAccess ? "Revoke Access (Test Paywall)" : "Grant Lifetime Access"}
+                {isPending ? <Loader2 className="size-4 animate-spin" /> : hasAccess ? "Revoke Access (Test Paywall)" : "Grant Archive Access"}
               </Button>
             </div>
           </div>
@@ -118,7 +112,7 @@ export default function BillingPage() {
           <div className="p-6 space-y-4">
             <div className="p-4 border border-border/50 bg-bg-surface/50 font-mono text-xs text-muted-foreground tracking-wide leading-relaxed">
               <p className="mb-2"><strong className="text-foreground">Stripe Webhooks:</strong> Fully implemented.</p>
-              <p className="mb-2">Webhook endpoint <code>/api/webhooks/stripe</code> listens for <code>checkout.session.completed</code> and updates the database securely.</p>
+              <p className="mb-2">Webhook endpoint <code>/api/webhooks/stripe</code> listens for <code>customer.subscription.*</code> events and updates the database securely.</p>
               <p>Admins can toggle their access here to test the public paywall without making real payments.</p>
             </div>
           </div>
@@ -136,7 +130,7 @@ export default function BillingPage() {
             <p className="mb-2 leading-relaxed max-w-2xl">Once upon a time in the ancient kingdom of Kangleipak, there lived seven brothers who were known throughout the land for their incredible strength and unwavering bond. They lived in a small village surrounded by dense, misty forests where spirits were said to roam freely.</p>
             <p className="mb-2 leading-relaxed max-w-2xl">One evening, as the sun dipped below the horizon casting a fiery orange glow over the hills, the youngest brother heard a strange melody drifting through the trees. It was a song of sorrow, echoing with an unnatural resonance that chilled him to the bone.</p>
           </div>
-          <PaywallOverlay onUnlock={mockCheckoutAction} />
+          <PaywallOverlay />
         </div>
       </div>
     </div>

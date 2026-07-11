@@ -1,6 +1,5 @@
 import * as React from "react";
 import { PaywallOverlay } from "@workspace/ui/components/PaywallOverlay";
-import { createCheckoutSession } from "@/actions/paywallActions";
 import { StoryReaderProvider, type StoryShape } from "./StoryReaderContext";
 
 type PaywallGateProps = {
@@ -16,14 +15,9 @@ type PaywallGateProps = {
  *
  * - hasAccess=true: renders the full reader inside StoryReaderProvider
  * - hasAccess=false: renders the reader in a locked/blurred state with the
- *   PaywallOverlay on top. The overlay calls the createCheckoutSession
- *   server action bound to this story's slug.
+ *   PaywallOverlay on top.
  */
 export function PaywallGate({ slug, hasAccess, initialStory, children }: PaywallGateProps) {
-  // Bind the slug into the server action so PaywallOverlay doesn't need
-  // to know about paywallActions directly.
-  const checkoutWithSlug = createCheckoutSession.bind(null, slug);
-
   if (hasAccess) {
     return (
       <StoryReaderProvider initialStory={initialStory}>
@@ -45,11 +39,13 @@ export function PaywallGate({ slug, hasAccess, initialStory, children }: Paywall
       </div>
 
       {/* Paywall overlay */}
-      <React.Suspense fallback={<div className="absolute inset-0 z-30 bg-cinematic-bg/80" />}>
-        <PaywallOverlay
-          onUnlock={checkoutWithSlug}
-          storySlug={slug}
-        />
+      <React.Suspense fallback={
+        <div className="absolute inset-0 z-30 bg-cinematic-bg/80 backdrop-blur-sm flex flex-col items-center justify-center">
+           <div className="size-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+           <p className="text-sm font-mono text-muted-foreground mt-4 animate-pulse">Loading archive protocol...</p>
+        </div>
+      }>
+        <PaywallOverlay />
       </React.Suspense>
     </div>
   );

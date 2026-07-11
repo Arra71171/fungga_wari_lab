@@ -13,6 +13,7 @@ const authIdSchema = z.string().uuid();
  */
 export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boolean) {
   const authId = authIdSchema.parse(rawAuthId);
+  const validatedGrantAccess = z.boolean().parse(grantAccess);
   const { profile: caller } = await requireUser();
 
   if (caller.role !== "superadmin" && caller.role !== "admin") {
@@ -23,8 +24,10 @@ export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boole
 
   const { error } = await adminSupabase
     .from("users")
-    .update({ has_lifetime_access: grantAccess })
-    .eq("auth_id", authId);
+    .upsert(
+      { auth_id: authId, has_lifetime_access: validatedGrantAccess },
+      { onConflict: "auth_id" }
+    );
 
   if (error) {
     throw new Error("Failed to update access: " + error.message);
@@ -39,19 +42,26 @@ export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boole
  */
 export async function getBillingStatus(rawAuthId: string) {
   const authId = authIdSchema.parse(rawAuthId);
-  await requireUser();
+  const { profile: caller } = await requireUser();
+
+  if (caller.auth_id !== authId && caller.role !== "superadmin" && caller.role !== "admin") {
+    throw new Error("Forbidden — you can only view your own billing status");
+  }
 
   const adminSupabase = createAdminClient();
 
   const { data, error } = await adminSupabase
     .from("users")
-    .select("has_lifetime_access")
+    .select("has_lifetime_access, subscription_status")
     .eq("auth_id", authId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error("Failed to fetch billing status");
   }
 
-  return data?.has_lifetime_access ?? false;
+  return {
+    has_lifetime_access: data?.has_lifetime_access ?? false,
+    subscription_status: data?.subscription_status ?? "none",
+  };
 }

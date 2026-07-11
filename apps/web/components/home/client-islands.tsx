@@ -75,7 +75,7 @@ export function ScrollProgressBarIsland() {
       aria-valuemax={100}
       aria-valuenow={progress}
       data-slot="scroll-progress"
-      className="fixed top-0 left-0 right-0 z-[100] h-[2px] bg-primary origin-left"
+      className="fixed top-0 left-0 right-0 z-50 h-0.5 bg-primary origin-left"
       style={{ scaleX }}
     />
   );
@@ -90,7 +90,7 @@ export function HeroIsland() {
     <section
       ref={heroRef}
       data-slot="hero-island"
-      className="relative px-6 md:px-12 lg:px-20 pt-[126px] pb-24 min-h-[85vh] flex items-center justify-center overflow-hidden"
+      className="relative px-6 md:px-12 lg:px-20 pt-32 pb-24 min-h-screen flex items-center justify-center overflow-hidden"
     >
       <motion.div
         style={{ opacity: heroOpacity }}
@@ -98,10 +98,10 @@ export function HeroIsland() {
       >
         <div className="flex flex-col justify-center max-w-lg space-y-4">
           <motion.div variants={fadeUp} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.05] text-foreground">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight text-foreground">
               <span className="font-heading font-medium block">Where stories</span>
               <TypingAnimation
-                className="font-heading font-medium text-brand-amber block whitespace-nowrap min-h-[1.2em]"
+                className="font-heading font-medium text-brand-amber block whitespace-nowrap min-h-16"
                 words={["outlive silence.", "defy erasure.", "echo forever.", "forge memory."]}
                 loop={true}
                 duration={100}
@@ -134,7 +134,7 @@ export function HeroIsland() {
           <ScrollReveal direction="up" distance={50} duration={1.2} scrub={0.5} className="relative z-10 w-full max-w-sm">
             <div className="relative w-full aspect-auto sm:aspect-square sm:max-w-sm mx-auto lg:max-w-sm bg-card rounded-none p-6 flex flex-col justify-between group transition-all duration-500 hover:shadow-nordic z-10 border border-border/40">
               <motion.div
-                className="absolute inset-0 bg-primary/5 blur-[80px] rounded-none pointer-events-none z-[-1]"
+                className="absolute inset-0 bg-primary/5 blur-3xl rounded-none pointer-events-none -z-10"
                 animate={{ scale: [1, 1.02, 1], opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -149,7 +149,7 @@ export function HeroIsland() {
                 <Users className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
 
-              <div className="flex-1 min-h-[180px] sm:min-h-0 w-full flex items-center justify-center relative rounded-none border border-border/40 bg-secondary/10 overflow-hidden mb-5">
+              <div className="flex-1 min-h-48 sm:min-h-0 w-full flex items-center justify-center relative rounded-none border border-border/40 bg-secondary/10 overflow-hidden mb-5">
                 <Lens zoomFactor={1.5} lensSize={180}>
                   <video
                     ref={(el) => {
@@ -164,17 +164,17 @@ export function HeroIsland() {
                     loop
                     muted
                     playsInline
-                    className="w-full h-full min-h-[220px] max-h-[480px] object-cover pointer-events-none"
+                    className="w-full h-full min-h-60 max-h-96 object-cover pointer-events-none"
                   />
                 </Lens>
                 
                 <div className="absolute bottom-0 right-0 px-3 py-1.5 bg-background/90 backdrop-blur-sm rounded-none border-t border-l border-border/50 z-20 pointer-events-auto">
-                  <span className="text-[10px] font-sans font-semibold tracking-wider text-muted-foreground uppercase">Loktak Lake</span>
+                  <span className="text-xs font-sans font-semibold tracking-wider text-muted-foreground uppercase">Loktak Lake</span>
                 </div>
               </div>
 
               <div className="border-t border-border/30 pt-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-[10px] font-sans tracking-wide text-foreground/70">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-xs font-sans tracking-wide text-foreground/70">
                   <div className="flex flex-col gap-1">
                     <span className="text-muted-foreground/60 uppercase font-semibold">Location</span>
                     <span className="font-medium text-foreground">Loktak Lake, Manipur</span>
@@ -349,7 +349,7 @@ export function CapabilityCellIsland({ icon, title, desc }: { icon: React.ReactN
       </div>
       <h3 className="text-lg font-medium tracking-wide text-foreground mb-3">{title}</h3>
       <p className="text-muted-foreground font-sans text-xs leading-relaxed mb-6 h-12">{desc}</p>
-      <div ref={lineRef} className="h-[1px] bg-brand-ember w-[24px]" />
+      <div ref={lineRef} className="h-0.5 bg-brand-ember w-6" />
     </div>
   );
 }
@@ -413,7 +413,7 @@ export function ScrollTopology() {
   const pathLength = useSpring(scrollYProgress, { stiffness: 80, damping: 20 });
 
   return (
-    <div data-slot="scroll-topology" className="fixed top-0 right-[2vw] bottom-0 w-12 pointer-events-none z-[5] hidden lg:block opacity-40">
+    <div data-slot="scroll-topology" className="fixed top-0 right-8 bottom-0 w-12 pointer-events-none z-10 hidden lg:block opacity-40">
       <svg viewBox="0 0 100 1000" className="w-full h-full" preserveAspectRatio="none">
         <motion.path
           d="M 50 0 L 50 150 L 80 180 L 80 300 L 20 330 L 20 500 L 80 530 L 80 750 L 50 780 L 50 1000"

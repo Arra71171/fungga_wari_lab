@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import { BrandLogo } from "@workspace/ui/components/BrandLogo";
 import { AnimatedThemeToggler } from "@workspace/ui/components/animated-theme-toggler";
@@ -16,9 +16,11 @@ import { useStoryReader } from "./StoryReaderContext";
 type StorySidebarProps = {
   /** Called when a scene is selected — used to close mobile drawer */
   onSceneSelect?: () => void;
+  /** Callback to close/collapse the sidebar on desktop */
+  onClose?: () => void;
 };
 
-export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
+export function StorySidebar({ onSceneSelect, onClose }: StorySidebarProps = {}) {
   const { story, chapters, currentSceneId, setCurrentSceneId } = useStoryReader();
   const [expandedChapterId, setExpandedChapterId] = React.useState<string | null>(null);
 
@@ -60,10 +62,21 @@ export function StorySidebar({ onSceneSelect }: StorySidebarProps = {}) {
     >
       {/* Logo */}
       <div className="flex items-center justify-between px-6 mb-8">
-        <BrandLogo variant="icon" size="sm" className="text-brand-ember/60" />
-        <span className="font-mono text-nano tracking-wide text-muted-foreground/50">
-          v1
-        </span>
+        <div className="flex items-center gap-2">
+          <BrandLogo variant="icon" size="sm" className="text-brand-ember/60" />
+          <span className="font-mono text-nano tracking-wide text-muted-foreground/50">
+            v1
+          </span>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            aria-label="Collapse sidebar"
+            className="size-6 flex items-center justify-center border border-cinematic-border/40 text-muted-foreground hover:text-cinematic-text hover:border-brand-ember/40 transition-all rounded-none"
+          >
+            <ChevronLeft className="size-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Story title */}

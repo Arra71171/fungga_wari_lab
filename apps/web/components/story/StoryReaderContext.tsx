@@ -148,27 +148,44 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
   useViewTracking(story?.id ?? undefined);
 
   const [mode, setMode] = React.useState<ReadingMode>("standard");
+  const [isRestored, setIsRestored] = React.useState(false);
   const [currentSceneId, setCurrentSceneIdState] = React.useState<string | null>(
     initialStory?.chapters?.[0]?.scenes?.[0]?.id ?? null
   );
 
-  // Set currentSceneId from localStorage only if it exists
+  // Restore currentSceneId from localStorage when story loads
   React.useEffect(() => {
-    if (!story || story.chapters.length === 0) return;
+    if (!story || story.chapters.length === 0) {
+      setIsRestored(true);
+      return;
+    }
 
-    const storageKey = `fungga:scene:${story.id}`;
-    const saved = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
+    let savedId: string | null = null;
+    if (typeof window !== "undefined") {
+      savedId = localStorage.getItem(`fungga:scene:${story.id}`);
+    }
 
-    if (saved) {
-      // Verify the saved scene still exists
-      const allScenes = story.chapters.flatMap((ch) => ch.scenes);
-      if (allScenes.some((s) => s.id === saved)) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCurrentSceneIdState(saved);
+    let isValidSavedId = false;
+    if (savedId) {
+      for (const ch of story.chapters) {
+        if (ch.scenes.some((s) => s.id === savedId)) {
+          isValidSavedId = true;
+          break;
+        }
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [story?.id]);
+
+    if (isValidSavedId && savedId) {
+      setCurrentSceneIdState(savedId);
+    } else {
+      const firstSceneId = story.chapters[0]?.scenes?.[0]?.id ?? null;
+      if (firstSceneId) {
+        setCurrentSceneIdState(firstSceneId);
+      }
+    }
+    
+    setIsRestored(true);
+  }, [story?.id, story?.chapters]);
 
   const setCurrentSceneId = React.useCallback(
     (id: string | null) => {
@@ -187,7 +204,7 @@ export function StoryReaderProvider({ children, initialStory }: { children: Reac
 
   // Silently sync reading position to Supabase when signed in
   React.useEffect(() => {
-    if (!story?.id || !currentSceneId) return;
+    if (!story?.id || !currentSceneId || !isRestored) return;
 
     // Derive the chapter that owns this scene
     let owningChapterId: string | null = null;

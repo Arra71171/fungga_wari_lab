@@ -13,7 +13,7 @@ export interface SpotlightCardProps extends HTMLMotionProps<"div"> {
 export function SpotlightCard({
   children,
   className,
-  spotlightColor = "rgba(255, 255, 255, 0.08)",
+  spotlightColor = "color-mix(in oklch, var(--primary) 15%, transparent)",
   ...props
 }: SpotlightCardProps) {
   const mouseX = useMotionValue(0);
@@ -34,9 +34,9 @@ export function SpotlightCard({
         "group relative overflow-hidden rounded-none bg-background",
         className
       )}
-      onMouseMove={handleMouseMove}
       data-slot="spotlight-card"
       {...props}
+      onMouseMove={handleMouseMove}
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-none opacity-0 transition duration-300 group-hover:opacity-100 z-[1]"
