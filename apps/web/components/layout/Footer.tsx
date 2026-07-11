@@ -4,7 +4,7 @@ import { FooterLinksIsland } from "@/components/home/client-islands"
 
 export function Footer() {
   return (
-    <footer className="relative z-10 py-10 px-6 md:px-12 lg:px-20 bg-background border-t border-primary">
+    <footer className="relative z-10 py-10 px-6 md:px-12 lg:px-20 bg-background border-t border-primary" data-slot="footer">
       <SectionDivider variant="smoke" fill="bg-background" stroke="text-primary/30" className="opacity-50 -top-px rotate-180" />
       <div className="max-w-5xl mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
         <div className="flex flex-col items-center md:items-start text-center md:text-left">

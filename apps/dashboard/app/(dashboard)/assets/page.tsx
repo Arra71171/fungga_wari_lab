@@ -69,7 +69,7 @@ export default function AssetsPage() {
                   key={tab.value}
                   onClick={() => setActiveFolder(tab.value)}
                   className={cn(
-                    "flex items-center gap-2 pb-3 font-sans text-xs uppercase tracking-widest transition-all border-b-2 shrink-0",
+                    "flex items-center gap-2 pb-3 font-sans text-xs uppercase tracking-widest transition-all border-b-2 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     isActive
                       ? "text-brand-ember border-brand-ember"
                       : "text-muted-foreground border-transparent hover:text-foreground hover:border-border-strong"

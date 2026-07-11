@@ -34,9 +34,9 @@ export function SpotlightCard({
         "group relative overflow-hidden rounded-none bg-background",
         className
       )}
-      onMouseMove={handleMouseMove}
       data-slot="spotlight-card"
       {...props}
+      onMouseMove={handleMouseMove}
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-none opacity-0 transition duration-300 group-hover:opacity-100 z-[1]"

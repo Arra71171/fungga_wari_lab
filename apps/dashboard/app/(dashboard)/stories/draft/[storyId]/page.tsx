@@ -149,7 +149,6 @@ export default function DraftEditorPage({
       setTags((story.tags || []).join(", "));
       setCategory(story.category || "other");
       setLanguage(story.language || "meiteilon");
-      setLanguage(story.language || "meiteilon");
 
       const mappedChapters: ChapterLocal[] = (story.chapters || []).map((c) => {
         const primaryScene = c.scenes && c.scenes.length > 0 ? c.scenes[0] : null;

@@ -1,8 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "./authHelpers";
 
 export async function getRecentActivityAction(limit = 20, offset = 0) {
+  await requireUser();
   const supabase = await createClient();
 
   const { data, error } = await supabase

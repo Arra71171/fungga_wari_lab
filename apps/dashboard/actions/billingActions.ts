@@ -13,6 +13,7 @@ const authIdSchema = z.string().uuid();
  */
 export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boolean) {
   const authId = authIdSchema.parse(rawAuthId);
+  const validatedGrantAccess = z.boolean().parse(grantAccess);
   const { profile: caller } = await requireUser();
 
   if (caller.role !== "superadmin" && caller.role !== "admin") {
@@ -24,7 +25,7 @@ export async function toggleLifetimeAccess(rawAuthId: string, grantAccess: boole
   const { error } = await adminSupabase
     .from("users")
     .upsert(
-      { auth_id: authId, has_lifetime_access: grantAccess },
+      { auth_id: authId, has_lifetime_access: validatedGrantAccess },
       { onConflict: "auth_id" }
     );
 

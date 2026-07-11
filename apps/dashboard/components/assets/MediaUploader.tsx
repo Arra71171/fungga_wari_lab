@@ -88,75 +88,66 @@ export function MediaUploader() {
 
     setIsUploading(true);
 
-    toast.promise(
-      new Promise(async (resolve, reject) => {
-        try {
-          // 1. Get signed signature from server
-          const { signature, timestamp, apiKey, folder } =
-            await getCloudinarySignature("fungga-wari-lab/assets");
+    const uploadPromise = (async () => {
+      // 1. Get signed signature from server
+      const { signature, timestamp, apiKey, folder } =
+        await getCloudinarySignature("fungga-wari-lab/assets");
 
-          // 2. Upload directly to Cloudinary using signed details
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("api_key", apiKey);
-          formData.append("timestamp", timestamp.toString());
-          formData.append("signature", signature);
-          formData.append("folder", folder);
+      // 2. Upload directly to Cloudinary using signed details
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
 
-          const resourceType = assetType === "text_story" ? "raw" : "auto";
-          const cloudinaryRes = await fetch(
-            `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
-            { method: "POST", body: formData }
-          );
+      const resourceType = assetType === "text_story" ? "raw" : "auto";
+      const cloudinaryRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
+        { method: "POST", body: formData }
+      );
 
-          if (!cloudinaryRes.ok) {
-            throw new Error("Cloudinary upload failed");
-          }
-
-          const cloudinaryData = await cloudinaryRes.json();
-          const { secure_url, public_id } = cloudinaryData as {
-            secure_url: string;
-            public_id: string;
-          };
-
-          // 3. Save the Cloudinary URL to the assets table (no storageId)
-          startTransition(() => {
-            createAsset({
-              title: file.name,
-              url: secure_url,
-              publicId: public_id,
-              type: assetType as
-                | "illustration"
-                | "sketch"
-                | "reference_photo"
-                | "audio_lore"
-                | "text_story",
-            }).catch((err) => {
-              console.error("Failed to save asset into supabase:", err);
-            });
-          });
-
-          resolve(true);
-        } catch (err) {
-          reject(err);
-        }
-      }),
-      {
-        loading: "Uploading to CDN...",
-        success: () => {
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-          setIsUploading(false);
-          return "Asset successfully uploaded.";
-        },
-        error: (err) => {
-          console.error("Upload failed:", err);
-          setIsUploading(false);
-          return "Failed to upload media file.";
-        }
+      if (!cloudinaryRes.ok) {
+        throw new Error("Cloudinary upload failed");
       }
-    );
+
+      const cloudinaryData = await cloudinaryRes.json();
+      const { secure_url, public_id } = cloudinaryData as {
+        secure_url: string;
+        public_id: string;
+      };
+
+      // 3. Save the Cloudinary URL to the assets table (no storageId)
+      await createAsset({
+        title: file.name,
+        url: secure_url,
+        publicId: public_id,
+        type: assetType as
+          | "illustration"
+          | "sketch"
+          | "reference_photo"
+          | "audio_lore"
+          | "text_story",
+      });
+
+      return true;
+    })();
+
+    toast.promise(uploadPromise, {
+      loading: "Uploading to CDN...",
+      success: () => {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        setIsUploading(false);
+        return "Asset successfully uploaded.";
+      },
+      error: (err) => {
+        console.error("Upload failed:", err);
+        setIsUploading(false);
+        return "Failed to upload media file.";
+      }
+    });
   };
 
   return (

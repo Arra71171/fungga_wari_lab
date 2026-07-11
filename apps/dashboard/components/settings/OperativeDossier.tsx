@@ -305,7 +305,7 @@ export function OperativeDossier() {
               id="dossier-sync-btn"
               onClick={handleSave}
               disabled={isSaving || !!aliasError || (alias === (me?.alias ?? "") && bio === (me?.bio ?? ""))}
-              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-none bg-primary border border-primary text-primary-foreground hover:bg-background hover:text-primary transition-all shadow-sm active:scale-[0.98] transition-transform w-full sm:w-auto min-w-0 sm:min-w-[200px]"
+              className="h-12 px-6 font-sans text-xs font-semibold tracking-wide rounded-none bg-primary border border-primary text-primary-foreground hover:bg-background hover:text-primary transition-all shadow-sm active:scale-95 transition-transform w-full sm:w-auto min-w-0 sm:min-w-48"
             >
               {isSaving ? <Loader2 className="animate-spin size-4 mr-2" /> : <Activity className="size-4 mr-2" />}
               {isSaving ? "Saving..." : "Save Changes"}

@@ -4,6 +4,7 @@ import React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createBrowserClient } from "@supabase/ssr"
+import type { Session, AuthError } from "@supabase/supabase-js"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
@@ -37,30 +38,28 @@ function RegisterForm() {
     setSuccess(null)
     setIsLoading(true)
 
-    toast.promise(
-      new Promise(async (resolve, reject) => {
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: name,
-            },
+    const signUpPromise = (async () => {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
           },
-        })
+        },
+      })
 
-        if (signUpError) {
-          reject(signUpError)
-          return
-        }
-        resolve(signUpData)
-      }),
-      {
+      if (signUpError) {
+        throw signUpError
+      }
+      return signUpData
+    })()
+
+    toast.promise(signUpPromise, {
         loading: "Forging your identity...",
-        success: (signUpData: unknown) => {
+        success: (signUpData: { session: Session | null } | undefined | null) => {
           setIsLoading(false)
-          const data = signUpData as { session: unknown | null }
-          if (data?.session) {
+          if (signUpData?.session) {
             router.push("/")
             router.refresh()
             return "Identity forged successfully. Welcome."
@@ -70,7 +69,7 @@ function RegisterForm() {
             return msg
           }
         },
-        error: (err: unknown) => {
+        error: (err: AuthError | Error | unknown) => {
           const errorMsg = err instanceof Error ? err.message : String(err)
           setError(errorMsg)
           setIsLoading(false)

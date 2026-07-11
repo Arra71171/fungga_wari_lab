@@ -413,7 +413,7 @@ export function StoryAssetForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-none font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-0 w-full sm:w-auto sm:min-w-[200px] shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
+          className="rounded-none font-sans font-medium tracking-wide bg-brand-ember hover:bg-brand-ember/90 text-primary-foreground h-12 px-8 min-w-0 w-full sm:w-auto sm:min-w-48 shadow-sm hover:translate-y-0.5 hover:shadow-none transition-all"
         >
           {isSubmitting ? (
             <Loader2 className="size-4 animate-spin mr-2" />

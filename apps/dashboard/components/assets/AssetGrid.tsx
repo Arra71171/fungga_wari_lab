@@ -48,9 +48,6 @@ function AssetGrid({ filterType }: AssetGridProps) {
     let cancelled = false;
     const type = filterType as Database["public"]["Enums"]["asset_type"] | undefined;
     
-    // Reset page when filter changes
-    setCurrentPage(1);
-    
     getAllAssets(type).then((data) => {
       if (!cancelled) setAssets(data as AssetRow[]);
     });
@@ -134,6 +131,15 @@ function AssetGrid({ filterType }: AssetGridProps) {
   // --- Pagination Logic ---
   const totalItems = assets.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  
+  const [prevFilterType, setPrevFilterType] = React.useState(filterType);
+  if (filterType !== prevFilterType) {
+    setPrevFilterType(filterType);
+    setCurrentPage(1);
+  } else if (currentPage > Math.max(1, totalPages)) {
+    setCurrentPage(Math.max(1, totalPages));
+  }
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedAssets = assets.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
@@ -201,7 +207,7 @@ function AssetGrid({ filterType }: AssetGridProps) {
 
             <AttachmentActions className={cn(
               "absolute top-2 right-2 transition-opacity duration-200",
-              selectedAsset?.id === asset.id ? "hidden" : "opacity-0 group-hover/attachment:opacity-100"
+              selectedAsset?.id === asset.id ? "hidden" : "opacity-0 group-hover/attachment:opacity-100 group-focus-within/attachment:opacity-100"
             )}>
               <AttachmentAction
                 aria-label="Copy URL"

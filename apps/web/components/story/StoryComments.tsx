@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { addComment, deleteComment } from "@/actions/socialActions";
 import { Textarea } from "@workspace/ui/components/textarea";
-import Image from "next/image";
+// import Image from "next/image"; // Removed to support external avatars from identity providers without configuring remotePatterns
 
 import { Trash2 } from "lucide-react";
 
@@ -91,7 +91,8 @@ export function StoryComments({
           <div key={comment.id} className="flex gap-4">
             <div className="size-8 border border-border rounded-none overflow-hidden flex items-center justify-center shrink-0">
               {comment.users?.avatar_url ? (
-                <Image src={comment.users.avatar_url} alt="" width={32} height={32} className="object-cover w-full h-full rounded-none" />
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={comment.users.avatar_url} alt="" width={32} height={32} className="object-cover w-full h-full rounded-none" referrerPolicy="no-referrer" />
               ) : (
                 <div className="bg-secondary font-mono text-[10px] w-full h-full flex items-center justify-center rounded-none">
                   {comment.users?.name?.slice(0, 2).toUpperCase() || "AN"}

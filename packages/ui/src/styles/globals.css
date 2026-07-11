@@ -18,8 +18,8 @@
     --card-foreground: oklch(14.48% 0 0deg);
     --popover: oklch(100% 0 0deg);
     --popover-foreground: oklch(14.48% 0 0deg);
-    --primary: oklch(0.60 0.18 45);
-    --primary-foreground: oklch(0.98 0.01 60);
+    --primary: oklch(60% 0.18 45deg);
+    --primary-foreground: oklch(98% 0.01 60deg);
     --secondary: oklch(96% 0.01 264deg);
     --secondary-foreground: oklch(20.46% 0 0deg);
     --muted: oklch(96% 0.01 264deg);
@@ -53,9 +53,9 @@
     --radius: 0rem;
 
     /* Shadows */
-    --shadow-nordic: 0px 8px 30px -4px oklch(0.14 0.02 50 / 0.15);
+    --shadow-nordic: 0px 8px 30px -4px oklch(14% 0.02 50deg / 0.15);
     --shadow-nordic-primary: 0px 8px 30px -4px var(--primary);
-    --shadow-nordic-sm: 0px 4px 15px -2px oklch(0.14 0.02 50 / 0.1);
+    --shadow-nordic-sm: 0px 4px 15px -2px oklch(14% 0.02 50deg / 0.1);
 
     /* Typography Settings from User */
     --font-sans: ui-sans-serif, system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -76,10 +76,10 @@
     --cinematic-border: oklch(88% 0.02 264deg);
 
     /* ── Depth Layer Tokens (light) ──────── */
-    --bg-base: oklch(0.965 0.008 60deg);
-    --bg-panel: oklch(0.975 0.01 60deg);
-    --bg-surface: oklch(1.0 0 0);
-    --bg-overlay: oklch(1.0 0 0);
+    --bg-base: oklch(96.5% 0.008 60deg);
+    --bg-panel: oklch(97.5% 0.01 60deg);
+    --bg-surface: oklch(100% 0 0deg);
+    --bg-overlay: oklch(100% 0 0deg);
 
     /* ── Illustration Overlay System ──────── */
     --illustration-overlay-from: oklch(6% 0.02 264deg / 78%);
@@ -130,8 +130,8 @@
     --sidebar-ring: var(--primary);
 
     /* Shadows */
-    --shadow-nordic: 0px 8px 30px -4px oklch(0 0 0 / 0.5);
-    --shadow-nordic-sm: 0px 4px 15px -2px oklch(0 0 0 / 0.4);
+    --shadow-nordic: 0px 8px 30px -4px oklch(0% 0 0deg / 0.5);
+    --shadow-nordic-sm: 0px 4px 15px -2px oklch(0% 0 0deg / 0.4);
 
     /* Brand & Cinematic Tokens */
     --brand-ember: var(--primary);

@@ -95,6 +95,8 @@ export function ExpandableCard({
             <motion.div
               layoutId={layoutId}
               ref={cardRef}
+              role="dialog"
+              aria-modal="true"
               className={cn(
                 "relative flex h-full max-h-[90vh] w-full max-w-[850px] flex-col overflow-auto bg-card shadow-nordic rounded-none border border-border pointer-events-auto [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [scrollbar-width:none]",
                 contentClassName
@@ -122,7 +124,16 @@ export function ExpandableCard({
       <motion.div
         layoutId={layoutId}
         onClick={() => handleSetActive(true)}
-        className={cn("cursor-pointer rounded-none group/expandable", className)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            handleSetActive(true)
+          }
+        }}
+        tabIndex={0}
+        role="button"
+        aria-expanded={active}
+        className={cn("cursor-pointer rounded-none group/expandable focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)}
       >
         {trigger}
       </motion.div>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { HTMLMotionProps } from "framer-motion"
 import { SpotlightCard } from "./SpotlightCard"
@@ -83,10 +84,10 @@ const BentoCard = ({
             size="sm"
             className="pointer-events-auto p-0 text-brand-ember font-medium"
           >
-            <a href={href}>
+            <Link href={href}>
               {cta}
               <ArrowRight className="ml-2 size-4" />
-            </a>
+            </Link>
           </Button>
         </div>
       )}
