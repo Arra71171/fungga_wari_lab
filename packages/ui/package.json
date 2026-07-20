@@ -76,10 +76,10 @@
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "chromatic": "^18.0.1",
-    "eslint": "^9.39.4",
+    "eslint": "^10.7.0",
     "storybook": "8.6.18",
     "tailwindcss": "^4.2.4",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vite": "5.4.11"
   },
   "exports": {
